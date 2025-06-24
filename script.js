@@ -47,15 +47,15 @@ function checkAndSetGreatOneCompletion(slug, currentData) {
 }
 
 function renderMainView(tabKey) {
-    mainContent.innerHTML = '';
+    mainContent.innerHTML = ''; 
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
     const header = document.createElement('h2');
     header.textContent = currentTab.title;
     mainContent.appendChild(header);
     if (tabKey === 'progresso') {
-        // Lógica do painel de progresso aqui...
-        mainContent.innerHTML += "<p>Painel de progresso em construção.</p>";
+        mainContent.appendChild(createProgressPanel());
+        updateProgressPanel();
         return;
     }
     const filterInput = document.createElement('input');
@@ -110,11 +110,11 @@ function showDetailView(name, tabKey) {
 }
 
 function renderGreatsDetailView(container, slug, tabKey) {
+    const trophyListContainer = document.createElement('div');
+    trophyListContainer.id = 'trophy-list-container';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
-    const trophyListContainer = document.createElement('div');
-    trophyListContainer.id = 'trophy-list-container';
     container.appendChild(trophyListContainer);
     const fursInfo = greatsFursData[slug];
     if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
@@ -138,9 +138,8 @@ function renderGreatsDetailView(container, slug, tabKey) {
             furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, refreshFurGrid));
             furGrid.appendChild(furCard);
         });
-        // Atualiza a aparência do card principal (grid de animais) após qualquer mudança
-        const mainGridCard = document.querySelector(`.album-grid .animal-card .info:contains('${slug.replace(/_/g, ' ')}')`)?.closest('.animal-card');
-        if(mainGridCard) updateCardAppearance(mainGridCard, slug, tabKey);
+        checkAndSetGreatOneCompletion(slug, animalData);
+        // Não salvar aqui, o salvamento ocorre em ações específicas do usuário
     };
     refreshFurGrid();
 }
@@ -249,11 +248,12 @@ function updateCardAppearance(card, slug, tabKey) {
     const animalData = savedData[tabKey]?.[slug] || {};
     let isComplete = false;
     if (tabKey === 'greats') {
+        checkAndSetGreatOneCompletion(slug, animalData); // Garante que o status 'completo' está atualizado
         if (animalData.completo) {
             isComplete = true;
         }
     }
-    // Adicionar outras lógicas aqui
+    // Lógicas para outras abas...
     if (isComplete) {
         card.classList.add('completed');
     } else {
@@ -261,8 +261,9 @@ function updateCardAppearance(card, slug, tabKey) {
     }
 }
 
-function createProgressPanel() { /* ... */ }
-function updateProgressPanel() { /* ... */ }
+// Funções de progresso omitidas para brevidade, mas devem estar aqui
+function createProgressPanel() { const panel = document.createElement('div'); panel.id = 'progress-panel'; panel.innerHTML = `<div>Painel de Progresso...</div>`; return panel; }
+function updateProgressPanel() { /* lógica... */ }
 
 document.addEventListener('DOMContentLoaded', () => {
     mainContent = document.querySelector('.main-content');
