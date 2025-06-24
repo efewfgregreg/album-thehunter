@@ -1,123 +1,76 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#1a202c">
-  <title>Álbum de Caça - theHunter: Call of the Wild</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
-    :root { --bg-color: #1a202c; --surface-color: #2d3748; --primary-color: #48bb78; --border-color: #4a5568; --text-color: #e2e8f0; --text-color-muted: #a0aec0; --font-headings: 'Oswald', sans-serif; --font-body: 'Nunito Sans', sans-serif; }
-    body { font-family: var(--font-body); background-color: var(--bg-color); color: var(--text-color); margin: 0; padding: 20px; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-    h1, h2, h3, h4 { font-family: var(--font-headings); color: #fff; text-transform: uppercase; letter-spacing: 1.2px; }
-    h1 { text-align: center; margin-bottom: 30px; font-size: 2.5rem; }
-    h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 25px; }
-    .tabs { text-align: center; margin-bottom: 30px; }
-    .tab-button { padding: 12px 25px; margin: 0 5px; border: 1px solid transparent; border-bottom: 3px solid transparent; background: var(--surface-color); color: var(--text-color-muted); border-radius: 8px 8px 0 0; cursor: pointer; font-size: 16px; font-weight: 700; transition: all 0.3s ease; font-family: var(--font-headings); }
-    .tab-button:hover { background: #3a475a; color: #fff; }
-    .tab-button.active { background: var(--surface-color); color: var(--primary-color); border-bottom: 3px solid var(--primary-color); }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; animation: fadeIn 0.5s ease; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .album { display: flex; flex-direction: column; gap: 15px; }
-    .card { position: relative; background-color: var(--surface-color); border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); cursor: pointer; display: flex; align-items: center; gap: 15px; padding: 15px; transition: transform 0.3s ease, box-shadow 0.3s ease; flex-wrap: wrap; border-left: 5px solid transparent; }
-    .card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.3); }
-    .card img { width: 60px; height: 60px; object-fit: cover; border-radius: 50%; border: 2px solid var(--border-color); }
-    .info { font-size: 1.1rem; color: var(--text-color); font-weight: 700; flex: 1; }
-    .card-unstarted { border-left-color: #e53e3e; }
-    .card-inprogress { border-left-color: #ecc94b; }
-    .card-all-done { border-left-color: var(--primary-color); }
-    .card-all-done .info { color: var(--primary-color); }
-    .details { width: 100%; margin-top: 15px; padding: 20px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px; cursor: default; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-    table th, table td { border: 1px solid var(--border-color); padding: 10px; color: var(--text-color); }
-    table th { background: #3a475a; }
-    input[type="number"], input[type="text"] { background-color: #1a202c; color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px; }
-    input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(72, 187, 120, 0.5); }
-    .check-container { display: flex; align-items: center; gap: 8px; margin-top:10px; }
-    .missing-counter { position: absolute; top: 8px; right: 15px; background-color: rgba(0, 0, 0, 0.7); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; display: none; }
-    .fur-table { display: flex; gap: 10px; width: 100%; }
-    .fur-column { flex: 1; border: 1px solid var(--border-color); border-radius: 4px; overflow: hidden; }
-    .fur-column h4 { text-align: center; margin: 0; padding: 8px; background-color: #3a475a; border-bottom: 1px solid var(--border-color); }
-    .fur-list { padding: 5px; min-height: 50px; }
-    .fur-item { padding: 8px; margin: 5px; border: 1px solid var(--border-color); border-radius: 4px; background-color: var(--surface-color); cursor: pointer; text-align: center; transition: background-color 0.3s; color: var(--text-color); }
-    .fur-item.completed { background-color: var(--primary-color); color: #1a202c; text-decoration: line-through; }
-    .great-one-fur-row, .super-rare-combo-row { display: flex; gap: 15px; align-items: center; padding: 10px; border-bottom: 1px solid var(--border-color); border-radius: 4px; transition: background-color 0.3s; cursor: pointer; flex-wrap: wrap; }
-    .great-one-fur-row.completed, .super-rare-combo-row.completed { background-color: rgba(72, 187, 120, 0.2); }
-    .great-one-fur-row:last-child, .super-rare-combo-row:last-child { border-bottom: none; }
-    .great-one-fur-photo { flex-basis: 100px; flex-shrink: 0; }
-    .great-one-fur-photo img { width: 100%; height: auto; border-radius: 4px; border: 1px solid var(--border-color); }
-    .great-one-fur-content, .super-rare-combo-content { flex-grow: 1; }
-    .great-one-fur-content table input { width: 70px; text-align: center; }
-    .image-link-container { display: none; margin-top: 10px; }
-    .image-link-container.visible { display: block; }
-    .image-link-container input { width: 95%; padding: 6px; }
-    #progress-panel { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-    .progress-widget { background: var(--surface-color); border-radius: 8px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border-top: 4px solid var(--primary-color); }
-    .progress-widget h3 { margin-top: 0; }
-    .progress-widget progress { width: 100%; height: 8px; border-radius: 4px; overflow: hidden; border: none; }
-    .progress-widget progress::-webkit-progress-bar { background-color: #1a202c; }
-    .progress-widget progress::-webkit-progress-value { background: var(--primary-color); }
-    .progress-stats { margin-top: 10px; display: flex; justify-content: space-between; font-size: 14px; color: var(--text-color-muted); }
-    .progress-stats .missing { font-weight: bold; color: #e53e3e; }
-    .filter-input { width: calc(100% - 22px); padding: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); background-color: #1a202c; color: var(--text-color); border-radius: 6px; font-size: 16px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a202c">
+    <title>Álbum de Caça - theHunter: Call of the Wild</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
+        :root {
+            --bg-color: #1a202c; --surface-color: #2d3748; --primary-color: #48bb78; --border-color: #4a5568; --text-color: #e2e8f0; --text-color-muted: #a0aec0; --font-headings: 'Oswald', sans-serif; --font-body: 'Nunito Sans', sans-serif;
+        }
+        * { box-sizing: border-box; }
+        body { font-family: var(--font-body); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 280px; background-color: #111827; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid var(--border-color); flex-shrink: 0; }
+        .sidebar h1 { font-size: 1.5rem; text-align: center; margin: 0 0 30px 0; letter-spacing: 1px; }
+        .sidebar .nav-button { width: 100%; padding: 15px 20px; margin-bottom: 10px; border: 1px solid var(--border-color); background: var(--surface-color); color: var(--text-color-muted); border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; transition: all 0.3s ease; font-family: var(--font-headings); text-align: left; text-transform: uppercase; }
+        .sidebar .nav-button:hover { background-color: #3a475a; color: #fff; }
+        .sidebar .nav-button.active { background-color: var(--primary-color); color: #111827; border-color: var(--primary-color); }
+        .main-content { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
+        .tab-content h2, .detail-view h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 25px; }
+        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+        .animal-card { background-color: var(--surface-color); border: 2px solid transparent; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .animal-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; transition: filter 0.3s ease; }
+        .animal-card .info { font-family: var(--font-headings); font-size: 1rem; color: var(--text-color); font-weight: 700; }
+        .animal-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.3); border-color: var(--primary-color); }
+        .animal-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
+        .animal-card.incomplete .info { color: var(--text-color-muted); }
+        .animal-card.inprogress img { filter: grayscale(50%); }
+        .animal-card.completed { border-color: var(--primary-color); box-shadow: 0 0 15px rgba(72, 187, 120, 0.5); }
+        .filter-input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); background-color: #1a202c; color: var(--text-color); border-radius: 6px; font-size: 16px; }
+        .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); margin-bottom: 20px; transition: all 0.2s ease; display: inline-block; width: auto; }
+        .back-button:hover { background: var(--primary-color); color: #111827; }
+        .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        .fur-card { background: var(--surface-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; position: relative;}
+        .fur-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; transition: filter 0.3s ease; }
+        .fur-card .fur-name { font-weight: bold; }
+        .fur-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
+        .fur-card.incomplete .fur-name { color: var(--text-color-muted); }
+        .fur-card.completed { border-color: var(--primary-color); }
+        .fur-card:hover { transform: scale(1.05); }
+        .trophy-count { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+        .grind-stats, .trophy-list { background-color: var(--surface-color); padding: 20px; border-radius: 8px; margin-bottom: 20px; }
+        .grind-stats h4, .trophy-list h4 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .grind-stats table { width: 100%; }
+        .grind-stats td { padding: 5px; }
+        .grind-stats input { width: 100px; text-align: center; }
+        .trophy-list ul { list-style: none; padding: 0; }
+        .trophy-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color); }
+        .trophy-list li:last-child { border-bottom: none; }
+        .add-trophy-btn, .remove-trophy-btn { background: var(--primary-color); color: #111827; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .remove-trophy-btn { background-color: #c53030; color: white; }
+    </style>
 </head>
 <body>
-<div class="container">
-  <h1>Álbum de Caça - theHunter: Call of the Wild</h1>
-  <div class="tabs">
-    <button class="tab-button active" data-target="pelagens">Pelagens Raras</button>
-    <button class="tab-button" data-target="diamantes">Diamantes</button>
-    <button class="tab-button" data-target="greats">Greats One</button>
-    <button class="tab-button" data-target="super_raros">Super Raros</button>
-    <button class="tab-button" data-target="progresso">Progresso</button>
-  </div>
-  <div class="tab-content active" id="pelagens">
-    <h2>Pelagens Raras</h2>
-    <input type="text" class="filter-input" data-target="album-pelagens" placeholder="Buscar animal...">
-    <div class="album" id="album-pelagens"></div>
-  </div>
-  <div class="tab-content" id="diamantes">
-    <h2>Diamantes</h2>
-    <input type="text" class="filter-input" data-target="album-diamantes" placeholder="Buscar animal...">
-    <div class="album" id="album-diamantes"></div>
-  </div>
-  <div class="tab-content" id="greats">
-    <h2>Greats One</h2>
-    <input type="text" class="filter-input" data-target="album-greats" placeholder="Buscar animal...">
-    <div class="album" id="album-greats"></div>
-  </div>
-  <div class="tab-content" id="super_raros">
-    <h2>Super Raros (Diamante + Pelagem Rara)</h2>
-    <input type="text" class="filter-input" data-target="album-super_raros" placeholder="Buscar animal...">
-    <div class="album" id="album-super_raros"></div>
-  </div>
-  <div class="tab-content" id="progresso">
-    <h2>Painel de Progresso</h2>
-    <div id="progress-panel">
-        <div class="progress-widget"><h3>Pelagens Raras</h3><progress id="progress-pelagens" value="0" max="100"></progress><div class="progress-stats"><span id="stats-pelagens">Obtidas: 0 / 0</span><span class="missing" id="missing-pelagens">Faltam: 0</span></div></div>
-        <div class="progress-widget"><h3>Diamantes</h3><progress id="progress-diamantes" value="0" max="100"></progress><div class="progress-stats"><span id="stats-diamantes">Obtidos: 0 / 0</span><span class="missing" id="missing-diamantes">Faltam: 0</span></div></div>
-        <div class="progress-widget"><h3>Great Ones</h3><progress id="progress-greats" value="0" max="100"></progress><div class="progress-stats"><span id="stats-greats">Obtidos: 0 / 0</span><span class="missing" id="missing-greats">Faltam: 0</span></div></div>
-        <div class="progress-widget"><h3>Super Raros</h3><progress id="progress-super_raros" value="0" max="100"></progress><div class="progress-stats"><span id="stats-super_raros">Obtidos: 0 / 0</span><span class="missing" id="missing-super_raros">Faltam: 0</span></div></div>
+    <div class="sidebar">
+        <h1>Álbum de Caça</h1>
+        <button class="nav-button active" data-target="pelagens">Pelagens Raras</button>
+        <button class="nav-button" data-target="diamantes">Diamantes</button>
+        <button class="nav-button" data-target="greats">Greats One</button>
+        <button class="nav-button" data-target="super_raros">Super Raros</button>
+        <button class="nav-button" data-target="progresso">Progresso</button>
     </div>
-  </div>
-</div>
-
-<script src="script.js" defer></script>
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('./sw.js').then(registration => {
-        console.log('ServiceWorker registrado com sucesso: ', registration.scope);
-      }).catch(error => {
-        console.log('Falha no registro do ServiceWorker: ', error);
-      });
-    });
-  }
-</script>
-
+    <div class="main-content">
+        </div>
+    <script src="script.js" defer></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js');
+        });
+      }
+    </script>
 </body>
 </html>
