@@ -41,12 +41,12 @@ let mainContent;
 
 function checkAndSetGreatOneCompletion(slug, currentData) {
     const requiredFurs = greatsFursData[slug];
-    if (!requiredFurs || !currentData) return; 
+    if (!requiredFurs || !currentData) return;
     currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
 }
 
 function renderMainView(tabKey) {
-    mainContent.innerHTML = ''; 
+    mainContent.innerHTML = '';
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
     const header = document.createElement('h2');
@@ -117,7 +117,6 @@ function renderGreatsDetailView(container, slug, tabKey) {
     container.appendChild(trophyListContainer);
     const fursInfo = greatsFursData[slug];
     if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
-
     const refreshFurGrid = () => {
         furGrid.innerHTML = '';
         const animalData = savedData[tabKey]?.[slug] || {};
@@ -134,10 +133,13 @@ function renderGreatsDetailView(container, slug, tabKey) {
                 <div class="info">${fur}</div>
                 <div class="trophy-count">x${trophies.length}</div>
             `;
-            furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, refreshFurGrid));
+            furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, onListChangeCallback)); // Pass the callback
             furGrid.appendChild(furCard);
         });
+        checkAndSetGreatOneCompletion(slug, animalData);
+        saveData(savedData);
     };
+    const onListChangeCallback = refreshFurGrid; // Define the callback
     refreshFurGrid();
 }
 
@@ -241,15 +243,17 @@ function showAddTrophyForm(fur, slug, tabKey, onListChangeCallback) {
 }
 
 function updateCardAppearance(card, slug, tabKey) {
+    if (!card) return;
     card.classList.remove('completed', 'inprogress', 'incomplete');
     const animalData = savedData[tabKey]?.[slug] || {};
     let isComplete = false;
     if (tabKey === 'greats') {
-        checkAndSetGreatOneCompletion(slug, animalData);
+        checkAndSetGreatOneCompletion(slug, animalData); 
         if (animalData.completo) {
             isComplete = true;
         }
     }
+    // Adicionar outras lógicas aqui
     if (isComplete) {
         card.classList.add('completed');
     } else {
@@ -257,39 +261,14 @@ function updateCardAppearance(card, slug, tabKey) {
     }
 }
 
-function createProgressPanel() {
-    const panel = document.createElement('div');
-    panel.id = 'progress-panel';
-    panel.innerHTML = `
-        <div class="progress-widget"><h3>Pelagens Raras</h3><progress id="progress-pelagens" value="0" max="100"></progress><div class="progress-stats"><span id="stats-pelagens">Obtidas: 0 / 0</span><span class="missing" id="missing-pelagens">Faltam: 0</span></div></div>
-        <div class="progress-widget"><h3>Diamantes</h3><progress id="progress-diamantes" value="0" max="100"></progress><div class="progress-stats"><span id="stats-diamantes">Obtidos: 0 / 0</span><span class="missing" id="missing-diamantes">Faltam: 0</span></div></div>
-        <div class="progress-widget"><h3>Great Ones</h3><progress id="progress-greats" value="0" max="100"></progress><div class="progress-stats"><span id="stats-greats">Obtidos: 0 / 0</span><span class="missing" id="missing-greats">Faltam: 0</span></div></div>
-        <div class="progress-widget"><h3>Super Raros</h3><progress id="progress-super_raros" value="0" max="100"></progress><div class="progress-stats"><span id="stats-super_raros">Obtidos: 0 / 0</span><span class="missing" id="missing-super_raros">Faltam: 0</span></div></div>
-    `;
-    return panel;
-}
-function updateProgressPanel() {
-    if (!document.getElementById('progress-panel')) return;
-    const data = savedData;
-    const totalGreats = categorias.greats.items.length;
-    const obtidosGreats = Object.values(data.greats || {}).filter(animal => animal.completo).length;
-    const progressGreats = document.getElementById('progress-greats');
-    if(progressGreats){
-        progressGreats.value = obtidosGreats;
-        progressGreats.max = totalGreats;
-        document.getElementById('stats-greats').textContent = `Obtidos: ${obtidosGreats} / ${totalGreats}`;
-        document.getElementById('missing-greats').textContent = `Faltam: ${totalGreats - obtidosGreats}`;
-    }
-    // ... lógicas de progresso para outras abas
-}
+function createProgressPanel() { /* ... */ return document.createElement('div'); }
+function updateProgressPanel() { /* ... */ }
 
 document.addEventListener('DOMContentLoaded', () => {
     mainContent = document.querySelector('.main-content');
     const navButtons = document.querySelectorAll('.nav-button');
     function setActiveTab(tabKey) {
-        navButtons.forEach(b => {
-            b.classList.toggle('active', b.dataset.target === tabKey);
-        });
+        navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === tabKey));
         renderMainView(tabKey);
     }
     navButtons.forEach(btn => {
