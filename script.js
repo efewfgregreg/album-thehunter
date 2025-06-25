@@ -1,4 +1,5 @@
 const saveDataKey = 'theHunterAlbumData';
+
 function loadData() {
     try {
         const data = localStorage.getItem(saveDataKey);
@@ -8,6 +9,7 @@ function loadData() {
         return {};
     }
 }
+
 function saveData(data) {
     try {
         localStorage.setItem(saveDataKey, JSON.stringify(data));
@@ -18,6 +20,7 @@ function saveData(data) {
         console.error("Erro ao salvar dados no localStorage", e);
     }
 }
+
 const savedData = loadData();
 const femaleOnlyDiamondSpecies = ["lebre_nuca_dourada", "lebre_europeia", "codorniz_da_virginia", "castor_norte_americano"];
 const maleAndFemaleDiamondSpecies = ["lebre_peluda", "raposa_cinzenta", "lebre_da_eurasia", "coelho_da_florida", "oryx_do_cabo"];
@@ -27,24 +30,24 @@ const items = ["Alce","Antilocapra","Antílope Negro","Bantengue","Bisão da Flo
 
 function slugify(text) { return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, ''); }
 
-const categorias = { 
-    pelagens: { title: 'Pelagens Raras', items: items }, 
-    diamantes: { title: 'Diamantes', items: items }, 
-    greats: { title: 'Greats One', items: ["Alce","Urso Negro","Veado-Mula","Veado Vermelho","Veado-de-cauda-branca","Raposa","Faisão","Gamo","Tahr"] }, 
-    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug) }, 
-    progresso: { title: 'Painel de Progresso' } 
+const categorias = {
+    pelagens: { title: 'Pelagens Raras', items: items },
+    diamantes: { title: 'Diamantes', items: items },
+    greats: { title: 'Greats One', items: ["Alce","Urso Negro","Veado-Mula","Veado Vermelho","Veado-de-cauda-branca","Raposa","Faisão","Gamo","Tahr"] },
+    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug) },
+    progresso: { title: 'Painel de Progresso' }
 };
 
 let mainContent;
 
 function checkAndSetGreatOneCompletion(slug, currentData) {
     const requiredFurs = greatsFursData[slug];
-    if (!requiredFurs || !currentData) return; 
+    if (!requiredFurs || !currentData) return;
     currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
 }
 
 function renderMainView(tabKey) {
-    mainContent.innerHTML = ''; 
+    mainContent.innerHTML = '';
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
     const header = document.createElement('h2');
@@ -87,6 +90,41 @@ function createAnimalCard(name, tabKey) {
     return card;
 }
 
+function renderRareFursDetailView(container, name, slug) {
+    const furGrid = document.createElement('div');
+    furGrid.className = 'fur-grid';
+    container.appendChild(furGrid);
+
+    const speciesFurs = rareFursData[slug];
+    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
+        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
+        return;
+    }
+
+    // Combina pelagens de macho e fêmea, remove duplicatas e ordena alfabeticamente
+    const allFurs = [...(speciesFurs.macho || []), ...(speciesFurs.femea || [])];
+    const uniqueFurs = [...new Set(allFurs)].sort((a, b) => a.localeCompare(b));
+
+    uniqueFurs.forEach(fur => {
+        const furCard = document.createElement('div');
+        // Por enquanto, o card não terá funcionalidade de clique, apenas exibição.
+        furCard.className = 'fur-card incomplete';
+
+        const furSlug = slugify(fur);
+        // Tenta carregar a imagem específica da pelagem
+        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
+        // Se falhar, usa a imagem genérica do animal
+        const genericImagePath = `animais/${slug}.png`;
+
+        furCard.innerHTML = `
+            <img src="${specificImagePath}" alt="${fur}" onerror="this.onerror=null; this.src='${genericImagePath}';">
+            <div class="info">${fur}</div>
+        `;
+        
+        furGrid.appendChild(furCard);
+    });
+}
+
 function showDetailView(name, tabKey) {
     mainContent.innerHTML = '';
     const slug = slugify(name);
@@ -95,6 +133,7 @@ function showDetailView(name, tabKey) {
     backButton.innerHTML = '&larr; Voltar para a Lista';
     backButton.addEventListener('click', () => renderMainView(tabKey));
     mainContent.appendChild(backButton);
+
     const detailHeader = document.createElement('h2');
     detailHeader.textContent = `${name} - ${categorias[tabKey].title}`;
     mainContent.appendChild(detailHeader);
@@ -104,6 +143,8 @@ function showDetailView(name, tabKey) {
     
     if (tabKey === 'greats') {
         renderGreatsDetailView(detailContent, name, slug, tabKey);
+    } else if (tabKey === 'pelagens') { // <-- AQUI ESTÁ A MUDANÇA
+        renderRareFursDetailView(detailContent, name, slug);
     } else {
         detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
     }
@@ -163,7 +204,7 @@ function renderTrophyList(fur, slug, tabKey, name, onListChangeCallback) {
             dateSpan.textContent = `Data do Abate: ${trophy.date}`;
             const detailsDiv = document.createElement('div');
             detailsDiv.className = 'trophy-item-details';
-            detailsDiv.style.display = 'none'; 
+            detailsDiv.style.display = 'none';
             detailsDiv.innerHTML = `
                 <p><strong>Abates na Grind:</strong> ${trophy.abates || 'N/A'}</p>
                 <p><strong>Diamantes na Grind:</strong> ${trophy.diamantes || 'N/A'}</p>
@@ -178,7 +219,7 @@ function renderTrophyList(fur, slug, tabKey, name, onListChangeCallback) {
                 checkAndSetGreatOneCompletion(slug, savedData[tabKey][slug]);
                 saveData(savedData);
                 onListChangeCallback();
-                renderTrophyList(fur, slug, tabKey, name, onListChangeCallback); 
+                renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
             };
             const contentWrapper = document.createElement('div');
             contentWrapper.style.flexGrow = '1';
@@ -249,7 +290,7 @@ function updateCardAppearance(card, slug, tabKey) {
     const animalData = savedData[tabKey]?.[slug] || {};
     let isComplete = false;
     if (tabKey === 'greats') {
-        checkAndSetGreatOneCompletion(slug, animalData); 
+        checkAndSetGreatOneCompletion(slug, animalData);
         if (animalData.completo) {
             isComplete = true;
         }
