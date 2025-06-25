@@ -137,7 +137,6 @@ const diamondFursData = {
     "zarro-castanho": { macho: ["Pardo Escuro", "Pardo Avermelhado"], femea: [] }
 };
 
-
 function slugify(text) {
     return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
 }
@@ -260,19 +259,18 @@ function renderSuperRareDetailView(container, name, slug) {
     const genderedFurs = [];
     if (speciesFurs.macho) {
         speciesFurs.macho.forEach(fur => {
-            genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur });
+            genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur });
         });
     }
     if (speciesFurs.femea) {
         speciesFurs.femea.forEach(fur => {
-            genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur });
+            genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur });
         });
     }
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
     genderedFurs.forEach(furInfo => {
         const furCard = document.createElement('div');
-        // A lógica de conclusão de Super Raros usa os dados de Pelagens Raras
-        const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
+        const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true;
         furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furInfo.originalName);
         const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
@@ -280,14 +278,13 @@ function renderSuperRareDetailView(container, name, slug) {
         furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
         
         furCard.addEventListener('click', () => {
-            if (!savedData.pelagens) savedData.pelagens = {};
-            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
-            const currentState = savedData.pelagens[slug][furInfo.displayName] || false;
-            savedData.pelagens[slug][furInfo.displayName] = !currentState;
+            if (!savedData.super_raros) savedData.super_raros = {};
+            if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
+            const currentState = savedData.super_raros[slug][furInfo.displayName] || false;
+            savedData.super_raros[slug][furInfo.displayName] = !currentState;
             saveData(savedData);
             furCard.classList.toggle('completed', !currentState);
             furCard.classList.toggle('incomplete', currentState);
-            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'pelagens');
             updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'super_raros');
         });
         
@@ -590,7 +587,8 @@ function updateCardAppearance(card, slug, tabKey) {
                 speciesRareFurs.femea.forEach(fur => requiredOptions.push(`Fêmea ${fur}`));
             }
             if(requiredOptions.length > 0) {
-                const animalData = savedData['pelagens']?.[slug] || {};
+                const saveDataKeyForTab = tabKey === 'pelagens' ? 'pelagens' : 'super_raros';
+                const animalData = savedData[saveDataKeyForTab]?.[slug] || {};
                 const completedOptions = requiredOptions.filter(option => animalData[option] === true);
                 if (completedOptions.length === requiredOptions.length) {
                     status = 'completed';
@@ -617,6 +615,13 @@ function createProgressPanel() {
             </div>
         </div>
         <div class="progress-section">
+            <h3>Progresso de Super Raros</h3>
+            <div id="super-rares-progress-label" class="progress-label">Calculando...</div>
+            <div class="progress-bar-container">
+                <div id="super-rares-progress-bar" class="progress-bar-fill"></div>
+            </div>
+        </div>
+        <div class="progress-section">
             <h3>Progresso de Diamantes</h3>
             <div id="diamond-progress-label" class="progress-label">Calculando...</div>
             <div class="progress-bar-container">
@@ -637,21 +642,15 @@ function createProgressPanel() {
 function updateProgressPanel() {
     // --- Cálculo Pelagens Raras ---
     let totalRares = 0;
-    const uniqueRareFurs = new Set();
     for (const slug in rareFursData) {
-        rareFursData[slug].macho.forEach(fur => uniqueRareFurs.add(`Macho ${fur}`));
-        rareFursData[slug].femea.forEach(fur => uniqueRareFurs.add(`Fêmea ${fur}`));
+        const uniqueFurs = new Set([...rareFursData[slug].macho, ...rareFursData[slug].femea]);
+        totalRares += uniqueFurs.size;
     }
-    totalRares = uniqueRareFurs.size;
     
     let collectedRares = 0;
     if (savedData.pelagens) {
         for (const slug in savedData.pelagens) {
-            for (const trophy in savedData.pelagens[slug]) {
-                if (savedData.pelagens[slug][trophy] === true) {
-                    collectedRares++;
-                }
-            }
+            collectedRares += Object.keys(savedData.pelagens[slug]).filter(key => savedData.pelagens[slug][key]).length;
         }
     }
 
@@ -662,6 +661,24 @@ function updateProgressPanel() {
     if(rareBar) {
         rareBar.style.width = `${rarePercentage}%`;
         rareBar.textContent = `${Math.round(rarePercentage)}%`;
+    }
+
+    // --- Cálculo Super Raros ---
+    const totalSuperRares = totalRares; // A base de colecionáveis é a mesma
+    let collectedSuperRares = 0;
+    if (savedData.super_raros) {
+        for (const slug in savedData.super_raros) {
+            collectedSuperRares += Object.keys(savedData.super_raros[slug]).filter(key => savedData.super_raros[slug][key]).length;
+        }
+    }
+
+    const superRarePercentage = totalSuperRares > 0 ? (collectedSuperRares / totalSuperRares) * 100 : 0;
+    const superRareLabel = document.getElementById('super-rares-progress-label');
+    const superRareBar = document.getElementById('super-rares-progress-bar');
+    if(superRareLabel) superRareLabel.textContent = `${collectedSuperRares} / ${totalSuperRares}`;
+    if(superRareBar) {
+        superRareBar.style.width = `${superRarePercentage}%`;
+        superRareBar.textContent = `${Math.round(superRarePercentage)}%`;
     }
 
     // --- Cálculo Diamantes ---
@@ -726,6 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setActiveTab(e.currentTarget.dataset.target);
         });
     });
+    
     const initialTab = 'progresso'; 
     navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === initialTab));
     renderMainView(initialTab);
