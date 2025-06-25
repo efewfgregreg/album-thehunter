@@ -179,13 +179,10 @@ function renderDiamondsDetailView(container, name, slug) {
         const imagePath = `animais/${slug}.png`;
         card.innerHTML = `
             <img src="${imagePath}" alt="${name}" onerror="this.onerror=null; this.src='animais/placeholder.png';">
-            <div class="info-and-score">
-                <span class="trophy-name">${option}</span>
-                <div class="trophy-score-controls">
-                    <input type="text" class="trophy-score-input" placeholder="---" value="${score}">
-                    <img src="animais/icon_diamante.png" class="trophy-score-icon" alt="Diamante">
-                    <button class="trophy-score-save-btn">Salvar</button>
-                </div>
+            <div class="info">${option}</div>
+            <div class="trophy-score-container">
+                <input type="text" class="trophy-score-input" placeholder="Pontos" value="${score}">
+                <button class="trophy-score-save-btn">Salvar</button>
             </div>
         `;
         grid.appendChild(card);
