@@ -101,24 +101,37 @@ function renderRareFursDetailView(container, name, slug) {
         return;
     }
 
-    // Combina pelagens de macho e fêmea, remove duplicatas e ordena alfabeticamente
-    const allFurs = [...(speciesFurs.macho || []), ...(speciesFurs.femea || [])];
-    const uniqueFurs = [...new Set(allFurs)].sort((a, b) => a.localeCompare(b));
+    const genderedFurs = [];
 
-    uniqueFurs.forEach(fur => {
+    // Adiciona pelagens de macho com o prefixo "Macho"
+    if (speciesFurs.macho) {
+        speciesFurs.macho.forEach(fur => {
+            genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur });
+        });
+    }
+
+    // Adiciona pelagens de fêmea com o prefixo "Fêmea"
+    if (speciesFurs.femea) {
+        speciesFurs.femea.forEach(fur => {
+            genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur });
+        });
+    }
+
+    // Ordena a lista final pelo nome de exibição
+    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    genderedFurs.forEach(furInfo => {
         const furCard = document.createElement('div');
-        // Por enquanto, o card não terá funcionalidade de clique, apenas exibição.
         furCard.className = 'fur-card incomplete';
 
-        const furSlug = slugify(fur);
-        // Tenta carregar a imagem específica da pelagem
+        // Usa o nome original da pelagem para o slug e o caminho da imagem
+        const furSlug = slugify(furInfo.originalName);
         const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
-        // Se falhar, usa a imagem genérica do animal
         const genericImagePath = `animais/${slug}.png`;
 
         furCard.innerHTML = `
-            <img src="${specificImagePath}" alt="${fur}" onerror="this.onerror=null; this.src='${genericImagePath}';">
-            <div class="info">${fur}</div>
+            <img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';">
+            <div class="info">${furInfo.displayName}</div>
         `;
         
         furGrid.appendChild(furCard);
@@ -143,7 +156,7 @@ function showDetailView(name, tabKey) {
     
     if (tabKey === 'greats') {
         renderGreatsDetailView(detailContent, name, slug, tabKey);
-    } else if (tabKey === 'pelagens') { // <-- AQUI ESTÁ A MUDANÇA
+    } else if (tabKey === 'pelagens') {
         renderRareFursDetailView(detailContent, name, slug);
     } else {
         detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
