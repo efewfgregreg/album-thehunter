@@ -37,23 +37,31 @@
         .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); margin-bottom: 20px; transition: all 0.2s ease; display: inline-block; width: auto; }
         .back-button:hover { background: var(--primary-color); color: #111827; }
         .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .fur-card { position: relative; background: var(--surface-color); border-radius: 8px; padding: 10px; padding-bottom: 40px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .fur-card { position: relative; background: var(--surface-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; }
         .fur-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; transition: filter 0.3s ease; }
-        .fur-card .info { font-family: var(--font-headings); font-size: 1rem; font-weight: 700; }
+        .fur-card .info { font-family: var(--font-headings); font-size: 1rem; font-weight: 700; flex-grow: 1; }
         .fur-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
         .fur-card.incomplete .info { color: var(--text-color-muted); }
         .fur-card.completed { border-color: var(--primary-color); }
         .fur-card:hover { transform: scale(1.05); }
-        .trophy-count { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
-        .trophy-score-container{position:absolute;bottom:5px;right:5px;display:flex;align-items:center;gap:5px}
-        .trophy-score-input{width:70px;padding:4px 6px;border:1px solid var(--border-color);background-color:var(--bg-color);color:var(--text-color);border-radius:4px;font-size:14px;font-weight:bold;text-align:center}
+        .info-and-score{display:flex;justify-content:space-between;align-items:center;width:100%;margin-top:auto;padding-top:10px}
+        .trophy-name{font-size:1rem;text-align:left}
+        .trophy-score-controls{display:flex;align-items:center;gap:4px}
+        .trophy-score-input{width:55px;padding:4px;border:1px solid var(--border-color);background-color:var(--bg-color);color:var(--text-color);border-radius:4px;font-size:14px;font-weight:bold;text-align:center}
         .trophy-score-save-btn{padding:4px 8px;font-size:12px;background:var(--primary-color);color:#111827;border:none;border-radius:4px;cursor:pointer}
+        /* ESTILOS PARA O PAINEL DE PROGRESSO */
+        .progress-panel { display: flex; flex-direction: column; gap: 30px; max-width: 800px; margin: 20px auto; }
+        .progress-section { background-color: var(--surface-color); padding: 20px; border-radius: 8px; border-left: 5px solid var(--primary-color); }
+        .progress-section h3 { margin-top: 0; font-family: var(--font-headings); }
+        .progress-label { font-size: 1.1rem; margin-bottom: 10px; color: var(--text-color-muted); }
+        .progress-bar-container { width: 100%; background-color: var(--bg-color); border-radius: 8px; height: 25px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; width: 0%; background-color: var(--primary-color); border-radius: 8px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: #111827; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h1>Álbum de Caça</h1>
-        <button class="nav-button active" data-target="pelagens">Pelagens Raras</button>
+        <button class="nav-button" data-target="pelagens">Pelagens Raras</button>
         <button class="nav-button" data-target="diamantes">Diamantes</button>
         <button class="nav-button" data-target="greats">Greats One</button>
         <button class="nav-button" data-target="super_raros">Super Raros</button>
