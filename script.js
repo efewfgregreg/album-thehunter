@@ -94,41 +94,33 @@ function renderRareFursDetailView(container, name, slug) {
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
-
     const speciesFurs = rareFursData[slug];
     if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
         furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
         return;
     }
-
     const genderedFurs = [];
-
     if (speciesFurs.macho) {
         speciesFurs.macho.forEach(fur => {
             genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur });
         });
     }
-
     if (speciesFurs.femea) {
         speciesFurs.femea.forEach(fur => {
             genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur });
         });
     }
-
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
-
     genderedFurs.forEach(furInfo => {
         const furCard = document.createElement('div');
         furCard.className = 'fur-card incomplete';
         const furSlug = slugify(furInfo.originalName);
         const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericImagePath = `animais/${slug}.png`;
-
         furCard.innerHTML = `
             <img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';">
             <div class="info">${furInfo.displayName}</div>
         `;
-        
         furGrid.appendChild(furCard);
     });
 }
@@ -137,41 +129,33 @@ function renderSuperRareDetailView(container, name, slug) {
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
-
     const speciesFurs = rareFursData[slug];
     if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
         furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
         return;
     }
-
     const genderedFurs = [];
-
     if (speciesFurs.macho) {
         speciesFurs.macho.forEach(fur => {
             genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur });
         });
     }
-
     if (speciesFurs.femea) {
         speciesFurs.femea.forEach(fur => {
             genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur });
         });
     }
-
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
-
     genderedFurs.forEach(furInfo => {
         const furCard = document.createElement('div');
         furCard.className = 'fur-card incomplete';
         const furSlug = slugify(furInfo.originalName);
         const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericImagePath = `animais/${slug}.png`;
-
         furCard.innerHTML = `
             <img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';">
             <div class="info">${furInfo.displayName}</div>
         `;
-        
         furGrid.appendChild(furCard);
     });
 }
@@ -180,52 +164,36 @@ function renderDiamondsDetailView(container, name, slug) {
     const grid = document.createElement('div');
     grid.className = 'fur-grid'; // Reutilizando o estilo dos cards
     container.appendChild(grid);
-
     let diamondOptions = [];
-    // Define quais troféus de diamante são possíveis para a espécie
     if (femaleOnlyDiamondSpecies.includes(slug)) {
         diamondOptions.push('Fêmea Diamante');
     } else if (maleAndFemaleDiamondSpecies.includes(slug)) {
         diamondOptions.push('Macho Diamante');
         diamondOptions.push('Fêmea Diamante');
     } else {
-        // O padrão para todas as outras espécies é apenas Macho
         diamondOptions.push('Macho Diamante');
     }
-
     const animalData = savedData['diamantes']?.[slug] || {};
-
     diamondOptions.forEach(option => {
         const card = document.createElement('div');
         const isCompleted = animalData[option] === true;
         card.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        
         const imagePath = `animais/${slug}.png`;
-
         card.innerHTML = `
             <img src="${imagePath}" alt="${name}" onerror="this.onerror=null; this.src='animais/placeholder.png';">
             <div class="info">${option}</div>
         `;
-
-        // Adiciona a funcionalidade de clique para salvar o progresso
         card.addEventListener('click', () => {
             const currentState = savedData['diamantes']?.[slug]?.[option] || false;
-            
             if (!savedData['diamantes']) savedData['diamantes'] = {};
             if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-            
             savedData['diamantes'][slug][option] = !currentState;
             saveData(savedData);
-
-            // Atualiza a aparência do card clicado
             card.classList.toggle('completed', !currentState);
             card.classList.toggle('incomplete', currentState);
-            
-            // Tenta encontrar e atualizar o card correspondente na visão principal
             const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
             updateCardAppearance(mainAnimalCard, slug, 'diamantes');
         });
-
         grid.appendChild(card);
     });
 }
@@ -238,14 +206,11 @@ function showDetailView(name, tabKey) {
     backButton.innerHTML = '&larr; Voltar para a Lista';
     backButton.addEventListener('click', () => renderMainView(tabKey));
     mainContent.appendChild(backButton);
-
     const detailHeader = document.createElement('h2');
     detailHeader.textContent = `${name} - ${categorias[tabKey].title}`;
     mainContent.appendChild(detailHeader);
-    
     const detailContent = document.createElement('div');
     mainContent.appendChild(detailContent);
-    
     if (tabKey === 'greats') {
         renderGreatsDetailView(detailContent, name, slug, tabKey);
     } else if (tabKey === 'pelagens') {
@@ -268,7 +233,6 @@ function renderGreatsDetailView(container, name, slug, tabKey) {
     container.appendChild(trophyListContainer);
     const fursInfo = greatsFursData[slug];
     if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
-
     const refreshFurGrid = () => {
         furGrid.innerHTML = '';
         const animalData = savedData[tabKey]?.[slug] || {};
@@ -396,9 +360,7 @@ function showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback) {
 function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
     card.classList.remove('completed', 'inprogress', 'incomplete');
-    
-    let status = 'incomplete'; // Status padrão
-
+    let status = 'incomplete'; 
     if (tabKey === 'greats') {
         const animalData = savedData[tabKey]?.[slug] || {};
         checkAndSetGreatOneCompletion(slug, animalData);
@@ -415,20 +377,17 @@ function updateCardAppearance(card, slug, tabKey) {
         } else {
             requiredOptions.push('Macho Diamante');
         }
-
         const animalData = savedData[tabKey]?.[slug] || {};
         const allCompleted = requiredOptions.every(option => animalData[option] === true);
-        
         if (allCompleted) {
             status = 'completed';
         } else {
             const someCompleted = requiredOptions.some(option => animalData[option] === true);
             if (someCompleted) {
-                status = 'inprogress'; // Fica amarelo se tiver pelo menos 1 de 2
+                status = 'inprogress';
             }
         }
     }
-    
     card.classList.add(status);
 }
 
