@@ -189,8 +189,16 @@ function renderDiamondsDetailView(container, name, slug) {
         grid.appendChild(card);
         const scoreInput = card.querySelector('.trophy-score-input');
         const saveBtn = card.querySelector('.trophy-score-save-btn');
+        
+        saveBtn.style.display = 'none';
+        
+        scoreInput.addEventListener('focus', () => {
+            saveBtn.style.display = 'inline-block';
+        });
+
         scoreInput.addEventListener('click', (e) => e.stopPropagation());
         saveBtn.addEventListener('click', (e) => e.stopPropagation());
+
         saveBtn.addEventListener('click', () => {
             if (!savedData['diamantes']) savedData['diamantes'] = {};
             if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
@@ -203,9 +211,9 @@ function renderDiamondsDetailView(container, name, slug) {
             card.classList.remove('incomplete');
             const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
             updateCardAppearance(mainAnimalCard, slug, 'diamantes');
-            saveBtn.textContent = 'Salvo!';
-            setTimeout(() => { saveBtn.textContent = 'Salvar'; }, 2000);
+            saveBtn.style.display = 'none';
         });
+
         card.addEventListener('click', () => {
             const currentOptionData = savedData['diamantes']?.[slug]?.[option];
             const currentCompleted = currentOptionData === true || (typeof currentOptionData === 'object' && currentOptionData.completed);
