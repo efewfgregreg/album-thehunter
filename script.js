@@ -183,15 +183,16 @@ function renderDiamondsDetailView(container, name, slug) {
             <div class="info">${option}</div>
             <div class="trophy-score-container">
                 <input type="text" class="trophy-score-input" placeholder="Pontos" value="${score}">
+                <img src="animais/icon_diamante.png" class="trophy-score-icon" alt="Diamante">
                 <button class="trophy-score-save-btn">Salvar</button>
             </div>
         `;
         grid.appendChild(card);
         const scoreInput = card.querySelector('.trophy-score-input');
         const saveBtn = card.querySelector('.trophy-score-save-btn');
-        
+
         saveBtn.style.display = 'none';
-        
+
         scoreInput.addEventListener('focus', () => {
             saveBtn.style.display = 'inline-block';
         });
