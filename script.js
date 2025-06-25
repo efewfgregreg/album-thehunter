@@ -137,6 +137,7 @@ const diamondFursData = {
     "zarro-castanho": { macho: ["Pardo Escuro", "Pardo Avermelhado"], femea: [] }
 };
 
+
 function slugify(text) {
     return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
 }
@@ -224,11 +225,25 @@ function renderRareFursDetailView(container, name, slug) {
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
     genderedFurs.forEach(furInfo => {
         const furCard = document.createElement('div');
-        furCard.className = 'fur-card';
+        const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
+        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        
         const furSlug = slugify(furInfo.originalName);
         const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericImagePath = `animais/${slug}.png`;
         furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
+        
+        furCard.addEventListener('click', () => {
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
+            const currentState = savedData.pelagens[slug][furInfo.displayName] || false;
+            savedData.pelagens[slug][furInfo.displayName] = !currentState;
+            saveData(savedData);
+            furCard.classList.toggle('completed', !currentState);
+            furCard.classList.toggle('incomplete', currentState);
+            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'pelagens');
+        });
+
         furGrid.appendChild(furCard);
     });
 }
@@ -245,22 +260,37 @@ function renderSuperRareDetailView(container, name, slug) {
     const genderedFurs = [];
     if (speciesFurs.macho) {
         speciesFurs.macho.forEach(fur => {
-            genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur });
+            genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur });
         });
     }
     if (speciesFurs.femea) {
         speciesFurs.femea.forEach(fur => {
-            genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur });
+            genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur });
         });
     }
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
     genderedFurs.forEach(furInfo => {
         const furCard = document.createElement('div');
-        furCard.className = 'fur-card';
+        // A lógica de conclusão de Super Raros usa os dados de Pelagens Raras
+        const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
+        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furInfo.originalName);
         const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericImagePath = `animais/${slug}.png`;
         furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
+        
+        furCard.addEventListener('click', () => {
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
+            const currentState = savedData.pelagens[slug][furInfo.displayName] || false;
+            savedData.pelagens[slug][furInfo.displayName] = !currentState;
+            saveData(savedData);
+            furCard.classList.toggle('completed', !currentState);
+            furCard.classList.toggle('incomplete', currentState);
+            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'pelagens');
+            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'super_raros');
+        });
+        
         furGrid.appendChild(furCard);
     });
 }
@@ -536,14 +566,32 @@ function updateCardAppearance(card, slug, tabKey) {
             if (speciesDiamondFurs.femea) {
                 speciesDiamondFurs.femea.forEach(fur => requiredOptions.push(`Fêmea ${fur} Diamante`));
             }
-            
             if (requiredOptions.length > 0) {
                 const animalData = savedData[tabKey]?.[slug] || {};
                 const completedOptions = requiredOptions.filter(option => {
                     const optionData = animalData[option];
                     return optionData === true || (typeof optionData === 'object' && optionData.completed);
                 });
-
+                if (completedOptions.length === requiredOptions.length) {
+                    status = 'completed';
+                } else if (completedOptions.length > 0) {
+                    status = 'inprogress';
+                }
+            }
+        }
+    } else if (tabKey === 'pelagens' || tabKey === 'super_raros') {
+        const speciesRareFurs = rareFursData[slug];
+        if (speciesRareFurs) {
+            const requiredOptions = [];
+            if (speciesRareFurs.macho) {
+                speciesRareFurs.macho.forEach(fur => requiredOptions.push(`Macho ${fur}`));
+            }
+            if (speciesRareFurs.femea) {
+                speciesRareFurs.femea.forEach(fur => requiredOptions.push(`Fêmea ${fur}`));
+            }
+            if(requiredOptions.length > 0) {
+                const animalData = savedData['pelagens']?.[slug] || {};
+                const completedOptions = requiredOptions.filter(option => animalData[option] === true);
                 if (completedOptions.length === requiredOptions.length) {
                     status = 'completed';
                 } else if (completedOptions.length > 0) {
@@ -561,6 +609,13 @@ function createProgressPanel() {
     panel.id = 'progress-panel';
 
     panel.innerHTML = `
+        <div class="progress-section">
+            <h3>Progresso de Pelagens Raras</h3>
+            <div id="rares-progress-label" class="progress-label">Calculando...</div>
+            <div class="progress-bar-container">
+                <div id="rares-progress-bar" class="progress-bar-fill"></div>
+            </div>
+        </div>
         <div class="progress-section">
             <h3>Progresso de Diamantes</h3>
             <div id="diamond-progress-label" class="progress-label">Calculando...</div>
@@ -580,6 +635,35 @@ function createProgressPanel() {
 }
 
 function updateProgressPanel() {
+    // --- Cálculo Pelagens Raras ---
+    let totalRares = 0;
+    const uniqueRareFurs = new Set();
+    for (const slug in rareFursData) {
+        rareFursData[slug].macho.forEach(fur => uniqueRareFurs.add(`Macho ${fur}`));
+        rareFursData[slug].femea.forEach(fur => uniqueRareFurs.add(`Fêmea ${fur}`));
+    }
+    totalRares = uniqueRareFurs.size;
+    
+    let collectedRares = 0;
+    if (savedData.pelagens) {
+        for (const slug in savedData.pelagens) {
+            for (const trophy in savedData.pelagens[slug]) {
+                if (savedData.pelagens[slug][trophy] === true) {
+                    collectedRares++;
+                }
+            }
+        }
+    }
+
+    const rarePercentage = totalRares > 0 ? (collectedRares / totalRares) * 100 : 0;
+    const rareLabel = document.getElementById('rares-progress-label');
+    const rareBar = document.getElementById('rares-progress-bar');
+    if(rareLabel) rareLabel.textContent = `${collectedRares} / ${totalRares}`;
+    if(rareBar) {
+        rareBar.style.width = `${rarePercentage}%`;
+        rareBar.textContent = `${Math.round(rarePercentage)}%`;
+    }
+
     // --- Cálculo Diamantes ---
     let totalDiamonds = 0;
     for (const slug in diamondFursData) {
@@ -642,7 +726,6 @@ document.addEventListener('DOMContentLoaded', () => {
             setActiveTab(e.currentTarget.dataset.target);
         });
     });
-    // Inicia na aba de progresso para vermos o resultado
     const initialTab = 'progresso'; 
     navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === initialTab));
     renderMainView(initialTab);
