@@ -1,3 +1,4 @@
+// --- DADOS E FUNÇÕES BÁSICAS ---
 const saveDataKey = 'theHunterAlbumData';
 function loadData() {
     try {
@@ -46,15 +47,15 @@ function checkAndSetGreatOneCompletion(slug, currentData) {
 }
 
 function renderMainView(tabKey) {
-    mainContent.innerHTML = '';
+    mainContent.innerHTML = ''; 
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
     const header = document.createElement('h2');
     header.textContent = currentTab.title;
     mainContent.appendChild(header);
     if (tabKey === 'progresso') {
-        mainContent.appendChild(createProgressPanel());
-        updateProgressPanel();
+        // Lógica do painel de progresso aqui...
+        mainContent.innerHTML += "<p>Painel de progresso em construção.</p>";
         return;
     }
     const filterInput = document.createElement('input');
@@ -109,14 +110,15 @@ function showDetailView(name, tabKey) {
 }
 
 function renderGreatsDetailView(container, slug, tabKey) {
+    const trophyListContainer = document.createElement('div');
+    trophyListContainer.id = 'trophy-list-container';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
-    const trophyListContainer = document.createElement('div');
-    trophyListContainer.id = 'trophy-list-container';
     container.appendChild(trophyListContainer);
     const fursInfo = greatsFursData[slug];
     if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
+
     const refreshFurGrid = () => {
         furGrid.innerHTML = '';
         const animalData = savedData[tabKey]?.[slug] || {};
@@ -133,13 +135,12 @@ function renderGreatsDetailView(container, slug, tabKey) {
                 <div class="info">${fur}</div>
                 <div class="trophy-count">x${trophies.length}</div>
             `;
-            furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, onListChangeCallback)); // Pass the callback
+            furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, refreshFurGrid));
             furGrid.appendChild(furCard);
         });
         checkAndSetGreatOneCompletion(slug, animalData);
         saveData(savedData);
     };
-    const onListChangeCallback = refreshFurGrid; // Define the callback
     refreshFurGrid();
 }
 
@@ -253,7 +254,6 @@ function updateCardAppearance(card, slug, tabKey) {
             isComplete = true;
         }
     }
-    // Adicionar outras lógicas aqui
     if (isComplete) {
         card.classList.add('completed');
     } else {
