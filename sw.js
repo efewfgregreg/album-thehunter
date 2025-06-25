@@ -1,41 +1,47 @@
-// Define um nome e a versão do cache
-const CACHE_NAME = 'album-thehunter-cache-v1';
-
-// Lista de arquivos essenciais para o funcionamento offline
+const CACHE_NAME = 'album-thehunter-cache-v2'; // Mudei a versão para forçar a atualização
 const URLS_TO_CACHE = [
-  './',
-  'index.html',
-  'script.js',
-  'manifest.json',
-  'animais/placeholder.png', // Adicionando o placeholder ao cache
-  'icons/icon-192x192.png',
-  'icons/icon-512x512.png'
+    './',
+    'index.html',
+    'script.js',
+    'manifest.json',
+    'animais/placeholder.png',
+    'icons/icon-192x192.png',
+    'icons/icon-512x512.png'
 ];
 
-// Evento 'install' - é acionado quando o PWA é instalado
+// Instala o service worker e armazena os arquivos essenciais
 self.addEventListener('install', (event) => {
-  // Espera até que o cache seja aberto e todos os arquivos sejam armazenados
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Cache aberto e arquivos essenciais salvos.');
-        return cache.addAll(URLS_TO_CACHE);
-      })
-  );
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then((cache) => {
+                console.log('Cache aberto e arquivos essenciais salvos na v2.');
+                return cache.addAll(URLS_TO_CACHE);
+            })
+    );
 });
 
-// Evento 'fetch' - é acionado para cada requisição que a página faz
+// Estratégia: Network First (Tenta buscar na rede primeiro, se falhar, usa o cache)
+// Isso é melhor para o desenvolvimento, pois você sempre verá as últimas alterações.
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    // Tenta encontrar o recurso no cache primeiro
-    caches.match(event.request)
-      .then((response) => {
-        // Se encontrar no cache, retorna o arquivo do cache
-        if (response) {
-          return response;
-        }
-        // Se não encontrar, busca na rede
-        return fetch(event.request);
-      })
-  );
+    event.respondWith(
+        fetch(event.request).catch(() => {
+            return caches.match(event.request);
+        })
+    );
+});
+
+// Limpa caches antigos
+self.addEventListener('activate', (event) => {
+    const cacheWhitelist = [CACHE_NAME];
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheWhitelist.indexOf(cacheName) === -1) {
+                        return caches.delete(cacheName);
+                    }
+                })
+            );
+        })
+    );
 });
