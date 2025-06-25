@@ -138,6 +138,54 @@ function renderRareFursDetailView(container, name, slug) {
     });
 }
 
+// NOVA FUNÇÃO PARA A ABA SUPER RAROS
+function renderSuperRareDetailView(container, name, slug) {
+    const furGrid = document.createElement('div');
+    furGrid.className = 'fur-grid';
+    container.appendChild(furGrid);
+
+    const speciesFurs = rareFursData[slug];
+    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
+        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
+        return;
+    }
+
+    const genderedFurs = [];
+
+    // Adiciona pelagens de macho com o sufixo "Diamante"
+    if (speciesFurs.macho) {
+        speciesFurs.macho.forEach(fur => {
+            genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur });
+        });
+    }
+
+    // Adiciona pelagens de fêmea com o sufixo "Diamante"
+    if (speciesFurs.femea) {
+        speciesFurs.femea.forEach(fur => {
+            genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur });
+        });
+    }
+
+    // Ordena a lista final pelo nome de exibição
+    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+    genderedFurs.forEach(furInfo => {
+        const furCard = document.createElement('div');
+        furCard.className = 'fur-card incomplete';
+
+        const furSlug = slugify(furInfo.originalName);
+        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const genericImagePath = `animais/${slug}.png`;
+
+        furCard.innerHTML = `
+            <img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';">
+            <div class="info">${furInfo.displayName}</div>
+        `;
+        
+        furGrid.appendChild(furCard);
+    });
+}
+
 function showDetailView(name, tabKey) {
     mainContent.innerHTML = '';
     const slug = slugify(name);
@@ -156,8 +204,10 @@ function showDetailView(name, tabKey) {
     
     if (tabKey === 'greats') {
         renderGreatsDetailView(detailContent, name, slug, tabKey);
-    } else if (tabKey === 'pelagens' || tabKey === 'super_raros') { // <-- A MUDANÇA ESTÁ AQUI
-        renderRareFursDetailView(detailContent, name, slug);
+    } else if (tabKey === 'pelagens') {
+        renderRareFursDetailView(detailContent, name, slug); // Chama a função antiga (sem "Diamante")
+    } else if (tabKey === 'super_raros') {
+        renderSuperRareDetailView(detailContent, name, slug); // Chama a função nova (com "Diamante")
     } else {
         detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
     }
