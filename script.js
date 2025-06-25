@@ -178,16 +178,18 @@ function renderSuperRareDetailView(container, name, slug) {
 
 function renderDiamondsDetailView(container, name, slug) {
     const grid = document.createElement('div');
-    grid.className = 'fur-grid';
+    grid.className = 'fur-grid'; // Reutilizando o estilo dos cards
     container.appendChild(grid);
 
     let diamondOptions = [];
+    // Define quais troféus de diamante são possíveis para a espécie
     if (femaleOnlyDiamondSpecies.includes(slug)) {
         diamondOptions.push('Fêmea Diamante');
     } else if (maleAndFemaleDiamondSpecies.includes(slug)) {
         diamondOptions.push('Macho Diamante');
         diamondOptions.push('Fêmea Diamante');
     } else {
+        // O padrão para todas as outras espécies é apenas Macho
         diamondOptions.push('Macho Diamante');
     }
 
@@ -195,11 +197,7 @@ function renderDiamondsDetailView(container, name, slug) {
 
     diamondOptions.forEach(option => {
         const card = document.createElement('div');
-        
-        const optionData = animalData[option];
-        const isCompleted = optionData === true || (typeof optionData === 'object' && optionData.completed);
-        const score = (typeof optionData === 'object' && optionData.score) ? optionData.score : '';
-
+        const isCompleted = animalData[option] === true;
         card.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
         
         const imagePath = `animais/${slug}.png`;
@@ -207,59 +205,28 @@ function renderDiamondsDetailView(container, name, slug) {
         card.innerHTML = `
             <img src="${imagePath}" alt="${name}" onerror="this.onerror=null; this.src='animais/placeholder.png';">
             <div class="info">${option}</div>
-            <div class="trophy-score-container">
-                <input type="text" class="trophy-score-input" placeholder="Pontos" value="${score}">
-                <button class="trophy-score-save-btn">Salvar</button>
-            </div>
         `;
 
-        grid.appendChild(card);
-
-        const scoreInput = card.querySelector('.trophy-score-input');
-        const saveBtn = card.querySelector('.trophy-score-save-btn');
-
-        scoreInput.addEventListener('click', (e) => e.stopPropagation());
-        saveBtn.addEventListener('click', (e) => e.stopPropagation());
-
-        saveBtn.addEventListener('click', () => {
-            if (!savedData['diamantes']) savedData['diamantes'] = {};
-            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-            
-            savedData['diamantes'][slug][option] = {
-                completed: true,
-                score: scoreInput.value
-            };
-            saveData(savedData);
-
-            card.classList.add('completed');
-            card.classList.remove('incomplete');
-            const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
-            updateCardAppearance(mainAnimalCard, slug, 'diamantes');
-
-            saveBtn.textContent = 'Salvo!';
-            setTimeout(() => { saveBtn.textContent = 'Salvar'; }, 2000);
-        });
-
+        // Adiciona a funcionalidade de clique para salvar o progresso
         card.addEventListener('click', () => {
-            const currentOptionData = savedData['diamantes']?.[slug]?.[option];
-            const currentCompleted = currentOptionData === true || (typeof currentOptionData === 'object' && currentOptionData.completed);
+            const currentState = savedData['diamantes']?.[slug]?.[option] || false;
             
             if (!savedData['diamantes']) savedData['diamantes'] = {};
             if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-
-            const existingScore = (typeof currentOptionData === 'object' && currentOptionData.score) ? currentOptionData.score : scoreInput.value;
             
-            savedData['diamantes'][slug][option] = {
-                completed: !currentCompleted,
-                score: existingScore
-            };
+            savedData['diamantes'][slug][option] = !currentState;
             saveData(savedData);
 
-            card.classList.toggle('completed', !currentCompleted);
-            card.classList.toggle('incomplete', currentCompleted);
+            // Atualiza a aparência do card clicado
+            card.classList.toggle('completed', !currentState);
+            card.classList.toggle('incomplete', currentState);
+            
+            // Tenta encontrar e atualizar o card correspondente na visão principal
             const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
             updateCardAppearance(mainAnimalCard, slug, 'diamantes');
         });
+
+        grid.appendChild(card);
     });
 }
 
@@ -430,7 +397,7 @@ function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
     card.classList.remove('completed', 'inprogress', 'incomplete');
     
-    let status = 'incomplete';
+    let status = 'incomplete'; // Status padrão
 
     if (tabKey === 'greats') {
         const animalData = savedData[tabKey]?.[slug] || {};
@@ -450,16 +417,15 @@ function updateCardAppearance(card, slug, tabKey) {
         }
 
         const animalData = savedData[tabKey]?.[slug] || {};
+        const allCompleted = requiredOptions.every(option => animalData[option] === true);
         
-        const completedOptions = requiredOptions.filter(option => {
-            const optionData = animalData[option];
-            return optionData === true || (typeof optionData === 'object' && optionData.completed);
-        });
-
-        if (completedOptions.length === requiredOptions.length) {
+        if (allCompleted) {
             status = 'completed';
-        } else if (completedOptions.length > 0) {
-            status = 'inprogress';
+        } else {
+            const someCompleted = requiredOptions.some(option => animalData[option] === true);
+            if (someCompleted) {
+                status = 'inprogress'; // Fica amarelo se tiver pelo menos 1 de 2
+            }
         }
     }
     
