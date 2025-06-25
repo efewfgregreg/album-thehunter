@@ -137,614 +137,617 @@ const diamondFursData = {
     "zarro-castanho": { macho: ["Pardo Escuro", "Pardo Avermelhado"], femea: [] }
 };
 
+
 function slugify(text) {
-    return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
+    return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
 }
 
 const categorias = {
-    pelagens: { title: 'Pelagens Raras', items: items },
-    diamantes: { title: 'Diamantes', items: items },
-    greats: { title: 'Greats One', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"] },
-    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug) },
-    progresso: { title: 'Painel de Progresso' }
+    pelagens: { title: 'Pelagens Raras', items: items },
+    diamantes: { title: 'Diamantes', items: items },
+    greats: { title: 'Greats One', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"] },
+    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug) },
+    progresso: { title: 'Painel de Progresso' }
 };
 
 let mainContent;
 
 function checkAndSetGreatOneCompletion(slug, currentData) {
-    const requiredFurs = greatsFursData[slug];
-    if (!requiredFurs || !currentData) return;
-    currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
+    const requiredFurs = greatsFursData[slug];
+    if (!requiredFurs || !currentData) return;
+    currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
 }
 
 function renderMainView(tabKey) {
-    mainContent.innerHTML = '';
-    const currentTab = categorias[tabKey];
-    if (!currentTab) return;
-    const header = document.createElement('h2');
-    header.textContent = currentTab.title;
-    mainContent.appendChild(header);
-    if (tabKey === 'progresso') {
-        mainContent.appendChild(createProgressPanel());
-        updateProgressPanel();
-        return;
-    }
-    const filterInput = document.createElement('input');
-    filterInput.type = 'text';
-    filterInput.className = 'filter-input';
-    filterInput.placeholder = 'Buscar animal...';
-    mainContent.appendChild(filterInput);
-    const albumGrid = document.createElement('div');
-    albumGrid.className = 'album-grid';
-    mainContent.appendChild(albumGrid);
-    (currentTab.items || []).sort((a, b) => a.localeCompare(b)).forEach(name => {
-        const card = createAnimalCard(name, tabKey);
-        albumGrid.appendChild(card);
-    });
-    filterInput.addEventListener('input', (event) => {
-        const searchTerm = event.target.value.toLowerCase();
-        albumGrid.querySelectorAll('.animal-card').forEach(card => {
-            const animalName = card.querySelector('.info').textContent.toLowerCase();
-            card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
-        });
-    });
+    mainContent.innerHTML = '';
+    const currentTab = categorias[tabKey];
+    if (!currentTab) return;
+    const header = document.createElement('h2');
+    header.textContent = currentTab.title;
+    mainContent.appendChild(header);
+    if (tabKey === 'progresso') {
+        mainContent.appendChild(createProgressPanel());
+        updateProgressPanel();
+        return;
+    }
+    const filterInput = document.createElement('input');
+    filterInput.type = 'text';
+    filterInput.className = 'filter-input';
+    filterInput.placeholder = 'Buscar animal...';
+    mainContent.appendChild(filterInput);
+    const albumGrid = document.createElement('div');
+    albumGrid.className = 'album-grid';
+    mainContent.appendChild(albumGrid);
+    (currentTab.items || []).sort((a, b) => a.localeCompare(b)).forEach(name => {
+        const card = createAnimalCard(name, tabKey);
+        albumGrid.appendChild(card);
+    });
+    filterInput.addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        albumGrid.querySelectorAll('.animal-card').forEach(card => {
+            const animalName = card.querySelector('.info').textContent.toLowerCase();
+            card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
 }
 
 function createAnimalCard(name, tabKey) {
-    const card = document.createElement('div');
-    card.className = 'animal-card';
-    const slug = slugify(name);
-    card.dataset.slug = slug;
-    card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
-    card.addEventListener('click', () => showDetailView(name, tabKey));
-    updateCardAppearance(card, slug, tabKey);
-    return card;
+    const card = document.createElement('div');
+    card.className = 'animal-card';
+    const slug = slugify(name);
+    card.dataset.slug = slug;
+    card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
+    card.addEventListener('click', () => showDetailView(name, tabKey));
+    updateCardAppearance(card, slug, tabKey);
+    return card;
 }
 
 function renderRareFursDetailView(container, name, slug) {
-    const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid';
-    container.appendChild(furGrid);
-    const speciesFurs = rareFursData[slug];
-    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
-        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
-        return;
-    }
-    const genderedFurs = [];
-    if (speciesFurs.macho) {
-        speciesFurs.macho.forEach(fur => {
-            genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur });
-        });
-    }
-    if (speciesFurs.femea) {
-        speciesFurs.femea.forEach(fur => {
-            genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur });
-        });
-    }
-    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
-    genderedFurs.forEach(furInfo => {
-        const furCard = document.createElement('div');
-        const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
-        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        
-        const furSlug = slugify(furInfo.originalName);
-        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
-        const genericImagePath = `animais/${slug}.png`;
-        furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
-        
-        furCard.addEventListener('click', () => {
-            if (!savedData.pelagens) savedData.pelagens = {};
-            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
-            const currentState = savedData.pelagens[slug][furInfo.displayName] || false;
-            savedData.pelagens[slug][furInfo.displayName] = !currentState;
-            saveData(savedData);
-            furCard.classList.toggle('completed', !currentState);
-            furCard.classList.toggle('incomplete', currentState);
-            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'pelagens');
-        });
+    const furGrid = document.createElement('div');
+    furGrid.className = 'fur-grid';
+    container.appendChild(furGrid);
+    const speciesFurs = rareFursData[slug];
+    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
+        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
+        return;
+    }
+    const genderedFurs = [];
+    if (speciesFurs.macho) {
+        speciesFurs.macho.forEach(fur => {
+            genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur });
+        });
+    }
+    if (speciesFurs.femea) {
+        speciesFurs.femea.forEach(fur => {
+            genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur });
+        });
+    }
+    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
+    genderedFurs.forEach(furInfo => {
+        const furCard = document.createElement('div');
+        const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
+        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        
+        const furSlug = slugify(furInfo.originalName);
+        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const genericImagePath = `animais/${slug}.png`;
+        furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
+        
+        furCard.addEventListener('click', () => {
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
+            const currentState = savedData.pelagens[slug][furInfo.displayName] || false;
+            savedData.pelagens[slug][furInfo.displayName] = !currentState;
+            saveData(savedData);
+            furCard.classList.toggle('completed', !currentState);
+            furCard.classList.toggle('incomplete', currentState);
+            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'pelagens');
+        });
 
-        furGrid.appendChild(furCard);
-    });
+        furGrid.appendChild(furCard);
+    });
 }
 
 function renderSuperRareDetailView(container, name, slug) {
-    const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid';
-    container.appendChild(furGrid);
-    const speciesFurs = rareFursData[slug];
-    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
-        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
-        return;
-    }
-    const genderedFurs = [];
-    if (speciesFurs.macho) {
-        speciesFurs.macho.forEach(fur => {
-            genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur });
-        });
-    }
-    if (speciesFurs.femea) {
-        speciesFurs.femea.forEach(fur => {
-            genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur });
-        });
-    }
-    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
-    genderedFurs.forEach(furInfo => {
-        const furCard = document.createElement('div');
-        const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true;
-        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        const furSlug = slugify(furInfo.originalName);
-        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
-        const genericImagePath = `animais/${slug}.png`;
-        furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
-        
-        furCard.addEventListener('click', () => {
-            if (!savedData.super_raros) savedData.super_raros = {};
-            if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
-            const currentState = savedData.super_raros[slug][furInfo.displayName] || false;
-            savedData.super_raros[slug][furInfo.displayName] = !currentState;
-            saveData(savedData);
-            furCard.classList.toggle('completed', !currentState);
-            furCard.classList.toggle('incomplete', currentState);
-            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'super_raros');
-        });
-        
-        furGrid.appendChild(furCard);
-    });
+    const furGrid = document.createElement('div');
+    furGrid.className = 'fur-grid';
+    container.appendChild(furGrid);
+    const speciesFurs = rareFursData[slug];
+    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
+        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
+        return;
+    }
+    const genderedFurs = [];
+    if (speciesFurs.macho) {
+        speciesFurs.macho.forEach(fur => {
+            genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur });
+        });
+    }
+    if (speciesFurs.femea) {
+        speciesFurs.femea.forEach(fur => {
+            genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur });
+        });
+    }
+    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
+    genderedFurs.forEach(furInfo => {
+        const furCard = document.createElement('div');
+        const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true;
+        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        const furSlug = slugify(furInfo.originalName);
+        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const genericImagePath = `animais/${slug}.png`;
+        furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
+        
+        furCard.addEventListener('click', () => {
+            if (!savedData.super_raros) savedData.super_raros = {};
+            if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
+            const currentState = savedData.super_raros[slug][furInfo.displayName] || false;
+            savedData.super_raros[slug][furInfo.displayName] = !currentState;
+            saveData(savedData);
+            furCard.classList.toggle('completed', !currentState);
+            furCard.classList.toggle('incomplete', currentState);
+            updateCardAppearance(document.querySelector(`.animal-card[data-slug='${slug}']`), slug, 'super_raros');
+        });
+        
+        furGrid.appendChild(furCard);
+    });
 }
 
 function renderDiamondsDetailView(container, name, slug) {
-    const grid = document.createElement('div');
-    grid.className = 'fur-grid';
-    container.appendChild(grid);
-    
-    const speciesDiamondFurs = diamondFursData[slug];
-    if (!speciesDiamondFurs || (speciesDiamondFurs.macho.length === 0 && speciesDiamondFurs.femea.length === 0)) {
-        grid.innerHTML = '<p>Nenhuma pelagem de diamante listada para este animal.</p>';
-        return;
-    }
+    const grid = document.createElement('div');
+    grid.className = 'fur-grid';
+    container.appendChild(grid);
+    
+    const speciesDiamondFurs = diamondFursData[slug];
+    if (!speciesDiamondFurs || (speciesDiamondFurs.macho.length === 0 && speciesDiamondFurs.femea.length === 0)) {
+        grid.innerHTML = '<p>Nenhuma pelagem de diamante listada para este animal.</p>';
+        return;
+    }
 
-    const diamondTrophyOptions = [];
-    if (speciesDiamondFurs.macho) {
-        speciesDiamondFurs.macho.forEach(fur => {
-            diamondTrophyOptions.push({
-                displayText: `Macho ${fur} Diamante`,
-                furName: fur
-            });
-        });
-    }
-    if (speciesDiamondFurs.femea) {
-        speciesDiamondFurs.femea.forEach(fur => {
-            diamondTrophyOptions.push({
-                displayText: `Fêmea ${fur} Diamante`,
-                furName: fur
-            });
-        });
-    }
+    const diamondTrophyOptions = [];
+    if (speciesDiamondFurs.macho) {
+        speciesDiamondFurs.macho.forEach(fur => {
+            diamondTrophyOptions.push({
+                displayText: `Macho ${fur} Diamante`,
+                furName: fur
+            });
+        });
+    }
+    if (speciesDiamondFurs.femea) {
+        speciesDiamondFurs.femea.forEach(fur => {
+            diamondTrophyOptions.push({
+                displayText: `Fêmea ${fur} Diamante`,
+                furName: fur
+            });
+        });
+    }
 
-    const animalData = savedData['diamantes']?.[slug] || {};
+    const animalData = savedData['diamantes']?.[slug] || {};
 
-    diamondTrophyOptions.sort((a,b) => a.displayText.localeCompare(b.displayText)).forEach(option => {
-        const card = document.createElement('div');
-        const optionData = animalData[option.displayText];
-        const isCompleted = optionData === true || (typeof optionData === 'object' && optionData.completed);
-        const score = (typeof optionData === 'object' && optionData.score) ? optionData.score : '';
-        card.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        
-        const furSlug = slugify(option.furName);
-        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
-        const genericImagePath = `animais/${slug}.png`;
-        
-        card.innerHTML = `
-            <img src="${specificImagePath}" alt="${option.displayText}" onerror="this.onerror=null; this.src='${genericImagePath}';">
-            <div class="info-and-score">
-                <span class="trophy-name">${option.displayText}</span>
-                <div class="trophy-score-controls">
-                    <input type="text" class="trophy-score-input" placeholder="---" value="${score}">
-                    <button class="trophy-score-save-btn">Salvar</button>
-                </div>
-            </div>
-        `;
-        grid.appendChild(card);
-        const scoreInput = card.querySelector('.trophy-score-input');
-        const saveBtn = card.querySelector('.trophy-score-save-btn');
-        
-        saveBtn.style.display = 'none';
-        
-        scoreInput.addEventListener('focus', () => {
-            saveBtn.style.display = 'inline-block';
-        });
+    diamondTrophyOptions.sort((a,b) => a.displayText.localeCompare(b.displayText)).forEach(option => {
+        const card = document.createElement('div');
+        const optionData = animalData[option.displayText];
+        const isCompleted = optionData === true || (typeof optionData === 'object' && optionData.completed);
+        const score = (typeof optionData === 'object' && optionData.score) ? optionData.score : '';
+        card.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        
+        const furSlug = slugify(option.furName);
+        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const genericImagePath = `animais/${slug}.png`;
+        
+        card.innerHTML = `
+            <img src="${specificImagePath}" alt="${option.displayText}" onerror="this.onerror=null; this.src='${genericImagePath}';">
+            <div class="info-and-score">
+                <span class="trophy-name">${option.displayText}</span>
+                <div class="trophy-score-controls">
+                    <input type="text" class="trophy-score-input" placeholder="---" value="${score}">
+                    <button class="trophy-score-save-btn">Salvar</button>
+                </div>
+            </div>
+        `;
+        grid.appendChild(card);
+        const scoreInput = card.querySelector('.trophy-score-input');
+        const saveBtn = card.querySelector('.trophy-score-save-btn');
+        
+        saveBtn.style.display = 'none';
+        
+        scoreInput.addEventListener('focus', () => {
+            saveBtn.style.display = 'inline-block';
+        });
 
-        scoreInput.addEventListener('click', (e) => e.stopPropagation());
-        saveBtn.addEventListener('click', (e) => e.stopPropagation());
+        scoreInput.addEventListener('click', (e) => e.stopPropagation());
+        saveBtn.addEventListener('click', (e) => e.stopPropagation());
 
-        saveBtn.addEventListener('click', () => {
-            if (!savedData['diamantes']) savedData['diamantes'] = {};
-            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-            savedData['diamantes'][slug][option.displayText] = {
-                completed: true,
-                score: scoreInput.value
-            };
-            saveData(savedData);
-            card.classList.add('completed');
-            card.classList.remove('incomplete');
-            const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
-            updateCardAppearance(mainAnimalCard, slug, 'diamantes');
-            saveBtn.style.display = 'none';
-        });
+        saveBtn.addEventListener('click', () => {
+            if (!savedData['diamantes']) savedData['diamantes'] = {};
+            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
+            savedData['diamantes'][slug][option.displayText] = {
+                completed: true,
+                score: scoreInput.value
+            };
+            saveData(savedData);
+            card.classList.add('completed');
+            card.classList.remove('incomplete');
+            const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
+            updateCardAppearance(mainAnimalCard, slug, 'diamantes');
+            saveBtn.style.display = 'none';
+        });
 
-        card.addEventListener('click', () => {
-            const currentOptionData = savedData['diamantes']?.[slug]?.[option.displayText];
-            const currentCompleted = currentOptionData === true || (typeof currentOptionData === 'object' && currentOptionData.completed);
-            if (!savedData['diamantes']) savedData['diamantes'] = {};
-            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-            const existingScore = (typeof currentOptionData === 'object' && currentOptionData.score) ? currentOptionData.score : scoreInput.value;
-            savedData['diamantes'][slug][option.displayText] = {
-                completed: !currentCompleted,
-                score: existingScore
-            };
-            saveData(savedData);
-            card.classList.toggle('completed', !currentCompleted);
-            card.classList.toggle('incomplete', currentCompleted);
-            const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
-            updateCardAppearance(mainAnimalCard, slug, 'diamantes');
-        });
-    });
+        card.addEventListener('click', () => {
+            const currentOptionData = savedData['diamantes']?.[slug]?.[option.displayText];
+            const currentCompleted = currentOptionData === true || (typeof currentOptionData === 'object' && currentOptionData.completed);
+            if (!savedData['diamantes']) savedData['diamantes'] = {};
+            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
+            const existingScore = (typeof currentOptionData === 'object' && currentOptionData.score) ? currentOptionData.score : scoreInput.value;
+            savedData['diamantes'][slug][option.displayText] = {
+                completed: !currentCompleted,
+                score: existingScore
+            };
+            saveData(savedData);
+            card.classList.toggle('completed', !currentCompleted);
+            card.classList.toggle('incomplete', currentCompleted);
+            const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
+            updateCardAppearance(mainAnimalCard, slug, 'diamantes');
+        });
+    });
 }
 
 
 function showDetailView(name, tabKey) {
-    mainContent.innerHTML = '';
-    const slug = slugify(name);
-    const backButton = document.createElement('button');
-    backButton.className = 'back-button';
-    backButton.innerHTML = '&larr; Voltar para a Lista';
-    backButton.addEventListener('click', () => renderMainView(tabKey));
-    mainContent.appendChild(backButton);
-    const detailHeader = document.createElement('h2');
-    detailHeader.textContent = `${name} - ${categorias[tabKey].title}`;
-    mainContent.appendChild(detailHeader);
-    const detailContent = document.createElement('div');
-    mainContent.appendChild(detailContent);
-    if (tabKey === 'greats') {
-        renderGreatsDetailView(detailContent, name, slug, tabKey);
-    } else if (tabKey === 'pelagens') {
-        renderRareFursDetailView(detailContent, name, slug);
-    } else if (tabKey === 'super_raros') {
-        renderSuperRareDetailView(detailContent, name, slug);
-    } else if (tabKey === 'diamantes') {
-        renderDiamondsDetailView(detailContent, name, slug);
-    } else {
-        detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
-    }
+    mainContent.innerHTML = '';
+    const slug = slugify(name);
+    const backButton = document.createElement('button');
+    backButton.className = 'back-button';
+    backButton.innerHTML = '&larr; Voltar para a Lista';
+    backButton.addEventListener('click', () => renderMainView(tabKey));
+    mainContent.appendChild(backButton);
+    const detailHeader = document.createElement('h2');
+    detailHeader.textContent = `${name} - ${categorias[tabKey].title}`;
+    mainContent.appendChild(detailHeader);
+    const detailContent = document.createElement('div');
+    mainContent.appendChild(detailContent);
+    if (tabKey === 'greats') {
+        renderGreatsDetailView(detailContent, name, slug, tabKey);
+    } else if (tabKey === 'pelagens') {
+        renderRareFursDetailView(detailContent, name, slug);
+    } else if (tabKey === 'super_raros') {
+        renderSuperRareDetailView(detailContent, name, slug);
+    } else if (tabKey === 'diamantes') {
+        renderDiamondsDetailView(detailContent, name, slug);
+    } else {
+        detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
+    }
 }
 
 function renderGreatsDetailView(container, name, slug, tabKey) {
-    const trophyListContainer = document.createElement('div');
-    trophyListContainer.id = 'trophy-list-container';
-    const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid';
-    container.appendChild(furGrid);
-    container.appendChild(trophyListContainer);
-    const fursInfo = greatsFursData[slug];
-    if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
-    const refreshFurGrid = () => {
-        furGrid.innerHTML = '';
-        const animalData = savedData[tabKey]?.[slug] || {};
-        fursInfo.forEach(fur => {
-            const furData = animalData.furs?.[fur] || {};
-            const trophies = furData.trophies || [];
-            const furCard = document.createElement('div');
-            furCard.className = `fur-card ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
-            const furSlug = slugify(fur);
-            const specificImagePath = `animais/pelagens/great_${slug}_${furSlug}.png`;
-            const genericImagePath = `animais/${slug}.png`;
-            furCard.innerHTML = `<img src="${specificImagePath}" alt="${fur}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${fur}</div><div class="trophy-count">x${trophies.length}</div>`;
-            furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, name, refreshFurGrid));
-            furGrid.appendChild(furCard);
-        });
-        const mainCard = document.querySelector(`.animal-card[data-slug='${slug}']`);
-        updateCardAppearance(mainCard, slug, tabKey);
-    };
-    refreshFurGrid();
+    const trophyListContainer = document.createElement('div');
+    trophyListContainer.id = 'trophy-list-container';
+    const furGrid = document.createElement('div');
+    furGrid.className = 'fur-grid';
+    container.appendChild(furGrid);
+    container.appendChild(trophyListContainer);
+    const fursInfo = greatsFursData[slug];
+    if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
+    const refreshFurGrid = () => {
+        furGrid.innerHTML = '';
+        const animalData = savedData[tabKey]?.[slug] || {};
+        fursInfo.forEach(fur => {
+            const furData = animalData.furs?.[fur] || {};
+            const trophies = furData.trophies || [];
+            const furCard = document.createElement('div');
+            furCard.className = `fur-card ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
+            const furSlug = slugify(fur);
+            const specificImagePath = `animais/pelagens/great_${slug}_${furSlug}.png`;
+            const genericImagePath = `animais/${slug}.png`;
+            furCard.innerHTML = `<img src="${specificImagePath}" alt="${fur}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${fur}</div><div class="trophy-count">x${trophies.length}</div>`;
+            furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, name, refreshFurGrid));
+            furGrid.appendChild(furCard);
+        });
+        const mainCard = document.querySelector(`.animal-card[data-slug='${slug}']`);
+        updateCardAppearance(mainCard, slug, tabKey);
+    };
+    refreshFurGrid();
 }
 
 function renderTrophyList(fur, slug, tabKey, name, onListChangeCallback) {
-    const container = document.getElementById('trophy-list-container');
-    container.innerHTML = '';
-    const animalData = savedData[tabKey]?.[slug] || {};
-    const furData = animalData.furs?.[fur] || {};
-    const trophies = furData.trophies || [];
-    const listWrapper = document.createElement('div');
-    listWrapper.className = 'trophy-list';
-    listWrapper.innerHTML = `<h4>Troféus "${fur}" Registrados:</h4>`;
-    const ul = document.createElement('ul');
-    if (trophies.length > 0) {
-        trophies.forEach((trophy, index) => {
-            const li = document.createElement('li');
-            li.className = 'trophy-item';
-            const dateSpan = document.createElement('span');
-            dateSpan.className = 'trophy-date';
-            dateSpan.textContent = `Data do Abate: ${trophy.date}`;
-            const detailsDiv = document.createElement('div');
-            detailsDiv.className = 'trophy-item-details';
-            detailsDiv.style.display = 'none';
-            detailsDiv.innerHTML = `<p><strong>Abates na Grind:</strong> ${trophy.abates || 'N/A'}</p><p><strong>Diamantes na Grind:</strong> ${trophy.diamantes || 'N/A'}</p><p><strong>Peles Raras na Grind:</strong> ${trophy.pelesRaras || 'N/A'}</p>`;
-            const removeBtn = document.createElement('button');
-            removeBtn.className = 'remove-trophy-btn';
-            removeBtn.textContent = 'Remover';
-            removeBtn.onclick = (e) => {
-                e.stopPropagation();
-                trophies.splice(index, 1);
-                checkAndSetGreatOneCompletion(slug, savedData[tabKey][slug]);
-                saveData(savedData);
-                onListChangeCallback();
-                renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
-            };
-            const contentWrapper = document.createElement('div');
-            contentWrapper.style.flexGrow = '1';
-            contentWrapper.appendChild(dateSpan);
-            contentWrapper.appendChild(detailsDiv);
-            li.appendChild(contentWrapper);
-            li.appendChild(removeBtn);
-            li.addEventListener('click', () => {
-                detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
-            });
-            ul.appendChild(li);
-        });
-    } else {
-        ul.innerHTML = '<li>Nenhum troféu registrado.</li>';
-    }
-    listWrapper.appendChild(ul);
-    const addBtn = document.createElement('button');
-    addBtn.className = 'add-trophy-btn';
-    addBtn.textContent = `Adicionar Novo Abate "${fur}"`;
-    addBtn.onclick = () => showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback);
-    listWrapper.appendChild(addBtn);
-    container.appendChild(listWrapper);
+    const container = document.getElementById('trophy-list-container');
+    container.innerHTML = '';
+    const animalData = savedData[tabKey]?.[slug] || {};
+    const furData = animalData.furs?.[fur] || {};
+    const trophies = furData.trophies || [];
+    const listWrapper = document.createElement('div');
+    listWrapper.className = 'trophy-list';
+    listWrapper.innerHTML = `<h4>Troféus "${fur}" Registrados:</h4>`;
+    const ul = document.createElement('ul');
+    if (trophies.length > 0) {
+        trophies.forEach((trophy, index) => {
+            const li = document.createElement('li');
+            li.className = 'trophy-item';
+            const dateSpan = document.createElement('span');
+            dateSpan.className = 'trophy-date';
+            dateSpan.textContent = `Data do Abate: ${trophy.date}`;
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'trophy-item-details';
+            detailsDiv.style.display = 'none';
+            detailsDiv.innerHTML = `<p><strong>Abates na Grind:</strong> ${trophy.abates || 'N/A'}</p><p><strong>Diamantes na Grind:</strong> ${trophy.diamantes || 'N/A'}</p><p><strong>Peles Raras na Grind:</strong> ${trophy.pelesRaras || 'N/A'}</p>`;
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-trophy-btn';
+            removeBtn.textContent = 'Remover';
+            removeBtn.onclick = (e) => {
+                e.stopPropagation();
+                trophies.splice(index, 1);
+                checkAndSetGreatOneCompletion(slug, savedData[tabKey][slug]);
+                saveData(savedData);
+                onListChangeCallback();
+                renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
+            };
+            const contentWrapper = document.createElement('div');
+            contentWrapper.style.flexGrow = '1';
+            contentWrapper.appendChild(dateSpan);
+            contentWrapper.appendChild(detailsDiv);
+            li.appendChild(contentWrapper);
+            li.appendChild(removeBtn);
+            li.addEventListener('click', () => {
+                detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
+            });
+            ul.appendChild(li);
+        });
+    } else {
+        ul.innerHTML = '<li>Nenhum troféu registrado.</li>';
+    }
+    listWrapper.appendChild(ul);
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-trophy-btn';
+    addBtn.textContent = `Adicionar Novo Abate "${fur}"`;
+    addBtn.onclick = () => showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback);
+    listWrapper.appendChild(addBtn);
+    container.appendChild(listWrapper);
 }
 
 function showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback) {
-    const container = document.getElementById('trophy-list-container');
-    container.innerHTML = '';
-    const formWrapper = document.createElement('div');
-    formWrapper.className = 'grind-stats';
-    formWrapper.innerHTML = `
-        <h4>Registrar Novo Troféu: ${fur}</h4>
-        <table><tbody>
-            <tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr>
-            <tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr>
-            <tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr>
-            <tr><td>Data do Abate:</td><td><input type="date" name="date"></td></tr>
-        </tbody></table>
-        <button id="save-trophy-btn">Salvar Troféu</button>
-        <button id="cancel-trophy-btn">Cancelar</button>
-    `;
-    container.appendChild(formWrapper);
-    document.getElementById('save-trophy-btn').onclick = () => {
-        const dateInput = formWrapper.querySelector('[name="date"]').value;
-        const newTrophy = {
-            abates: formWrapper.querySelector('[name="abates"]').value,
-            diamantes: formWrapper.querySelector('[name="diamantes"]').value,
-            pelesRaras: formWrapper.querySelector('[name="pelesRaras"]').value,
-            date: dateInput || new Date().toISOString().split('T')[0]
-        };
-        if (!savedData[tabKey]) savedData[tabKey] = {};
-        if (!savedData[tabKey][slug]) savedData[tabKey][slug] = {};
-        if (!savedData[tabKey][slug].furs) savedData[tabKey][slug].furs = {};
-        if (!savedData[tabKey][slug].furs[fur]) savedData[tabKey][slug].furs[fur] = { trophies: [] };
-        savedData[tabKey][slug].furs[fur].trophies.push(newTrophy);
-        checkAndSetGreatOneCompletion(slug, savedData[tabKey][slug]);
-        saveData(savedData);
-        onListChangeCallback();
-        renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
-    };
-    document.getElementById('cancel-trophy-btn').onclick = () => {
-        renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
-    };
+    const container = document.getElementById('trophy-list-container');
+    container.innerHTML = '';
+    const formWrapper = document.createElement('div');
+    formWrapper.className = 'grind-stats';
+    formWrapper.innerHTML = `
+        <h4>Registrar Novo Troféu: ${fur}</h4>
+        <table><tbody>
+            <tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr>
+            <tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr>
+            <tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr>
+            <tr><td>Data do Abate:</td><td><input type="date" name="date"></td></tr>
+        </tbody></table>
+        <button id="save-trophy-btn">Salvar Troféu</button>
+        <button id="cancel-trophy-btn">Cancelar</button>
+    `;
+    container.appendChild(formWrapper);
+    document.getElementById('save-trophy-btn').onclick = () => {
+        const dateInput = formWrapper.querySelector('[name="date"]').value;
+        const newTrophy = {
+            abates: formWrapper.querySelector('[name="abates"]').value,
+            diamantes: formWrapper.querySelector('[name="diamantes"]').value,
+            pelesRaras: formWrapper.querySelector('[name="pelesRaras"]').value,
+            date: dateInput || new Date().toISOString().split('T')[0]
+        };
+        if (!savedData[tabKey]) savedData[tabKey] = {};
+        if (!savedData[tabKey][slug]) savedData[tabKey][slug] = {};
+        if (!savedData[tabKey][slug].furs) savedData[tabKey][slug].furs = {};
+        if (!savedData[tabKey][slug].furs[fur]) savedData[tabKey][slug].furs[fur] = { trophies: [] };
+        savedData[tabKey][slug].furs[fur].trophies.push(newTrophy);
+        checkAndSetGreatOneCompletion(slug, savedData[tabKey][slug]);
+        saveData(savedData);
+        onListChangeCallback();
+        renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
+    };
+    document.getElementById('cancel-trophy-btn').onclick = () => {
+        renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
+    };
 }
 
 function updateCardAppearance(card, slug, tabKey) {
-    if (!card) return;
-    card.classList.remove('completed', 'inprogress', 'incomplete');
-    let status = 'incomplete';
-    if (tabKey === 'greats') {
-        const animalData = savedData[tabKey]?.[slug] || {};
-        checkAndSetGreatOneCompletion(slug, animalData);
-        if (animalData.completo) {
-            status = 'completed';
-        }
-    } else if (tabKey === 'diamantes') {
-        const speciesDiamondFurs = diamondFursData[slug];
-        if (speciesDiamondFurs) {
-            const requiredOptions = [];
-            if (speciesDiamondFurs.macho) {
-                speciesDiamondFurs.macho.forEach(fur => requiredOptions.push(`Macho ${fur} Diamante`));
-            }
-            if (speciesDiamondFurs.femea) {
-                speciesDiamondFurs.femea.forEach(fur => requiredOptions.push(`Fêmea ${fur} Diamante`));
-            }
-            if (requiredOptions.length > 0) {
-                const animalData = savedData[tabKey]?.[slug] || {};
-                const completedOptions = requiredOptions.filter(option => {
-                    const optionData = animalData[option];
-                    return optionData === true || (typeof optionData === 'object' && optionData.completed);
-                });
-                if (completedOptions.length === requiredOptions.length) {
-                    status = 'completed';
-                } else if (completedOptions.length > 0) {
-                    status = 'inprogress';
-                }
-            }
-        }
-    } else if (tabKey === 'pelagens' || tabKey === 'super_raros') {
-        const speciesRareFurs = rareFursData[slug];
-        if (speciesRareFurs) {
-            const requiredOptions = [];
-            if (speciesRareFurs.macho) {
-                speciesRareFurs.macho.forEach(fur => requiredOptions.push(`Macho ${fur}`));
-            }
-            if (speciesRareFurs.femea) {
-                speciesRareFurs.femea.forEach(fur => requiredOptions.push(`Fêmea ${fur}`));
-            }
-            if(requiredOptions.length > 0) {
-                const saveDataKeyForTab = tabKey === 'pelagens' ? 'pelagens' : 'super_raros';
-                const animalData = savedData[saveDataKeyForTab]?.[slug] || {};
-                const completedOptions = requiredOptions.filter(option => animalData[option] === true);
-                if (completedOptions.length === requiredOptions.length) {
-                    status = 'completed';
-                } else if (completedOptions.length > 0) {
-                    status = 'inprogress';
-                }
-            }
-        }
-    }
-    card.classList.add(status);
+    if (!card) return;
+    card.classList.remove('completed', 'inprogress', 'incomplete');
+    let status = 'incomplete';
+    if (tabKey === 'greats') {
+        const animalData = savedData[tabKey]?.[slug] || {};
+        checkAndSetGreatOneCompletion(slug, animalData);
+        if (animalData.completo) {
+            status = 'completed';
+        }
+    } else if (tabKey === 'diamantes') {
+        const speciesDiamondFurs = diamondFursData[slug];
+        if (speciesDiamondFurs) {
+            const requiredOptions = [];
+            if (speciesDiamondFurs.macho) {
+                speciesDiamondFurs.macho.forEach(fur => requiredOptions.push(`Macho ${fur} Diamante`));
+            }
+            if (speciesDiamondFurs.femea) {
+                speciesDiamondFurs.femea.forEach(fur => requiredOptions.push(`Fêmea ${fur} Diamante`));
+            }
+            if (requiredOptions.length > 0) {
+                const animalData = savedData[tabKey]?.[slug] || {};
+                const completedOptions = requiredOptions.filter(option => {
+                    const optionData = animalData[option];
+                    return optionData === true || (typeof optionData === 'object' && optionData.completed);
+                });
+                if (completedOptions.length === requiredOptions.length) {
+                    status = 'completed';
+                } else if (completedOptions.length > 0) {
+                    status = 'inprogress';
+                }
+            }
+        }
+    } else if (tabKey === 'pelagens' || tabKey === 'super_raros') {
+        const speciesRareFurs = rareFursData[slug];
+        if (speciesRareFurs) {
+            const requiredOptions = [];
+            if (speciesRareFurs.macho) {
+                speciesRareFurs.macho.forEach(fur => requiredOptions.push(`Macho ${fur}`));
+            }
+            if (speciesRareFurs.femea) {
+                speciesRareFurs.femea.forEach(fur => requiredOptions.push(`Fêmea ${fur}`));
+            }
+            if(requiredOptions.length > 0) {
+                const saveDataKeyForTab = tabKey === 'pelagens' ? 'pelagens' : 'super_raros';
+                const animalData = savedData[saveDataKeyForTab]?.[slug] || {};
+                const completedOptions = requiredOptions.filter(option => animalData[option] === true);
+                if (completedOptions.length === requiredOptions.length) {
+                    status = 'completed';
+                } else if (completedOptions.length > 0) {
+                    status = 'inprogress';
+                }
+            }
+        }
+    }
+    card.classList.add(status);
 }
 
 function createProgressPanel() {
-    const panel = document.createElement('div');
-    panel.className = 'progress-panel';
-    panel.id = 'progress-panel';
+    const panel = document.createElement('div');
+    panel.className = 'progress-panel';
+    panel.id = 'progress-panel';
 
-    panel.innerHTML = `
-        <div class="progress-section">
-            <h3>Progresso de Pelagens Raras</h3>
-            <div id="rares-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="rares-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-        <div class="progress-section">
-            <h3>Progresso de Super Raros</h3>
-            <div id="super-rares-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="super-rares-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-        <div class="progress-section">
-            <h3>Progresso de Diamantes</h3>
-            <div id="diamond-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="diamond-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-        <div class="progress-section">
-            <h3>Progresso de Great Ones</h3>
-            <div id="greatone-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="greatone-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-    `;
-    return panel;
+    panel.innerHTML = `
+        <div class="progress-section">
+            <h3>Progresso de Pelagens Raras</h3>
+            <div id="rares-progress-label" class="progress-label">Calculando...</div>
+            <div class="progress-bar-container">
+                <div id="rares-progress-bar" class="progress-bar-fill"></div>
+            </div>
+        </div>
+        <div class="progress-section">
+            <h3>Progresso de Super Raros</h3>
+            <div id="super-rares-progress-label" class="progress-label">Calculando...</div>
+            <div class="progress-bar-container">
+                <div id="super-rares-progress-bar" class="progress-bar-fill"></div>
+            </div>
+        </div>
+        <div class="progress-section">
+            <h3>Progresso de Diamantes</h3>
+            <div id="diamond-progress-label" class="progress-label">Calculando...</div>
+            <div class="progress-bar-container">
+                <div id="diamond-progress-bar" class="progress-bar-fill"></div>
+            </div>
+        </div>
+        <div class="progress-section">
+            <h3>Progresso de Great Ones</h3>
+            <div id="greatone-progress-label" class="progress-label">Calculando...</div>
+            <div class="progress-bar-container">
+                <div id="greatone-progress-bar" class="progress-bar-fill"></div>
+            </div>
+        </div>
+    `;
+    return panel;
 }
 
 function updateProgressPanel() {
-    // --- Cálculo Pelagens Raras ---
-    let totalRares = 0;
-    for (const slug in rareFursData) {
-        const uniqueFurs = new Set([...rareFursData[slug].macho, ...rareFursData[slug].femea]);
-        totalRares += uniqueFurs.size;
-    }
-    
-    let collectedRares = 0;
-    if (savedData.pelagens) {
-        for (const slug in savedData.pelagens) {
-            collectedRares += Object.keys(savedData.pelagens[slug]).filter(key => savedData.pelagens[slug][key]).length;
-        }
-    }
+    // --- Cálculo Pelagens Raras ---
+    let totalRares = 0;
+    const uniqueRareFurs = new Set();
+    for (const slug in rareFursData) {
+        rareFursData[slug].macho.forEach(fur => uniqueRareFurs.add(`Macho ${fur}`));
+        rareFursData[slug].femea.forEach(fur => uniqueRareFurs.add(`Fêmea ${fur}`));
+    }
+    totalRares = uniqueRareFurs.size;
+    
+    let collectedRares = 0;
+    if (savedData.pelagens) {
+        for (const slug in savedData.pelagens) {
+            collectedRares += Object.keys(savedData.pelagens[slug]).filter(key => savedData.pelagens[slug][key]).length;
+        }
+    }
 
-    const rarePercentage = totalRares > 0 ? (collectedRares / totalRares) * 100 : 0;
-    const rareLabel = document.getElementById('rares-progress-label');
-    const rareBar = document.getElementById('rares-progress-bar');
-    if(rareLabel) rareLabel.textContent = `${collectedRares} / ${totalRares}`;
-    if(rareBar) {
-        rareBar.style.width = `${rarePercentage}%`;
-        rareBar.textContent = `${Math.round(rarePercentage)}%`;
-    }
+    const rarePercentage = totalRares > 0 ? (collectedRares / totalRares) * 100 : 0;
+    const rareLabel = document.getElementById('rares-progress-label');
+    const rareBar = document.getElementById('rares-progress-bar');
+    if(rareLabel) rareLabel.textContent = `${collectedRares} / ${totalRares}`;
+    if(rareBar) {
+        rareBar.style.width = `${rarePercentage}%`;
+        rareBar.textContent = `${Math.round(rarePercentage)}%`;
+    }
 
-    // --- Cálculo Super Raros ---
-    const totalSuperRares = totalRares; // A base de colecionáveis é a mesma
-    let collectedSuperRares = 0;
-    if (savedData.super_raros) {
-        for (const slug in savedData.super_raros) {
-            collectedSuperRares += Object.keys(savedData.super_raros[slug]).filter(key => savedData.super_raros[slug][key]).length;
-        }
-    }
+    // --- Cálculo Super Raros ---
+    const totalSuperRares = totalRares; // A base de colecionáveis é a mesma
+    let collectedSuperRares = 0;
+    if (savedData.super_raros) {
+        for (const slug in savedData.super_raros) {
+            collectedSuperRares += Object.keys(savedData.super_raros[slug]).filter(key => savedData.super_raros[slug][key]).length;
+        }
+    }
 
-    const superRarePercentage = totalSuperRares > 0 ? (collectedSuperRares / totalSuperRares) * 100 : 0;
-    const superRareLabel = document.getElementById('super-rares-progress-label');
-    const superRareBar = document.getElementById('super-rares-progress-bar');
-    if(superRareLabel) superRareLabel.textContent = `${collectedSuperRares} / ${totalSuperRares}`;
-    if(superRareBar) {
-        superRareBar.style.width = `${superRarePercentage}%`;
-        superRareBar.textContent = `${Math.round(superRarePercentage)}%`;
-    }
+    const superRarePercentage = totalSuperRares > 0 ? (collectedSuperRares / totalSuperRares) * 100 : 0;
+    const superRareLabel = document.getElementById('super-rares-progress-label');
+    const superRareBar = document.getElementById('super-rares-progress-bar');
+    if(superRareLabel) superRareLabel.textContent = `${collectedSuperRares} / ${totalSuperRares}`;
+    if(superRareBar) {
+        superRareBar.style.width = `${superRarePercentage}%`;
+        superRareBar.textContent = `${Math.round(superRarePercentage)}%`;
+    }
 
-    // --- Cálculo Diamantes ---
-    let totalDiamonds = 0;
-    for (const slug in diamondFursData) {
-        totalDiamonds += diamondFursData[slug].macho.length;
-        totalDiamonds += diamondFursData[slug].femea.length;
-    }
+    // --- Cálculo Diamantes ---
+    let totalDiamonds = 0;
+    for (const slug in diamondFursData) {
+        totalDiamonds += diamondFursData[slug].macho.length;
+        totalDiamonds += diamondFursData[slug].femea.length;
+    }
 
-    let collectedDiamonds = 0;
-    if (savedData.diamantes) {
-        for (const slug in savedData.diamantes) {
-            for (const trophy in savedData.diamantes[slug]) {
-                const optionData = savedData.diamantes[slug][trophy];
-                if (optionData === true || (typeof optionData === 'object' && optionData.completed)) {
-                    collectedDiamonds++;
-                }
-            }
-        }
-    }
-    
-    const diamondPercentage = totalDiamonds > 0 ? (collectedDiamonds / totalDiamonds) * 100 : 0;
-    const diamondLabel = document.getElementById('diamond-progress-label');
-    const diamondBar = document.getElementById('diamond-progress-bar');
-    if(diamondLabel) diamondLabel.textContent = `${collectedDiamonds} / ${totalDiamonds}`;
-    if(diamondBar) {
-        diamondBar.style.width = `${diamondPercentage}%`;
-        diamondBar.textContent = `${Math.round(diamondPercentage)}%`;
-    }
+    let collectedDiamonds = 0;
+    if (savedData.diamantes) {
+        for (const slug in savedData.diamantes) {
+            for (const trophy in savedData.diamantes[slug]) {
+                const optionData = savedData.diamantes[slug][trophy];
+                if (optionData === true || (typeof optionData === 'object' && optionData.completed)) {
+                    collectedDiamonds++;
+                }
+            }
+        }
+    }
+    
+    const diamondPercentage = totalDiamonds > 0 ? (collectedDiamonds / totalDiamonds) * 100 : 0;
+    const diamondLabel = document.getElementById('diamond-progress-label');
+    const diamondBar = document.getElementById('diamond-progress-bar');
+    if(diamondLabel) diamondLabel.textContent = `${collectedDiamonds} / ${totalDiamonds}`;
+    if(diamondBar) {
+        diamondBar.style.width = `${diamondPercentage}%`;
+        diamondBar.textContent = `${Math.round(diamondPercentage)}%`;
+    }
 
-    // --- Cálculo Great Ones ---
-    const totalGreatOnes = Object.keys(greatsFursData).length;
-    let collectedGreatOnes = 0;
-    if (savedData.greats) {
-        for (const slug in savedData.greats) {
-            if (savedData.greats[slug].completo) {
-                collectedGreatOnes++;
-            }
-        }
-    }
+    // --- Cálculo Great Ones ---
+    const totalGreatOnes = Object.keys(greatsFursData).length;
+    let collectedGreatOnes = 0;
+    if (savedData.greats) {
+        for (const slug in savedData.greats) {
+            if (savedData.greats[slug].completo) {
+                collectedGreatOnes++;
+            }
+        }
+    }
 
-    const greatOnePercentage = totalGreatOnes > 0 ? (collectedGreatOnes / totalGreatOnes) * 100 : 0;
-    const greatOneLabel = document.getElementById('greatone-progress-label');
-    const greatOneBar = document.getElementById('greatone-progress-bar');
-    if(greatOneLabel) greatOneLabel.textContent = `${collectedGreatOnes} / ${totalGreatOnes}`;
-    if(greatOneBar) {
-        greatOneBar.style.width = `${greatOnePercentage}%`;
-        greatOneBar.textContent = `${Math.round(greatOnePercentage)}%`;
-    }
+    const greatOnePercentage = totalGreatOnes > 0 ? (collectedGreatOnes / totalGreatOnes) * 100 : 0;
+    const greatOneLabel = document.getElementById('greatone-progress-label');
+    const greatOneBar = document.getElementById('greatone-progress-bar');
+    if(greatOneLabel) greatOneLabel.textContent = `${collectedGreatOnes} / ${totalGreatOnes}`;
+    if(greatOneBar) {
+        greatOneBar.style.width = `${greatOnePercentage}%`;
+        greatOneBar.textContent = `${Math.round(greatOnePercentage)}%`;
+    }
 }
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    mainContent = document.querySelector('.main-content');
-    const navButtons = document.querySelectorAll('.nav-button');
-    function setActiveTab(tabKey) {
-        navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === tabKey));
-        renderMainView(tabKey);
-    }
-    navButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            setActiveTab(e.currentTarget.dataset.target);
-        });
-    });
-    
-    const initialTab = 'progresso'; 
-    navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === initialTab));
-    renderMainView(initialTab);
+    mainContent = document.querySelector('.main-content');
+    const navButtons = document.querySelectorAll('.nav-button');
+    function setActiveTab(tabKey) {
+        navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === tabKey));
+        renderMainView(tabKey);
+    }
+    navButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            setActiveTab(e.currentTarget.dataset.target);
+        });
+    });
+    
+    const initialTab = 'progresso'; 
+    navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === initialTab));
+    renderMainView(initialTab);
 });
