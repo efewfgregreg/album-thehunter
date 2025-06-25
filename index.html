@@ -54,14 +54,14 @@
         .progress-section { background-color: var(--surface-color); padding: 20px; border-radius: 8px; border-left: 5px solid var(--primary-color); }
         .progress-section h3 { margin-top: 0; font-family: var(--font-headings); }
         .progress-label { font-size: 1.1rem; margin-bottom: 10px; color: var(--text-color-muted); }
-        .progress-bar-container { width: 100%; background-color: var(--bg-color); border-radius: 8px; height: 25px; overflow: hidden; }
-        .progress-bar-fill { height: 100%; width: 0%; background-color: var(--primary-color); border-radius: 8px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: #111827; font-weight: bold; }
+        .progress-bar-container { width: 100%; background-color: var(--bg-color); border-radius: 8px; height: 25px; overflow: hidden; border: 1px solid var(--border-color); }
+        .progress-bar-fill { height: 100%; width: 0%; background-color: var(--primary-color); border-radius: 8px; transition: width 0.5s ease-in-out; display: flex; align-items: center; justify-content: center; color: #111827; font-weight: bold; font-size: 0.9rem; }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h1>Álbum de Caça</h1>
-        <button class="nav-button" data-target="pelagens">Pelagens Raras</button>
+        <button class="nav-button active" data-target="pelagens">Pelagens Raras</button>
         <button class="nav-button" data-target="diamantes">Diamantes</button>
         <button class="nav-button" data-target="greats">Greats One</button>
         <button class="nav-button" data-target="super_raros">Super Raros</button>

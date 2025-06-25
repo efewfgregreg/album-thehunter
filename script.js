@@ -137,7 +137,6 @@ const diamondFursData = {
     "zarro-castanho": { macho: ["Pardo Escuro", "Pardo Avermelhado"], femea: [] }
 };
 
-
 function slugify(text) {
     return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
 }
@@ -564,14 +563,14 @@ function createProgressPanel() {
     panel.innerHTML = `
         <div class="progress-section">
             <h3>Progresso de Diamantes</h3>
-            <div id="diamond-progress-label" class="progress-label">0 / 0</div>
+            <div id="diamond-progress-label" class="progress-label">Calculando...</div>
             <div class="progress-bar-container">
                 <div id="diamond-progress-bar" class="progress-bar-fill"></div>
             </div>
         </div>
         <div class="progress-section">
             <h3>Progresso de Great Ones</h3>
-            <div id="greatone-progress-label" class="progress-label">0 / 0</div>
+            <div id="greatone-progress-label" class="progress-label">Calculando...</div>
             <div class="progress-bar-container">
                 <div id="greatone-progress-bar" class="progress-bar-fill"></div>
             </div>
@@ -604,8 +603,10 @@ function updateProgressPanel() {
     const diamondLabel = document.getElementById('diamond-progress-label');
     const diamondBar = document.getElementById('diamond-progress-bar');
     if(diamondLabel) diamondLabel.textContent = `${collectedDiamonds} / ${totalDiamonds}`;
-    if(diamondBar) diamondBar.style.width = `${diamondPercentage}%`;
-    if(diamondBar) diamondBar.textContent = `${Math.round(diamondPercentage)}%`;
+    if(diamondBar) {
+        diamondBar.style.width = `${diamondPercentage}%`;
+        diamondBar.textContent = `${Math.round(diamondPercentage)}%`;
+    }
 
     // --- Cálculo Great Ones ---
     const totalGreatOnes = Object.keys(greatsFursData).length;
@@ -622,8 +623,10 @@ function updateProgressPanel() {
     const greatOneLabel = document.getElementById('greatone-progress-label');
     const greatOneBar = document.getElementById('greatone-progress-bar');
     if(greatOneLabel) greatOneLabel.textContent = `${collectedGreatOnes} / ${totalGreatOnes}`;
-    if(greatOneBar) greatOneBar.style.width = `${greatOnePercentage}%`;
-    if(greatOneBar) greatOneBar.textContent = `${Math.round(greatOnePercentage)}%`;
+    if(greatOneBar) {
+        greatOneBar.style.width = `${greatOnePercentage}%`;
+        greatOneBar.textContent = `${Math.round(greatOnePercentage)}%`;
+    }
 }
 
 
@@ -639,9 +642,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setActiveTab(e.currentTarget.dataset.target);
         });
     });
-    // Inicia na aba de pelagens
-    // Se quiser iniciar em outra aba, mude o valor abaixo.
-    const initialTab = 'pelagens'; 
+    // Inicia na aba de progresso para vermos o resultado
+    const initialTab = 'progresso'; 
     navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === initialTab));
     renderMainView(initialTab);
 });
