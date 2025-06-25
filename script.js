@@ -214,12 +214,12 @@ function renderRareFursDetailView(container, name, slug) {
     const genderedFurs = [];
     if (speciesFurs.macho) {
         speciesFurs.macho.forEach(fur => {
-            genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur });
+            genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur, gender: 'macho' });
         });
     }
     if (speciesFurs.femea) {
         speciesFurs.femea.forEach(fur => {
-            genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur });
+            genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur, gender: 'femea' });
         });
     }
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
@@ -229,9 +229,12 @@ function renderRareFursDetailView(container, name, slug) {
         furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
         
         const furSlug = slugify(furInfo.originalName);
-        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
-        const genericImagePath = `animais/${slug}.png`;
-        furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
+        const genderSlug = furInfo.gender;
+        const genderSpecificPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
+        const genderNeutralPath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const genericAnimalPath = `animais/${slug}.png`;
+
+        furCard.innerHTML = `<img src="${genderSpecificPath}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';"><div class="info">${furInfo.displayName}</div>`;
         
         furCard.addEventListener('click', () => {
             if (!savedData.pelagens) savedData.pelagens = {};
@@ -260,12 +263,12 @@ function renderSuperRareDetailView(container, name, slug) {
     const genderedFurs = [];
     if (speciesFurs.macho) {
         speciesFurs.macho.forEach(fur => {
-            genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur });
+            genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur, gender: 'macho' });
         });
     }
     if (speciesFurs.femea) {
         speciesFurs.femea.forEach(fur => {
-            genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur });
+            genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur, gender: 'femea' });
         });
     }
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
@@ -274,9 +277,11 @@ function renderSuperRareDetailView(container, name, slug) {
         const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true;
         furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furInfo.originalName);
-        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
-        const genericImagePath = `animais/${slug}.png`;
-        furCard.innerHTML = `<img src="${specificImagePath}" alt="${furInfo.displayName}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${furInfo.displayName}</div>`;
+        const genderSlug = furInfo.gender;
+        const genderSpecificPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
+        const genderNeutralPath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const genericAnimalPath = `animais/${slug}.png`;
+        furCard.innerHTML = `<img src="${genderSpecificPath}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';"><div class="info">${furInfo.displayName}</div>`;
         
         furCard.addEventListener('click', () => {
             if (!savedData.super_raros) savedData.super_raros = {};
@@ -309,7 +314,8 @@ function renderDiamondsDetailView(container, name, slug) {
         speciesDiamondFurs.macho.forEach(fur => {
             diamondTrophyOptions.push({
                 displayText: `Macho ${fur} Diamante`,
-                furName: fur
+                furName: fur,
+                gender: 'macho'
             });
         });
     }
@@ -317,7 +323,8 @@ function renderDiamondsDetailView(container, name, slug) {
         speciesDiamondFurs.femea.forEach(fur => {
             diamondTrophyOptions.push({
                 displayText: `Fêmea ${fur} Diamante`,
-                furName: fur
+                furName: fur,
+                gender: 'femea'
             });
         });
     }
@@ -332,11 +339,13 @@ function renderDiamondsDetailView(container, name, slug) {
         card.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
         
         const furSlug = slugify(option.furName);
-        const specificImagePath = `animais/pelagens/${slug}_${furSlug}.png`;
-        const genericImagePath = `animais/${slug}.png`;
+        const genderSlug = option.gender;
+        const genderSpecificPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
+        const genderNeutralPath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const genericAnimalPath = `animais/${slug}.png`;
         
         card.innerHTML = `
-            <img src="${specificImagePath}" alt="${option.displayText}" onerror="this.onerror=null; this.src='${genericImagePath}';">
+            <img src="${genderSpecificPath}" alt="${option.displayText}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';">
             <div class="info-and-score">
                 <span class="trophy-name">${option.displayText}</span>
                 <div class="trophy-score-controls">
@@ -750,45 +759,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialTab = 'progresso'; 
     navButtons.forEach(b => b.classList.toggle('active', b.dataset.target === initialTab));
     renderMainView(initialTab);
-});
-sw.js: // Define um nome e a versão do cache
-const CACHE_NAME = 'album-thehunter-cache-v1';
-
-// Lista de arquivos essenciais para o funcionamento offline
-const URLS_TO_CACHE = [
-  './',
-  'index.html',
-  'script.js',
-  'manifest.json',
-  'animais/placeholder.png', // Adicionando o placeholder ao cache
-  'icons/icon-192x192.png',
-  'icons/icon-512x512.png'
-];
-
-// Evento 'install' - é acionado quando o PWA é instalado
-self.addEventListener('install', (event) => {
-  // Espera até que o cache seja aberto e todos os arquivos sejam armazenados
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        console.log('Cache aberto e arquivos essenciais salvos.');
-        return cache.addAll(URLS_TO_CACHE);
-      })
-  );
-});
-
-// Evento 'fetch' - é acionado para cada requisição que a página faz
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    // Tenta encontrar o recurso no cache primeiro
-    caches.match(event.request)
-      .then((response) => {
-        // Se encontrar no cache, retorna o arquivo do cache
-        if (response) {
-          return response;
-        }
-        // Se não encontrar, busca na rede
-        return fetch(event.request);
-      })
-  );
 });
