@@ -52,7 +52,7 @@
         .main-content {
             flex-grow: 1; padding: 20px; display: flex; flex-direction: column; overflow-y: auto;
         }
-        .detail-view h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 25px; }
+        .main-content h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 25px; }
         .album-grid {
             display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px;
         }
@@ -91,17 +91,19 @@
         .fur-card:hover { transform: scale(1.05); }
         .trophy-count { position: absolute; top: 15px; right: 15px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
         
-        .trophy-list, .diamond-details-container { background-color: var(--surface-color); padding: 20px; border-radius: 8px; margin-top: 20px; }
-        .trophy-list h4 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
+        .trophy-list, .diamond-details-container, .grind-stats { background-color: var(--surface-color); padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .trophy-list h4, .grind-stats h4 { margin-top: 0; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; }
         .trophy-list ul { list-style: none; padding: 0; }
         .trophy-list li { display: flex; justify-content: space-between; align-items: center; padding: 8px; border-bottom: 1px solid var(--border-color); cursor: pointer; }
         .trophy-list li:last-child { border-bottom: none; }
         .trophy-item-details { padding: 10px 0 0 15px; font-size: 0.9em; color: var(--text-color-muted); }
-        .add-trophy-btn, .remove-trophy-btn { background: var(--primary-color); color: #111827; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
-        .remove-trophy-btn { background-color: #c53030; color: white; }
-        .diamond-details-container table { width: 100%; }
-        .diamond-details-container td { padding: 8px 5px; }
-        .diamond-details-container input { width: 100%; text-align: center; }
+        .add-trophy-btn, .remove-trophy-btn, .grind-stats button { background: var(--primary-color); color: #111827; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .remove-trophy-btn, #cancel-trophy-btn { background-color: #c53030; color: white; margin-left: 10px; }
+        .grind-stats table, .diamond-details-container table { width: 100%; }
+        .grind-stats td, .diamond-details-container td { padding: 8px 5px; }
+        .grind-stats input, .diamond-details-container input { width: 100%; text-align: center; }
+        .trophy-card { margin-bottom: 15px; }
+        .trophy-card:last-child { margin-bottom: 0; }
     </style>
 </head>
 <body>
