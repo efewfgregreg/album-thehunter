@@ -156,7 +156,7 @@ function showDetailView(name, tabKey) {
     
     if (tabKey === 'greats') {
         renderGreatsDetailView(detailContent, name, slug, tabKey);
-    } else if (tabKey === 'pelagens') {
+    } else if (tabKey === 'pelagens' || tabKey === 'super_raros') { // <-- A MUDANÇA ESTÁ AQUI
         renderRareFursDetailView(detailContent, name, slug);
     } else {
         detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
