@@ -1,4 +1,3 @@
-// --- DADOS E FUNÇÕES BÁSICAS ---
 const saveDataKey = 'theHunterAlbumData';
 function loadData() {
     try {
@@ -42,34 +41,40 @@ let mainContent;
 
 function checkAndSetGreatOneCompletion(slug, currentData) {
     const requiredFurs = greatsFursData[slug];
-    if (!requiredFurs || !currentData) return; 
+    if (!requiredFurs || !currentData) return;
     currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
 }
 
 function renderMainView(tabKey) {
-    mainContent.innerHTML = ''; 
+    mainContent.innerHTML = '';
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
+
     const header = document.createElement('h2');
     header.textContent = currentTab.title;
     mainContent.appendChild(header);
+
     if (tabKey === 'progresso') {
         mainContent.appendChild(createProgressPanel());
         updateProgressPanel();
         return;
     }
+
     const filterInput = document.createElement('input');
     filterInput.type = 'text';
     filterInput.className = 'filter-input';
     filterInput.placeholder = 'Buscar animal...';
     mainContent.appendChild(filterInput);
+
     const albumGrid = document.createElement('div');
     albumGrid.className = 'album-grid';
     mainContent.appendChild(albumGrid);
-    currentTab.items.sort((a, b) => a.localeCompare(b)).forEach(name => {
+    
+    (currentTab.items || []).sort((a, b) => a.localeCompare(b)).forEach(name => {
         const card = createAnimalCard(name, tabKey);
         albumGrid.appendChild(card);
     });
+
     filterInput.addEventListener('input', (event) => {
         const searchTerm = event.target.value.toLowerCase();
         albumGrid.querySelectorAll('.animal-card').forEach(card => {
@@ -83,7 +88,6 @@ function createAnimalCard(name, tabKey) {
     const card = document.createElement('div');
     card.className = 'animal-card';
     const slug = slugify(name);
-    card.dataset.slug = slug; // Adiciona o slug para referência futura
     card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
     card.addEventListener('click', () => showDetailView(name, tabKey));
     updateCardAppearance(card, slug, tabKey);
@@ -102,13 +106,13 @@ function showDetailView(name, tabKey) {
     detailHeader.textContent = `${name} - ${categorias[tabKey].title}`;
     mainContent.appendChild(detailHeader);
     
-    // Roteador para a função de renderização de detalhes correta
+    const detailContent = document.createElement('div');
+    mainContent.appendChild(detailContent);
+
     if (tabKey === 'greats') {
-        renderGreatsDetailView(mainContent, slug, tabKey);
+        renderGreatsDetailView(detailContent, slug, tabKey);
     } else {
-        const detailContent = document.createElement('div');
-        mainContent.appendChild(detailContent);
-        detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
+        detailContent.innerHTML = `<p>Funcionalidade de detalhes para ${name} na aba ${tabKey} ainda não implementada.</p>`;
     }
 }
 
@@ -119,7 +123,6 @@ function renderGreatsDetailView(container, slug, tabKey) {
     const trophyListContainer = document.createElement('div');
     trophyListContainer.id = 'trophy-list-container';
     container.appendChild(trophyListContainer);
-    
     const fursInfo = greatsFursData[slug];
     if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
 
@@ -143,9 +146,8 @@ function renderGreatsDetailView(container, slug, tabKey) {
             furGrid.appendChild(furCard);
         });
         checkAndSetGreatOneCompletion(slug, animalData);
-        saveData(savedData); // Salva o status 'completo' atualizado
+        saveData(savedData);
     };
-
     refreshFurGrid();
 }
 
@@ -254,7 +256,7 @@ function updateCardAppearance(card, slug, tabKey) {
     const animalData = savedData[tabKey]?.[slug] || {};
     let isComplete = false;
     if (tabKey === 'greats') {
-        checkAndSetGreatOneCompletion(slug, animalData); 
+        checkAndSetGreatOneCompletion(slug, animalData);
         if (animalData.completo) {
             isComplete = true;
         }
@@ -267,8 +269,8 @@ function updateCardAppearance(card, slug, tabKey) {
     }
 }
 
-function createProgressPanel() { const panel = document.createElement('div'); panel.id = 'progress-panel'; panel.innerHTML = `<div>Painel de Progresso...</div>`; return panel; }
-function updateProgressPanel() { /* lógica... */ }
+function createProgressPanel() { /* ... */ return document.createElement('div'); }
+function updateProgressPanel() { /* ... */ }
 
 document.addEventListener('DOMContentLoaded', () => {
     mainContent = document.querySelector('.main-content');
