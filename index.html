@@ -36,9 +36,13 @@
         .filter-input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); background-color: #1a202c; color: var(--text-color); border-radius: 6px; font-size: 16px; }
         .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); margin-bottom: 20px; transition: all 0.2s ease; display: inline-block; width: auto; }
         .back-button:hover { background: var(--primary-color); color: #111827; }
-        
-        /* ESTILOS UNIFICADOS PARA OS CARDS DE DETALHE */
-        .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+
+        /* ESTILOS UNIFICADOS PARA OS CARDS DE DETALHE - CORRIGIDO */
+        .fur-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
         .fur-card {
             background: var(--surface-color);
             border-radius: 8px;
@@ -49,37 +53,34 @@
             border: 2px solid transparent;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start; /* Alinha os itens ao topo */
+            gap: 10px; /* Cria um espaçamento consistente entre os itens */
         }
         .fur-card:hover { transform: scale(1.05); }
         .fur-card img {
             width: 100%;
-            height: 120px; /* Altura da imagem */
+            height: 120px;
             object-fit: cover;
             border-radius: 4px;
-            margin-bottom: 8px;
+            /* A margem foi removida para usar o 'gap' do .fur-card */
         }
-        
-        /* --- INÍCIO DA CORREÇÃO --- */
-
         .fur-card .info, .fur-card .trophy-name {
             font-family: var(--font-headings);
             font-size: 0.9rem;
             line-height: 1.3;
             font-weight: 700;
-            /* A propriedade 'flex-grow' foi movida para o contêiner '.info-and-score' abaixo */
+            /* Propriedades problemáticas removidas (flex-grow, margin-bottom) */
         }
-
-        /* NOVO: Estilo para o contêiner de diamante */
+        
+        /* Regra específica para o container do texto e pontuação nos cards de diamante */
         .info-and-score {
             display: flex;
             flex-direction: column;
-            flex-grow: 1; /* Faz esta seção inteira (texto + input) ocupar o espaço vertical restante */
-            justify-content: center; /* Centraliza o conteúdo (texto e input) verticalmente */
-            gap: 12px; /* Cria um espaçamento ideal entre o texto e a caixa de input */
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Espaçamento entre o nome e a caixa de pontuação */
         }
 
-        /* --- FIM DA CORREÇÃO --- */
-        
         .fur-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
         .fur-card.incomplete .info, .fur-card.incomplete .trophy-name { color: var(--text-color-muted); }
         .fur-card.completed { border-color: var(--primary-color); }
