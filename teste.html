@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1a202c">
+    <title>Álbum de Caça - theHunter: Call of the Wild</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
+        :root {
+            --bg-color: #1a202c; --surface-color: #2d3748; --primary-color: #48bb78; --border-color: #4a5568; --text-color: #e2e8f0; --text-color-muted: #a0aec0; --font-headings: 'Oswald', sans-serif; --font-body: 'Nunito Sans', sans-serif;
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: var(--font-body); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; height: 100vh; overflow: hidden;
+        }
+        .sidebar {
+            width: 280px; background-color: #111827; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid var(--border-color); flex-shrink: 0;
+        }
+        .sidebar h1 { font-size: 1.5rem; text-align: center; margin: 0 0 30px 0; letter-spacing: 1px; }
+        .sidebar .nav-button { width: 100%; padding: 15px 20px; margin-bottom: 10px; border: 1px solid var(--border-color); background: var(--surface-color); color: var(--text-color-muted); border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; transition: all 0.3s ease; font-family: var(--font-headings); text-align: left; text-transform: uppercase; }
+        .sidebar .nav-button:hover { background-color: #3a475a; color: #fff; }
+        .sidebar .nav-button.active { background-color: var(--primary-color); color: #111827; border-color: var(--primary-color); }
+        .main-content { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
+        .main-content h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 25px; }
+        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
+        .animal-card { background-color: var(--surface-color); border: 2px solid transparent; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .animal-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; transition: filter 0.3s ease; }
+        .animal-card .info { font-family: var(--font-headings); font-size: 1rem; color: var(--text-color); font-weight: 700; }
+        .animal-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.3); border-color: var(--primary-color); }
+        .animal-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
+        .animal-card.incomplete .info { color: var(--text-color-muted); }
+        .animal-card.inprogress img { filter: grayscale(50%); }
+        .animal-card.completed { border-color: var(--primary-color); box-shadow: 0 0 15px rgba(72, 187, 120, 0.5); }
+        .filter-input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); background-color: #1a202c; color: var(--text-color); border-radius: 6px; font-size: 16px; }
+        .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); margin-bottom: 20px; transition: all 0.2s ease; display: inline-block; width: auto; }
+        .back-button:hover { background: var(--primary-color); color: #111827; }
+
+        /* ESTILOS UNIFICADOS PARA OS CARDS DE DETALHE - VERSÃO FINAL */
+        .fur-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+            align-items: start; /* Impede que os cards se estiquem verticalmente */
+        }
+        .fur-card {
+            background: var(--surface-color);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 10px;
+        }
+        .fur-card:hover { transform: scale(1.05); }
+        .fur-card img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        .fur-card .info, .fur-card .trophy-name {
+            font-family: var(--font-headings);
+            font-size: 0.9rem;
+            line-height: 1.3;
+            font-weight: 700;
+        }
+        
+        .info-and-score {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .fur-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
+        .fur-card.incomplete .info, .fur-card.incomplete .trophy-name { color: var(--text-color-muted); }
+        .fur-card.completed { border-color: var(--primary-color); }
+        .trophy-score-controls { display: flex; align-items: center; justify-content: center; gap: 5px; }
+        .trophy-score-input { width: 60px; padding: 4px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); border-radius: 4px; font-size: 14px; text-align: center; }
+        .trophy-score-save-btn { padding: 4px 8px; font-size: 12px; background: var(--primary-color); color: #111827; border: none; border-radius: 4px; cursor: pointer; }
+        .trophy-count { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+        
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h1>Álbum de Caça</h1>
+        <button class="nav-button active" data-target="pelagens">Pelagens Raras</button>
+        <button class="nav-button" data-target="diamantes">Diamantes</button>
+        <button class="nav-button" data-target="greats">Greats One</button>
+        <button class="nav-button" data-target="super_raros">Super Raros</button>
+        <button class="nav-button" data-target="progresso">Progresso</button>
+    </div>
+    <div class="main-content">
+    </div>
+    <script src="script.js" defer></script>
+</body>
+</html>
