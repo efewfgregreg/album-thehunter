@@ -36,9 +36,13 @@
         .filter-input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); background-color: #1a202c; color: var(--text-color); border-radius: 6px; font-size: 16px; }
         .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); margin-bottom: 20px; transition: all 0.2s ease; display: inline-block; width: auto; }
         .back-button:hover { background: var(--primary-color); color: #111827; }
-        
-        /* ESTILOS UNIFICADOS PARA OS CARDS DE DETALHE */
-        .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+
+        /* ESTILOS UNIFICADOS PARA OS CARDS DE DETALHE - CORRIGIDO */
+        .fur-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 15px;
+        }
         .fur-card {
             background: var(--surface-color);
             border-radius: 8px;
@@ -49,33 +53,42 @@
             border: 2px solid transparent;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Alinha o conteúdo ao topo */
+            justify-content: flex-start; /* Alinha os itens ao topo */
+            gap: 10px; /* Cria um espaçamento consistente entre os itens */
         }
         .fur-card:hover { transform: scale(1.05); }
         .fur-card img {
             width: 100%;
-            height: 120px; /* Altura da imagem */
+            height: 120px;
             object-fit: cover;
             border-radius: 4px;
-            margin-bottom: 8px; /* Espaço entre imagem e texto */
+            /* A margem foi removida para usar o 'gap' do .fur-card */
         }
         .fur-card .info, .fur-card .trophy-name {
             font-family: var(--font-headings);
-            font-size: 0.95rem; /* Tamanho do texto */
+            font-size: 0.9rem;
             line-height: 1.3;
             font-weight: 700;
-            margin-bottom: 8px; /* Espaço abaixo do texto */
+            /* Propriedades problemáticas removidas (flex-grow, margin-bottom) */
         }
+        
+        /* Regra específica para o container do texto e pontuação nos cards de diamante */
+        .info-and-score {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Espaçamento entre o nome e a caixa de pontuação */
+        }
+
         .fur-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
         .fur-card.incomplete .info, .fur-card.incomplete .trophy-name { color: var(--text-color-muted); }
         .fur-card.completed { border-color: var(--primary-color); }
-
-        /* Controles de pontuação para a aba Diamantes */
-        .info-and-score { margin-top: auto; } /* Empurra para o fundo */
         .trophy-score-controls { display: flex; align-items: center; justify-content: center; gap: 5px; }
         .trophy-score-input { width: 60px; padding: 4px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); border-radius: 4px; font-size: 14px; text-align: center; }
         .trophy-score-save-btn { padding: 4px 8px; font-size: 12px; background: var(--primary-color); color: #111827; border: none; border-radius: 4px; cursor: pointer; }
         .trophy-count { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+        
     </style>
 </head>
 <body>
