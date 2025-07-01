@@ -79,7 +79,6 @@ const diamondFursData = {
     "ibex_de_gredos": { macho: ["Cinza Claro", "Marrom Híbrido", "Cinzento", "Pardo e Cinza"], femea: [] },
     "ibex_de_ronda": { macho: ["Cinzento", "Marrom Híbrido", "Pardo", "Pardo e Cinza"], femea: [] },
     "ibex_espanhol_do_sudeste": { macho: [], femea: [] },
-    "jacaré_americano": { macho: ["Oliva", "Pardo Escuro"], femea: [] },
     "javali": { macho: ["Pardo", "Pardo Claro", "Pardo Escuro", "Preto e Dourado"], femea: [] },
     "javali_africano": { macho: ["Cinzento Escuro", "Pardo Avermelhado"], femea: [] },
     "lebre-antílope": { macho: ["Cinzento", "Mosqueado", "Pardo Escuro"], femea: [] },
