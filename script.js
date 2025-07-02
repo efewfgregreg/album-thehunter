@@ -233,7 +233,11 @@ function renderRareFursDetailView(container, name, slug) {
         const genderNeutralPath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericAnimalPath = `animais/${slug}.png`;
 
-        furCard.innerHTML = `<img src="${genderSpecificPath}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';"><div class="info">${furInfo.displayName}</div>`;
+        furCard.innerHTML = `
+            <img src="${genderSpecificPath}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';">
+            <div class="info">${furInfo.displayName}</div>
+            <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
+        `;
         
         furCard.addEventListener('click', () => {
             if (!savedData.pelagens) savedData.pelagens = {};
@@ -280,7 +284,11 @@ function renderSuperRareDetailView(container, name, slug) {
         const genderSpecificPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
         const genderNeutralPath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericAnimalPath = `animais/${slug}.png`;
-        furCard.innerHTML = `<img src="${genderSpecificPath}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';"><div class="info">${furInfo.displayName}</div>`;
+        furCard.innerHTML = `
+            <img src="${genderSpecificPath}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';">
+            <div class="info">${furInfo.displayName}</div>
+            <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
+        `;
         
         furCard.addEventListener('click', () => {
             if (!savedData.super_raros) savedData.super_raros = {};
@@ -352,6 +360,7 @@ function renderDiamondsDetailView(container, name, slug) {
                     <button class="trophy-score-save-btn">Salvar</button>
                 </div>
             </div>
+            <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
         `;
         grid.appendChild(card);
         const scoreInput = card.querySelector('.trophy-score-input');
@@ -447,7 +456,12 @@ function renderGreatsDetailView(container, name, slug, tabKey) {
             const furSlug = slugify(fur);
             const specificImagePath = `animais/pelagens/great_${slug}_${furSlug}.png`;
             const genericImagePath = `animais/${slug}.png`;
-            furCard.innerHTML = `<img src="${specificImagePath}" alt="${fur}" onerror="this.onerror=null; this.src='${genericImagePath}';"><div class="info">${fur}</div><div class="trophy-count">x${trophies.length}</div>`;
+            furCard.innerHTML = `
+                <img src="${specificImagePath}" alt="${fur}" onerror="this.onerror=null; this.src='${genericImagePath}';">
+                <div class="info">${fur}</div>
+                <div class="trophy-count">x${trophies.length}</div>
+                <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
+            `;
             furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, name, refreshFurGrid));
             furGrid.appendChild(furCard);
         });
