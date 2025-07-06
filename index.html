@@ -9,7 +9,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
         
-        /* NOVA PALETA DE CORES E ESTILOS GLOBAIS */
+        /* PALETA DE CORES E ESTILOS GLOBAIS */
         :root {
             --bg-color: #181a1b;          /* Fundo principal (quase preto) */
             --surface-color: #2c2f33;    /* Cor das cartas */
@@ -31,7 +31,7 @@
             font-family: var(--font-body);
             background-color: var(--bg-color);
             color: var(--text-color);
-            overflow-x: hidden; /* Previne scroll horizontal */
+            overflow-x: hidden;
         }
 
         /* --- ESTILO DO HUB DE NAVEGAÇÃO INICIAL --- */
@@ -129,7 +129,6 @@
             font-size: 16px;
         }
         
-        /* ESTILOS DAS CARTAS DE ANIMAIS E PELAGENS (AJUSTADOS) */
         .album-grid, .fur-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -171,21 +170,18 @@
         .fullscreen-btn { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 28px; opacity: 0; transition: opacity 0.2s ease-in-out; z-index: 10; }
         .fur-card:hover .fullscreen-btn { opacity: 1; }
 
-        /* Estilos do Modal (sem alterações) */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
         .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; }
         .modal-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
         .modal-close:hover, .modal-close:focus { color: #bbb; text-decoration: none; }
         
-        /* Estilos do Painel de Progresso (sem alterações) */
         .progress-panel { display: flex; flex-direction: column; gap: 20px; }
         .progress-section { background-color: var(--surface-color); padding: 20px; border-radius: 8px; }
         .progress-section h3 { margin-bottom: 15px; font-family: var(--font-headings); }
-        .progress-label { text-align: right; margin-bottom: 5px; color: var(--text-color-muted); }
-        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; }
-        .progress-bar-fill { background-color: var(--primary-color); color: var(--bg-color); text-align: center; font-weight: bold; line-height: 20px; height: 20px; transition: width 0.5s ease; }
+        .progress-label { text-align: right; margin-bottom: 5px; color: var(--text-color-muted); font-size: 0.9rem;}
+        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; height: 22px;}
+        .progress-bar-fill { background-color: var(--primary-color); color: var(--bg-color); text-align: center; font-weight: bold; line-height: 22px; height: 100%; transition: width 0.5s ease; }
 
-        /* Estilos da tela de detalhes de Great Ones (sem alterações) */
         #trophy-list-container { margin-top: 20px; background: #23272A; padding: 20px; border-radius: 8px; }
         .trophy-list h4 { margin-bottom: 15px; }
         .trophy-list ul { list-style: none; padding: 0; }
