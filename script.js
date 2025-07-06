@@ -67,7 +67,6 @@ const diamondFursData = {
     "cudo_menor": { macho: ["Cinzento"], femea: [] },
     "faisão_de_pescoço_anelado": { macho: ["Cinzento", "Muda", "Pardo", "Pardo e Branco"], femea: [] },
     "frisada": { macho: ["Cinzento", "Plum. de Inverno"], femea: [] },
-    "galinha_montês": { macho: ["Cinzento", "Escuro", "Pardo", "Pardo Claro"], femea: [] },
     "galo_lira": { macho: ["Escuro"], femea: [] },
     "gamo": { macho: ["Escuro", "Escuro e Pintado", "Pintado", "Branco", "Chocolate"], femea: [] },
     "ganso_bravo": { macho: ["Pardo", "Cinzento"], femea: [] },
@@ -132,8 +131,9 @@ const diamondFursData = {
     "veado_mula": { macho: ["Cinzento", "Pardo", "Amarelado"], femea: [] },
     "veado_de_roosevelt": { macho: ["Bronzeado", "Laranja", "Pardo"], femea: [] },
     "veado_vermelho": { macho: ["Pardo", "Pardo Claro", "Pardo Escuro"], femea: [] },
-    "lagopode_branco": { macho: ["Bicolor", "Muda", "Mosqueado"], femea: [] },
-    "lagopode_escoces": { macho: ["Bicolor", "Muda"], femea: [] },
+    "galinha_montês": { macho: ["Cinzento", "Escuro", "Pardo", "Pardo Claro"], femea: [] },
+    "lagópode_branco": { macho: ["Bicolor", "Muda", "Mosqueado"], femea: [] },
+    "lagópode_escocês": { macho: ["Bicolor", "Muda"], femea: [] },
     "zarro_negrinha": { macho: ["Preto"], femea: [] },
     "zarro_castanho": { macho: ["Pardo Escuro", "Pardo Avermelhado"], femea: [] }
 };
