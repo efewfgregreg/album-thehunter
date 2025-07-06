@@ -103,7 +103,7 @@ const diamondFursData = {
     "marrequinha_americana": { macho: ["Verde Claro"], femea: [] },
     "marrequinha_comum": { macho: ["Verde Claro", "Verde Escuro"], femea: [] },
     "muflão_ibérico": { macho: ["Pardo", "Pardo Claro"], femea: [] },
-    "muntjac_vermelho_do_norte": { macho: ["Vermelho"], femea: [] },
+    "muntjac_vermelho_do_norte": { macho: ["Vermelho Variação 1", "Vermelho Variação 2"], femea: [] },
     "nilgó": { macho: ["Azul", "Pardo Escuro"], femea: [] },
     "onça_parda": { macho: ["Pardo Claro", "Vermelho Escuro", "Cinzento"], femea: [] },
     "oryx_do_cabo": { macho: ["Cinza Claro", "Cinzento"], femea: ["Cinza Claro", "Cinzento"] },
