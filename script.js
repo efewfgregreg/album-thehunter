@@ -529,7 +529,6 @@ function updateCardAppearance(card, slug, tabKey) {
         if (animalData.completo) {
             status = 'completed';
         } else {
-            // Check for in-progress
             const collectedFurs = animalData.furs ? Object.values(animalData.furs).filter(fur => fur.trophies?.length > 0).length : 0;
             if (collectedFurs > 0) {
                 status = 'inprogress';
@@ -684,7 +683,6 @@ function updateProgressPanel() {
     updateSection('greatone', collectedGreatOnesFurs, totalGreatOnesFurs);
 }
 
-
 function openModal(imageUrl) {
     const modal = document.getElementById('fullscreen-modal');
     const modalImg = document.getElementById('modal-image');
@@ -713,6 +711,29 @@ document.addEventListener('DOMContentLoaded', () => {
     appContainer = document.getElementById('app-container');
     
     renderNavigationHub();
+
+    // --- BOTÃO DE DEBUG ---
+    const debugButton = document.createElement('button');
+    debugButton.textContent = 'Debug Dados Salvos';
+    debugButton.style.position = 'fixed';
+    debugButton.style.bottom = '10px';
+    debugButton.style.right = '10px';
+    debugButton.style.padding = '10px 15px';
+    debugButton.style.zIndex = '9999';
+    debugButton.style.background = '#d9534f'; // Cor vermelha
+    debugButton.style.color = 'white';
+    debugButton.style.border = '1px solid #d43f3a';
+    debugButton.style.borderRadius = '5px';
+    debugButton.style.cursor = 'pointer';
+    debugButton.onclick = () => {
+        console.log("--- DEBUG: DADOS SALVOS ATUALMENTE ---");
+        const currentData = loadData();
+        console.log(currentData);
+        alert('Os dados de debug foram impressos no console (F12). Por favor, envie um print da aba "Console".');
+    };
+    document.body.appendChild(debugButton);
+    // --- FIM DO BOTÃO DE DEBUG ---
+
 
     const modal = document.getElementById('fullscreen-modal');
     const closeBtn = document.querySelector('.modal-close');
