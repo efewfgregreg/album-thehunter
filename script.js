@@ -148,7 +148,7 @@ function slugify(text) {
 const categorias = {
     pelagens: { title: 'Pelagens Raras', items: items },
     diamantes: { title: 'Diamantes', items: items },
-    greats: { title: 'Greats One', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr", "Urso Pardo"] },
+    greats: { title: 'Greats One', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"] },
     super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug) },
     progresso: { title: 'Painel de Progresso' }
 };
