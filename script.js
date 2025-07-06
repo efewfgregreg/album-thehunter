@@ -132,7 +132,7 @@ const diamondFursData = {
     "veado_mula": { macho: ["Cinzento", "Pardo", "Amarelado"], femea: [] },
     "veado_de_roosevelt": { macho: ["Bronzeado", "Laranja", "Pardo"], femea: [] },
     "veado_vermelho": { macho: ["Pardo", "Pardo Claro", "Pardo Escuro"], femea: [] },
-    "lagópode_branco": { macho: ["Bicolor", "Muda", "Mosqueado"], femea: [] },
+    "lagópode_branco": { macho: ["Bicolor", "Muda", "Mosqueado", "Muda variação 1", "Muda variação 2"], femea: [] },
     "lagópode_escocês": { macho: ["Bicolor", "Muda"], femea: [] },
     "zarro_negrinha": { macho: ["Preto"], femea: [] },
     "zarro_castanho": { macho: ["Pardo Escuro", "Pardo Avermelhado"], femea: [] }
