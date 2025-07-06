@@ -4,81 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#1a202c">
+    <meta name="theme-color" content="#181a1b">
     <title>Álbum de Caça - theHunter: Call of the Wild</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
+        
+        /* NOVA PALETA DE CORES E ESTILOS GLOBAIS */
         :root {
-            --bg-color: #1a202c; --surface-color: #2d3748; --primary-color: #48bb78; --border-color: #4a5568; --text-color: #e2e8f0; --text-color-muted: #a0aec0; --font-headings: 'Oswald', sans-serif; --font-body: 'Nunito Sans', sans-serif;
+            --bg-color: #181a1b;          /* Fundo principal (quase preto) */
+            --surface-color: #2c2f33;    /* Cor das cartas */
+            --primary-color: #00bcd4;     /* Cor de destaque (ciano vibrante) */
+            --border-color: #40444b;     /* Cor das bordas */
+            --text-color: #e6e6e6;        /* Cor do texto principal */
+            --text-color-muted: #99aab5;  /* Cor do texto secundário */
+            --font-headings: 'Oswald', sans-serif;
+            --font-body: 'Nunito Sans', sans-serif;
         }
-        * { box-sizing: border-box; }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: var(--font-body); background-color: var(--bg-color); color: var(--text-color); margin: 0; display: flex; height: 100vh; overflow: hidden;
+            font-family: var(--font-body);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow-x: hidden; /* Previne scroll horizontal */
         }
-        .sidebar {
-            width: 280px; background-color: #111827; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid var(--border-color); flex-shrink: 0;
+
+        /* --- ESTILO DO HUB DE NAVEGAÇÃO INICIAL --- */
+        .navigation-hub {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            padding: 40px;
+            min-height: 100vh;
+            width: 100%;
         }
-        .sidebar h1 { font-size: 1.5rem; text-align: center; margin: 0 0 30px 0; letter-spacing: 1px; }
-        .sidebar .nav-button { width: 100%; padding: 15px 20px; margin-bottom: 10px; border: 1px solid var(--border-color); background: var(--surface-color); color: var(--text-color-muted); border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 700; transition: all 0.3s ease; font-family: var(--font-headings); text-align: left; text-transform: uppercase; }
-        .sidebar .nav-button:hover { background-color: #3a475a; color: #fff; }
-        .sidebar .nav-button.active { background-color: var(--primary-color); color: #111827; border-color: var(--primary-color); }
-        .main-content { flex-grow: 1; padding: 20px; display: flex; flex-direction: column; overflow-y: auto; }
-        .main-content h2 { border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 25px; }
-        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 20px; }
-        .animal-card { background-color: var(--surface-color); border: 2px solid transparent; border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; }
+
+        .hub-title {
+            width: 100%;
+            text-align: center;
+            font-family: var(--font-headings);
+            font-size: 3rem;
+            letter-spacing: 2px;
+            color: var(--text-color);
+            margin-bottom: 20px;
+        }
+
+        .nav-card {
+            background-color: var(--surface-color);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            width: 250px;
+            height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: var(--font-headings);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-color-muted);
+        }
+
+        .nav-card:hover {
+            transform: translateY(-10px);
+            background-color: #36393f;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
+            box-shadow: 0 10px 30px rgba(0, 188, 212, 0.2);
+        }
+
+        /* --- ESTILO DO CONTEÚDO PRINCIPAL (GRIDS DE ANIMAIS) --- */
+        .main-content {
+            padding: 20px 40px;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+        }
+
+        .page-header h2 {
+            font-family: var(--font-headings);
+            font-size: 2.5rem;
+        }
+
+        .back-button {
+            background: var(--surface-color);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-family: var(--font-headings);
+            transition: all 0.2s ease;
+        }
+
+        .back-button:hover {
+            background: var(--primary-color);
+            color: #111827;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        /* ESTILOS DAS CARTAS DE ANIMAIS E PELAGENS (AJUSTADOS) */
+        .album-grid, .fur-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        .animal-card {
+            background-color: var(--surface-color);
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
         .animal-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; transition: filter 0.3s ease; }
         .animal-card .info { font-family: var(--font-headings); font-size: 1rem; color: var(--text-color); font-weight: 700; }
         .animal-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px rgba(0,0,0,0.3); border-color: var(--primary-color); }
         .animal-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
         .animal-card.incomplete .info { color: var(--text-color-muted); }
         .animal-card.inprogress img { filter: grayscale(50%); }
-        .animal-card.completed { border-color: var(--primary-color); box-shadow: 0 0 15px rgba(72, 187, 120, 0.5); }
-        .filter-input { width: 100%; padding: 12px; margin-bottom: 20px; border: 1px solid var(--border-color); background-color: #1a202c; color: var(--text-color); border-radius: 6px; font-size: 16px; }
-        .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); margin-bottom: 20px; transition: all 0.2s ease; display: inline-block; width: auto; }
-        .back-button:hover { background: var(--primary-color); color: #111827; }
+        .animal-card.completed { border-color: var(--primary-color); box-shadow: 0 0 15px rgba(0, 188, 212, 0.4); }
 
-        .fur-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 15px;
-            align-items: start;
-        }
         .fur-card {
-            background: var(--surface-color);
-            border-radius: 8px;
-            padding: 10px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            gap: 10px;
-            position: relative; 
+            background: var(--surface-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; position: relative;
         }
         .fur-card:hover { transform: scale(1.05); }
-        .fur-card img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-        .fur-card .info, .fur-card .trophy-name {
-            font-family: var(--font-headings);
-            font-size: 0.9rem;
-            line-height: 1.3;
-            font-weight: 700;
-        }
-        
-        .info-and-score {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
+        .fur-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; }
+        .fur-card .info, .fur-card .trophy-name { font-family: var(--font-headings); font-size: 0.9rem; line-height: 1.3; font-weight: 700; }
+        .info-and-score { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; }
         .fur-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
         .fur-card.incomplete .info, .fur-card.incomplete .trophy-name { color: var(--text-color-muted); }
         .fur-card.completed { border-color: var(--primary-color); }
@@ -86,80 +168,36 @@
         .trophy-score-input { width: 60px; padding: 4px; border: 1px solid var(--border-color); background-color: var(--bg-color); color: var(--text-color); border-radius: 4px; font-size: 14px; text-align: center; }
         .trophy-score-save-btn { padding: 4px 8px; font-size: 12px; background: var(--primary-color); color: #111827; border: none; border-radius: 4px; cursor: pointer; }
         .trophy-count { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: bold; }
+        .fullscreen-btn { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 28px; opacity: 0; transition: opacity 0.2s ease-in-out; z-index: 10; }
+        .fur-card:hover .fullscreen-btn { opacity: 1; }
+
+        /* Estilos do Modal (sem alterações) */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
+        .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .modal-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
+        .modal-close:hover, .modal-close:focus { color: #bbb; text-decoration: none; }
         
-        .fullscreen-btn {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            line-height: 28px;
-            opacity: 0; 
-            transition: opacity 0.2s ease-in-out;
-            z-index: 10;
-        }
+        /* Estilos do Painel de Progresso (sem alterações) */
+        .progress-panel { display: flex; flex-direction: column; gap: 20px; }
+        .progress-section { background-color: var(--surface-color); padding: 20px; border-radius: 8px; }
+        .progress-section h3 { margin-bottom: 15px; font-family: var(--font-headings); }
+        .progress-label { text-align: right; margin-bottom: 5px; color: var(--text-color-muted); }
+        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; }
+        .progress-bar-fill { background-color: var(--primary-color); color: var(--bg-color); text-align: center; font-weight: bold; line-height: 20px; height: 20px; transition: width 0.5s ease; }
 
-        .fur-card:hover .fullscreen-btn {
-            opacity: 1;
-        }
+        /* Estilos da tela de detalhes de Great Ones (sem alterações) */
+        #trophy-list-container { margin-top: 20px; background: #23272A; padding: 20px; border-radius: 8px; }
+        .trophy-list h4 { margin-bottom: 15px; }
+        .trophy-list ul { list-style: none; padding: 0; }
+        .trophy-list li { background: #2C2F33; padding: 10px 15px; margin-bottom: 8px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+        .remove-trophy-btn, .add-trophy-btn { background-color: var(--primary-color); color: #111; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
+        .add-trophy-btn { margin-top: 15px; width: 100%; }
+        .trophy-item-details { margin-top: 10px; padding-top: 10px; border-top: 1px solid #40444B; }
 
-        .modal {
-            display: none; 
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.85);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            max-width: 90%;
-            max-height: 90%;
-            object-fit: contain;
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: #f1f1f1;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .modal-close:hover,
-        .modal-close:focus {
-            color: #bbb;
-            text-decoration: none;
-        }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h1>Álbum de Caça</h1>
-        <button class="nav-button active" data-target="pelagens">Pelagens Raras</button>
-        <button class="nav-button" data-target="diamantes">Diamantes</button>
-        <button class="nav-button" data-target="greats">Greats One</button>
-        <button class="nav-button" data-target="super_raros">Super Raros</button>
-        <button class="nav-button" data-target="progresso">Progresso</button>
-    </div>
-    <div class="main-content">
-    </div>
+    <div id="app-container"></div>
 
     <div id="fullscreen-modal" class="modal">
       <span class="modal-close">&times;</span>
