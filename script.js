@@ -32,47 +32,47 @@ const reservesData = {
     layton_lake: {
         name: "Lagos de Layton",
         image: "reservas/layton_lake.png",
-        animals: ["alce", "veado_de_cauda_branca", "veado_de_cauda_preta", "veado_de_roosevelt", "urso_negro", "coiote", "pato_real"]
+        animals: [ "coelho_europeu", "faisão_de_pescoço_anelado", "veado_vermelho", "corça", "gamo", "javali", "ganso_do_canadá", "raposa_vermelha", "bisão_europeu"]
     },
     hirschfelden: {
         name: "Hirschfelden",
         image: "reservas/hirschfelden.png",
-        animals: ["gamo", "corça", "veado_vermelho", "javali", "bisão_europeu", "raposa_vermelha", "ganso_do_canadá"]
+        animals: [ "lebre_de_cauda_branca", "pato_real", "peru_merriami","coiote", "veado_de_cauda_branca", "veado_de_cauda_preta","urso_negro", "veado_de_roosevelt", "alce"]
     },
     medved_taiga: {
         name: "Taiga Medved",
         image: "reservas/medved_taiga.png",
-        animals: ["alce", "rena", "cervo_almiscarado", "urso_pardo", "javali", "lince_euroasiática", "lobo_cinzento"]
+        animals: ["alce", "rena", "tetraz_grande", "cervo_almiscarado", "urso_pardo", "javali", "lince_euroasiática", "lobo_cinzento"]
     },
     vurhonga_savanna: {
         name: "Savana Vurhonga",
         image: "reservas/vurhonga_savanna.png",
-        animals: ["chacal_listrado", "lebre_peluda", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "oryx_do_cabo", "antílope_negro"]
+        animals: ["chacal_listrado", "lebre_de_nuca_dourada", "piadeira",  "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "oryx_do_cabo"]
     },
     parque_fernando: {
         name: "Parque Fernando",
         image: "reservas/parque_fernando.png",
-        animals: ["veado_vermelho", "veado_mula", "onça_parda", "antílope_negro", "búfalo_dágua", "chital"]
+        animals: ["veado_vermelho", "marreca_carijó", "caititu", "veado_mula", "onça_parda", "antílope_negro", "búfalo_dágua", "chital"]
     },
     yukon_valley: {
         name: "Vale do Yukon",
         image: "reservas/yukon_valley.png",
-        animals: ["caribu", "alce", "urso_cinzento", "lobo_cinzento", "bisão_das_planícies", "raposa_vermelha", "pato_harlequim"]
+        animals: ["caribu", "ganso_do_canadá", "alce", "urso_cinzento", "lobo_cinzento", "bisão_das_planícies", "raposa_vermelha", "pato_harlequim"]
     },
     cuatro_colinas: {
         name: "Cuatro Colinas",
         image: "reservas/cuatro_colinas.png",
-        animals: ["ibex_de_gredos", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "muflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"]
+        animals: ["ibex_de_gredos", "faisão_de_pescoço_anelado", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "muflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"]
     },
     silver_ridge_peaks: {
         name: "Picos de Silver Ridge",
         image: "reservas/silver_ridge_peaks.png",
-        animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_selvagem"]
+        animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_merriami"]
     },
     te_awaroa: {
         name: "Te Awaroa",
         image: "reservas/te_awaroa.png",
-        animals: ["veado_vermelho", "gamo", "cabra_selvagem", "porco_selvagem", "peru_selvagem", "camurça", "coelho_europeu", "pato_real"]
+        animals: ["veado_vermelho", "gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_merriami", "camurça", "coelho_europeu", "pato_real"]
     },
     rancho_del_arroyo: {
         name: "Rancho del Arroyo",
@@ -82,37 +82,37 @@ const reservesData = {
     mississippi_acres: {
         name: "Mississippi Acres",
         image: "reservas/mississippi_acres.png",
-        animals: ["veado_de_cauda_branca", "javali", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano", "peru", "marreca_carijó"]
+        animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru_selvagem", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"]
     },
     revontuli_coast: {
         name: "Costa de Revontuli",
         image: "reservas/revontuli_coast.png",
-        animals: ["alce", "veado_de_cauda_branca", "urso_pardo", "rena", "galinha_montês", "galo_lira", "tetraz_grande", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha", "veado_de_cauda_preta"]
+        animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiático", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha"]
     },
     new_england_mountains: {
         name: "New England Mountains",
         image: "reservas/new_england_mountains.png",
-        animals: ["alce", "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "pato_carolino", "gamo"]
+        animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo", "raposa_cinzenta",  "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha"]
     },
     emerald_coast: {
         name: "Emerald Coast",
         image: "reservas/emerald_coast.png",
-        animals: ["canguru_cinza_oriental", "cervo_de_timor", "gamo", "javali", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"]
+        animals: ["canguru_cinza_oriental", "codorna_dos_restolhos", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"]
     },
     sundarpatan: {
         name: "Sundarpatan",
         image: "reservas/sundarpatan.png",
-        animals: ["antílope_negro", "tahr", "carneiro_azul", "cervo_almiscarado", "cervo_sika", "chital", "leopardo_das_neves", "faisão", "marreca_arrebio", "javali"]
+        animals: ["antílope_negro", "ganso_bravo", "lebre_peluda", "muntjac_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala"]
     },
     salzwiesen: {
         name: "Salzwiesen Park",
         image: "reservas/salzwiesen.png",
-        animals: ["gamo", "javali", "bisão_europeu", "guaxinim_comum", "raposa_vermelha", "ganso_do_canadá", "faisão_de_pescoço_anelado", "corça"]
+        animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho"]
     },
     askiy_ridge: {
         name: "Askiy Ridge",
         image: "reservas/askiy_ridge.png",
-        animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "urso_pardo", "bisão_da_floresta", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "lagópode_branco", "pato_harlequim", "castor_norte_americano"]
+        animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", " "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"]
     }
 };
 
