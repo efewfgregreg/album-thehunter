@@ -486,6 +486,9 @@ function renderSuperRareDetailView(container, name, slug) {
 }
 
 function renderDiamondsDetailView(container, name, slug) {
+    // Garante que o container esteja limpo antes de desenhar os cards
+    container.innerHTML = '';
+
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
@@ -498,10 +501,10 @@ function renderDiamondsDetailView(container, name, slug) {
 
     const allPossibleFurs = [];
     if (speciesDiamondFurs.macho) {
-        speciesDiamondFurs.macho.forEach(fur => allPossibleFurs.push({ displayName: `Macho ${fur}`, originalName: fur, gender: 'macho' }));
+        speciesDiamondFurs.macho.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Macho' }));
     }
     if (speciesDiamondFurs.femea) {
-        speciesDiamondFurs.femea.forEach(fur => allPossibleFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur, gender: 'femea' }));
+        speciesDiamondFurs.femea.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Fêmea' }));
     }
 
     allPossibleFurs.sort((a, b) => a.displayName.localeCompare(b.displayName));
@@ -510,66 +513,80 @@ function renderDiamondsDetailView(container, name, slug) {
         const furCard = document.createElement('div');
         furCard.className = 'fur-card';
 
-        // Encontra todos os troféus para este tipo de pelagem e pega o de maior score
-        const savedTrophiesForFur = (savedData.diamantes?.[slug] || []).filter(t => t.type === furInfo.displayName);
+        const fullTrophyName = `${furInfo.gender} ${furInfo.displayName}`;
+        const savedTrophiesForFur = (savedData.diamantes?.[slug] || []).filter(t => t.type === fullTrophyName);
         const highestScoreTrophy = savedTrophiesForFur.reduce((max, t) => t.score > max.score ? t : max, { score: -1 });
 
         const isCompleted = highestScoreTrophy.score !== -1;
         furCard.classList.add(isCompleted ? 'completed' : 'incomplete');
 
         const furSlug = slugify(furInfo.originalName);
-        const genderSlug = furInfo.gender;
+        const genderSlug = furInfo.gender.toLowerCase();
         const genderSpecificPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
         const genderNeutralPath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericAnimalPath = `animais/${slug}.png`;
 
         furCard.innerHTML = `
             <img src="${genderSpecificPath}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';">
-            <div class="info">${furInfo.displayName.replace(' Diamante', '')}</div>
-            <div class="highest-score">${isCompleted ? `Score: <b>${highestScoreTrophy.score}</b>` : 'Não obtido'}</div>
+            <div class="info-header">
+                <span class="gender-tag">${furInfo.gender}</span>
+                <div class="info">${furInfo.displayName}</div>
+            </div>
+            <div class="score-container">
+                ${isCompleted 
+                    ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` 
+                    : '<span class="score-add-btn">Adicionar Pontuação</span>'
+                }
+            </div>
             <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
         `;
 
-        furCard.addEventListener('click', () => {
+        const scoreContainer = furCard.querySelector('.score-container');
+        scoreContainer.addEventListener('click', (e) => {
+            e.stopPropagation(); // Impede que o click propague para outros elementos
+
+            // Se já existe um input, não faz nada
+            if (scoreContainer.querySelector('input')) return;
+
             const currentScore = isCompleted ? highestScoreTrophy.score : '';
-            const newScore = prompt(`Digite a pontuação (score) para "${furInfo.displayName}":`, currentScore);
+            scoreContainer.innerHTML = `<input type="number" class="score-input" value="${currentScore}" placeholder="0.0">`;
+            
+            const input = scoreContainer.querySelector('.score-input');
+            input.focus();
+            input.select();
 
-            if (newScore !== null && !isNaN(newScore) && newScore.trim() !== '') {
-                // Adiciona ou atualiza o troféu
-                if (!savedData.diamantes) savedData.diamantes = {};
-                if (!Array.isArray(savedData.diamantes[slug])) savedData.diamantes[slug] = [];
-
-                // Remove troféus antigos para este tipo para evitar duplicatas (mantém apenas o mais recente)
-                const otherTrophies = savedData.diamantes[slug].filter(t => t.type !== furInfo.displayName);
-                
-                const newTrophy = {
-                    id: Date.now(),
-                    type: furInfo.displayName,
-                    score: parseFloat(newScore)
-                };
-
-                savedData.diamantes[slug] = [...otherTrophies, newTrophy];
-                saveData(savedData);
-                
-                // Re-renderiza a view para refletir a mudança
+            const saveScore = () => {
+                const newScoreValue = input.value;
+                if (newScoreValue !== null && !isNaN(newScoreValue) && newScoreValue.trim() !== '') {
+                    if (!savedData.diamantes) savedData.diamantes = {};
+                    if (!Array.isArray(savedData.diamantes[slug])) savedData.diamantes[slug] = [];
+                    
+                    const otherTrophies = savedData.diamantes[slug].filter(t => t.type !== fullTrophyName);
+                    const newTrophy = {
+                        id: Date.now(),
+                        type: fullTrophyName,
+                        score: parseFloat(newScoreValue)
+                    };
+                    savedData.diamantes[slug] = [...otherTrophies, newTrophy];
+                    saveData(savedData);
+                }
+                // Re-renderiza a view para refletir a mudança, já com o bug corrigido
                 renderDiamondsDetailView(container, name, slug);
-            } else if (newScore === null) {
-                // Usuário cancelou
-            } else {
-                alert("Por favor, insira um número válido para a pontuação.");
-            }
+            };
+
+            input.addEventListener('blur', saveScore);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    saveScore();
+                } else if (e.key === 'Escape') {
+                    renderDiamondsDetailView(container, name, slug); // Apenas re-renderiza para cancelar
+                }
+            });
         });
+
         furGrid.appendChild(furCard);
     });
 }
-
-// A função showAddDiamondForm não é mais necessária e pode ser apagada ou deixada em branco.
-// A lógica dela foi incorporada no click do card acima.
-function showAddDiamondForm(container, name, slug, onSaveCallback) {
-    // Esta função não é mais usada neste novo design.
-    console.log("Esta função (showAddDiamondForm) foi substituída pelo novo design de cards.");
-}
-
 
 function renderGreatsDetailView(container, name, slug, tabKey) {
     const trophyListContainer = document.createElement('div');
