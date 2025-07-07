@@ -52,7 +52,7 @@
         .nav-card i { font-size: 2rem; transition: color 0.3s ease; }
         .nav-card:hover { transform: translateY(-10px) scale(1.03); background-color: rgba(64, 68, 75, 0.9); color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 25px rgba(0, 188, 212, 0.4); }
         
-        /* --- GRIDES DE CARDS (ANIMAIS, RESERVAS) --- */
+        /* --- GRIDES DE CARDS (ANIMAIS, RESERVAS, PELAGENS) --- */
         .filter-input { width: 100%; background-color: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 20px; padding: 10px 20px; font-size: 1rem; color: var(--text-color); transition: all 0.3s ease; margin-bottom: 30px; }
         .filter-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 10px rgba(0, 188, 212, 0.5); }
         .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
@@ -69,7 +69,6 @@
         .animal-card.completed img { filter: invert(65%) sepia(74%) saturate(1450%) hue-rotate(145deg) brightness(95%) contrast(101%) drop-shadow(0 0 5px var(--primary-color)); }
         .animal-card.completed::after { font-family: "Font Awesome 6 Free"; content: "\f058"; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--primary-color); background-color: var(--surface-color); border-radius: 50%; text-shadow: 0 0 8px rgba(0, 0, 0, 0.9); }
         
-        /* --- ESTILOS PARA TELA DE DETALHES (PELAGENS, SUPER RAROS) --- */
         .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
         .fur-card { background: var(--surface-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; position: relative; }
         .fur-card:hover { transform: scale(1.05); }
@@ -81,7 +80,7 @@
         .fullscreen-btn { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 28px; opacity: 0; transition: opacity 0.2s ease-in-out; z-index: 10; }
         .fur-card:hover .fullscreen-btn { opacity: 1; }
 
-        /* --- NOVOS ESTILOS PARA TELA DE DETALHES (DIAMANTES) --- */
+        /* --- ESTILOS DIÁRIO DE TROFÉUS (DIAMANTES) --- */
         .add-trophy-container { margin-bottom: 20px; }
         .add-trophy-btn { background-color: var(--primary-color); color: #111; border: none; padding: 12px 20px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; font-family: var(--font-headings); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 10px; }
         .add-trophy-btn:hover { background-color: #20e4ff; transform: scale(1.02); }
