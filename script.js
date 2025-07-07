@@ -32,12 +32,12 @@ const reservesData = {
     layton_lake: {
         name: "Lagos de Layton",
         image: "reservas/layton_lake.png",
-        animals: [ "coelho_europeu", "faisão_de_pescoço_anelado", "veado_vermelho", "corça", "gamo", "javali", "ganso_do_canadá", "raposa_vermelha", "bisão_europeu"]
+        animals: ["alce", "veado_de_cauda_branca", "veado_de_cauda_preta", "veado_de_roosevelt", "urso_negro", "coiote", "pato_real", "lebre_da_cauda_branca"]
     },
     hirschfelden: {
         name: "Hirschfelden",
         image: "reservas/hirschfelden.png",
-        animals: [ "lebre_da_cauda_branca", "pato_real", "peru","coiote", "veado_de_cauda_branca", "veado_de_cauda_preta","urso_negro", "veado_de_roosevelt", "alce"]
+        animals: ["gamo", "corça", "veado_vermelho", "javali", "bisão_europeu", "raposa_vermelha", "ganso_do_canadá", "coelho_europeu", "faisão_de_pescoço_anelado"]
     },
     medved_taiga: {
         name: "Taiga Medved",
@@ -47,7 +47,7 @@ const reservesData = {
     vurhonga_savanna: {
         name: "Savana Vurhonga",
         image: "reservas/vurhonga_savanna.png",
-        animals: ["chacal_listrado", "lebre_nuca_dourada", "piadeira", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "oryx_do_cabo"]
+        animals: ["chacal_listrado", "lebre_peluda", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "oryx_do_cabo", "antílope_negro", "piadeira"]
     },
     parque_fernando: {
         name: "Parque Fernando",
@@ -62,7 +62,7 @@ const reservesData = {
     cuatro_colinas: {
         name: "Cuatro Colinas",
         image: "reservas/cuatro_colinas.png",
-        animals: ["ibex_de_gredos", "faisão_de_pescoço_anelado", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "muflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"]
+        animals: ["ibex_de_gredos", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "muflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"]
     },
     silver_ridge_peaks: {
         name: "Picos de Silver Ridge",
@@ -82,17 +82,17 @@ const reservesData = {
     mississippi_acres: {
         name: "Mississippi Acres",
         image: "reservas/mississippi_acres.png",
-        animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru_selvagem", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"]
+        animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"]
     },
     revontuli_coast: {
         name: "Costa de Revontuli",
         image: "reservas/revontuli_coast.png",
-        animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha", "veado_de_cauda_preta"]
+        animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha"]
     },
     new_england_mountains: {
         name: "New England Mountains",
         image: "reservas/new_england_mountains.png",
-        animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta",  "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha"]
+        animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta",  "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"]
     },
     emerald_coast: {
         name: "Emerald Coast",
@@ -102,12 +102,12 @@ const reservesData = {
     sundarpatan: {
         name: "Sundarpatan",
         image: "reservas/sundarpatan.png",
-        animals: ["antílope_negro", "ganso_bravo", "lebre_peluda", "muntjac_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala"]
+        animals: ["antílope_negro", "ganso_bravo", "lebre_peluda", "muntjac_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala", "javali"]
     },
     salzwiesen: {
         name: "Salzwiesen Park",
         image: "reservas/salzwiesen.png",
-        animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho"]
+        animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho", "veado_de_cauda_preta"]
     },
     askiy_ridge: {
         name: "Askiy Ridge",
@@ -115,7 +115,6 @@ const reservesData = {
         animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"]
     }
 };
-
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
 
@@ -358,6 +357,8 @@ function showDetailView(name, tabKey) {
     appContainer.appendChild(mainContent);
 }
 
+// ... (Restante das funções: renderRareFursDetailView, renderSuperRareDetailView, etc. continuam aqui) ...
+// (O código abaixo é o restante das funções, sem alterações)
 function renderRareFursDetailView(container, name, slug) {
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -477,7 +478,7 @@ function renderSuperRareDetailView(container, name, slug) {
 
 function renderDiamondsDetailView(container, name, slug) {
     const grid = document.createElement('div');
-    grid.className = 'fur-grid';
+    grid.className = 'trophy-grid';
     container.appendChild(grid);
     
     const speciesDiamondFurs = diamondFursData[slug];
@@ -490,18 +491,14 @@ function renderDiamondsDetailView(container, name, slug) {
     if (speciesDiamondFurs.macho) {
         speciesDiamondFurs.macho.forEach(fur => {
             diamondTrophyOptions.push({
-                displayText: `Macho ${fur} Diamante`,
-                furName: fur,
-                gender: 'macho'
+                displayText: `Macho ${fur}`, furName: fur, gender: 'macho'
             });
         });
     }
     if (speciesDiamondFurs.femea) {
         speciesDiamondFurs.femea.forEach(fur => {
             diamondTrophyOptions.push({
-                displayText: `Fêmea ${fur} Diamante`,
-                furName: fur,
-                gender: 'femea'
+                displayText: `Fêmea ${fur}`, furName: fur, gender: 'femea'
             });
         });
     }
@@ -509,73 +506,54 @@ function renderDiamondsDetailView(container, name, slug) {
     const animalData = savedData['diamantes']?.[slug] || {};
 
     diamondTrophyOptions.sort((a,b) => a.displayText.localeCompare(b.displayText)).forEach(option => {
-        const card = document.createElement('div');
-        const optionData = animalData[option.displayText];
+        const optionData = animalData[option.displayText + " Diamante"];
         const isCompleted = optionData === true || (typeof optionData === 'object' && optionData.completed);
         const score = (typeof optionData === 'object' && optionData.score) ? optionData.score : '';
-        card.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        
+        const card = document.createElement('div');
+        card.className = `trophy-card ${isCompleted ? 'completed' : 'incomplete'}`;
         
         const furSlug = slugify(option.furName);
         const genderSlug = option.gender;
-        const genderSpecificPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
-        const genderNeutralPath = `animais/pelagens/${slug}_${furSlug}.png`;
         const genericAnimalPath = `animais/${slug}.png`;
+        const specificImagePath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
         
         card.innerHTML = `
-            <img src="${genderSpecificPath}" alt="${option.displayText}" onerror="this.onerror=null; this.src='${genderNeutralPath}'; this.onerror=null; this.src='${genericAnimalPath}';">
-            <div class="info-and-score">
-                <span class="trophy-name">${option.displayText}</span>
-                <div class="trophy-score-controls">
-                    <input type="text" class="trophy-score-input" placeholder="---" value="${score}">
-                    <button class="trophy-score-save-btn">Salvar</button>
+            <img src="${specificImagePath}" alt="${option.displayText}" class="trophy-card-img" onerror="this.onerror=null; this.src='${genericAnimalPath}';">
+            <div class="trophy-card-info">
+                <span class="trophy-card-title">${option.displayText}</span>
+                <span class="trophy-card-tag">Diamante</span>
+                <div class="trophy-card-score-area">
+                    ${isCompleted ? 
+                        `<div class="trophy-score-display"><span>Score:</span> ${score || 'N/A'}</div>` :
+                        `<div class="trophy-score-controls">
+                            <input type="text" class="trophy-score-input" placeholder="Score..." value="${score}">
+                            <button class="trophy-score-save-btn">✔</button>
+                         </div>`
+                    }
                 </div>
             </div>
-            <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
         `;
         grid.appendChild(card);
-        const scoreInput = card.querySelector('.trophy-score-input');
-        const saveBtn = card.querySelector('.trophy-score-save-btn');
         
-        saveBtn.style.display = 'none';
-        
-        scoreInput.addEventListener('focus', () => {
-            saveBtn.style.display = 'inline-block';
-        });
-
-        scoreInput.addEventListener('click', (e) => e.stopPropagation());
-        saveBtn.addEventListener('click', (e) => e.stopPropagation());
-
-        saveBtn.addEventListener('click', () => {
-            if (!savedData['diamantes']) savedData['diamantes'] = {};
-            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-            savedData['diamantes'][slug][option.displayText] = {
-                completed: true,
-                score: scoreInput.value
-            };
-            saveData(savedData);
-            card.classList.add('completed');
-            card.classList.remove('incomplete');
-            const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
-            updateCardAppearance(mainAnimalCard, slug, 'diamantes');
-            saveBtn.style.display = 'none';
-        });
-
-        card.addEventListener('click', () => {
-            const currentOptionData = savedData['diamantes']?.[slug]?.[option.displayText];
-            const currentCompleted = currentOptionData === true || (typeof currentOptionData === 'object' && currentOptionData.completed);
-            if (!savedData['diamantes']) savedData['diamantes'] = {};
-            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-            const existingScore = (typeof currentOptionData === 'object' && currentOptionData.score) ? currentOptionData.score : scoreInput.value;
-            savedData['diamantes'][slug][option.displayText] = {
-                completed: !currentCompleted,
-                score: existingScore
-            };
-            saveData(savedData);
-            card.classList.toggle('completed', !currentCompleted);
-            card.classList.toggle('incomplete', currentCompleted);
-            const mainAnimalCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
-            updateCardAppearance(mainAnimalCard, slug, 'diamantes');
-        });
+        if (!isCompleted) {
+            const scoreInput = card.querySelector('.trophy-score-input');
+            const saveBtn = card.querySelector('.trophy-score-save-btn');
+            
+            scoreInput.addEventListener('click', e => e.stopPropagation());
+            saveBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (!savedData['diamantes']) savedData['diamantes'] = {};
+                if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
+                
+                savedData['diamantes'][slug][option.displayText + " Diamante"] = {
+                    completed: true,
+                    score: scoreInput.value
+                };
+                saveData(savedData);
+                renderDiamondsDetailView(container, name, slug);
+            });
+        }
     });
 }
 

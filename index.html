@@ -14,7 +14,7 @@
             --bg-color: #181a1b;
             --surface-color: #2c2f33;
             --primary-color: #00bcd4;
-            --border-color: #40444b;
+            --border-color: #4a5568;
             --text-color: #e6e6e6;
             --text-color-muted: #99aab5;
             --font-headings: 'Oswald', sans-serif;
@@ -114,7 +114,6 @@
         .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); transition: all 0.2s ease; }
         .back-button:hover { background: var(--primary-color); color: #111827; }
         
-        /* ESTILO ATUALIZADO DA BARRA DE BUSCA */
         .filter-input {
             width: 100%;
             background-color: rgba(0, 0, 0, 0.3);
@@ -132,11 +131,10 @@
             box-shadow: 0 0 10px rgba(0, 188, 212, 0.5);
         }
         
-        /* --- ESTILOS ATUALIZADOS PARA OS CARDS DE ANIMAIS --- */
-        .album-grid, .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 20px; }
+        .album-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
         
         .animal-card {
-            background: linear-gradient(145deg, #383c4a, #2c2f33); /* Gradiente metálico */
+            background: linear-gradient(145deg, #383c4a, #2c2f33);
             border: 1px solid #4a5568;
             border-radius: 8px;
             padding: 15px;
@@ -144,51 +142,41 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
-            overflow: hidden; /* Importante para o efeito de zoom */
+            overflow: hidden;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
         }
-
         .animal-card:hover { 
             transform: translateY(-5px); 
             border-color: var(--primary-color);
         }
-
         .animal-card img {
             width: 100%;
             height: 110px;
-            object-fit: contain; /* Garante que o ícone inteiro apareça */
+            object-fit: contain;
             margin-bottom: 15px;
             transition: all 0.3s ease-in-out;
-            /* Transforma o ícone preto em branco/cinza claro */
             filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%);
         }
-
         .animal-card:hover img {
             transform: scale(1.1);
-            /* Adiciona um brilho ao ícone ao passar o mouse */
             filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%) drop-shadow(0 0 8px rgba(255, 255, 255, 0.7));
         }
-
         .animal-card .info { font-family: var(--font-headings); font-size: 1rem; color: var(--text-color); font-weight: 700; }
-
         .animal-card.incomplete img { 
-            filter: grayscale(100%) brightness(0.5); /* Mantém o estilo para não coletados */
+            filter: grayscale(100%) brightness(0.5); 
         }
         .animal-card.incomplete .info { color: var(--text-color-muted); }
-
         .animal-card.inprogress {
-            border-color: #f0ad4e; /* Borda laranja para "em progresso" */
+            border-color: #f0ad4e;
         }
         .animal-card.inprogress img {
             filter: invert(70%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(70%) contrast(95%);
         }
-
         .animal-card.completed {
             border-color: var(--primary-color);
-            box-shadow: 0 0 20px rgba(0, 188, 212, 0.5); /* Brilho neon */
+            box-shadow: 0 0 20px rgba(0, 188, 212, 0.5);
         }
         .animal-card.completed img {
-            /* Filtro para colorir o ícone de ciano */
             filter: invert(65%) sepia(74%) saturate(1450%) hue-rotate(145deg) brightness(95%) contrast(101%) drop-shadow(0 0 5px var(--primary-color));
         }
         .animal-card.completed::after {
@@ -205,7 +193,29 @@
             text-shadow: 0 0 8px rgba(0, 0, 0, 0.9);
         }
 
-        /* --- ESTILOS RESTANTES (sem alterações) --- */
+        /* --- ESTILOS DOSSIÊ/DETALHES --- */
+        .dossier-layout { display: flex; gap: 30px; margin-top: 20px; }
+        .hero-image-container { flex-basis: 40%; display: flex; align-items: center; justify-content: center; }
+        .hero-image { width: 100%; max-height: 400px; object-fit: contain; filter: drop-shadow(0 0 15px rgba(0,0,0,0.5)); }
+        .detail-content-container { flex-basis: 60%; }
+        .trophy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+
+        .trophy-card { background: linear-gradient(145deg, #232526, #383c4a); border-radius: 6px; border: 1px solid var(--border-color); overflow: hidden; display: flex; transition: all 0.3s ease; }
+        .trophy-card:hover { transform: scale(1.03); box-shadow: 0 0 15px rgba(0,0,0,0.4); }
+        .trophy-card-img { width: 80px; height: 110px; object-fit: cover; flex-shrink: 0; }
+        .trophy-card.incomplete .trophy-card-img { filter: grayscale(80%) brightness(0.8); }
+        .trophy-card-info { padding: 10px; display: flex; flex-direction: column; width: 100%; }
+        .trophy-card-title { font-family: var(--font-headings); font-size: 1rem; font-weight: bold; }
+        .trophy-card-tag { font-size: 0.8rem; color: var(--primary-color); font-weight: bold; text-transform: uppercase; }
+        .trophy-card-score-area { margin-top: auto; }
+        .trophy-score-display { font-size: 0.9rem; color: var(--text-color-muted); }
+        .trophy-score-display span { color: var(--text-color); }
+        .trophy-card.completed { background: linear-gradient(145deg, #3a3a3a, #2c2f33); border: 1px solid var(--primary-color); box-shadow: 0 0 10px rgba(0, 188, 212, 0.3); }
+        .trophy-card.completed .trophy-score-display { font-size: 1.1rem; font-weight: bold; color: #ffd700; }
+        .trophy-card.completed .trophy-score-display span { color: var(--text-color-muted); font-weight: normal; font-size: 0.8rem; }
+        
+        /* --- ESTILOS RESTANTES --- */
+        .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
         .fur-card { background: var(--surface-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; position: relative; }
         .fur-card:hover { transform: scale(1.05); }
         .fur-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; }
