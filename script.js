@@ -351,9 +351,7 @@ function renderAnimalDossier(animalName, originReserveKey) {
     dossierTabs.querySelector('.dossier-tab').click();
 }
 
-// --- LÓGICA DAS ABAS ESPECÍFICAS ---
 
-// ... (as funções renderRareFursDetailView, renderSuperRareDetailView, renderDiamondsDetailView, renderGreatsDetailView, etc. permanecem as mesmas)
 // --- LÓGICA DAS ABAS ESPECÍFICAS ---
 
 function renderRareFursDetailView(container, name, slug) {
@@ -468,12 +466,11 @@ function renderDiamondsDetailView(container, name, slug) {
             const input = scoreContainer.querySelector('.score-input');
             input.focus(); input.select();
             const saveScore = () => {
-                const newScoreValue = input.value;
-                if (newScoreValue !== null && !isNaN(newScoreValue) && newScoreValue.trim() !== '') {
+                if (input.value !== null && !isNaN(input.value) && input.value.trim() !== '') {
                     if (!savedData.diamantes) savedData.diamantes = {};
                     if (!Array.isArray(savedData.diamantes[slug])) savedData.diamantes[slug] = [];
                     const otherTrophies = savedData.diamantes[slug].filter(t => t.type !== fullTrophyName);
-                    savedData.diamantes[slug] = [...otherTrophies, { id: Date.now(), type: fullTrophyName, score: parseFloat(newScoreValue) }];
+                    savedData.diamantes[slug] = [...otherTrophies, { id: Date.now(), type: fullTrophyName, score: parseFloat(input.value) }];
                     saveData(savedData);
                 }
                 renderDiamondsDetailView(container, name, slug);
