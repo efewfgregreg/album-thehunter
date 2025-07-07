@@ -6,10 +6,10 @@ function loadData() {
         const parsedData = data ? JSON.parse(data) : {};
         if (parsedData.diamantes) {
             for (const slug in parsedData.diamantes) {
-                // Se o dado antigo for um array (da versão anterior), ele precisa ser convertido para o novo formato de objeto.
-                // A maneira mais segura é resetar os dados, mas isso tenta evitar erros.
-                if (Array.isArray(parsedData.diamantes[slug])) {
-                     parsedData.diamantes[slug] = {};
+                // Garante que o dado para cada animal na seção de diamantes seja sempre um array.
+                // Se for um formato antigo (que não é um array), ele será resetado para uma lista vazia.
+                if (!Array.isArray(parsedData.diamantes[slug])) {
+                    parsedData.diamantes[slug] = [];
                 }
             }
         }
@@ -103,7 +103,7 @@ const reservesData = {
     new_england_mountains: {
         name: "New England Mountains",
         image: "reservas/new_england_mountains.png",
-        animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta",  "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"]
+        animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta", "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"]
     },
     emerald_coast: {
         name: "Emerald Coast",
@@ -486,8 +486,6 @@ function renderSuperRareDetailView(container, name, slug) {
 }
 
 function renderDiamondsDetailView(container, name, slug) {
-    // Esta é a função que foi totalmente refeita para o "Diário de Troféus"
-    // (O código que eu te enviei anteriormente com essa função corrigida)
     const detailContainer = document.createElement('div');
     detailContainer.innerHTML = `
         <div class="add-trophy-container">
