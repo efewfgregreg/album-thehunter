@@ -3,19 +3,18 @@ const saveDataKey = 'theHunterAlbumData';
 function loadData() {
     try {
         const data = localStorage.getItem(saveDataKey);
-        // Garante que o campo de diamantes seja um array para cada animal
         const parsedData = data ? JSON.parse(data) : {};
         if (parsedData.diamantes) {
             for (const slug in parsedData.diamantes) {
                 if (!Array.isArray(parsedData.diamantes[slug])) {
-                    // Converte o formato antigo (objeto) para o novo (array), se necessário
-                    parsedData.diamantes[slug] = Object.values(parsedData.diamantes[slug]);
+                    parsedData.diamantes[slug] = [];
                 }
             }
         }
         return parsedData;
     } catch (e) {
         console.error("Erro ao carregar dados do localStorage", e);
+        localStorage.clear();
         return {};
     }
 }
@@ -127,6 +126,9 @@ const reservesData = {
 };
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
+// ... (Todo o restante do código que já funcionava) ...
+// ...
+// ... (Abaixo, a versão completa de todas as funções que trabalhamos)
 
 function slugify(text) {
     return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
@@ -521,7 +523,7 @@ function renderDiamondsDetailView(container, name, slug) {
 
     detailContainer.querySelector('#add-new-diamond-btn').addEventListener('click', () => {
         const formContainer = detailContainer.querySelector('#add-diamond-form-container');
-        showAddDiamondForm(formContainer, name, slug);
+        showAddDiamondForm(formContainer, name, slug, () => renderDiamondsDetailView(container, name, slug));
     });
 
     logContainer.addEventListener('click', (e) => {
@@ -536,6 +538,73 @@ function renderDiamondsDetailView(container, name, slug) {
                 }
             }
         }
+    });
+}
+
+function showAddDiamondForm(container, name, slug, onSaveCallback) {
+    if (container.style.display === 'block') {
+        container.style.display = 'none';
+        container.innerHTML = '';
+        return;
+    }
+
+    container.style.display = 'block';
+    const speciesDiamondFurs = diamondFursData[slug];
+    let optionsHtml = '';
+
+    if (speciesDiamondFurs) {
+        if (speciesDiamondFurs.macho) {
+            speciesDiamondFurs.macho.forEach(fur => {
+                optionsHtml += `<option value="Macho ${fur} Diamante">Macho ${fur}</option>`;
+            });
+        }
+        if (speciesDiamondFurs.femea) {
+            speciesDiamondFurs.femea.forEach(fur => {
+                optionsHtml += `<option value="Fêmea ${fur} Diamante">Fêmea ${fur}</option>`;
+            });
+        }
+    }
+
+    container.innerHTML = `
+        <div id="add-diamond-form">
+            <select name="trophy-type">
+                <option value="">Selecione a Pelagem...</option>
+                ${optionsHtml}
+            </select>
+            <input type="number" name="trophy-score" placeholder="Pontuação (score)">
+            <button id="save-new-diamond-btn" class="back-button">Salvar</button>
+            <button id="cancel-new-diamond-btn" class="back-button" style="background-color: #555;">Cancelar</button>
+        </div>
+    `;
+
+    container.querySelector('#save-new-diamond-btn').addEventListener('click', () => {
+        const type = container.querySelector('[name="trophy-type"]').value;
+        const score = container.querySelector('[name="trophy-score"]').value;
+
+        if (!type) {
+            alert('Por favor, selecione um tipo de pelagem.');
+            return;
+        }
+
+        if (!savedData.diamantes) {
+            savedData.diamantes = {};
+        }
+        if (!Array.isArray(savedData.diamantes[slug])) {
+            savedData.diamantes[slug] = [];
+        }
+
+        savedData.diamantes[slug].push({
+            id: Date.now(),
+            type: type,
+            score: score
+        });
+        saveData(savedData);
+        onSaveCallback(); // Chama a função para re-renderizar a view principal de diamantes
+    });
+    
+    container.querySelector('#cancel-new-diamond-btn').addEventListener('click', () => {
+        container.style.display = 'none';
+        container.innerHTML = '';
     });
 }
 
@@ -814,9 +883,9 @@ function updateProgressPanel() {
     });
     let collectedDiamonds = 0;
     if (currentData.diamantes) {
-        Object.values(currentData.diamantes).forEach(speciesData => {
-            if(Array.isArray(speciesData)){ // Lógica para o novo formato de array
-                collectedDiamonds += speciesData.length;
+        Object.values(currentData.diamantes).forEach(speciesTrophies => {
+            if (Array.isArray(speciesTrophies)) {
+                collectedDiamonds += speciesTrophies.length;
             }
         });
     }
