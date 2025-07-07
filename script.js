@@ -693,10 +693,10 @@ function showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback) {
 function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
     card.classList.remove('completed', 'inprogress', 'incomplete');
-    let status = 'incomplete'; 
+    let status = 'incomplete';
 
     if (tabKey === 'greats') {
-        const animalData = savedData[tabKey]?.[slug] || {};
+        const animalData = savedData.greats?.[slug] || {};
         checkAndSetGreatOneCompletion(slug, animalData);
         if (animalData.completo) {
             status = 'completed';
@@ -706,42 +706,33 @@ function updateCardAppearance(card, slug, tabKey) {
                 status = 'inprogress';
             }
         }
-    } else {
-        let requiredOptions = [];
-        const speciesData = (tabKey === 'diamantes') ? diamondFursData[slug] : rareFursData[slug];
-        if (speciesData) {
-            if (speciesData.macho) {
-                speciesData.macho.forEach(fur => {
-                    let optionName = `Macho ${fur}`;
-                    if (tabKey === 'diamantes' || tabKey === 'super_raros') optionName += ' Diamante';
-                    requiredOptions.push(optionName);
-                });
-            }
-            if (speciesData.femea) {
-                speciesData.femea.forEach(fur => {
-                    let optionName = `Fêmea ${fur}`;
-                    if (tabKey === 'diamantes' || tabKey === 'super_raros') optionName += ' Diamante';
-                    requiredOptions.push(optionName);
-                });
+    } else if (tabKey === 'diamantes') {
+        const diamondTrophies = savedData.diamantes?.[slug] || [];
+        if (diamondTrophies.length > 0) {
+            status = 'completed';
+        }
+    } else if (tabKey === 'super_raros') {
+        let hasSuperRares = false;
+        const speciesFurs = rareFursData?.[slug];
+        if (speciesFurs) {
+            const allPossibleSuperRares = [];
+            if (speciesFurs.macho) speciesFurs.macho.forEach(fur => allPossibleSuperRares.push(`Macho ${fur} Diamante`));
+            if (diamondFursData?.[slug]?.femea?.length > 0) speciesFurs.femea.forEach(fur => allPossibleSuperRares.push(`Fêmea ${fur} Diamante`));
+            const collectedSuperRares = savedData.super_raros?.[slug] || {};
+            if (allPossibleSuperRares.some(sr => collectedSuperRares.hasOwnProperty(sr) && collectedSuperRares?.[sr] === true)) {
+                status = 'completed';
             }
         }
-
-        if (requiredOptions.length > 0) {
-            const animalData = savedData[tabKey]?.[slug] || {};
-            const completedCount = requiredOptions.filter(option => {
-                const optionData = animalData[option];
-                return optionData === true || (typeof optionData === 'object' && optionData.completed);
-            }).length;
-
-            if (completedCount === requiredOptions.length) {
-                status = 'completed';
-            } else if (completedCount > 0) {
-                status = 'inprogress';
-            }
+    } else if (tabKey === 'pelagens') {
+        const pelagensData = savedData.pelagens?.[slug] || {};
+        if (Object.values(pelagensData).some(v => v === true)) {
+            status = 'completed';
         }
     }
+
     card.classList.add(status);
 }
+
 
 // --- LÓGICA DO NOVO PAINEL DE PROGRESSO ---
 
@@ -810,7 +801,7 @@ function createLatestAchievementsPanel() {
             const animalName = items.find(i => slugify(i) === slug) || slug;
             if(greatOneData.furs) {
                 Object.entries(greatOneData.furs).forEach(([furName, furData]) => {
-                    furData.trophies.forEach(trophy => {
+                    (furData.trophies || []).forEach(trophy => {
                          allTrophies.push({
                             id: new Date(trophy.date).getTime(),
                             animalName: animalName,
@@ -831,14 +822,36 @@ function createLatestAchievementsPanel() {
             const card = document.createElement('div');
             card.className = 'achievement-card';
 
-            // Aplica rotação aleatória para o efeito de "foto pregada no mural"
-            const rotation = Math.random() * 6 - 3; // Ângulo entre -3 e +3 graus
+            const rotation = Math.random() * 6 - 3; 
             card.style.transform = `rotate(${rotation}deg)`;
             card.addEventListener('mouseenter', () => card.style.zIndex = 10);
             card.addEventListener('mouseleave', () => card.style.zIndex = 1);
 
+            const animalSlug = trophy.slug;
+            let imagePathString;
+
+            if (trophy.type === 'diamond') {
+                const genderSlug = trophy.furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+                const pureFurName = trophy.furName.replace(/^(macho|fêmea|diamante)\s/gi, '').trim();
+                const furSlug = slugify(pureFurName);
+                
+                const specificPath = `animais/pelagens/${animalSlug}_${furSlug}_${genderSlug}.png`;
+                const neutralPath = `animais/pelagens/${animalSlug}_${furSlug}.png`;
+                const basePath = `animais/${animalSlug}.png`;
+                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${neutralPath}'; this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
+
+            } else if (trophy.type === 'greatone') {
+                const furSlug = slugify(trophy.furName);
+                const specificPath = `animais/pelagens/great_${animalSlug}_${furSlug}.png`;
+                const basePath = `animais/${animalSlug}.png`;
+                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
+            
+            } else { 
+                 imagePathString = `src="animais/${animalSlug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';"`;
+            }
+            
             card.innerHTML = `
-                <img src="animais/${trophy.slug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';">
+                <img ${imagePathString}>
                 <div class="achievement-card-info">
                     <div class="animal-name">${trophy.animalName}</div>
                     <div class="fur-name">${trophy.furName.replace('Diamante','')}</div>
