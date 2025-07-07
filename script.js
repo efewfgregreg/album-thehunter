@@ -244,6 +244,7 @@ function createAnimalCard(name, tabKey) {
 
 // --- ROTEADOR DE VISUALIZAÇÃO DE DETALHES ---
 function showDetailView(name, tabKey, originReserveKey = null) {
+    // Se a origem for uma reserva, mostra o novo Dossiê. Caso contrário, mantém o fluxo antigo.
     if (originReserveKey) {
         renderAnimalDossier(name, originReserveKey);
     } else {
@@ -346,11 +347,125 @@ function renderAnimalDossier(animalName, originReserveKey) {
         tabs[tabKey].renderFunc(dossierContent, animalName, slug);
     });
     
+    // Abre a primeira aba por padrão
     dossierTabs.querySelector('.dossier-tab').click();
 }
 
-
 // --- LÓGICA DAS ABAS ESPECÍFICAS ---
+
+function renderReservesList(container) {
+    container.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'album-grid reserves-grid';
+    container.appendChild(grid);
+
+    const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+
+    for (const [reserveKey, reserve] of sortedReserves) {
+        const progress = calculateReserveProgress(reserveKey);
+        
+        const card = document.createElement('div');
+        card.className = 'reserve-card';
+        card.innerHTML = `
+            <div class="reserve-card-bg" style="background-image: url('${reserve.image}')"></div>
+            <div class="reserve-card-overlay"></div>
+            <div class="reserve-card-content">
+                <div class="reserve-card-stats">
+                    <span><i class="fas fa-paw"></i> ${progress.collectedRares}</span>
+                    <span><i class="fas fa-gem"></i> ${progress.collectedDiamonds}</span>
+                    <span><i class="fas fa-crown"></i> ${progress.collectedGreatOnes}</span>
+                </div>
+                <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
+            </div>
+        `;
+        card.addEventListener('click', () => showReserveDetailView(reserveKey));
+        grid.appendChild(card);
+    }
+}
+
+function showReserveDetailView(reserveKey) {
+    const mainContent = document.querySelector('.main-content');
+    mainContent.innerHTML = ''; 
+
+    const reserve = reservesData[reserveKey];
+    if (!reserve) return;
+
+    const header = document.createElement('div');
+    header.className = 'page-header';
+    header.innerHTML = `
+        <h2>${reserve.name}</h2>
+        <button class="back-button">&larr; Voltar para Reservas</button>
+    `;
+    header.querySelector('.back-button').addEventListener('click', () => renderMainView('reservas'));
+    mainContent.appendChild(header);
+
+    const checklistContainer = document.createElement('div');
+    checklistContainer.className = 'animal-checklist';
+    
+    const animalNames = reserve.animals.map(slug => items.find(item => slugify(item) === slug)).filter(name => name);
+
+    animalNames.sort((a,b) => a.localeCompare(b)).forEach(animalName => {
+        const slug = slugify(animalName);
+        
+        const totalRares = (rareFursData[slug]?.macho.length || 0) + (rareFursData[slug]?.femea.length || 0);
+        const collectedRares = Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
+        const raresPercentage = totalRares > 0 ? (collectedRares / totalRares) * 100 : 0;
+
+        const totalDiamonds = (diamondFursData[slug]?.macho.length || 0) + (diamondFursData[slug]?.femea.length || 0);
+        const collectedDiamonds = new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
+        const diamondsPercentage = totalDiamonds > 0 ? (collectedDiamonds / totalDiamonds) * 100 : 0;
+        
+        const isGreatOne = greatsFursData.hasOwnProperty(slug);
+
+        const row = document.createElement('div');
+        row.className = 'animal-checklist-row';
+        row.innerHTML = `
+            <img class="animal-icon" src="animais/${slug}.png" onerror="this.src='animais/placeholder.png'">
+            <div class="animal-name">${animalName}</div>
+            <div class="mini-progress-bars">
+                <div class="mini-progress" title="Pelagens Raras: ${collectedRares}/${totalRares}">
+                    <i class="fas fa-paw"></i>
+                    <div class="mini-progress-bar-container"><div class="mini-progress-bar" style="width: ${raresPercentage}%"></div></div>
+                </div>
+                <div class="mini-progress" title="Diamantes: ${collectedDiamonds}/${totalDiamonds}">
+                    <i class="fas fa-gem"></i>
+                    <div class="mini-progress-bar-container"><div class="mini-progress-bar" style="width: ${diamondsPercentage}%"></div></div>
+                </div>
+            </div>
+            <i class="fas fa-crown great-one-indicator ${isGreatOne ? 'possible' : ''}" title="Pode ser Great One"></i>
+        `;
+        row.addEventListener('click', () => showDetailView(animalName, 'reservas', reserveKey));
+        checklistContainer.appendChild(row);
+    });
+
+    mainContent.appendChild(checklistContainer);
+}
+
+function calculateReserveProgress(reserveKey) {
+    const reserveAnimals = reservesData[reserveKey]?.animals || [];
+    let progress = {
+        collectedRares: 0, totalRares: 0,
+        collectedDiamonds: 0, totalDiamonds: 0,
+        collectedGreatOnes: 0, totalGreatOnes: 0
+    };
+
+    reserveAnimals.forEach(slug => {
+        if (rareFursData[slug]) {
+            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
+            progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
+        }
+        if (diamondFursData[slug]) {
+            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
+            progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
+        }
+        if (greatsFursData[slug]) {
+            progress.totalGreatOnes += greatsFursData[slug].length;
+            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
+        }
+    });
+
+    return progress;
+}
 
 function renderRareFursDetailView(container, name, slug) {
     container.innerHTML = '';
