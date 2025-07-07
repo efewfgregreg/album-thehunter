@@ -247,7 +247,6 @@ function createAnimalCard(name, tabKey) {
 
 // --- ROTEADOR DE VISUALIZAÇÃO DE DETALHES ---
 function showDetailView(name, tabKey, originReserveKey = null) {
-    // Se a origem for uma reserva, mostra o novo Dossiê. Caso contrário, mantém o fluxo antigo.
     if (originReserveKey) {
         renderAnimalDossier(name, originReserveKey);
     } else {
@@ -260,28 +259,30 @@ function renderSimpleDetailView(name, tabKey) {
     const slug = slugify(name);
 
     const contentContainer = mainContent.querySelector('div:not(.page-header)');
-    contentContainer.innerHTML = '';
+    if(contentContainer) contentContainer.innerHTML = '';
     
     mainContent.querySelector('.page-header h2').textContent = name;
     const backButton = mainContent.querySelector('.page-header .back-button');
     backButton.innerHTML = `&larr; Voltar para ${categorias[tabKey].title}`;
     backButton.onclick = () => renderMainView(tabKey);
     
+    const detailContent = contentContainer || mainContent;
+
     if (tabKey === 'greats') {
-        renderGreatsDetailView(contentContainer, name, slug);
+        renderGreatsDetailView(detailContent, name, slug);
     } else if (tabKey === 'pelagens') {
-        renderRareFursDetailView(contentContainer, name, slug);
+        renderRareFursDetailView(detailContent, name, slug);
     } else if (tabKey === 'super_raros') {
-        renderSuperRareDetailView(contentContainer, name, slug);
+        renderSuperRareDetailView(detailContent, name, slug);
     } else if (tabKey === 'diamantes') {
-        renderDiamondsDetailView(contentContainer, name, slug);
+        renderDiamondsDetailView(detailContent, name, slug);
     }
 }
 
 function renderAnimalDossier(animalName, originReserveKey) {
     const mainContent = document.querySelector('.main-content');
     const slug = slugify(animalName);
-
+    
     const contentContainer = mainContent.querySelector('div:not(.page-header)');
     contentContainer.innerHTML = '';
 
@@ -622,7 +623,7 @@ function openGreatsTrophyModal(animalName, slug, furName) {
             deleteBtn.onclick = () => {
                 if(confirm('Tem certeza que deseja remover este abate?')) {
                     trophies.splice(index, 1); saveData(savedData); modal.remove();
-                    const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > div:last-child');
+                    const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > div:not(.page-header)');
                     if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
                 }
             };
