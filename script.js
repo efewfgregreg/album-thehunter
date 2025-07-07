@@ -6,8 +6,6 @@ function loadData() {
         const parsedData = data ? JSON.parse(data) : {};
         if (parsedData.diamantes) {
             for (const slug in parsedData.diamantes) {
-                // Garante que o dado para cada animal na seção de diamantes seja sempre um array.
-                // Se for um formato antigo (que não é um array), ele será resetado para uma lista vazia.
                 if (!Array.isArray(parsedData.diamantes[slug])) {
                     parsedData.diamantes[slug] = [];
                 }
@@ -16,7 +14,7 @@ function loadData() {
         return parsedData;
     } catch (e) {
         console.error("Erro ao carregar dados do localStorage", e);
-        localStorage.clear(); // Limpa dados corrompidos
+        localStorage.clear();
         return {};
     }
 }
@@ -24,8 +22,8 @@ function loadData() {
 function saveData(data) {
     try {
         localStorage.setItem(saveDataKey, JSON.stringify(data));
-        if (document.getElementById('progress-panel')) {
-            updateProgressPanel();
+        if (document.getElementById('progress-panel-main-container')) {
+            renderProgressView(document.getElementById('progress-panel-main-container').parentNode);
         }
     } catch (e) {
         console.error("Erro ao salvar dados no localStorage", e);
@@ -134,12 +132,12 @@ function slugify(text) {
 }
 
 const categorias = {
-    pelagens: { title: 'Pelagens Raras', items: items },
-    diamantes: { title: 'Diamantes', items: items },
-    greats: { title: 'Greats One', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"] },
-    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug) },
-    reservas: { title: 'Reservas de Caça' },
-    progresso: { title: 'Painel de Progresso' }
+    pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
+    diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
+    greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
+    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug), icon: 'fas fa-star' },
+    reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
+    progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
 };
 
 let appContainer;
@@ -161,21 +159,12 @@ function renderNavigationHub() {
     title.textContent = 'Álbum de Caça';
     hub.appendChild(title);
 
-    const icons = {
-        pelagens: "fas fa-paw",
-        diamantes: "fas fa-gem",
-        greats: "fas fa-crown",
-        super_raros: "fas fa-star",
-        reservas: "fas fa-map-marked-alt",
-        progresso: "fas fa-chart-line"
-    };
-
     Object.keys(categorias).forEach(key => {
         const cat = categorias[key];
         const card = document.createElement('div');
         card.className = 'nav-card';
         card.innerHTML = `
-            <i class="${icons[key] || 'fas fa-question-circle'}"></i>
+            <i class="${cat.icon || 'fas fa-question-circle'}"></i>
             <span>${cat.title}</span>
         `;
         card.dataset.target = key;
@@ -212,25 +201,7 @@ function renderMainView(tabKey) {
     appContainer.appendChild(mainContent);
 
     if (tabKey === 'progresso') {
-        const progressContent = createProgressPanel();
-        mainContent.appendChild(progressContent);
-
-        const resetButton = document.createElement('button');
-        resetButton.id = 'reset-progress-btn';
-        resetButton.textContent = 'Resetar Todo o Progresso';
-        resetButton.className = 'back-button';
-        resetButton.style.backgroundColor = '#d9534f';
-        resetButton.style.borderColor = '#d43f3a';
-        resetButton.style.marginTop = '20px';
-        resetButton.onclick = () => {
-            if (confirm('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.')) {
-                localStorage.removeItem(saveDataKey);
-                location.reload();
-            }
-        };
-        mainContent.appendChild(resetButton);
-        
-        updateProgressPanel();
+        renderProgressView(mainContent);
     } else if (tabKey === 'reservas') {
         renderReservesList(mainContent);
     } else {
@@ -369,6 +340,7 @@ function showDetailView(name, tabKey) {
 }
 
 function renderRareFursDetailView(container, name, slug) {
+    container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
@@ -422,6 +394,7 @@ function renderRareFursDetailView(container, name, slug) {
 }
 
 function renderSuperRareDetailView(container, name, slug) {
+    container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
@@ -543,9 +516,8 @@ function renderDiamondsDetailView(container, name, slug) {
 
         const scoreContainer = furCard.querySelector('.score-container');
         scoreContainer.addEventListener('click', (e) => {
-            e.stopPropagation(); // Impede que o click propague para outros elementos
+            e.stopPropagation();
 
-            // Se já existe um input, não faz nada
             if (scoreContainer.querySelector('input')) return;
 
             const currentScore = isCompleted ? highestScoreTrophy.score : '';
@@ -570,7 +542,6 @@ function renderDiamondsDetailView(container, name, slug) {
                     savedData.diamantes[slug] = [...otherTrophies, newTrophy];
                     saveData(savedData);
                 }
-                // Re-renderiza a view para refletir a mudança, já com o bug corrigido
                 renderDiamondsDetailView(container, name, slug);
             };
 
@@ -579,7 +550,7 @@ function renderDiamondsDetailView(container, name, slug) {
                 if (e.key === 'Enter') {
                     saveScore();
                 } else if (e.key === 'Escape') {
-                    renderDiamondsDetailView(container, name, slug); // Apenas re-renderiza para cancelar
+                    renderDiamondsDetailView(container, name, slug);
                 }
             });
         });
@@ -589,6 +560,7 @@ function renderDiamondsDetailView(container, name, slug) {
 }
 
 function renderGreatsDetailView(container, name, slug, tabKey) {
+    container.innerHTML = '';
     const trophyListContainer = document.createElement('div');
     trophyListContainer.id = 'trophy-list-container';
     const furGrid = document.createElement('div');
@@ -771,122 +743,244 @@ function updateCardAppearance(card, slug, tabKey) {
     card.classList.add(status);
 }
 
-function createProgressPanel() {
-    const panel = document.createElement('div');
-    panel.className = 'progress-panel';
-    panel.id = 'progress-panel';
+// --- LÓGICA DO NOVO PAINEL DE PROGRESSO ---
 
-    panel.innerHTML = `
-        <div class="progress-section">
-            <h3>Progresso de Pelagens Raras</h3>
-            <div id="rares-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="rares-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-        <div class="progress-section">
-            <h3>Progresso de Super Raros</h3>
-            <div id="super-rares-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="super-rares-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-        <div class="progress-section">
-            <h3>Progresso de Diamantes</h3>
-            <div id="diamond-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="diamond-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-        <div class="progress-section">
-            <h3>Progresso de Great Ones</h3>
-            <div id="greatone-progress-label" class="progress-label">Calculando...</div>
-            <div class="progress-bar-container">
-                <div id="greatone-progress-bar" class="progress-bar-fill"></div>
-            </div>
-        </div>
-    `;
-    return panel;
-}
+function renderProgressView(container) {
+    container.innerHTML = ''; 
+    const wrapper = document.createElement('div');
+    wrapper.className = 'progress-view-container';
+    wrapper.id = 'progress-panel-main-container';
 
-function updateProgressPanel() {
-    const currentData = loadData(); 
+    // 1. Painel de Últimas Conquistas
+    wrapper.appendChild(createLatestAchievementsPanel());
 
-    const updateSection = (id, collected, total) => {
-        const label = document.getElementById(`${id}-progress-label`);
-        const bar = document.getElementById(`${id}-progress-bar`);
-        const percentage = total > 0 ? (collected / total) * 100 : 0;
+    // 2. Painel de Progresso Geral
+    const progressPanel = document.createElement('div');
+    progressPanel.id = 'progress-panel';
+    updateProgressPanel(progressPanel);
+    wrapper.appendChild(progressPanel);
 
-        if (label) {
-            label.textContent = `${collected} / ${total}`;
-        }
-        if (bar) {
-            bar.style.width = `${percentage}%`;
-            bar.textContent = `${Math.round(percentage)}%`;
+    // 3. Botão de Reset
+    const resetButton = document.createElement('button');
+    resetButton.id = 'reset-progress-btn';
+    resetButton.textContent = 'Resetar Todo o Progresso';
+    resetButton.className = 'back-button';
+    resetButton.style.backgroundColor = '#d9534f';
+    resetButton.style.borderColor = '#d43f3a';
+    resetButton.style.marginTop = '20px';
+    resetButton.onclick = () => {
+        if (confirm('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.')) {
+            localStorage.removeItem(saveDataKey);
+            location.reload();
         }
     };
+    wrapper.appendChild(resetButton);
+    
+    container.appendChild(wrapper);
+}
 
-    let totalRares = 0;
-    Object.values(rareFursData).forEach(species => {
-        totalRares += (species.macho?.length || 0);
-        totalRares += (species.femea?.length || 0);
-    });
-    let collectedRares = 0;
-    if (currentData.pelagens) {
-        Object.values(currentData.pelagens).forEach(speciesData => {
-            collectedRares += Object.values(speciesData).filter(isCollected => isCollected === true).length;
+function createLatestAchievementsPanel() {
+    const panel = document.createElement('div');
+    panel.className = 'latest-achievements-panel';
+    panel.innerHTML = '<h3><i class="fas fa-star"></i> Últimas Conquistas</h3>';
+    
+    const grid = document.createElement('div');
+    grid.className = 'achievements-grid';
+
+    const allTrophies = [];
+    // Coleta dos Diamantes
+    if(savedData.diamantes) {
+        Object.entries(savedData.diamantes).forEach(([slug, trophies]) => {
+            const animalName = items.find(i => slugify(i) === slug) || slug;
+            trophies.forEach(trophy => {
+                allTrophies.push({
+                    id: trophy.id,
+                    animalName: animalName,
+                    furName: trophy.type,
+                    slug: slug,
+                    type: 'diamond'
+                });
+            });
         });
     }
-    updateSection('rares', collectedRares, totalRares);
-
-    let totalSuperRares = 0;
-    Object.entries(rareFursData).forEach(([slug, species]) => {
-        totalSuperRares += (species.macho?.length || 0);
-        const femaleCanBeDiamond = diamondFursData[slug]?.femea?.length > 0;
-        if (femaleCanBeDiamond) {
-            totalSuperRares += (species.femea?.length || 0);
-        }
-    });
-    let collectedSuperRares = 0;
-    if (currentData.super_raros) {
-        Object.values(currentData.super_raros).forEach(speciesData => {
-            collectedSuperRares += Object.values(speciesData).filter(isCollected => isCollected === true).length;
-        });
-    }
-    updateSection('super-rares', collectedSuperRares, totalSuperRares);
-
-    let totalDiamonds = 0;
-    Object.values(diamondFursData).forEach(species => {
-        totalDiamonds += (species.macho?.length || 0);
-        totalDiamonds += (species.femea?.length || 0);
-    });
-    let collectedDiamonds = 0;
-    if (currentData.diamantes) {
-        Object.values(currentData.diamantes).forEach(speciesData => {
-            if (Array.isArray(speciesData)) {
-                collectedDiamonds += speciesData.length;
-            }
-        });
-    }
-    updateSection('diamond', collectedDiamonds, totalDiamonds);
-
-    let totalGreatOnesFurs = 0;
-    Object.values(greatsFursData).forEach(fursArray => {
-        totalGreatOnesFurs += fursArray.length;
-    });
-    let collectedGreatOnesFurs = 0;
-    if (currentData.greats) {
-        Object.values(currentData.greats).forEach(speciesData => {
-            if (speciesData.furs) {
-                Object.values(speciesData.furs).forEach(furData => {
-                    if (furData.trophies?.length > 0) {
-                        collectedGreatOnesFurs++;
-                    }
+    // Coleta dos Great Ones
+    if(savedData.greats) {
+        Object.entries(savedData.greats).forEach(([slug, greatOneData]) => {
+            const animalName = items.find(i => slugify(i) === slug) || slug;
+            if(greatOneData.furs) {
+                Object.entries(greatOneData.furs).forEach(([furName, furData]) => {
+                    furData.trophies.forEach(trophy => {
+                         allTrophies.push({
+                            id: new Date(trophy.date).getTime(), // Usa a data como ID
+                            animalName: animalName,
+                            furName: furName,
+                            slug: slug,
+                            type: 'greatone'
+                        });
+                    });
                 });
             }
         });
     }
-    updateSection('greatone', collectedGreatOnesFurs, totalGreatOnesFurs);
+
+    if (allTrophies.length === 0) {
+        grid.innerHTML = '<p>Nenhum troféu de destaque registrado ainda.</p>';
+    } else {
+        allTrophies.sort((a, b) => b.id - a.id).slice(0, 4).forEach(trophy => {
+            const card = document.createElement('div');
+            card.className = 'achievement-card';
+            card.innerHTML = `
+                <img src="animais/${trophy.slug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';">
+                <div class="achievement-card-info">
+                    <div class="animal-name">${trophy.animalName}</div>
+                    <div class="fur-name">${trophy.furName}</div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    panel.appendChild(grid);
+    return panel;
+}
+
+function updateProgressPanel(panel) {
+    const currentData = loadData();
+
+    const sections = {
+        pelagens: { title: "Progresso de Pelagens Raras", data: rareFursData, saved: currentData.pelagens || {}, type: 'boolean' },
+        super_raros: { title: "Progresso de Super Raros", data: rareFursData, saved: currentData.super_raros || {}, type: 'boolean_super' },
+        diamantes: { title: "Progresso de Diamantes", data: diamondFursData, saved: currentData.diamantes || {}, type: 'array' },
+        greats: { title: "Progresso de Great Ones", data: greatsFursData, saved: currentData.greats || {}, type: 'object' }
+    };
+
+    Object.keys(sections).forEach(key => {
+        const sectionInfo = sections[key];
+        let total = 0;
+        let collected = 0;
+
+        if(sectionInfo.type === 'boolean') {
+            Object.values(sectionInfo.data).forEach(species => {
+                total += (species.macho?.length || 0) + (species.femea?.length || 0);
+            });
+            Object.values(sectionInfo.saved).forEach(speciesData => {
+                collected += Object.values(speciesData).filter(isCollected => isCollected === true).length;
+            });
+        } else if (sectionInfo.type === 'boolean_super') {
+             Object.entries(sectionInfo.data).forEach(([slug, species]) => {
+                total += (species.macho?.length || 0);
+                if (diamondFursData[slug]?.femea?.length > 0) total += (species.femea?.length || 0);
+            });
+            Object.values(sectionInfo.saved).forEach(speciesData => {
+                collected += Object.values(speciesData).filter(isCollected => isCollected === true).length;
+            });
+        } else if(sectionInfo.type === 'array') {
+             Object.values(sectionInfo.data).forEach(species => {
+                total += (species.macho?.length || 0) + (species.femea?.length || 0);
+            });
+            Object.values(sectionInfo.saved).forEach(speciesData => {
+                collected += new Set(speciesData.map(t => t.type)).size; // Conta tipos únicos
+            });
+        } else if (sectionInfo.type === 'object') {
+            Object.values(sectionInfo.data).forEach(fursArray => total += fursArray.length);
+            Object.values(sectionInfo.saved).forEach(speciesData => {
+                if(speciesData.furs) {
+                    collected += Object.values(speciesData.furs).filter(fur => fur.trophies?.length > 0).length;
+                }
+            });
+        }
+
+        const percentage = total > 0 ? (collected / total) * 100 : 0;
+        let medalClass = '';
+        let medalIcon = 'fa-medal';
+        if (percentage >= 75) { medalClass = 'gold'; }
+        else if (percentage >= 50) { medalClass = 'silver'; }
+        else if (percentage > 0) { medalClass = 'bronze'; }
+
+        const sectionEl = document.createElement('div');
+        sectionEl.className = 'progress-section';
+        sectionEl.innerHTML = `
+            <div class="progress-header">
+                <div class="progress-title-container">
+                    <i class="fas ${medalIcon} progress-medal ${medalClass}"></i>
+                    <h3>${sectionInfo.title}</h3>
+                </div>
+                <div class="progress-label">${collected} / ${total}</div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: ${percentage}%;"></div>
+            </div>
+        `;
+        sectionEl.addEventListener('click', () => toggleProgressDetail(sectionEl, key));
+        panel.appendChild(sectionEl);
+    });
+}
+
+function toggleProgressDetail(sectionEl, categoryKey) {
+    const existingDetail = sectionEl.querySelector('.progress-detail-view');
+    if (existingDetail) {
+        existingDetail.remove();
+        return;
+    }
+
+    const detailView = document.createElement('div');
+    detailView.className = 'progress-detail-view';
+    
+    // Lógica para preencher os detalhes
+    renderProgressDetail(detailView, categoryKey);
+
+    sectionEl.appendChild(detailView);
+}
+
+function renderProgressDetail(detailContainer, categoryKey) {
+    const sourceData = categorias[categoryKey].items.map(slugify);
+    const savedDataForCategory = savedData[categoryKey] || {};
+    
+    const progressByAnimal = {};
+
+    sourceData.forEach(slug => {
+        const animalName = items.find(i => slugify(i) === slug) || slug;
+        let total = 0;
+        let collected = 0;
+
+        switch(categoryKey) {
+            case 'pelagens':
+                total = (rareFursData[slug]?.macho.length || 0) + (rareFursData[slug]?.femea.length || 0);
+                collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length;
+                break;
+            case 'diamantes':
+                 total = (diamondFursData[slug]?.macho.length || 0) + (diamondFursData[slug]?.femea.length || 0);
+                 collected = new Set((savedDataForCategory[slug] || []).map(t => t.type)).size;
+                 break;
+            case 'greats':
+                if(!greatsFursData[slug]) return;
+                total = greatsFursData[slug].length;
+                collected = Object.values(savedDataForCategory[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
+                break;
+            case 'super_raros':
+                 if(!rareFursData[slug]) return;
+                 total += rareFursData[slug].macho?.length || 0;
+                 if(diamondFursData[slug]?.femea?.length > 0) total += rareFursData[slug].femea?.length || 0;
+                 collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length;
+                 break;
+        }
+
+        if (total > 0 && collected > 0) {
+            progressByAnimal[animalName] = { collected, total };
+        }
+    });
+
+    if (Object.keys(progressByAnimal).length === 0) {
+        detailContainer.innerHTML = `<div class="progress-detail-item"><span class="label">Nenhum progresso nesta categoria ainda.</span></div>`;
+        return;
+    }
+    
+    Object.entries(progressByAnimal).sort((a,b) => a[0].localeCompare(b[0])).forEach(([animalName, progress]) => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'progress-detail-item';
+        itemEl.innerHTML = `<span class="label">${animalName}</span> <span class="value">${progress.collected} / ${progress.total}</span>`;
+        detailContainer.appendChild(itemEl);
+    });
 }
 
 function openModal(imageUrl) {

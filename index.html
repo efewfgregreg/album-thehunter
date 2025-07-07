@@ -18,6 +18,8 @@
             --text-color: #e6e6e6;
             --text-color-muted: #99aab5;
             --gold-color: #ffd700;
+            --bronze-color: #cd7f32;
+            --silver-color: #c0c0c0;
             --font-headings: 'Oswald', sans-serif;
             --font-body: 'Nunito Sans', sans-serif;
         }
@@ -79,133 +81,60 @@
         /*======================================================
         =            ESTILOS PARA DIAMANTES (Versão 2)         =
         ======================================================*/
-
-        .fur-card {
-            /* Adiciona um gradiente sutil e sombra para profundidade */
-            background: linear-gradient(145deg, #2c2f33, #232529);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.05);
-        }
-
-        .fur-card .info-header {
-            margin-bottom: 10px;
-        }
-
-        .fur-card .gender-tag {
-            font-size: 0.75rem;
-            padding: 2px 6px;
-            border-radius: 4px;
-            background-color: rgba(0,0,0,0.2);
-            color: var(--text-color-muted);
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-
-        .fur-card .score-container {
-            margin-top: auto;
-            padding: 8px;
-            border-radius: 6px;
-            background-color: rgba(0,0,0,0.2);
-            transition: background-color 0.3s ease;
-            cursor: pointer;
-        }
-
-        .fur-card:hover .score-container {
-            background-color: rgba(0,0,0,0.4);
-        }
-
-        .fur-card .score-add-btn {
-            font-weight: bold;
-            color: var(--text-color-muted);
-            font-size: 0.9rem;
-        }
-
-        .fur-card .score-display {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: var(--gold-color);
-        }
-
-        .fur-card .score-display .fa-trophy {
-            margin-right: 8px;
-            font-size: 1rem;
-            opacity: 0.8;
-        }
-
-        .fur-card .score-input {
-            width: 100%;
-            background-color: var(--bg-color);
-            border: 1px solid var(--gold-color);
-            color: var(--gold-color);
-            text-align: center;
-            font-size: 1.2rem;
-            border-radius: 4px;
-            padding: 4px;
-            font-family: var(--font-headings);
-        }
-
-        .fur-card .score-input:focus {
-            outline: none;
-            box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-        }
-
-        /* --- Estados do Card --- */
-
-        .fur-card.incomplete img {
-            filter: grayscale(80%) brightness(0.6);
-            transition: all 0.3s ease;
-        }
-
-        .fur-card.incomplete:hover img {
-            filter: grayscale(50%) brightness(0.8);
-        }
-
-        .fur-card.incomplete .info {
-            color: var(--text-color-muted);
-        }
-
-        .fur-card.completed {
-            border-color: var(--gold-color);
-            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,215,0,0.1);
-        }
-
-        .fur-card.completed .info {
-            color: var(--text-color);
-        }
-
-        .fur-card.completed .gender-tag {
-            background-color: rgba(255, 215, 0, 0.1);
-            color: var(--gold-color);
-        }
-
-        .fur-card.completed img {
-            filter: none;
-            transition: all 0.3s ease;
-        }
-
-        .fur-card.completed:hover img {
-            transform: scale(1.05);
-        }
-
-        /*=====  Fim dos Estilos para Diamantes  ======*/
+        .fur-card { background: linear-gradient(145deg, #2c2f33, #232529); box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.05); }
+        .fur-card .info-header { margin-bottom: 10px; }
+        .fur-card .gender-tag { font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; background-color: rgba(0,0,0,0.2); color: var(--text-color-muted); font-weight: bold; text-transform: uppercase; }
+        .fur-card .score-container { margin-top: auto; padding: 8px; border-radius: 6px; background-color: rgba(0,0,0,0.2); transition: background-color 0.3s ease; cursor: pointer; }
+        .fur-card:hover .score-container { background-color: rgba(0,0,0,0.4); }
+        .fur-card .score-add-btn { font-weight: bold; color: var(--text-color-muted); font-size: 0.9rem; }
+        .fur-card .score-display { font-size: 1.2rem; font-weight: bold; color: var(--gold-color); }
+        .fur-card .score-display .fa-trophy { margin-right: 8px; font-size: 1rem; opacity: 0.8; }
+        .fur-card .score-input { width: 100%; background-color: var(--bg-color); border: 1px solid var(--gold-color); color: var(--gold-color); text-align: center; font-size: 1.2rem; border-radius: 4px; padding: 4px; font-family: var(--font-headings); }
+        .fur-card .score-input:focus { outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .fur-card.incomplete img { filter: grayscale(80%) brightness(0.6); transition: all 0.3s ease; }
+        .fur-card.incomplete:hover img { filter: grayscale(50%) brightness(0.8); }
+        .fur-card.incomplete .info { color: var(--text-color-muted); }
+        .fur-card.completed { border-color: var(--gold-color); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,215,0,0.1); }
+        .fur-card.completed .info { color: var(--text-color); }
+        .fur-card.completed .gender-tag { background-color: rgba(255, 215, 0, 0.1); color: var(--gold-color); }
+        .fur-card.completed img { filter: none; transition: all 0.3s ease; }
+        .fur-card.completed:hover img { transform: scale(1.05); }
 
         /* --- OUTROS ESTILOS --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
         .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; }
         .modal-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
         .modal-close:hover, .modal-close:focus { color: #bbb; text-decoration: none; }
-        .progress-panel { display: flex; flex-direction: column; gap: 20px; }
-        .progress-section { background-color: var(--surface-color); padding: 20px; border-radius: 8px; }
-        .progress-section h3 { margin-bottom: 15px; font-family: var(--font-headings); }
-        .progress-label { text-align: right; margin-bottom: 5px; color: var(--text-color-muted); font-size: 0.9rem;}
-        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; height: 22px;}
-        .progress-bar-fill { background-color: var(--primary-color); color: var(--bg-color); text-align: center; font-weight: bold; line-height: 22px; height: 100%; transition: width 0.5s ease; }
-        #trophy-list-container { margin-top: 20px; background: #23272A; padding: 20px; border-radius: 8px; }
-        .trophy-list h4 { margin-bottom: 15px; }
-        .trophy-list ul { list-style: none; padding: 0; }
-        .trophy-list li { background: #2C2F33; padding: 10px 15px; margin-bottom: 8px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .remove-trophy-btn { background-color: var(--primary-color); color: #111; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
-        .add-trophy-btn { margin-top: 15px; width: 100%; background-color: var(--primary-color); color: #111; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; font-family: var(--font-headings); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .trophy-item-details { margin-top: 10px; padding-top: 10px; border-top: 1px solid #40444B; }
+        
+        /*======================================================
+        =      PAINEL DE PROGRESSO (TEMA DIÁRIO DE CAÇA)       =
+        ======================================================*/
+        .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
+        .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(https://www.transparenttextures.com/patterns/leather.png); background-color: #2a2c30; padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .achievement-card { background-color: #36393f; border-radius: 6px; overflow: hidden; text-align: center; border: 1px solid var(--border-color); }
+        .achievement-card img { width: 100%; height: 100px; object-fit: cover; }
+        .achievement-card-info { padding: 10px; }
+        .achievement-card-info .animal-name { font-family: var(--font-headings); font-size: 1.1rem; }
+        .achievement-card-info .fur-name { font-size: 0.9rem; color: var(--text-color-muted); }
+        #progress-panel { display: flex; flex-direction: column; gap: 20px; }
+        .progress-section { background-color: var(--surface-color); padding: 15px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; border: 1px solid var(--border-color); }
+        .progress-section:hover { background-color: #36393f; border-color: var(--primary-color); }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; }
+        .progress-header h3 { margin: 0; font-family: var(--font-headings); }
+        .progress-title-container { display: flex; align-items: center; gap: 10px; }
+        .progress-medal { font-size: 1.5rem; }
+        .progress-medal.bronze { color: var(--bronze-color); }
+        .progress-medal.silver { color: var(--silver-color); }
+        .progress-medal.gold { color: var(--gold-color); }
+        .progress-label { text-align: right; color: var(--text-color-muted); font-size: 0.9rem; font-weight: bold; }
+        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; height: 12px; margin-top: 10px; }
+        .progress-bar-fill { background: linear-gradient(90deg, #43A047, #66BB6A); height: 100%; transition: width 0.5s ease; border-radius: 5px; }
+        .progress-detail-view { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; }
+        .progress-detail-item { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; }
+        .progress-detail-item .label { color: var(--text-color-muted); }
+        .progress-detail-item .value { font-weight: bold; }
     </style>
 </head>
 <body>
