@@ -6,15 +6,17 @@ function loadData() {
         const parsedData = data ? JSON.parse(data) : {};
         if (parsedData.diamantes) {
             for (const slug in parsedData.diamantes) {
-                if (!Array.isArray(parsedData.diamantes[slug])) {
-                    parsedData.diamantes[slug] = [];
+                // Se o dado antigo for um array (da versão anterior), ele precisa ser convertido para o novo formato de objeto.
+                // A maneira mais segura é resetar os dados, mas isso tenta evitar erros.
+                if (Array.isArray(parsedData.diamantes[slug])) {
+                     parsedData.diamantes[slug] = {};
                 }
             }
         }
         return parsedData;
     } catch (e) {
         console.error("Erro ao carregar dados do localStorage", e);
-        localStorage.clear();
+        localStorage.clear(); // Limpa dados corrompidos
         return {};
     }
 }
@@ -126,9 +128,6 @@ const reservesData = {
 };
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
-// ... (Todo o restante do código que já funcionava) ...
-// ...
-// ... (Abaixo, a versão completa de todas as funções que trabalhamos)
 
 function slugify(text) {
     return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
@@ -487,7 +486,7 @@ function renderSuperRareDetailView(container, name, slug) {
 }
 
 function renderDiamondsDetailView(container, name, slug) {
-    // A função que foi totalmente refeita para o "Diário de Troféus"
+    // Esta é a função que foi totalmente refeita para o "Diário de Troféus"
     // (O código que eu te enviei anteriormente com essa função corrigida)
     const detailContainer = document.createElement('div');
     detailContainer.innerHTML = `
@@ -599,7 +598,7 @@ function showAddDiamondForm(container, name, slug, onSaveCallback) {
             score: score
         });
         saveData(savedData);
-        onSaveCallback(); // Chama a função para re-renderizar a view principal de diamantes
+        onSaveCallback(); 
     });
     
     container.querySelector('#cancel-new-diamond-btn').addEventListener('click', () => {
@@ -883,9 +882,9 @@ function updateProgressPanel() {
     });
     let collectedDiamonds = 0;
     if (currentData.diamantes) {
-        Object.values(currentData.diamantes).forEach(speciesTrophies => {
-            if (Array.isArray(speciesTrophies)) {
-                collectedDiamonds += speciesTrophies.length;
+        Object.values(currentData.diamantes).forEach(speciesData => {
+            if (Array.isArray(speciesData)) {
+                collectedDiamonds += speciesData.length;
             }
         });
     }

@@ -69,34 +69,33 @@
         .animal-card.completed img { filter: invert(65%) sepia(74%) saturate(1450%) hue-rotate(145deg) brightness(95%) contrast(101%) drop-shadow(0 0 5px var(--primary-color)); }
         .animal-card.completed::after { font-family: "Font Awesome 6 Free"; content: "\f058"; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--primary-color); background-color: var(--surface-color); border-radius: 50%; text-shadow: 0 0 8px rgba(0, 0, 0, 0.9); }
         
-        .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 15px; }
-        .fur-card { background: var(--surface-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; justify-content: flex-start; gap: 10px; position: relative; }
+        .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; }
+        .fur-card { background: var(--surface-color); border-radius: 8px; padding: 10px; text-align: center; cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; position: relative; }
         .fur-card:hover { transform: scale(1.05); }
         .fur-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; }
-        .fur-card .info { font-family: var(--font-headings); font-size: 0.9rem; line-height: 1.3; font-weight: 700; }
-        .fur-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
+        .fur-card .info { font-family: var(--font-headings); font-size: 1rem; line-height: 1.3; font-weight: 700; }
         .fur-card.incomplete .info { color: var(--text-color-muted); }
         .fur-card.completed { border-color: var(--primary-color); }
         .fullscreen-btn { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 28px; opacity: 0; transition: opacity 0.2s ease-in-out; z-index: 10; }
         .fur-card:hover .fullscreen-btn { opacity: 1; }
 
-        /* --- ESTILOS DIÁRIO DE TROFÉUS (DIAMANTES) --- */
-        .add-trophy-container { margin-bottom: 20px; }
-        .add-trophy-btn { background-color: var(--primary-color); color: #111; border: none; padding: 12px 20px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; font-family: var(--font-headings); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        /* --- NOVOS ESTILOS PARA DIÁRIO DE TROFÉUS (DIAMANTES) --- */
+        .highest-score { margin-top: auto; padding-top: 10px; font-size: 0.9rem; color: var(--text-color-muted); }
+        .highest-score b { color: var(--gold-color); font-size: 1rem; }
+        #add-trophy-form-container { background-color: var(--surface-color); padding: 20px; border-radius: 8px; margin-top: 15px; border: 1px solid var(--border-color); }
+        #add-trophy-form-container input { width: 100%; padding: 10px; margin-bottom: 10px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 5px; font-size: 1rem; }
+        #add-trophy-form-container button { width: auto; padding: 10px 20px; margin-right: 10px; }
+        .add-trophy-btn { background-color: var(--primary-color); color: #111; border: none; padding: 12px 20px; width: 100%; border-radius: 6px; cursor: pointer; font-size: 1.1rem; font-weight: bold; font-family: var(--font-headings); transition: all 0.2s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
         .add-trophy-btn:hover { background-color: #20e4ff; transform: scale(1.02); }
-        #add-diamond-form { background-color: var(--surface-color); padding: 20px; border-radius: 8px; margin-top: 15px; border: 1px solid var(--border-color); }
-        #add-diamond-form select, #add-diamond-form input { width: 100%; padding: 10px; margin-bottom: 10px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 5px; font-size: 1rem; }
-        #add-diamond-form button { width: auto; padding: 10px 20px; margin-right: 10px; }
-        .trophy-log { display: flex; flex-direction: column; gap: 10px; }
+        .trophy-log-list { display: flex; flex-direction: column; gap: 10px; }
         .trophy-log-entry { display: flex; align-items: center; background: linear-gradient(145deg, #2c2f33, #383c4a); padding: 15px; border-radius: 6px; border-left: 5px solid var(--gold-color); }
         .trophy-log-info { flex-grow: 1; }
-        .trophy-log-title { font-size: 1.1rem; font-weight: bold; }
-        .trophy-log-score { font-size: 0.9rem; color: var(--text-color-muted); }
-        .trophy-log-score b { color: var(--gold-color); }
+        .trophy-log-score { font-size: 1.2rem; color: var(--gold-color); }
+        .trophy-log-score span { color: var(--text-color-muted); font-size: 0.9rem; }
         .trophy-log-delete-btn { background: #d9534f; color: white; border: none; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; font-size: 1rem; transition: background-color 0.2s ease; margin-left: 15px; flex-shrink: 0; }
         .trophy-log-delete-btn:hover { background: #c9302c; }
 
-        /* --- OUTROS ESTILOS --- */
+        /* --- OUTROS --- */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
         .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; }
         .modal-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
@@ -111,9 +110,6 @@
         .trophy-list h4 { margin-bottom: 15px; }
         .trophy-list ul { list-style: none; padding: 0; }
         .trophy-list li { background: #2C2F33; padding: 10px 15px; margin-bottom: 8px; border-radius: 5px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .remove-trophy-btn, .add-trophy-btn { background-color: var(--primary-color); color: #111; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; }
-        .add-trophy-btn { margin-top: 15px; width: 100%; }
-        .trophy-item-details { margin-top: 10px; padding-top: 10px; border-top: 1px solid #40444B; }
     </style>
 </head>
 <body>
