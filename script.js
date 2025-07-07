@@ -573,7 +573,6 @@ function renderDiamondsDetailView(container, name, slug) {
     });
 }
 
-
 function renderGreatsDetailView(container, name, slug, tabKey) {
     const trophyListContainer = document.createElement('div');
     trophyListContainer.id = 'trophy-list-container';
