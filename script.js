@@ -199,22 +199,26 @@ function renderMainView(tabKey) {
     header.appendChild(backButton);
     mainContent.appendChild(header);
     
+    // Cria um container para o conteúdo que pode ser limpo sem apagar o cabeçalho
+    const contentContainer = document.createElement('div');
+    mainContent.appendChild(contentContainer);
+    
     appContainer.appendChild(mainContent);
 
     if (tabKey === 'progresso') {
-        renderProgressView(mainContent);
+        renderProgressView(contentContainer);
     } else if (tabKey === 'reservas') {
-        renderReservesList(mainContent); // CORREÇÃO APLICADA AQUI
+        renderReservesList(contentContainer);
     } else {
         const filterInput = document.createElement('input');
         filterInput.type = 'text';
         filterInput.className = 'filter-input';
         filterInput.placeholder = 'Buscar animal...';
-        mainContent.appendChild(filterInput);
+        contentContainer.appendChild(filterInput);
 
         const albumGrid = document.createElement('div');
         albumGrid.className = 'album-grid';
-        mainContent.appendChild(albumGrid);
+        contentContainer.appendChild(albumGrid);
 
         (currentTab.items || []).sort((a, b) => a.localeCompare(b)).forEach(name => {
             const card = createAnimalCard(name, tabKey);
@@ -252,61 +256,43 @@ function showDetailView(name, tabKey, originReserveKey = null) {
 }
 
 function renderSimpleDetailView(name, tabKey) {
-    appContainer.innerHTML = '';
+    const mainContent = document.querySelector('.main-content');
     const slug = slugify(name);
 
-    const mainContent = document.createElement('div');
-    mainContent.className = 'main-content';
-
-    const header = document.createElement('div');
-    header.className = 'page-header';
-
-    const detailHeader = document.createElement('h2');
-    detailHeader.textContent = name;
-
-    const backButton = document.createElement('button');
-    backButton.className = 'back-button';
-    backButton.innerHTML = `&larr; Voltar para ${categorias[tabKey].title}`;
-    backButton.addEventListener('click', () => renderMainView(tabKey));
+    // Limpa apenas o conteúdo, não o cabeçalho
+    const contentContainer = mainContent.querySelector('div:not(.page-header)');
+    contentContainer.innerHTML = '';
     
-    header.appendChild(detailHeader);
-    header.appendChild(backButton);
-    mainContent.appendChild(header);
-
-    const detailContent = document.createElement('div');
-    mainContent.appendChild(detailContent);
+    // Atualiza o cabeçalho
+    mainContent.querySelector('.page-header h2').textContent = name;
+    const backButton = mainContent.querySelector('.page-header .back-button');
+    backButton.innerHTML = `&larr; Voltar para ${categorias[tabKey].title}`;
+    backButton.onclick = () => renderMainView(tabKey);
     
     if (tabKey === 'greats') {
-        renderGreatsDetailView(detailContent, name, slug);
+        renderGreatsDetailView(contentContainer, name, slug);
     } else if (tabKey === 'pelagens') {
-        renderRareFursDetailView(detailContent, name, slug);
+        renderRareFursDetailView(contentContainer, name, slug);
     } else if (tabKey === 'super_raros') {
-        renderSuperRareDetailView(detailContent, name, slug);
+        renderSuperRareDetailView(contentContainer, name, slug);
     } else if (tabKey === 'diamantes') {
-        renderDiamondsDetailView(detailContent, name, slug);
+        renderDiamondsDetailView(contentContainer, name, slug);
     }
-    
-    appContainer.appendChild(mainContent);
 }
 
 function renderAnimalDossier(animalName, originReserveKey) {
-    appContainer.innerHTML = '';
+    const mainContent = document.querySelector('.main-content');
     const slug = slugify(animalName);
 
-    const mainContent = document.createElement('div');
-    mainContent.className = 'main-content';
+    // Limpa apenas o conteúdo, não o cabeçalho
+    const contentContainer = mainContent.querySelector('div:not(.page-header)');
+    contentContainer.innerHTML = '';
 
-    const header = document.createElement('div');
-    header.className = 'page-header';
-    const detailHeader = document.createElement('h2');
-    detailHeader.textContent = `Dossiê: ${animalName}`;
-    const backButton = document.createElement('button');
-    backButton.className = 'back-button';
+    // Atualiza o cabeçalho
+    mainContent.querySelector('.page-header h2').textContent = `Dossiê: ${animalName}`;
+    const backButton = mainContent.querySelector('.page-header .back-button');
     backButton.innerHTML = `&larr; Voltar para ${reservesData[originReserveKey].name}`;
-    backButton.addEventListener('click', () => showReserveDetailView(originReserveKey));
-    header.appendChild(detailHeader);
-    header.appendChild(backButton);
-    mainContent.appendChild(header);
+    backButton.onclick = () => showReserveDetailView(originReserveKey);
 
     const dossierTabs = document.createElement('div');
     dossierTabs.className = 'dossier-tabs';
@@ -331,9 +317,8 @@ function renderAnimalDossier(animalName, originReserveKey) {
         dossierTabs.appendChild(tab);
     });
 
-    mainContent.appendChild(dossierTabs);
-    mainContent.appendChild(dossierContent);
-    appContainer.appendChild(mainContent);
+    contentContainer.appendChild(dossierTabs);
+    contentContainer.appendChild(dossierContent);
     
     dossierTabs.addEventListener('click', e => {
         const tab = e.target.closest('.dossier-tab');
@@ -355,7 +340,7 @@ function renderAnimalDossier(animalName, originReserveKey) {
 function renderReservesList(container) {
     container.innerHTML = '';
     const grid = document.createElement('div');
-    grid.className = 'album-grid reserves-grid';
+    grid.className = 'album-grid reserves-grid'; 
     container.appendChild(grid);
 
     const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
@@ -384,19 +369,16 @@ function renderReservesList(container) {
 
 function showReserveDetailView(reserveKey) {
     const mainContent = document.querySelector('.main-content');
-    mainContent.innerHTML = ''; 
+    const contentContainer = mainContent.querySelector('div:not(.page-header)');
+    contentContainer.innerHTML = ''; 
 
     const reserve = reservesData[reserveKey];
     if (!reserve) return;
 
-    const header = document.createElement('div');
-    header.className = 'page-header';
-    header.innerHTML = `
-        <h2>${reserve.name}</h2>
-        <button class="back-button">&larr; Voltar para Reservas</button>
-    `;
-    header.querySelector('.back-button').addEventListener('click', () => renderMainView('reservas'));
-    mainContent.appendChild(header);
+    mainContent.querySelector('.page-header h2').textContent = reserve.name;
+    const backButton = mainContent.querySelector('.page-header .back-button');
+    backButton.innerHTML = `&larr; Voltar para Reservas`;
+    backButton.onclick = () => renderMainView('reservas');
 
     const checklistContainer = document.createElement('div');
     checklistContainer.className = 'animal-checklist';
@@ -437,7 +419,7 @@ function showReserveDetailView(reserveKey) {
         checklistContainer.appendChild(row);
     });
 
-    mainContent.appendChild(checklistContainer);
+    contentContainer.appendChild(checklistContainer);
 }
 
 function calculateReserveProgress(reserveKey) {
@@ -748,8 +730,7 @@ function updateCardAppearance(card, slug, tabKey) {
 // --- LÓGICA DO NOVO PAINEL DE PROGRESSO ---
 
 function renderProgressView(container) {
-    const mainContentArea = container.closest('.main-content');
-    mainContentArea.querySelectorAll('.progress-view-container, #reset-progress-btn').forEach(el => el.remove());
+    container.innerHTML = '';
     
     const wrapper = document.createElement('div');
     wrapper.className = 'progress-view-container';
@@ -773,8 +754,8 @@ function renderProgressView(container) {
             location.reload();
         }
     };
-    mainContentArea.appendChild(wrapper);
-    mainContentArea.appendChild(resetButton);
+    container.appendChild(wrapper);
+    container.appendChild(resetButton);
 }
 
 
