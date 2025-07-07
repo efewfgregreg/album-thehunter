@@ -22,10 +22,10 @@ function loadData() {
 function saveData(data) {
     try {
         localStorage.setItem(saveDataKey, JSON.stringify(data));
+        // Se o painel de progresso estiver na tela, atualiza-o
         if (document.getElementById('progress-panel-main-container')) {
             const container = document.getElementById('progress-panel-main-container').parentNode;
-            const mainContent = container.closest('.main-content');
-            renderProgressView(mainContent);
+            renderProgressView(container);
         }
     } catch (e) {
         console.error("Erro ao salvar dados no localStorage", e);
@@ -203,9 +203,7 @@ function renderMainView(tabKey) {
     appContainer.appendChild(mainContent);
 
     if (tabKey === 'progresso') {
-        const progressContainer = document.createElement('div');
-        mainContent.appendChild(progressContainer);
-        renderProgressView(progressContainer);
+        renderProgressView(mainContent);
     } else if (tabKey === 'reservas') {
         renderReservesList(mainContent);
     } else {
@@ -827,16 +825,23 @@ function createLatestAchievementsPanel() {
     }
 
     if (allTrophies.length === 0) {
-        grid.innerHTML = '<p>Nenhum troféu de destaque registrado ainda.</p>';
+        grid.innerHTML = '<p style="color: var(--text-color-muted); grid-column: 1 / -1;">Nenhum troféu de destaque registrado ainda.</p>';
     } else {
         allTrophies.sort((a, b) => b.id - a.id).slice(0, 4).forEach(trophy => {
             const card = document.createElement('div');
             card.className = 'achievement-card';
+
+            // Aplica rotação aleatória para o efeito de "foto pregada no mural"
+            const rotation = Math.random() * 6 - 3; // Ângulo entre -3 e +3 graus
+            card.style.transform = `rotate(${rotation}deg)`;
+            card.addEventListener('mouseenter', () => card.style.zIndex = 10);
+            card.addEventListener('mouseleave', () => card.style.zIndex = 1);
+
             card.innerHTML = `
                 <img src="animais/${trophy.slug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';">
                 <div class="achievement-card-info">
                     <div class="animal-name">${trophy.animalName}</div>
-                    <div class="fur-name">${trophy.furName}</div>
+                    <div class="fur-name">${trophy.furName.replace('Diamante','')}</div>
                 </div>
             `;
             grid.appendChild(card);
