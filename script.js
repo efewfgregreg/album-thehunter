@@ -37,7 +37,7 @@ const reservesData = {
     hirschfelden: {
         name: "Hirschfelden",
         image: "reservas/hirschfelden.png",
-        animals: [ "lebre_de_cauda_branca", "pato_real", "peru_merriami","coiote", "veado_de_cauda_branca", "veado_de_cauda_preta","urso_negro", "veado_de_roosevelt", "alce"]
+        animals: [ "lebre_da_cauda_branca", "pato_real", "peru","coiote", "veado_de_cauda_branca", "veado_de_cauda_preta","urso_negro", "veado_de_roosevelt", "alce"]
     },
     medved_taiga: {
         name: "Taiga Medved",
@@ -47,7 +47,7 @@ const reservesData = {
     vurhonga_savanna: {
         name: "Savana Vurhonga",
         image: "reservas/vurhonga_savanna.png",
-        animals: ["chacal_listrado", "lebre_de_nuca_dourada", "piadeira",  "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "oryx_do_cabo"]
+        animals: ["chacal_listrado", "lebre_nuca_dourada", "piadeira", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "oryx_do_cabo"]
     },
     parque_fernando: {
         name: "Parque Fernando",
@@ -67,12 +67,12 @@ const reservesData = {
     silver_ridge_peaks: {
         name: "Picos de Silver Ridge",
         image: "reservas/silver_ridge_peaks.png",
-        animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_merriami"]
+        animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_selvagem"]
     },
     te_awaroa: {
         name: "Te Awaroa",
         image: "reservas/te_awaroa.png",
-        animals: ["veado_vermelho", "gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_merriami", "camurça", "coelho_europeu", "pato_real"]
+        animals: ["veado_vermelho", "gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_selvagem", "camurça", "coelho_europeu", "pato_real"]
     },
     rancho_del_arroyo: {
         name: "Rancho del Arroyo",
@@ -87,17 +87,17 @@ const reservesData = {
     revontuli_coast: {
         name: "Costa de Revontuli",
         image: "reservas/revontuli_coast.png",
-        animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiático", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha"]
+        animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha", "veado_de_cauda_preta"]
     },
     new_england_mountains: {
         name: "New England Mountains",
         image: "reservas/new_england_mountains.png",
-        animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo", "raposa_cinzenta",  "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha"]
+        animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta",  "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha"]
     },
     emerald_coast: {
         name: "Emerald Coast",
         image: "reservas/emerald_coast.png",
-        animals: ["canguru_cinza_oriental", "codorna_dos_restolhos", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"]
+        animals: ["canguru_cinza_oriental", "codorna_de_restolho", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"]
     },
     sundarpatan: {
         name: "Sundarpatan",
@@ -112,9 +112,10 @@ const reservesData = {
     askiy_ridge: {
         name: "Askiy Ridge",
         image: "reservas/askiy_ridge.png",
-        animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves","lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"]
+        animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"]
     }
 };
+
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
 
@@ -150,11 +151,23 @@ function renderNavigationHub() {
     title.textContent = 'Álbum de Caça';
     hub.appendChild(title);
 
+    const icons = {
+        pelagens: "fas fa-paw",
+        diamantes: "fas fa-gem",
+        greats: "fas fa-crown",
+        super_raros: "fas fa-star",
+        reservas: "fas fa-map-marked-alt",
+        progresso: "fas fa-chart-line"
+    };
+
     Object.keys(categorias).forEach(key => {
         const cat = categorias[key];
         const card = document.createElement('div');
         card.className = 'nav-card';
-        card.textContent = cat.title;
+        card.innerHTML = `
+            <i class="${icons[key] || 'fas fa-question-circle'}"></i>
+            <span>${cat.title}</span>
+        `;
         card.dataset.target = key;
         card.addEventListener('click', () => renderMainView(key));
         hub.appendChild(card);
@@ -241,7 +254,6 @@ function renderReservesList(container) {
     grid.className = 'album-grid';
     container.appendChild(grid);
 
-    // Ordena as reservas pelo nome antes de exibir
     const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
     for (const [reserveKey, reserve] of sortedReserves) {
@@ -346,8 +358,6 @@ function showDetailView(name, tabKey) {
     appContainer.appendChild(mainContent);
 }
 
-// ... (Restante das funções: renderRareFursDetailView, renderSuperRareDetailView, etc. continuam aqui) ...
-// (O código abaixo é o restante das funções, sem alterações)
 function renderRareFursDetailView(container, name, slug) {
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -598,7 +608,7 @@ function renderGreatsDetailView(container, name, slug, tabKey) {
             furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, name, refreshFurGrid));
             furGrid.appendChild(furCard);
         });
-        const mainCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
+        const mainCard = document.querySelector(`.animal-card[data-slug='${slug}']`);
         updateCardAppearance(mainCard, slug, tabKey);
     };
     refreshFurGrid();
