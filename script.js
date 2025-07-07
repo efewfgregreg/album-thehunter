@@ -199,7 +199,6 @@ function renderMainView(tabKey) {
     header.appendChild(backButton);
     mainContent.appendChild(header);
     
-    // Cria um container para o conteúdo que pode ser limpo sem apagar o cabeçalho
     const contentContainer = document.createElement('div');
     mainContent.appendChild(contentContainer);
     
@@ -248,6 +247,7 @@ function createAnimalCard(name, tabKey) {
 
 // --- ROTEADOR DE VISUALIZAÇÃO DE DETALHES ---
 function showDetailView(name, tabKey, originReserveKey = null) {
+    // Se a origem for uma reserva, mostra o novo Dossiê. Caso contrário, mantém o fluxo antigo.
     if (originReserveKey) {
         renderAnimalDossier(name, originReserveKey);
     } else {
@@ -259,11 +259,9 @@ function renderSimpleDetailView(name, tabKey) {
     const mainContent = document.querySelector('.main-content');
     const slug = slugify(name);
 
-    // Limpa apenas o conteúdo, não o cabeçalho
     const contentContainer = mainContent.querySelector('div:not(.page-header)');
     contentContainer.innerHTML = '';
     
-    // Atualiza o cabeçalho
     mainContent.querySelector('.page-header h2').textContent = name;
     const backButton = mainContent.querySelector('.page-header .back-button');
     backButton.innerHTML = `&larr; Voltar para ${categorias[tabKey].title}`;
@@ -284,11 +282,9 @@ function renderAnimalDossier(animalName, originReserveKey) {
     const mainContent = document.querySelector('.main-content');
     const slug = slugify(animalName);
 
-    // Limpa apenas o conteúdo, não o cabeçalho
     const contentContainer = mainContent.querySelector('div:not(.page-header)');
     contentContainer.innerHTML = '';
 
-    // Atualiza o cabeçalho
     mainContent.querySelector('.page-header h2').textContent = `Dossiê: ${animalName}`;
     const backButton = mainContent.querySelector('.page-header .back-button');
     backButton.innerHTML = `&larr; Voltar para ${reservesData[originReserveKey].name}`;
