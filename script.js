@@ -22,7 +22,6 @@ function loadData() {
 function saveData(data) {
     try {
         localStorage.setItem(saveDataKey, JSON.stringify(data));
-        // Se o painel de progresso estiver na tela, atualiza-o
         if (document.getElementById('progress-panel-main-container')) {
             const container = document.getElementById('progress-panel-main-container').parentNode;
             renderProgressView(container);
@@ -327,7 +326,7 @@ function showDetailView(name, tabKey) {
     mainContent.appendChild(detailContent);
     
     if (tabKey === 'greats') {
-        renderGreatsDetailView(detailContent, name, slug, tabKey);
+        renderGreatsDetailView(detailContent, name, slug);
     } else if (tabKey === 'pelagens') {
         renderRareFursDetailView(detailContent, name, slug);
     } else if (tabKey === 'super_raros') {
@@ -559,136 +558,137 @@ function renderDiamondsDetailView(container, name, slug) {
     });
 }
 
-function renderGreatsDetailView(container, name, slug, tabKey) {
+function renderGreatsDetailView(container, animalName, slug) {
     container.innerHTML = '';
-    const trophyListContainer = document.createElement('div');
-    trophyListContainer.id = 'trophy-list-container';
     const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid';
+    furGrid.className = 'fur-grid greats-grid';
     container.appendChild(furGrid);
-    container.appendChild(trophyListContainer);
+
     const fursInfo = greatsFursData[slug];
-    if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
-    const refreshFurGrid = () => {
-        furGrid.innerHTML = '';
-        const animalData = savedData[tabKey]?.[slug] || {};
-        fursInfo.forEach(fur => {
-            const furData = animalData.furs?.[fur] || {};
-            const trophies = furData.trophies || [];
-            const furCard = document.createElement('div');
-            furCard.className = `fur-card ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
-            const furSlug = slugify(fur);
-            const specificImagePath = `animais/pelagens/great_${slug}_${furSlug}.png`;
-            const genericImagePath = `animais/${slug}.png`;
-            furCard.innerHTML = `
-                <img src="${specificImagePath}" alt="${fur}" onerror="this.onerror=null; this.src='${genericImagePath}';">
-                <div class="info">${fur}</div>
-                <div class="trophy-count">x${trophies.length}</div>
-                <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
-            `;
-            furCard.addEventListener('click', () => renderTrophyList(fur, slug, tabKey, name, refreshFurGrid));
-            furGrid.appendChild(furCard);
-        });
-        const mainCard = document.querySelector(`.album-grid .animal-card[data-slug='${slug}']`);
-        updateCardAppearance(mainCard, slug, tabKey);
-    };
-    refreshFurGrid();
+    if (!fursInfo) {
+        furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>';
+        return;
+    }
+
+    fursInfo.forEach(furName => {
+        const furData = savedData.greats?.[slug]?.furs?.[furName] || {};
+        const trophies = furData.trophies || [];
+        const furCard = document.createElement('div');
+        furCard.className = `fur-card trophy-frame ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
+        
+        const furSlug = slugify(furName);
+        const specificImagePath = `animais/pelagens/great_${slug}_${furSlug}.png`;
+        const genericImagePath = `animais/${slug}.png`;
+
+        furCard.innerHTML = `
+            <img src="${specificImagePath}" alt="${furName}" onerror="this.onerror=null; this.src='${genericImagePath}';">
+            <div class="info-plaque">
+                <div class="info">${furName}</div>
+                <div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div>
+            </div>
+        `;
+        furCard.addEventListener('click', () => openGreatsTrophyModal(animalName, slug, furName));
+        furGrid.appendChild(furCard);
+    });
 }
 
-function renderTrophyList(fur, slug, tabKey, name, onListChangeCallback) {
-    const container = document.getElementById('trophy-list-container');
-    container.innerHTML = '';
-    const animalData = savedData[tabKey]?.[slug] || {};
-    const furData = animalData.furs?.[fur] || {};
-    const trophies = furData.trophies || [];
-    const listWrapper = document.createElement('div');
-    listWrapper.className = 'trophy-list';
-    listWrapper.innerHTML = `<h4>Troféus "${fur}" Registrados:</h4>`;
-    const ul = document.createElement('ul');
-    if (trophies.length > 0) {
+function openGreatsTrophyModal(animalName, slug, furName) {
+    const existingModal = document.querySelector('.trophy-manager-modal');
+    if(existingModal) existingModal.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'trophy-manager-modal';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content-box';
+    modal.appendChild(modalContent);
+    
+    // Header
+    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Troféus de: ${furName}</h3>`;
+
+    // Lista de troféus existentes
+    const logList = document.createElement('ul');
+    logList.className = 'trophy-log-list';
+    const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
+    if(trophies.length === 0) {
+        logList.innerHTML = '<li>Nenhum abate registrado.</li>';
+    } else {
         trophies.forEach((trophy, index) => {
             const li = document.createElement('li');
-            li.className = 'trophy-item';
-            const dateSpan = document.createElement('span');
-            dateSpan.className = 'trophy-date';
-            dateSpan.textContent = `Data do Abate: ${trophy.date}`;
-            const detailsDiv = document.createElement('div');
-            detailsDiv.className = 'trophy-item-details';
-            detailsDiv.style.display = 'none';
-            detailsDiv.innerHTML = `<p><strong>Abates na Grind:</strong> ${trophy.abates || 'N/A'}</p><p><strong>Diamantes na Grind:</strong> ${trophy.diamantes || 'N/A'}</p><p><strong>Peles Raras na Grind:</strong> ${trophy.pelesRaras || 'N/A'}</p>`;
-            const removeBtn = document.createElement('button');
-            removeBtn.className = 'remove-trophy-btn';
-            removeBtn.textContent = 'Remover';
-            removeBtn.onclick = (e) => {
-                e.stopPropagation();
-                trophies.splice(index, 1);
-                checkAndSetGreatOneCompletion(slug, savedData[tabKey][slug]);
-                saveData(savedData);
-                onListChangeCallback();
-                renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
+            li.innerHTML = `
+                <span>Abate de ${new Date(trophy.date).toLocaleDateString()} (Grind: ${trophy.abates || 'N/A'})</span>
+            `;
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-trophy-btn';
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.onclick = () => {
+                if(confirm('Tem certeza que deseja remover este abate?')) {
+                    trophies.splice(index, 1);
+                    saveData(savedData);
+                    modal.remove();
+                    showDetailView(animalName, 'greats');
+                }
             };
-            const contentWrapper = document.createElement('div');
-            contentWrapper.style.flexGrow = '1';
-            contentWrapper.appendChild(dateSpan);
-            contentWrapper.appendChild(detailsDiv);
-            li.appendChild(contentWrapper);
-            li.appendChild(removeBtn);
-            li.addEventListener('click', () => {
-                detailsDiv.style.display = detailsDiv.style.display === 'none' ? 'block' : 'none';
-            });
-            ul.appendChild(li);
+            li.appendChild(deleteBtn);
+            logList.appendChild(li);
         });
-    } else {
-        ul.innerHTML = '<li>Nenhum troféu registrado.</li>';
     }
-    listWrapper.appendChild(ul);
-    const addBtn = document.createElement('button');
-    addBtn.className = 'add-trophy-btn';
-    addBtn.textContent = `Adicionar Novo Abate "${fur}"`;
-    addBtn.onclick = () => showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback);
-    listWrapper.appendChild(addBtn);
-    container.appendChild(listWrapper);
-}
+    modalContent.appendChild(logList);
 
-function showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback) {
-    const container = document.getElementById('trophy-list-container');
-    container.innerHTML = '';
-    const formWrapper = document.createElement('div');
-    formWrapper.className = 'grind-stats';
-    formWrapper.innerHTML = `
-        <h4>Registrar Novo Troféu: ${fur}</h4>
+    // Formulário para adicionar novo
+    const form = document.createElement('div');
+    form.className = 'add-trophy-form';
+    form.innerHTML = `
+        <h4>Registrar Novo Abate</h4>
         <table><tbody>
             <tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr>
             <tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr>
             <tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr>
-            <tr><td>Data do Abate:</td><td><input type="date" name="date"></td></tr>
+            <tr><td>Data do Abate:</td><td><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></td></tr>
         </tbody></table>
-        <button id="save-trophy-btn">Salvar Troféu</button>
-        <button id="cancel-trophy-btn">Cancelar</button>
     `;
-    container.appendChild(formWrapper);
-    document.getElementById('save-trophy-btn').onclick = () => {
-        const dateInput = formWrapper.querySelector('[name="date"]').value;
+    modalContent.appendChild(form);
+
+    // Botões
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'modal-buttons';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'back-button';
+    cancelBtn.textContent = 'Cancelar';
+    cancelBtn.onclick = () => modal.remove();
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'back-button';
+    saveBtn.style.backgroundColor = 'var(--primary-color)';
+    saveBtn.style.color = '#111';
+    saveBtn.textContent = 'Salvar Troféu';
+    saveBtn.onclick = () => {
         const newTrophy = {
-            abates: formWrapper.querySelector('[name="abates"]').value,
-            diamantes: formWrapper.querySelector('[name="diamantes"]').value,
-            pelesRaras: formWrapper.querySelector('[name="pelesRaras"]').value,
-            date: dateInput || new Date().toISOString().split('T')[0]
+            abates: form.querySelector('[name="abates"]').value,
+            diamantes: form.querySelector('[name="diamantes"]').value,
+            pelesRaras: form.querySelector('[name="pelesRaras"]').value,
+            date: form.querySelector('[name="date"]').value || new Date().toISOString().split('T')[0]
         };
-        if (!savedData[tabKey]) savedData[tabKey] = {};
-        if (!savedData[tabKey][slug]) savedData[tabKey][slug] = {};
-        if (!savedData[tabKey][slug].furs) savedData[tabKey][slug].furs = {};
-        if (!savedData[tabKey][slug].furs[fur]) savedData[tabKey][slug].furs[fur] = { trophies: [] };
-        savedData[tabKey][slug].furs[fur].trophies.push(newTrophy);
-        checkAndSetGreatOneCompletion(slug, savedData[tabKey][slug]);
+
+        if (!savedData.greats) savedData.greats = {};
+        if (!savedData.greats[slug]) savedData.greats[slug] = {};
+        if (!savedData.greats[slug].furs) savedData.greats[slug].furs = {};
+        if (!savedData.greats[slug].furs[furName]) savedData.greats[slug].furs[furName] = { trophies: [] };
+        
+        savedData.greats[slug].furs[furName].trophies.push(newTrophy);
+        checkAndSetGreatOneCompletion(slug, savedData.greats[slug]);
         saveData(savedData);
-        onListChangeCallback();
-        renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
+        modal.remove();
+        showDetailView(animalName, 'greats'); // Re-renderiza a view principal de Greats
     };
-    document.getElementById('cancel-trophy-btn').onclick = () => {
-        renderTrophyList(fur, slug, tabKey, name, onListChangeCallback);
-    };
+
+    buttonsDiv.appendChild(cancelBtn);
+    buttonsDiv.appendChild(saveBtn);
+    modalContent.appendChild(buttonsDiv);
+    
+    document.body.appendChild(modal);
 }
+
 
 function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
@@ -712,14 +712,19 @@ function updateCardAppearance(card, slug, tabKey) {
             status = 'completed';
         }
     } else if (tabKey === 'super_raros') {
-        let hasSuperRares = false;
         const speciesFurs = rareFursData?.[slug];
         if (speciesFurs) {
             const allPossibleSuperRares = [];
             if (speciesFurs.macho) speciesFurs.macho.forEach(fur => allPossibleSuperRares.push(`Macho ${fur} Diamante`));
-            if (diamondFursData?.[slug]?.femea?.length > 0) speciesFurs.femea.forEach(fur => allPossibleSuperRares.push(`Fêmea ${fur} Diamante`));
+            if (diamondFursData?.[slug]?.femea?.length > 0) {
+                speciesFurs.femea.forEach(fur => {
+                    if (diamondFursData[slug].femea.includes(fur)) {
+                         allPossibleSuperRares.push(`Fêmea ${fur} Diamante`);
+                    }
+                });
+            }
             const collectedSuperRares = savedData.super_raros?.[slug] || {};
-            if (allPossibleSuperRares.some(sr => collectedSuperRares.hasOwnProperty(sr) && collectedSuperRares?.[sr] === true)) {
+            if (allPossibleSuperRares.some(sr => collectedSuperRares[sr] === true)) {
                 status = 'completed';
             }
         }

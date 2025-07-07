@@ -108,49 +108,15 @@
         =      PAINEL DE PROGRESSO (TEMA DIÁRIO DE CAÇA) V2        =
         ==========================================================*/
         .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
-        
-        /* --- Seção 'Últimas Conquistas' (Estilo Polaroid) --- */
         .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://www.transparenttextures.com/patterns/leather.png); background-color: #3a3834; padding: 20px; border-radius: 8px; border: 1px solid #5a554a; }
         .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
         .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; justify-items: center; }
-        .achievement-card {
-            background-color: #f0ead6;
-            padding: 10px 10px 15px 10px;
-            border-radius: 4px;
-            box-shadow: 3px 3px 8px rgba(0,0,0,0.4);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            width: 90%;
-            cursor: pointer;
-        }
-        .achievement-card:hover {
-            transform: scale(1.05);
-            box-shadow: 6px 6px 12px rgba(0,0,0,0.5);
-            z-index: 10;
-        }
-        .achievement-card img {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            background-color: #333;
-            border: 1px solid #ccc;
-        }
-        .achievement-card-info {
-            padding-top: 8px;
-            text-align: center;
-        }
-        .achievement-card-info .animal-name {
-            font-family: var(--font-body);
-            font-style: italic;
-            font-size: 1rem;
-            color: #444;
-            font-weight: 700;
-        }
-        .achievement-card-info .fur-name {
-            font-size: 0.8rem;
-            color: #666;
-        }
-        /* --- Fim do Estilo Polaroid --- */
-
+        .achievement-card { background-color: #f0ead6; padding: 10px 10px 15px 10px; border-radius: 4px; box-shadow: 3px 3px 8px rgba(0,0,0,0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; width: 90%; cursor: pointer; }
+        .achievement-card:hover { transform: scale(1.05); box-shadow: 6px 6px 12px rgba(0,0,0,0.5); z-index: 10; }
+        .achievement-card img { width: 100%; height: 100px; object-fit: cover; background-color: #333; border: 1px solid #ccc; }
+        .achievement-card-info { padding-top: 8px; text-align: center; }
+        .achievement-card-info .animal-name { font-family: var(--font-body); font-style: italic; font-size: 1rem; color: #444; font-weight: 700; }
+        .achievement-card-info .fur-name { font-size: 0.8rem; color: #666; }
         #progress-panel { display: flex; flex-direction: column; gap: 20px; }
         .progress-section { background-color: var(--surface-color); padding: 15px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; border: 1px solid var(--border-color); }
         .progress-section:hover { background-color: #36393f; border-color: var(--primary-color); }
@@ -168,6 +134,59 @@
         .progress-detail-item { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; }
         .progress-detail-item .label { color: var(--text-color-muted); }
         .progress-detail-item .value { font-weight: bold; }
+
+        /*==========================================================
+        =           ESTILOS DA SALA DE TROFÉUS (GREAT ONES)        =
+        ==========================================================*/
+        .greats-grid {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://www.transparenttextures.com/patterns/wood-pattern.png);
+            background-color: #4a3c31;
+            padding: 25px;
+            border-radius: 8px;
+            gap: 25px;
+        }
+        .fur-card.trophy-frame {
+            background: linear-gradient(145deg, #4a3f3a, #3b322d);
+            border: 8px solid #3b2e26;
+            border-image: linear-gradient(145deg, #6d5b51, #3b2e26) 1;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,0,0,0.5);
+            padding: 10px;
+            gap: 5px;
+        }
+        .fur-card.trophy-frame:hover {
+            box-shadow: 0 0 25px var(--gold-color), inset 0 0 15px rgba(0,0,0,0.5);
+        }
+        .trophy-frame img { border: 2px solid #2a211c; }
+        .trophy-frame .info-plaque { background-color: rgba(0,0,0,0.3); padding: 8px 5px; border-radius: 4px; margin-top: 5px; }
+        .trophy-frame .info { color: var(--gold-color); font-size: 1rem; line-height: 1.1; }
+        .trophy-frame .kill-counter { color: var(--text-color-muted); font-size: 0.9rem; }
+        .trophy-frame .kill-counter .fa-trophy { color: var(--gold-color); margin-right: 5px; }
+        .trophy-frame.incomplete img { filter: grayscale(1) brightness(0.5); }
+        .trophy-frame.incomplete .info { color: var(--text-color-muted); }
+
+        .trophy-manager-modal {
+            position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content-box {
+            background: var(--surface-color);
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
+        }
+        .modal-content-box h3 { border-bottom: 1px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .trophy-log-list { list-style: none; padding: 0; max-height: 150px; overflow-y: auto; margin-bottom: 15px; }
+        .trophy-log-list li { display: flex; justify-content: space-between; padding: 10px; background-color: var(--bg-color); border-radius: 4px; margin-bottom: 5px; }
+        .trophy-log-list .delete-trophy-btn { background: #d9534f; border: none; color: white; border-radius: 4px; cursor: pointer; padding: 0 10px; }
+        .add-trophy-form table { width: 100%; border-spacing: 0 10px; }
+        .add-trophy-form input { width: 100%; padding: 8px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 4px; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
     </style>
 </head>
 <body>
