@@ -23,7 +23,9 @@ function saveData(data) {
     try {
         localStorage.setItem(saveDataKey, JSON.stringify(data));
         if (document.getElementById('progress-panel-main-container')) {
-            renderProgressView(document.getElementById('progress-panel-main-container').parentNode);
+            const container = document.getElementById('progress-panel-main-container').parentNode;
+            const mainContent = container.closest('.main-content');
+            renderProgressView(mainContent);
         }
     } catch (e) {
         console.error("Erro ao salvar dados no localStorage", e);
@@ -201,7 +203,9 @@ function renderMainView(tabKey) {
     appContainer.appendChild(mainContent);
 
     if (tabKey === 'progresso') {
-        renderProgressView(mainContent);
+        const progressContainer = document.createElement('div');
+        mainContent.appendChild(progressContainer);
+        renderProgressView(progressContainer);
     } else if (tabKey === 'reservas') {
         renderReservesList(mainContent);
     } else {
@@ -459,9 +463,7 @@ function renderSuperRareDetailView(container, name, slug) {
 }
 
 function renderDiamondsDetailView(container, name, slug) {
-    // Garante que o container esteja limpo antes de desenhar os cards
     container.innerHTML = '';
-
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
@@ -746,21 +748,23 @@ function updateCardAppearance(card, slug, tabKey) {
 // --- LÓGICA DO NOVO PAINEL DE PROGRESSO ---
 
 function renderProgressView(container) {
-    container.innerHTML = ''; 
+    const mainContentArea = container.closest('.main-content');
+    const existingContent = mainContentArea.querySelector('.progress-view-container');
+    if (existingContent) {
+        existingContent.remove();
+    }
+    
     const wrapper = document.createElement('div');
     wrapper.className = 'progress-view-container';
     wrapper.id = 'progress-panel-main-container';
 
-    // 1. Painel de Últimas Conquistas
     wrapper.appendChild(createLatestAchievementsPanel());
 
-    // 2. Painel de Progresso Geral
     const progressPanel = document.createElement('div');
     progressPanel.id = 'progress-panel';
     updateProgressPanel(progressPanel);
     wrapper.appendChild(progressPanel);
 
-    // 3. Botão de Reset
     const resetButton = document.createElement('button');
     resetButton.id = 'reset-progress-btn';
     resetButton.textContent = 'Resetar Todo o Progresso';
@@ -776,8 +780,9 @@ function renderProgressView(container) {
     };
     wrapper.appendChild(resetButton);
     
-    container.appendChild(wrapper);
+    mainContentArea.appendChild(wrapper);
 }
+
 
 function createLatestAchievementsPanel() {
     const panel = document.createElement('div');
@@ -788,7 +793,6 @@ function createLatestAchievementsPanel() {
     grid.className = 'achievements-grid';
 
     const allTrophies = [];
-    // Coleta dos Diamantes
     if(savedData.diamantes) {
         Object.entries(savedData.diamantes).forEach(([slug, trophies]) => {
             const animalName = items.find(i => slugify(i) === slug) || slug;
@@ -803,7 +807,6 @@ function createLatestAchievementsPanel() {
             });
         });
     }
-    // Coleta dos Great Ones
     if(savedData.greats) {
         Object.entries(savedData.greats).forEach(([slug, greatOneData]) => {
             const animalName = items.find(i => slugify(i) === slug) || slug;
@@ -811,7 +814,7 @@ function createLatestAchievementsPanel() {
                 Object.entries(greatOneData.furs).forEach(([furName, furData]) => {
                     furData.trophies.forEach(trophy => {
                          allTrophies.push({
-                            id: new Date(trophy.date).getTime(), // Usa a data como ID
+                            id: new Date(trophy.date).getTime(),
                             animalName: animalName,
                             furName: furName,
                             slug: slug,
@@ -879,7 +882,7 @@ function updateProgressPanel(panel) {
                 total += (species.macho?.length || 0) + (species.femea?.length || 0);
             });
             Object.values(sectionInfo.saved).forEach(speciesData => {
-                collected += new Set(speciesData.map(t => t.type)).size; // Conta tipos únicos
+                collected += new Set(speciesData.map(t => t.type)).size;
             });
         } else if (sectionInfo.type === 'object') {
             Object.values(sectionInfo.data).forEach(fursArray => total += fursArray.length);
@@ -926,7 +929,6 @@ function toggleProgressDetail(sectionEl, categoryKey) {
     const detailView = document.createElement('div');
     detailView.className = 'progress-detail-view';
     
-    // Lógica para preencher os detalhes
     renderProgressDetail(detailView, categoryKey);
 
     sectionEl.appendChild(detailView);
@@ -945,11 +947,13 @@ function renderProgressDetail(detailContainer, categoryKey) {
 
         switch(categoryKey) {
             case 'pelagens':
-                total = (rareFursData[slug]?.macho.length || 0) + (rareFursData[slug]?.femea.length || 0);
+                if(!rareFursData[slug]) return;
+                total = (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
                 collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length;
                 break;
             case 'diamantes':
-                 total = (diamondFursData[slug]?.macho.length || 0) + (diamondFursData[slug]?.femea.length || 0);
+                 if(!diamondFursData[slug]) return;
+                 total = (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
                  collected = new Set((savedDataForCategory[slug] || []).map(t => t.type)).size;
                  break;
             case 'greats':
@@ -959,8 +963,8 @@ function renderProgressDetail(detailContainer, categoryKey) {
                 break;
             case 'super_raros':
                  if(!rareFursData[slug]) return;
-                 total += rareFursData[slug].macho?.length || 0;
-                 if(diamondFursData[slug]?.femea?.length > 0) total += rareFursData[slug].femea?.length || 0;
+                 total = (rareFursData[slug].macho?.length || 0);
+                 if(diamondFursData[slug]?.femea?.length > 0) total += (rareFursData[slug].femea?.length || 0);
                  collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length;
                  break;
         }
