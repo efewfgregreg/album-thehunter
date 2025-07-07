@@ -154,22 +154,9 @@
         .add-trophy-form input { width: 100%; padding: 8px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 4px; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
         
-        /*==========================================================
-        =       ESTILOS DA ABA RESERVAS (PAINEL DE CONTROLE)       =
-        ==========================================================*/
+        /* --- ESTILOS ABA RESERVAS (PAINEL DE CONTROLE) --- */
         .reserves-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
-        .reserve-card {
-            height: 180px;
-            position: relative;
-            border-radius: 8px;
-            overflow: hidden;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
+        .reserve-card { height: 180px; position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid transparent; transition: all 0.3s ease; }
         .reserve-card:hover { transform: scale(1.03); border-color: var(--primary-color); }
         .reserve-card-bg { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; transition: transform 0.4s ease; }
         .reserve-card:hover .reserve-card-bg { transform: scale(1.1); }
@@ -190,6 +177,13 @@
         .mini-progress-bar { height: 100%; background-color: var(--primary-color); border-radius: 4px; }
         .great-one-indicator { font-size: 1.5rem; color: var(--gold-color); opacity: 0.5; }
         .great-one-indicator.possible { opacity: 1; }
+
+        /* --- ESTILOS DO DOSSIÊ DO ANIMAL --- */
+        .dossier-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
+        .dossier-tab { padding: 10px 20px; cursor: pointer; color: var(--text-color-muted); border-bottom: 3px solid transparent; transition: all 0.2s ease; }
+        .dossier-tab:hover { color: var(--text-color); }
+        .dossier-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .dossier-tab .fa-crown { color: var(--gold-color); }
 
     </style>
 </head>
