@@ -3,7 +3,17 @@ const saveDataKey = 'theHunterAlbumData';
 function loadData() {
     try {
         const data = localStorage.getItem(saveDataKey);
-        return data ? JSON.parse(data) : {};
+        // Garante que o campo de diamantes seja um array para cada animal
+        const parsedData = data ? JSON.parse(data) : {};
+        if (parsedData.diamantes) {
+            for (const slug in parsedData.diamantes) {
+                if (!Array.isArray(parsedData.diamantes[slug])) {
+                    // Converte o formato antigo (objeto) para o novo (array), se necessário
+                    parsedData.diamantes[slug] = Object.values(parsedData.diamantes[slug]);
+                }
+            }
+        }
+        return parsedData;
     } catch (e) {
         console.error("Erro ao carregar dados do localStorage", e);
         return {};
@@ -475,103 +485,60 @@ function renderSuperRareDetailView(container, name, slug) {
 }
 
 function renderDiamondsDetailView(container, name, slug) {
-    const grid = document.createElement('div');
-    grid.className = 'trophy-grid';
-    container.appendChild(grid);
-    
-    const speciesDiamondFurs = diamondFursData[slug];
-    if (!speciesDiamondFurs || (speciesDiamondFurs.macho.length === 0 && speciesDiamondFurs.femea.length === 0)) {
-        grid.innerHTML = '<p>Nenhuma pelagem de diamante listada para este animal.</p>';
-        return;
-    }
+    // A função que foi totalmente refeita para o "Diário de Troféus"
+    // (O código que eu te enviei anteriormente com essa função corrigida)
+    const detailContainer = document.createElement('div');
+    detailContainer.innerHTML = `
+        <div class="add-trophy-container">
+            <button id="add-new-diamond-btn" class="add-trophy-btn">
+                <i class="fas fa-plus-circle"></i> Adicionar Novo Troféu Diamante
+            </button>
+            <div id="add-diamond-form-container" style="display: none;"></div>
+        </div>
+        <div class="trophy-log" id="trophy-log"></div>
+    `;
+    container.appendChild(detailContainer);
 
-    const diamondTrophyOptions = [];
-    if (speciesDiamondFurs.macho) {
-        speciesDiamondFurs.macho.forEach(fur => {
-            diamondTrophyOptions.push({
-                displayText: `Macho ${fur} Diamante`, furName: fur, gender: 'macho'
-            });
-        });
-    }
-    if (speciesDiamondFurs.femea) {
-        speciesDiamondFurs.femea.forEach(fur => {
-            diamondTrophyOptions.push({
-                displayText: `Fêmea ${fur} Diamante`, furName: fur, gender: 'femea'
-            });
-        });
-    }
+    const logContainer = detailContainer.querySelector('#trophy-log');
+    const trophies = savedData.diamantes?.[slug] || [];
 
-    const animalData = savedData['diamantes']?.[slug] || {};
-
-    diamondTrophyOptions.sort((a,b) => a.displayText.localeCompare(b.displayText)).forEach(option => {
-        const optionData = animalData[option.displayText];
-        const isCompleted = optionData && optionData.completed;
-        const score = optionData ? optionData.score : '';
-        
-        const card = document.createElement('div');
-        card.className = `trophy-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        
-        const furSlug = slugify(option.furName);
-        const genderSlug = option.gender;
-        const genericAnimalPath = `animais/${slug}.png`;
-        const specificImagePath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
-        
-        card.innerHTML = `
-            <img src="${specificImagePath}" alt="${option.displayText}" class="trophy-card-img" onerror="this.onerror=null; this.src='${genericAnimalPath}';">
-            <div class="trophy-card-info">
-                <span class="trophy-card-title">${option.displayText.replace(' Diamante', '')}</span>
-                <span class="trophy-card-tag">Diamante</span>
-                <div class="trophy-card-score-area">
-                    ${isCompleted ? 
-                        `<div class="trophy-score-display"><span>Score:</span> ${score || 'N/A'}</div>` :
-                        `<div class="trophy-score-controls">
-                            <input type="text" class="trophy-score-input" placeholder="Score..." value="${score}">
-                            <button class="trophy-score-save-btn">✔</button>
-                         </div>`
-                    }
+    if (trophies.length === 0) {
+        logContainer.innerHTML = '<p>Nenhum diamante registrado para este animal ainda.</p>';
+    } else {
+        trophies.sort((a, b) => b.score - a.score).forEach(trophy => {
+            const logEntry = document.createElement('div');
+            logEntry.className = 'trophy-log-entry';
+            logEntry.innerHTML = `
+                <div class="trophy-log-info">
+                    <div class="trophy-log-title">${trophy.type.replace(' Diamante', '')}</div>
+                    <div class="trophy-log-score"><span>Score:</span> <b>${trophy.score || 'N/A'}</b></div>
                 </div>
-            </div>
-            <button class="fullscreen-btn" onclick="openModal(this.closest('.trophy-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
-        `;
-        grid.appendChild(card);
-        
-        card.addEventListener('click', (e) => {
-            if (e.target.closest('.trophy-score-controls')) return;
-
-            if (!savedData['diamantes']) savedData['diamantes'] = {};
-            if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-            
-            const currentOption = savedData['diamantes'][slug][option.displayText];
-            
-            if (currentOption && currentOption.completed) {
-                delete savedData['diamantes'][slug][option.displayText];
-                saveData(savedData);
-                renderDiamondsDetailView(container, name, slug);
-            }
+                <button class="trophy-log-delete-btn" data-id="${trophy.id}">&times;</button>
+            `;
+            logContainer.appendChild(logEntry);
         });
+    }
 
-        if (!isCompleted) {
-            const scoreInput = card.querySelector('.trophy-score-input');
-            const saveBtn = card.querySelector('.trophy-score-save-btn');
-            
-            scoreInput.addEventListener('click', e => e.stopPropagation());
-            
-            saveBtn.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-                
-                if (!savedData['diamantes']) savedData['diamantes'] = {};
-                if (!savedData['diamantes'][slug]) savedData['diamantes'][slug] = {};
-                
-                savedData['diamantes'][slug][option.displayText] = {
-                    completed: true,
-                    score: scoreInput.value
-                };
-                saveData(savedData);
-                renderDiamondsDetailView(container, name, slug);
-            });
+    detailContainer.querySelector('#add-new-diamond-btn').addEventListener('click', () => {
+        const formContainer = detailContainer.querySelector('#add-diamond-form-container');
+        showAddDiamondForm(formContainer, name, slug);
+    });
+
+    logContainer.addEventListener('click', (e) => {
+        if (e.target.classList.contains('trophy-log-delete-btn')) {
+            const trophyId = e.target.dataset.id;
+            const trophyIndex = savedData.diamantes[slug].findIndex(t => t.id == trophyId);
+            if (trophyIndex > -1) {
+                if (confirm('Tem certeza que deseja excluir este troféu?')) {
+                    savedData.diamantes[slug].splice(trophyIndex, 1);
+                    saveData(savedData);
+                    renderDiamondsDetailView(container, name, slug); // Re-renderiza a view
+                }
+            }
         }
     });
 }
+
 
 function renderGreatsDetailView(container, name, slug, tabKey) {
     const trophyListContainer = document.createElement('div');
@@ -848,11 +815,9 @@ function updateProgressPanel() {
     let collectedDiamonds = 0;
     if (currentData.diamantes) {
         Object.values(currentData.diamantes).forEach(speciesData => {
-            Object.values(speciesData).forEach(trophyData => {
-                if (trophyData === true || (typeof trophyData === 'object' && trophyData.completed)) {
-                    collectedDiamonds++;
-                }
-            });
+            if(Array.isArray(speciesData)){ // Lógica para o novo formato de array
+                collectedDiamonds += speciesData.length;
+            }
         });
     }
     updateSection('diamond', collectedDiamonds, totalDiamonds);
