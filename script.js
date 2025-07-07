@@ -1,4 +1,3 @@
-// Este é o script.js completo e final
 const saveDataKey = 'theHunterAlbumData';
 
 function loadData() {
@@ -118,5 +117,4 @@ const reservesData = {
 };
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
-// (O restante do script continua aqui, sem alterações)
-// ...
+// (O resto do seu script continua aqui, exatamente como estava na última versão) ...
