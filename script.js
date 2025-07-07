@@ -1,19 +1,11 @@
 const saveDataKey = 'theHunterAlbumData';
 
 function loadData() {
-    console.log("FUNÇÃO loadData: Tentando carregar dados do localStorage...");
     try {
         const data = localStorage.getItem(saveDataKey);
-        console.log("FUNÇÃO loadData: Dados brutos encontrados:", data);
-        if (!data) {
-            console.log("FUNÇÃO loadData: Nenhum dado encontrado. Retornando objeto vazio.");
-            return {};
-        }
-        const parsedData = JSON.parse(data);
-        console.log("FUNÇÃO loadData: Dados analisados com sucesso:", parsedData);
-        return parsedData;
+        return data ? JSON.parse(data) : {};
     } catch (e) {
-        console.error("FUNÇÃO loadData: ERRO AO CARREGAR OU ANALISAR DADOS!", e);
+        console.error("Erro ao carregar dados do localStorage", e);
         return {};
     }
 }
@@ -21,16 +13,18 @@ function loadData() {
 function saveData(data) {
     try {
         localStorage.setItem(saveDataKey, JSON.stringify(data));
+        // A atualização agora é chamada de forma mais inteligente
         if (document.getElementById('progress-panel')) {
             updateProgressPanel();
         }
     } catch (e) {
-        console.error("FUNÇÃO saveData: Erro ao salvar dados no localStorage", e);
+        console.error("Erro ao salvar dados no localStorage", e);
     }
 }
 
 const savedData = loadData();
-// ... (TODAS AS SUAS CONSTANTES DE DADOS VÊM AQUI, IGUAIS A ANTES) ...
+
+// ... (TODAS AS CONSTANTES DE DADOS: rareFursData, greatsFursData, etc. CONTINUAM AQUI) ...
 const femaleOnlyDiamondSpecies = ["lebre_nuca_dourada", "lebre_europeia", "codorniz_da_virginia", "castor_norte_americano"];
 const maleAndFemaleDiamondSpecies = ["lebre_peluda", "raposa_cinzenta", "lebre_da_eurasia", "coelho_da_florida", "oryx_do_cabo"];
 const rareFursData = { "alce": { macho: ["Albino", "Melanístico", "Malhado", "Café"], femea: ["Albino", "Melanístico", "Malhado"] }, "antilocapra": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] }, "antílope_negro": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] }, "bantengue": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "bisão_das_planícies": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "bisão_europeu": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "búfalo_africano": { macho: ["Albino", "Leucismo"], femea: ["Albino", "Leucismo"] }, "búfalo_dágua": { macho: ["Albino", "Laranja"], femea: ["Albino", "Laranja"] }, "cabra_da_montanha": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "cabra_de_leque": { macho: ["Albino"], femea: ["Albino"] }, "cabra_selvagem": { macho: ["Albino", "Preto", "Cores Mistas"], femea: ["Albino", "Preto"] }, "caititu": { macho: ["Albino", "Melânico", "Ochre", "Leucismo"], femea: ["Albino", "Melânico", "Ochre", "Leucismo"] }, "camurça": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "canguru_cinza_oriental": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "caribu": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "carneiro_azul": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "carneiro_selvagem": { macho: ["Albino"], femea: ["Albino"] }, "cervo_porco_indiano": { macho: ["Malhado", "Leucismo"], femea: ["Malhado", "Leucismo"] }, "cervo_almiscarado": { macho: ["Albino", "Melânico", "Malhado"], femea: [] }, "cervo_de_timor": { macho: ["Albino", "leucistico", "malhado variação 1", "malhado variação 2"], femea: ["leucistico"] }, "cervo_do_pântano": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] }, "cervo_sika": { macho: ["Albino", "pintado vermelho"], femea: ["Albino", "pintado vermelho"] }, "chital": { macho: ["Albino", "malhado", "melanico"], femea: ["Albino", "malhado", "melanico"] }, "chacal_listrado": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "codorna_de_restolho": { macho: ["Albino", "Pardo Escuro"], femea: ["Albino"] }, "codorniz_da_virgínia": { macho: ["Albino"], femea: ["Albino"] }, "coelho_da_flórida": { macho: ["Albino", "melanico"], femea: ["Albino", "melanico"] }, "coelho_europeu": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "coiote": { macho: ["Albino", "Melânico", "malhado"], femea: ["Albino", "Melânico", "malhado"] }, "corça": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "crocodilo_de_água_salgada": { macho: ["Albino", "Melânico", "Pardo Claro", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "Pardo Claro", "malhado variação 1", "malhado variação 2"] }, "cudo_menor": { macho: ["Albino"], femea: ["Albino"] }, "cão_guaxinim": { macho: ["Albino", "Laranja", "Pardo escuro", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Laranja", "Pardo escuro", "malhado variação 1", "malhado variação 2"] }, "faisão_de_pescoço_anelado": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "faisão": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "frisada": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "galinha_montês": { macho: ["Pálida", "Híbrido", "Escuro"], femea: ["Pálida", "Híbrido", "Escuro"] }, "galo_lira": { macho: ["leucismo variação 1", "leucismo variação 2", "leucismo variação 3", "melanico variação 1", "melanico variação 2"], femea: ["Laranja"] }, "gamo": { macho: ["Albino", "Melânico", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico"] }, "ganso_bravo": { macho: ["Híbrido", "leucismo variação 1", "leucismo variação 2", "leucismo variação 3", "leucismo variação 4", "leucismo variação 5"], femea: ["Híbrido", "leucismo variação 1", "leucismo variação 2", "leucismo variação 3", "leucismo variação 4", "leucismo variação 5"] }, "ganso_campestre_da_tundra": { macho: ["leucismo variação 1", "leucismo variação 2", "leucismo variação 3"], femea: ["leucismo variação 1", "leucismo variação 2", "leucismo variação 3"] }, "ganso_pega": { macho: ["Melânico", "leucismo variação 1", "leucismo variação 2", "malhado variação 1", "malhado variação 2"], femea: ["Melânico", "leucismo variação 1", "leucismo variação 2", "malhado variação 1", "malhado variação 2"] }, "ganso_do_canadá": { macho: ["Cinza", "Melânico", "Leucismo cinza claro", "hibrido branco"], femea: ["Cinza", "Melânico", "Leucismo cinza claro", "hibrido branco"] }, "ganso_das_neves": { macho: ["Albino", "Melânico", "variação azul", "hibrido", "intermediario"], femea: ["Albino", "Melânico", "variação azul", "hibrido", "intermediario"] }, "gnu_de_cauda_preta": { macho: ["Albino"], femea: ["Albino", "Coroado"] }, "guaxinim_comum": { macho: ["Albino", "Melânico", "loiro malhado", "cinza malhado"], femea: ["Albino", "Melânico", "loiro malhado", "cinza malhado"] }, "iaque_selvagem": { macho: ["Ouro", "Leucismo", "albino variação 1", "albino variação 2"], femea: ["Ouro", "Leucismo", "albino variação 1", "albino variação 2", "marrom profundo", "preto profundo"] }, "ibex_de_beceite": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "jacaré_americano": { macho: ["Albino", "Melânico", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "malhado variação 1", "malhado variação 2"] }, "javali": { macho: ["Albino", "Melânico", "preto e dourado"], femea: ["Albino", "Melânico", "preto e dourado"] }, "javali_africano": { macho: ["Albino"], femea: ["Albino", "Vermelho"] }, "lagópode_branco": { macho: ["Branco", "muda variação 1", "muda variação 2"], femea: ["Branco", "muda variação 1", "muda variação 2", "mosqueado variação 1", "mosqueado variação 2"] }, "lagópode_escocês": { macho: ["Branco"], femea: ["Branco"] }, "lebre_antílope": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "lebre_da_eurásia": { macho: ["Albino", "Branco", "muda variação 1", "muda variação 2", "pardo claro", "pardo escuro", "cinza claro", "cinza escuro"], femea: ["Albino", "Branco", "muda variação 1", "muda variação 2"] }, "lebre_peluda": { macho: ["Albino", "Branco"], femea: ["Albino", "Branco"] }, "lebre_da_cauda_branca": { macho: ["Albino"], femea: ["Albino"] }, "lebre_nuca_dourada": { macho: ["cinza claro"], femea: ["cinza claro"] }, "lebre_europeia": { macho: ["albino", "melanico"], femea: ["albino", "melanico"] }, "leopardo_das_neves": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "leão": { macho: ["Albino", "amarelado", "pardo escuro"], femea: ["Albino", "amarelado", "pardo escuro"] }, "lince_pardo_do_méxico": { macho: ["Albino", "Melânico", "Azul"], femea: ["Albino", "Melânico", "Azul"] }, "lince_euroasiática": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "lobo_cinzento": { macho: ["Albino", "Melânico", "cinza escuro", "clara de ovo", "marrom averelhado"], femea: ["Albino", "Melânico", "cinza escuro", "clara de ovo", "marrom averelhado"] }, "lobo_ibérico": { macho: ["Albino", "Melânico", "fantasma", "ogro", "sombra", "inverno", "oliva", "prístino"], femea: ["Albino", "Melânico", "fantasma", "ogro", "sombra", "inverno", "oliva", "prístino"] }, "marreca_carijó": { macho: ["Melânico"], femea: ["bege"] }, "marrequinha_comum": { macho: ["híbrido azul", "híbrido verde", "Leucismo variação 1", "Leucismo variação 2"], femea: ["Leucismo"] }, "marrequinha_americana": { macho: ["Albino", "Verde Claro", "malhado variação 1", "malhado variação 2", "malhado variação 3"], femea: ["malhado variação 1", "malhado variação 2"] }, "muflão_ibérico": { macho: ["Albino", "Melânico", "cinza"], femea: ["Albino", "Melânico", "cinza"] }, "muntjac_vermelho_do_norte": { macho: ["Albino", "Melânico", "Leucismo variação 1", "Leucismo variação 2", "Vermelho variação 1", "Vermelho variação 2"], femea: ["Albino", "Melânico", "Leucismo variação 1", "Leucismo variação 2"] }, "nilgó": { macho: ["Malhado variação 1", "Malhado variação 2"], femea: ["Malhado variação 1", "Malhado variação 2"] }, "onça_parda": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "oryx_do_cabo": { macho: ["bege", "escuro", "ouro"], femea: ["bege", "escuro", "ouro"] }, "pato_olho_de_ouro": { macho: ["eclipse", "leucismo variação 1", "leucismo variação 2"], femea: ["escuro", "leucismo variação 1", "leucismo variação 2"] }, "pato_harlequim": { macho: ["Albino", "Melânico"], femea: ["Albino", "cinza", "escuro"] }, "pato_real": { macho: ["Melânico"], femea: ["Melânico", "amarelado"] }, "peru": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "peru_selvagem": { macho: ["Albino", "Melânico", "Leucismo", "bronze"], femea: ["Albino", "Melânico", "Leucismo"] }, "peru_selvagem_do_rio_grande": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "piadeira": { macho: ["híbrido", "eclipse", "leucismo variação 1", "leucismo variação 2"], femea: ["leucismo variação 1", "leucismo variação 2"] }, "porco_selvagem": { macho: ["Albino", "rosa", "manchas pretas variação 1", "manchas pretas variação 2", "hibrido marrom variação 1", "hibrido marrom variação 2", "marrom escuro variação 1", "marrom escuro variação 2"], femea: ["rosa"] }, "raposa_tibetana": { macho: ["Albino", "Melânico", "areia", "esfumaçado", "Leucismo"], femea: ["Albino", "Melânico", "areia", "esfumaçado", "Leucismo"] }, "raposa_cinzenta": { macho: ["Albino", "Melânico", "Leucismo", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "Leucismo", "malhado variação 1", "malhado variação 2"] }, "raposa_vermelha": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "rena": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] }, "sambar": { macho: ["Albino", "leucismo variação 1", "leucismo variação 2", "malhado variação 1", "malhado variação 2", "gradiente escuro"], femea: ["Albino", "Malhado", "Leucismo"] }, "tahr": { macho: ["Albino", "branco", "vermelho", "preto", "vermelho escuro", "pardo escuro"], femea: ["Albino", "branco", "vermelho"] }, "tetraz_grande": { macho: ["pálido", "Leucismo"], femea: ["Leucismo"] }, "tigre_de_bengala": { macho: ["Albino", "Melânico", "branco", "branco sem listras", "ouro", "pseudo melanico variação 1", "pseudo melanico variação 2", "pseudo melanico branco variação 1", "pseudo melanico branco variação 2"], femea: ["Albino", "Melânico", "branco", "branco sem listras", "ouro", "pseudo melanico variação 1", "pseudo melanico variação 2", "pseudo melanico branco variação 1", "pseudo melanico branco variação 2"] }, "urso_cinzento": { macho: ["Albino", "Marrom"], femea: ["Albino"] }, "urso_negro": { macho: ["Amarelado", "Marrom", "canela"], femea: ["Amarelado", "Marrom", "canela"] }, "urso_pardo": { macho: ["Albino", "Melanico"], femea: ["Albino", "Melanico"] }, "veado_das_montanhas_rochosas": { macho: ["Albino", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "malhado variação 1", "malhado variação 2"] }, "veado_de_cauda_branca": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "veado_de_cauda_preta": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "veado_de_roosevelt": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "veado_mula": { macho: ["Albino", "Melânico", "diluído", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "diluído", "malhado variação 1", "malhado variação 2"] }, "veado_vermelho": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "zarro_negrinha": { macho: ["Albino", "eclipse", "leucismo variação 1", "leucismo variação 2"], femea: ["leucismo variação 1", "leucismo variação 2"] }, "zarro_castanho": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "ibex_espanhol_do_sudeste": { macho: ["Albino", "Melânico", "laranja", "cinza claro", "castanho acinzentado", "marrom hibrido"], femea: ["Albino", "Melânico"] }, "ibex_de_gredos": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "ibex_de_ronda": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "tetraz_azul": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "marreca_arrebio": { macho: ["Albino", "Melânico", "malhado"], femea: ["Albino", "Melânico", "Leucismo", "malhado", "brilhante", "eritristico"] }, "ganso_das_neves": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "pato_carolino": { macho: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"], femea: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"] }, "castor_norte_americano": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "caribu_da_floresta_boreal": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "cervo_canadense": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "bisão_da_floresta": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] } };
@@ -82,6 +76,7 @@ function renderNavigationHub() {
     appContainer.appendChild(hub);
 }
 
+// FUNÇÃO CORRIGIDA
 function renderMainView(tabKey) {
     appContainer.innerHTML = '';
     const currentTab = categorias[tabKey];
@@ -105,9 +100,12 @@ function renderMainView(tabKey) {
     header.appendChild(backButton);
     mainContent.appendChild(header);
 
+    // Adiciona o mainContent à página ANTES de tentar manipulá-lo
+    appContainer.appendChild(mainContent);
+
     if (tabKey === 'progresso') {
         const progressContent = createProgressPanel();
-        mainContent.appendChild(progressContent);
+        mainContent.appendChild(progressContent); // Agora o painel existe na página
 
         const resetButton = document.createElement('button');
         resetButton.id = 'reset-progress-btn';
@@ -124,6 +122,7 @@ function renderMainView(tabKey) {
         };
         mainContent.appendChild(resetButton);
         
+        // Chama a atualização DEPOIS que tudo foi desenhado na tela
         updateProgressPanel();
     } else {
         const filterInput = document.createElement('input');
@@ -149,9 +148,8 @@ function renderMainView(tabKey) {
             });
         });
     }
-
-    appContainer.appendChild(mainContent);
 }
+
 
 function createAnimalCard(name, tabKey) {
     const card = document.createElement('div');
@@ -189,6 +187,9 @@ function showDetailView(name, tabKey) {
     const detailContent = document.createElement('div');
     mainContent.appendChild(detailContent);
 
+    // Adiciona o mainContent à página antes de preencher os detalhes
+    appContainer.appendChild(mainContent);
+
     if (tabKey === 'greats') {
         renderGreatsDetailView(detailContent, name, slug, tabKey);
     } else if (tabKey === 'pelagens') {
@@ -200,8 +201,6 @@ function showDetailView(name, tabKey) {
     } else {
         detailContent.innerHTML = `<p>Funcionalidade de detalhes para esta aba ainda não implementada.</p>`;
     }
-    
-    appContainer.appendChild(mainContent);
 }
 
 function renderRareFursDetailView(container, name, slug) {
@@ -546,11 +545,11 @@ function showAddTrophyForm(fur, slug, tabKey, name, onListChangeCallback) {
 function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
     card.classList.remove('completed', 'inprogress', 'incomplete');
-    let status = 'incomplete'; // Default status
+    let status = 'incomplete'; 
 
     if (tabKey === 'greats') {
         const animalData = savedData[tabKey]?.[slug] || {};
-        checkAndSetGreatOneCompletion(slug, animalData); // This function sets animalData.completo
+        checkAndSetGreatOneCompletion(slug, animalData);
         if (animalData.completo) {
             status = 'completed';
         } else {
@@ -635,101 +634,68 @@ function createProgressPanel() {
 }
 
 function updateProgressPanel() {
-    console.log("--- INICIANDO updateProgressPanel ---");
-    const currentDataForProgress = loadData(); // Usa uma variável local para não confundir
+    const currentData = loadData(); 
 
     const updateSection = (id, collected, total) => {
         const label = document.getElementById(`${id}-progress-label`);
         const bar = document.getElementById(`${id}-progress-bar`);
         const percentage = total > 0 ? (collected / total) * 100 : 0;
-        
-        console.log(`Seção '${id}': Coletado=${collected}, Total=${total}, Porcentagem=${percentage}%`);
 
         if (label) {
             label.textContent = `${collected} / ${total}`;
-        } else {
-            console.error(`Elemento de label não encontrado: ${id}-progress-label`);
         }
         if (bar) {
             bar.style.width = `${percentage}%`;
             bar.textContent = `${Math.round(percentage)}%`;
-        } else {
-            console.error(`Elemento de barra não encontrado: ${id}-progress-bar`);
         }
     };
 
-    // --- Rares ---
-    console.log("--- Calculando Pelagens Raras ---");
     let totalRares = 0;
     Object.values(rareFursData).forEach(species => {
         totalRares += (species.macho?.length || 0);
         totalRares += (species.femea?.length || 0);
     });
-    console.log("Total de Raras Possíveis:", totalRares);
-
     let collectedRares = 0;
-    if (currentDataForProgress.pelagens) {
-        console.log("Dados de 'pelagens' encontrados:", currentDataForProgress.pelagens);
-        Object.values(currentDataForProgress.pelagens).forEach(speciesData => {
+    if (currentData.pelagens) {
+        Object.values(currentData.pelagens).forEach(speciesData => {
             collectedRares += Object.values(speciesData).filter(isCollected => isCollected === true).length;
         });
-    } else {
-        console.log("Nenhum dado de 'pelagens' encontrado.");
     }
-    console.log("Total de Raras Coletadas:", collectedRares);
     updateSection('rares', collectedRares, totalRares);
 
-    // --- Super Rares ---
-    console.log("--- Calculando Super Raros ---");
     const totalSuperRares = totalRares;
-    console.log("Total de Super Raros Possíveis:", totalSuperRares);
     let collectedSuperRares = 0;
-    if (currentDataForProgress.super_raros) {
-        console.log("Dados de 'super_raros' encontrados:", currentDataForProgress.super_raros);
-        Object.values(currentDataForProgress.super_raros).forEach(speciesData => {
+    if (currentData.super_raros) {
+        Object.values(currentData.super_raros).forEach(speciesData => {
             collectedSuperRares += Object.values(speciesData).filter(isCollected => isCollected === true).length;
         });
-    } else {
-        console.log("Nenhum dado de 'super_raros' encontrado.");
     }
-    console.log("Total de Super Raros Coletados:", collectedSuperRares);
     updateSection('super-rares', collectedSuperRares, totalSuperRares);
 
-    // --- Diamonds ---
-    console.log("--- Calculando Diamantes ---");
     let totalDiamonds = 0;
     Object.values(diamondFursData).forEach(species => {
         totalDiamonds += (species.macho?.length || 0);
         totalDiamonds += (species.femea?.length || 0);
     });
-    console.log("Total de Diamantes Possíveis:", totalDiamonds);
     let collectedDiamonds = 0;
-    if (currentDataForProgress.diamantes) {
-        console.log("Dados de 'diamantes' encontrados:", currentDataForProgress.diamantes);
-        Object.values(currentDataForProgress.diamantes).forEach(speciesData => {
+    if (currentData.diamantes) {
+        Object.values(currentData.diamantes).forEach(speciesData => {
             Object.values(speciesData).forEach(trophyData => {
                 if (trophyData === true || (typeof trophyData === 'object' && trophyData.completed)) {
                     collectedDiamonds++;
                 }
             });
         });
-    } else {
-        console.log("Nenhum dado de 'diamantes' encontrado.");
     }
-    console.log("Total de Diamantes Coletados:", collectedDiamonds);
     updateSection('diamond', collectedDiamonds, totalDiamonds);
 
-    // --- Great Ones ---
-    console.log("--- Calculando Great Ones ---");
     let totalGreatOnesFurs = 0;
     Object.values(greatsFursData).forEach(fursArray => {
         totalGreatOnesFurs += fursArray.length;
     });
-    console.log("Total de Peles de Great One Possíveis:", totalGreatOnesFurs);
     let collectedGreatOnesFurs = 0;
-    if (currentDataForProgress.greats) {
-        console.log("Dados de 'greats' encontrados:", currentDataForProgress.greats);
-        Object.values(currentDataForProgress.greats).forEach(speciesData => {
+    if (currentData.greats) {
+        Object.values(currentData.greats).forEach(speciesData => {
             if (speciesData.furs) {
                 Object.values(speciesData.furs).forEach(furData => {
                     if (furData.trophies?.length > 0) {
@@ -738,12 +704,8 @@ function updateProgressPanel() {
                 });
             }
         });
-    } else {
-        console.log("Nenhum dado de 'greats' encontrado.");
     }
-    console.log("Total de Peles de Great One Coletadas:", collectedGreatOnesFurs);
     updateSection('greatone', collectedGreatOnesFurs, totalGreatOnesFurs);
-    console.log("--- FINALIZANDO updateProgressPanel ---");
 }
 
 function openModal(imageUrl) {
