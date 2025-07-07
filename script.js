@@ -351,7 +351,9 @@ function renderAnimalDossier(animalName, originReserveKey) {
     dossierTabs.querySelector('.dossier-tab').click();
 }
 
+// --- LÓGICA DAS ABAS ESPECÍFICAS ---
 
+// ... (as funções renderRareFursDetailView, renderSuperRareDetailView, renderDiamondsDetailView, renderGreatsDetailView, etc. permanecem as mesmas)
 // --- LÓGICA DAS ABAS ESPECÍFICAS ---
 
 function renderRareFursDetailView(container, name, slug) {
@@ -466,11 +468,12 @@ function renderDiamondsDetailView(container, name, slug) {
             const input = scoreContainer.querySelector('.score-input');
             input.focus(); input.select();
             const saveScore = () => {
-                if (input.value !== null && !isNaN(input.value) && input.value.trim() !== '') {
+                const newScoreValue = input.value;
+                if (newScoreValue !== null && !isNaN(newScoreValue) && newScoreValue.trim() !== '') {
                     if (!savedData.diamantes) savedData.diamantes = {};
                     if (!Array.isArray(savedData.diamantes[slug])) savedData.diamantes[slug] = [];
                     const otherTrophies = savedData.diamantes[slug].filter(t => t.type !== fullTrophyName);
-                    savedData.diamantes[slug] = [...otherTrophies, { id: Date.now(), type: fullTrophyName, score: parseFloat(input.value) }];
+                    savedData.diamantes[slug] = [...otherTrophies, { id: Date.now(), type: fullTrophyName, score: parseFloat(newScoreValue) }];
                     saveData(savedData);
                 }
                 renderDiamondsDetailView(container, name, slug);
@@ -709,15 +712,18 @@ function createLatestAchievementsPanel() {
                 const genderSlug = trophy.furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
                 const pureFurName = trophy.furName.replace(/^(macho|fêmea|diamante)\s/gi, '').trim();
                 const furSlug = slugify(pureFurName);
+                
                 const specificPath = `animais/pelagens/${animalSlug}_${furSlug}_${genderSlug}.png`;
                 const neutralPath = `animais/pelagens/${animalSlug}_${furSlug}.png`;
                 const basePath = `animais/${animalSlug}.png`;
                 imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${neutralPath}'; this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
+
             } else if (trophy.type === 'greatone') {
                 const furSlug = slugify(trophy.furName);
                 const specificPath = `animais/pelagens/great_${animalSlug}_${furSlug}.png`;
                 const basePath = `animais/${animalSlug}.png`;
                 imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
+            
             } else { 
                  imagePathString = `src="animais/${animalSlug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';"`;
             }
