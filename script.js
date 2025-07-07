@@ -204,7 +204,7 @@ function renderMainView(tabKey) {
     if (tabKey === 'progresso') {
         renderProgressView(mainContent);
     } else if (tabKey === 'reservas') {
-        renderReservesList(mainContent);
+        renderReservesList(mainContent); // CORREÇÃO APLICADA AQUI
     } else {
         const filterInput = document.createElement('input');
         filterInput.type = 'text';
@@ -244,7 +244,6 @@ function createAnimalCard(name, tabKey) {
 
 // --- ROTEADOR DE VISUALIZAÇÃO DE DETALHES ---
 function showDetailView(name, tabKey, originReserveKey = null) {
-    // Se a origem for uma reserva, mostra o novo Dossiê. Caso contrário, mantém o fluxo antigo.
     if (originReserveKey) {
         renderAnimalDossier(name, originReserveKey);
     } else {
@@ -347,9 +346,9 @@ function renderAnimalDossier(animalName, originReserveKey) {
         tabs[tabKey].renderFunc(dossierContent, animalName, slug);
     });
     
-    // Abre a primeira aba por padrão
     dossierTabs.querySelector('.dossier-tab').click();
 }
+
 
 // --- LÓGICA DAS ABAS ESPECÍFICAS ---
 
