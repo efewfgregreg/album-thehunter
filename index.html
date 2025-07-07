@@ -104,9 +104,7 @@
         .modal-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
         .modal-close:hover, .modal-close:focus { color: #bbb; text-decoration: none; }
         
-        /*==========================================================
-        =      PAINEL DE PROGRESSO (TEMA DIÁRIO DE CAÇA) V2        =
-        ==========================================================*/
+        /* --- ESTILOS PAINEL DE PROGRESSO --- */
         .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
         .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://www.transparenttextures.com/patterns/leather.png); background-color: #3a3834; padding: 20px; border-radius: 8px; border: 1px solid #5a554a; }
         .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
@@ -135,27 +133,10 @@
         .progress-detail-item .label { color: var(--text-color-muted); }
         .progress-detail-item .value { font-weight: bold; }
 
-        /*==========================================================
-        =           ESTILOS DA SALA DE TROFÉUS (GREAT ONES)        =
-        ==========================================================*/
-        .greats-grid {
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://www.transparenttextures.com/patterns/wood-pattern.png);
-            background-color: #4a3c31;
-            padding: 25px;
-            border-radius: 8px;
-            gap: 25px;
-        }
-        .fur-card.trophy-frame {
-            background: linear-gradient(145deg, #4a3f3a, #3b322d);
-            border: 8px solid #3b2e26;
-            border-image: linear-gradient(145deg, #6d5b51, #3b2e26) 1;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,0,0,0.5);
-            padding: 10px;
-            gap: 5px;
-        }
-        .fur-card.trophy-frame:hover {
-            box-shadow: 0 0 25px var(--gold-color), inset 0 0 15px rgba(0,0,0,0.5);
-        }
+        /* --- ESTILOS SALA DE TROFÉUS (GREAT ONES) --- */
+        .greats-grid { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://www.transparenttextures.com/patterns/wood-pattern.png); background-color: #4a3c31; padding: 25px; border-radius: 8px; gap: 25px; }
+        .fur-card.trophy-frame { background: linear-gradient(145deg, #4a3f3a, #3b322d); border: 8px solid #3b2e26; border-image: linear-gradient(145deg, #6d5b51, #3b2e26) 1; box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,0,0,0.5); padding: 10px; gap: 5px; }
+        .fur-card.trophy-frame:hover { box-shadow: 0 0 25px var(--gold-color), inset 0 0 15px rgba(0,0,0,0.5); }
         .trophy-frame img { border: 2px solid #2a211c; }
         .trophy-frame .info-plaque { background-color: rgba(0,0,0,0.3); padding: 8px 5px; border-radius: 4px; margin-top: 5px; }
         .trophy-frame .info { color: var(--gold-color); font-size: 1rem; line-height: 1.1; }
@@ -163,22 +144,8 @@
         .trophy-frame .kill-counter .fa-trophy { color: var(--gold-color); margin-right: 5px; }
         .trophy-frame.incomplete img { filter: grayscale(1) brightness(0.5); }
         .trophy-frame.incomplete .info { color: var(--text-color-muted); }
-
-        .trophy-manager-modal {
-            position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-        .modal-content-box {
-            background: var(--surface-color);
-            padding: 25px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            width: 90%;
-            max-width: 600px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.5);
-        }
+        .trophy-manager-modal { position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .modal-content-box { background: var(--surface-color); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); width: 90%; max-width: 600px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
         .modal-content-box h3 { border-bottom: 1px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 15px; }
         .trophy-log-list { list-style: none; padding: 0; max-height: 150px; overflow-y: auto; margin-bottom: 15px; }
         .trophy-log-list li { display: flex; justify-content: space-between; padding: 10px; background-color: var(--bg-color); border-radius: 4px; margin-bottom: 5px; }
@@ -186,6 +153,43 @@
         .add-trophy-form table { width: 100%; border-spacing: 0 10px; }
         .add-trophy-form input { width: 100%; padding: 8px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 4px; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        
+        /*==========================================================
+        =       ESTILOS DA ABA RESERVAS (PAINEL DE CONTROLE)       =
+        ==========================================================*/
+        .reserves-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+        .reserve-card {
+            height: 180px;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        .reserve-card:hover { transform: scale(1.03); border-color: var(--primary-color); }
+        .reserve-card-bg { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; transition: transform 0.4s ease; }
+        .reserve-card:hover .reserve-card-bg { transform: scale(1.1); }
+        .reserve-card-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.1) 60%); }
+        .reserve-card-content { position: relative; z-index: 2; padding: 15px; display: flex; flex-direction: column; height: 100%; justify-content: flex-end; }
+        .reserve-card-logo { max-height: 50px; width: auto; max-width: 80%; margin-bottom: 10px; filter: drop-shadow(0 2px 3px black); }
+        .reserve-card-stats { display: flex; gap: 15px; font-size: 0.9rem; align-items: center; color: var(--text-color-muted); }
+        .reserve-card-stats i { color: var(--primary-color); }
+        .reserve-card-stats .fa-crown { color: var(--gold-color); }
+        .reserve-detail-view .animal-checklist { display: flex; flex-direction: column; gap: 10px; }
+        .animal-checklist-row { display: grid; grid-template-columns: 50px 1fr auto; align-items: center; gap: 15px; background-color: var(--surface-color); padding: 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .animal-checklist-row:hover { background-color: #3c3f43; transform: translateX(5px); }
+        .animal-checklist-row .animal-icon { width: 40px; height: 40px; filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%); }
+        .animal-checklist-row .animal-name { font-family: var(--font-headings); font-size: 1.1rem; }
+        .animal-checklist-row .mini-progress-bars { display: flex; flex-direction: column; gap: 5px; }
+        .mini-progress { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+        .mini-progress-bar-container { flex-grow: 1; height: 8px; background-color: var(--bg-color); border-radius: 4px; }
+        .mini-progress-bar { height: 100%; background-color: var(--primary-color); border-radius: 4px; }
+        .great-one-indicator { font-size: 1.5rem; color: var(--gold-color); opacity: 0.5; }
+        .great-one-indicator.possible { opacity: 1; }
 
     </style>
 </head>
