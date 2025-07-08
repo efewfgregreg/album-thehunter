@@ -185,6 +185,35 @@
         .dossier-tab:hover { color: var(--text-color); }
         .dossier-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .dossier-tab .fa-crown { color: var(--gold-color); }
+        
+        /* --- ESTILOS PAINEL DE PROGRESSO (RESTAURADOS) --- */
+        .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
+        .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://www.transparenttextures.com/patterns/leather.png); background-color: #3a3834; padding: 20px; border-radius: 8px; border: 1px solid #5a554a; }
+        .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; justify-items: center; }
+        .achievement-card { background-color: #f0ead6; padding: 10px 10px 15px 10px; border-radius: 4px; box-shadow: 3px 3px 8px rgba(0,0,0,0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; width: 90%; cursor: pointer; }
+        .achievement-card:hover { transform: scale(1.05); box-shadow: 6px 6px 12px rgba(0,0,0,0.5); z-index: 10; }
+        .achievement-card img { width: 100%; height: 100px; object-fit: cover; background-color: #333; border: 1px solid #ccc; }
+        .achievement-card-info { padding-top: 8px; text-align: center; }
+        .achievement-card-info .animal-name { font-family: var(--font-body); font-style: italic; font-size: 1rem; color: #444; font-weight: 700; }
+        .achievement-card-info .fur-name { font-size: 0.8rem; color: #666; }
+        #progress-panel { display: flex; flex-direction: column; gap: 20px; }
+        .progress-section { background-color: var(--surface-color); padding: 15px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; border: 1px solid var(--border-color); }
+        .progress-section:hover { background-color: #36393f; border-color: var(--primary-color); }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; }
+        .progress-header h3 { margin: 0; font-family: var(--font-headings); }
+        .progress-title-container { display: flex; align-items: center; gap: 10px; }
+        .progress-medal { font-size: 1.5rem; }
+        .progress-medal.bronze { color: var(--bronze-color); }
+        .progress-medal.silver { color: var(--silver-color); }
+        .progress-medal.gold { color: var(--gold-color); }
+        .progress-label { text-align: right; color: var(--text-color-muted); font-size: 0.9rem; font-weight: bold; }
+        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; height: 12px; margin-top: 10px; }
+        .progress-bar-fill { background: linear-gradient(90deg, #43A047, #66BB6A); height: 100%; transition: width 0.5s ease; border-radius: 5px; }
+        .progress-detail-view { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; }
+        .progress-detail-item { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; }
+        .progress-detail-item .label { color: var(--text-color-muted); }
+        .progress-detail-item .value { font-weight: bold; }
 
         /* --- ESTILOS PARA MONTAGENS MÚLTIPLAS E SEU MODAL --- */
         .mounts-grid {
@@ -296,7 +325,6 @@
         .detail-item-body .fa-check-circle { color: var(--gold-color); }
         .detail-item-body .fa-times-circle { color: #d9534f; }
         .detail-item-body strong { color: var(--text-color); }
-
     </style>
 </head>
 <body>
