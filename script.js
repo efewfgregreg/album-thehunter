@@ -603,7 +603,7 @@ function renderMainView(tabKey) {
     } else if (tabKey === 'montagens') {
         renderMultiMountsView(contentContainer);
     } else if (tabKey === 'grind') {
-        renderGrindSelectionView(contentContainer);
+        renderGrindDashboard(contentContainer);
     } else {
         const filterInput = document.createElement('input');
         filterInput.type = 'text';
@@ -1494,6 +1494,60 @@ function renderMultiMountDetailModal(mountKey) {
 
 // --- FUNÇÕES CONTADOR DE GRIND ---
 
+function renderGrindDashboard(container) {
+    container.innerHTML = ''; // Limpa a área
+
+    // Botão para iniciar um novo grind
+    const newGrindCard = document.createElement('div');
+    newGrindCard.className = 'new-grind-card';
+    newGrindCard.innerHTML = `
+        <i class="fas fa-plus-circle"></i>
+        <span>Iniciar Novo Grind</span>
+    `;
+    newGrindCard.addEventListener('click', () => renderGrindSelectionView(container));
+    container.appendChild(newGrindCard);
+
+    // Divisor
+    container.innerHTML += '<h3 class="section-divider">Grinds em Andamento</h3>';
+
+    // Grid para os grinds existentes
+    const activeGrindsGrid = document.createElement('div');
+    activeGrindsGrid.className = 'active-grinds-grid';
+    container.appendChild(activeGrindsGrid);
+    
+    const sessions = savedData.grindSessions || {};
+
+    if (Object.keys(sessions).length === 0) {
+        activeGrindsGrid.innerHTML = '<p>Nenhum grind iniciado ainda.</p>';
+        return;
+    }
+
+    // Cria um card para cada grind salvo
+    for (const [animalSlug, sessionData] of Object.entries(sessions)) {
+        const animalName = items.find(item => slugify(item) === animalSlug);
+        const reserve = reservesData[sessionData.activeReserve];
+
+        if (animalName && reserve) {
+            const card = document.createElement('div');
+            card.className = 'grind-session-card';
+            card.innerHTML = `
+                <div class="grind-session-bg" style="background-image: url('${reserve.image}')"></div>
+                <div class="grind-session-overlay"></div>
+                <div class="grind-session-content">
+                    <img class="animal-icon" src="animais/${animalSlug}.png" onerror="this.src='animais/placeholder.png'">
+                    <div class="session-info">
+                        <span class="animal-name">${animalName}</span>
+                        <span class="reserve-name">${reserve.name}</span>
+                    </div>
+                </div>
+            `;
+            // Ao clicar, vai para a tela do contador daquele grind específico
+            card.addEventListener('click', () => renderGrindCounterView(animalSlug));
+            activeGrindsGrid.appendChild(card);
+        }
+    }
+}
+
 function renderGrindSelectionView(container) {
     container.innerHTML = '<h2>Selecione um Animal para Grindar</h2>';
     const albumGrid = document.createElement('div');
@@ -1550,7 +1604,7 @@ function renderGrindCounterView(animalSlug) {
 
     mainContent.querySelector('.page-header h2').textContent = `Grind: ${animalName}`;
     const backButton = mainContent.querySelector('.page-header .back-button');
-    backButton.innerHTML = `&larr; Mudar Animal`;
+    backButton.innerHTML = `&larr; Voltar para Dashboard`;
     backButton.onclick = () => renderMainView('grind');
 
     container.innerHTML = `
@@ -1608,6 +1662,7 @@ function renderGrindCounterView(animalSlug) {
         </div>
     `;
 }
+
 
 // --- INICIALIZAÇÃO E EVENTOS GERAIS ---
 
