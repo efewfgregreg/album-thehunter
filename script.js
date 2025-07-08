@@ -22,10 +22,18 @@ function loadData() {
 function saveData(data) {
     try {
         localStorage.setItem(saveDataKey, JSON.stringify(data));
+        
         if (document.getElementById('progress-panel-main-container')) {
             const container = document.getElementById('progress-panel-main-container').parentNode;
             renderProgressView(container);
         }
+
+        const mountsGrid = document.querySelector('.mounts-grid');
+        if (mountsGrid) {
+            const container = mountsGrid.parentNode;
+            renderMultiMountsView(container);
+        }
+
     } catch (e) {
         console.error("Erro ao salvar dados no localStorage", e);
     }
@@ -1309,8 +1317,26 @@ function closeModalOnEscape(event) {
     }
 }
 
+// --- FUNÇÕES DE MONTAGENS MÚLTIPLAS ---
+
+function updateMultiMountChecklist(slug, gender, change) {
+    if (!savedData.multi_mount_checklist) {
+        savedData.multi_mount_checklist = {};
+    }
+    
+    const key = `${slug}-${gender}`;
+    
+    const currentCount = savedData.multi_mount_checklist[key] || 0;
+    const newCount = Math.max(0, currentCount + change);
+
+    savedData.multi_mount_checklist[key] = newCount;
+    
+    saveData(savedData);
+}
+
 function checkMountRequirements(requiredAnimals) {
     const collectedDiamonds = savedData.diamantes || {};
+    const manualChecklist = savedData.multi_mount_checklist || {};
     const availableTrophies = {};
 
     for (const slug in collectedDiamonds) {
@@ -1321,21 +1347,33 @@ function checkMountRequirements(requiredAnimals) {
         });
     }
 
-    let collectedCount = 0;
-    const requirementsStatus = requiredAnimals.map(req => {
+    for (const key in manualChecklist) {
+        availableTrophies[key] = (availableTrophies[key] || 0) + (manualChecklist[key] || 0);
+    }
+    
+    const requiredCounts = {};
+    requiredAnimals.forEach(req => {
         const key = `${req.slug}-${req.gender}`;
-        if (availableTrophies[key] && availableTrophies[key] > 0) {
-            collectedCount++;
-            availableTrophies[key]--;
-            return { ...req, met: true };
-        }
-        return { ...req, met: false };
+        requiredCounts[key] = (requiredCounts[key] || 0) + 1;
     });
 
+    let allRequirementsMet = true;
+    let collectedCount = 0;
+
+    for (const key in requiredCounts) {
+        const needed = requiredCounts[key];
+        const available = availableTrophies[key] || 0;
+        
+        collectedCount += Math.min(needed, available);
+
+        if (available < needed) {
+            allRequirementsMet = false;
+        }
+    }
+    
     return {
-        isComplete: collectedCount === requiredAnimals.length,
-        progress: { collected: collectedCount, total: requiredAnimals.length },
-        requirementsStatus
+        isComplete: allRequirementsMet,
+        progress: { collected: collectedCount, total: requiredAnimals.length }
     };
 }
 
@@ -1349,32 +1387,48 @@ function renderMultiMountsView(container) {
 
     sortedMounts.forEach(mount => {
         const status = checkMountRequirements(mount.animals);
-        const animalName = items.find(item => slugify(item) === mount.animals[0].slug);
 
         const card = document.createElement('div');
         card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
         
         let requirementsHTML = '<ul class="mount-requirements-list">';
-        status.requirementsStatus.forEach(req => {
-            const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
+        
+        const groupedRequirements = {};
+        mount.animals.forEach(req => {
+            const key = `${req.slug}-${req.gender}`;
+            if (!groupedRequirements[key]) {
+                const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
+                groupedRequirements[key] = { ...req, animalName, count: 0 };
+            }
+            groupedRequirements[key].count++;
+        });
+
+        for(const key in groupedRequirements) {
+            const req = groupedRequirements[key];
+            const manualCount = savedData.multi_mount_checklist?.[key] || 0;
             const icon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus';
-            const statusIcon = req.met ? 'fa-check-circle' : 'fa-circle';
-            const statusColor = req.met ? 'var(--gold-color)' : 'var(--text-color)';
-            
+
             requirementsHTML += `
-                <li class="requirement-item" style="color: ${statusColor};">
-                    <i class="fas ${statusIcon}"></i>
-                    <span>${animalName}</span>
-                    <i class="fas ${icon}"></i>
+                <li class="requirement-item">
+                    <div class="requirement-info">
+                        <i class="fas ${icon}"></i>
+                        <span>${req.animalName} (x${req.count})</span>
+                    </div>
+                    <div class="requirement-controls">
+                        <span>Marcação Manual:</span>
+                        <button class="mount-control-btn minus" onclick="updateMultiMountChecklist('${req.slug}', '${req.gender}', -1)">-</button>
+                        <span class="manual-count">${manualCount}</span>
+                        <button class="mount-control-btn plus" onclick="updateMultiMountChecklist('${req.slug}', '${req.gender}', 1)">+</button>
+                    </div>
                 </li>
             `;
-        });
+        }
         requirementsHTML += '</ul>';
 
         card.innerHTML = `
             <div class="mount-card-header">
                 <h3>${mount.name}</h3>
-                <div class="mount-progress">${status.progress.collected} / ${status.progress.total}</div>
+                <div class="mount-progress" title="Progresso Total (Diamantes + Manual)">${status.progress.collected} / ${status.progress.total}</div>
             </div>
             ${requirementsHTML}
             ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i> Completo</div>' : ''}
@@ -1383,6 +1437,7 @@ function renderMultiMountsView(container) {
         grid.appendChild(card);
     });
 }
+
 
 document.addEventListener('DOMContentLoaded', () => {
     appContainer = document.getElementById('app-container');
