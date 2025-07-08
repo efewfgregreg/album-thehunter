@@ -98,41 +98,12 @@
         .fur-card.completed img { filter: none; transition: all 0.3s ease; }
         .fur-card.completed:hover img { transform: scale(1.05); }
 
-        /* --- OUTROS ESTILOS --- */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; }
-        .modal-content { max-width: 90%; max-height: 90%; object-fit: contain; }
+        /* --- OUTROS ESTILOS MODAL --- */
+        .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content-viewer { max-width: 90%; max-height: 90%; object-fit: contain; }
         .modal-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; }
         .modal-close:hover, .modal-close:focus { color: #bbb; text-decoration: none; }
         
-        /* --- ESTILOS PAINEL DE PROGRESSO --- */
-        .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
-        .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://www.transparenttextures.com/patterns/leather.png); background-color: #3a3834; padding: 20px; border-radius: 8px; border: 1px solid #5a554a; }
-        .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
-        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; justify-items: center; }
-        .achievement-card { background-color: #f0ead6; padding: 10px 10px 15px 10px; border-radius: 4px; box-shadow: 3px 3px 8px rgba(0,0,0,0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; width: 90%; cursor: pointer; }
-        .achievement-card:hover { transform: scale(1.05); box-shadow: 6px 6px 12px rgba(0,0,0,0.5); z-index: 10; }
-        .achievement-card img { width: 100%; height: 100px; object-fit: cover; background-color: #333; border: 1px solid #ccc; }
-        .achievement-card-info { padding-top: 8px; text-align: center; }
-        .achievement-card-info .animal-name { font-family: var(--font-body); font-style: italic; font-size: 1rem; color: #444; font-weight: 700; }
-        .achievement-card-info .fur-name { font-size: 0.8rem; color: #666; }
-        #progress-panel { display: flex; flex-direction: column; gap: 20px; }
-        .progress-section { background-color: var(--surface-color); padding: 15px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; border: 1px solid var(--border-color); }
-        .progress-section:hover { background-color: #36393f; border-color: var(--primary-color); }
-        .progress-header { display: flex; justify-content: space-between; align-items: center; }
-        .progress-header h3 { margin: 0; font-family: var(--font-headings); }
-        .progress-title-container { display: flex; align-items: center; gap: 10px; }
-        .progress-medal { font-size: 1.5rem; }
-        .progress-medal.bronze { color: var(--bronze-color); }
-        .progress-medal.silver { color: var(--silver-color); }
-        .progress-medal.gold { color: var(--gold-color); }
-        .progress-label { text-align: right; color: var(--text-color-muted); font-size: 0.9rem; font-weight: bold; }
-        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; height: 12px; margin-top: 10px; }
-        .progress-bar-fill { background: linear-gradient(90deg, #43A047, #66BB6A); height: 100%; transition: width 0.5s ease; border-radius: 5px; }
-        .progress-detail-view { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; }
-        .progress-detail-item { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; }
-        .progress-detail-item .label { color: var(--text-color-muted); }
-        .progress-detail-item .value { font-weight: bold; }
-
         /* --- ESTILOS SALA DE TROFÉUS (GREAT ONES) --- */
         .greats-grid { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(https://www.transparenttextures.com/patterns/wood-pattern.png); background-color: #4a3c31; padding: 25px; border-radius: 8px; gap: 25px; }
         .fur-card.trophy-frame { background: linear-gradient(145deg, #4a3f3a, #3b322d); border: 8px solid #3b2e26; border-image: linear-gradient(145deg, #6d5b51, #3b2e26) 1; box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,0,0,0.5); padding: 10px; gap: 5px; }
@@ -144,7 +115,9 @@
         .trophy-frame .kill-counter .fa-trophy { color: var(--gold-color); margin-right: 5px; }
         .trophy-frame.incomplete img { filter: grayscale(1) brightness(0.5); }
         .trophy-frame.incomplete .info { color: var(--text-color-muted); }
-        .trophy-manager-modal { position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        
+        /* --- ESTILOS MODAL DE FORMULÁRIO --- */
+        .form-modal { position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-content-box { background: var(--surface-color); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); width: 90%; max-width: 600px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
         .modal-content-box h3 { border-bottom: 1px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 15px; }
         .trophy-log-list { list-style: none; padding: 0; max-height: 150px; overflow-y: auto; margin-bottom: 15px; }
@@ -153,45 +126,13 @@
         .add-trophy-form table { width: 100%; border-spacing: 0 10px; }
         .add-trophy-form input { width: 100%; padding: 8px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 4px; }
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
-        
-        /* --- ESTILOS ABA RESERVAS (PAINEL DE CONTROLE) --- */
-        .reserves-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
-        .reserve-card { height: 180px; position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid transparent; transition: all 0.3s ease; }
-        .reserve-card:hover { transform: scale(1.03); border-color: var(--primary-color); }
-        .reserve-card-bg { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; transition: transform 0.4s ease; }
-        .reserve-card:hover .reserve-card-bg { transform: scale(1.1); }
-        .reserve-card-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.1) 60%); }
-        .reserve-card-content { position: relative; z-index: 2; padding: 15px; display: flex; flex-direction: column; height: 100%; justify-content: flex-end; }
-        .reserve-card-logo { max-height: 50px; width: auto; max-width: 80%; margin-bottom: 10px; filter: drop-shadow(0 2px 3px black); }
-        .reserve-card-stats { display: flex; gap: 15px; font-size: 0.9rem; align-items: center; color: var(--text-color-muted); }
-        .reserve-card-stats i { color: var(--primary-color); }
-        .reserve-card-stats .fa-crown { color: var(--gold-color); }
-        .animal-checklist { display: flex; flex-direction: column; gap: 10px; }
-        .animal-checklist-row { display: grid; grid-template-columns: 50px 1fr auto; align-items: center; gap: 15px; background-color: var(--surface-color); padding: 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
-        .animal-checklist-row:hover { background-color: #3c3f43; transform: translateX(5px); }
-        .animal-checklist-row .animal-icon { width: 40px; height: 40px; filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%); }
-        .animal-checklist-row .animal-name { font-family: var(--font-headings); font-size: 1.1rem; }
-        .animal-checklist-row .mini-progress-bars { display: flex; flex-direction: column; gap: 5px; }
-        .mini-progress { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
-        .mini-progress-bar-container { flex-grow: 1; height: 8px; background-color: var(--bg-color); border-radius: 4px; }
-        .mini-progress-bar { height: 100%; background-color: var(--primary-color); border-radius: 4px; }
-        .great-one-indicator { font-size: 1.5rem; color: var(--gold-color); opacity: 0.5; }
-        .great-one-indicator.possible { opacity: 1; }
 
-        /* --- ESTILOS DO DOSSIÊ DO ANIMAL --- */
-        .dossier-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
-        .dossier-tab { padding: 10px 20px; cursor: pointer; color: var(--text-color-muted); border-bottom: 3px solid transparent; transition: all 0.2s ease; font-family: var(--font-headings); }
-        .dossier-tab:hover { color: var(--text-color); }
-        .dossier-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
-        .dossier-tab .fa-crown { color: var(--gold-color); }
-
-        /* --- ESTILOS PARA MONTAGENS MÚLTIPLAS --- */
+        /* --- ESTILOS MONTAGENS MÚLTIPLAS E SEU MODAL --- */
         .mounts-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
         }
-
         .mount-card {
             background: var(--surface-color);
             border: 1px solid var(--border-color);
@@ -203,27 +144,26 @@
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
-
+        .mount-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
         .mount-card.completed {
             border-color: var(--gold-color);
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
         }
-
         .mount-card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
         }
-
         .mount-card-header h3 {
             font-family: var(--font-headings);
             color: var(--text-color);
             margin: 0;
         }
-
         .mount-progress {
             font-size: 0.9rem;
             font-weight: bold;
@@ -232,77 +172,27 @@
             padding: 4px 8px;
             border-radius: 12px;
         }
-
-        .mount-requirements-list {
-            list-style: none;
-            padding: 0;
+        .mount-card-animals {
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            gap: 5px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+            filter: grayscale(0.5);
+            opacity: 0.7;
         }
-
-        .requirement-item {
-            display: flex;
-            flex-direction: column;
-            align-items: stretch;
-            gap: 8px;
-            background-color: rgba(0,0,0,0.2);
-            padding: 8px 12px;
-            border-radius: 6px;
-            font-size: 0.95rem;
+        .mount-card-animals img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: invert(80%);
         }
-
-        .requirement-info, .requirement-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .mount-card.completed .mount-card-animals {
+            filter: grayscale(0);
+            opacity: 1;
         }
-
-        .requirement-info span {
-            flex-grow: 1; /* Faz o nome do animal ocupar o espaço restante */
+        .mount-card.completed .mount-card-animals img {
+            filter: invert(65%) sepia(74%) saturate(1450%) hue-rotate(145deg) brightness(95%) contrast(101%);
         }
-
-        .requirement-controls {
-            justify-content: space-between;
-            background-color: rgba(0,0,0,0.15);
-            padding: 5px 8px;
-            border-radius: 4px;
-            font-size: 0.8rem;
-            color: var(--text-color-muted);
-        }
-
-        .mount-control-btn {
-            background-color: var(--border-color);
-            color: var(--text-color);
-            border: none;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            line-height: 22px; /* Para centralizar o texto */
-            text-align: center;
-        }
-        .mount-control-btn:hover {
-            background-color: var(--primary-color);
-            color: #111;
-        }
-        .mount-control-btn.minus:hover {
-            background-color: #d9534f;
-        }
-
-        .manual-count {
-            font-weight: bold;
-            font-size: 1rem;
-            color: var(--text-color);
-            min-width: 15px;
-            text-align: center;
-        }
-
-        .requirement-item .fa-mars { color: #63b3ed; }
-        .requirement-item .fa-venus { color: #f687b3; }
-
         .mount-completed-banner {
             position: absolute;
             top: 15px;
@@ -316,14 +206,50 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             font-size: 0.8rem;
         }
+        .mount-detail-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .mount-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .mount-detail-item:last-child { border-bottom: none; }
+        .detail-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        .detail-item-header .fa-mars { color: #63b3ed; }
+        .detail-item-header .fa-venus { color: #f687b3; }
+        .detail-item-body {
+            font-size: 0.9rem;
+            padding-left: 26px;
+            color: var(--text-color-muted);
+        }
+        .detail-item-body .fa-check-circle { color: var(--gold-color); }
+        .detail-item-body .fa-times-circle { color: #d9534f; }
+        .detail-item-body strong { color: var(--text-color); }
     </style>
 </head>
 <body>
     <div id="app-container"></div>
-    <div id="fullscreen-modal" class="modal">
+
+    <div id="image-viewer-modal" class="modal-overlay">
       <span class="modal-close">&times;</span>
-      <img class="modal-content" id="modal-image">
+      <img class="modal-content-viewer" id="modal-image">
     </div>
+
+    <div id="form-modal" class="modal-overlay">
+        </div>
+
     <script src="script.js" defer></script>
 </body>
 </html>

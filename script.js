@@ -638,7 +638,6 @@ function createAnimalCard(name, tabKey) {
     return card;
 }
 
-// --- ROTEADOR DE VISUALIZAÇÃO DE DETALHES ---
 function showDetailView(name, tabKey, originReserveKey = null) {
     if (originReserveKey) {
         renderAnimalDossier(name, originReserveKey);
@@ -860,7 +859,7 @@ function renderRareFursDetailView(container, name, slug) {
         furCard.innerHTML = `
             <img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';">
             <div class="info">${furInfo.displayName}</div>
-            <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
+            <button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
         `;
         furCard.addEventListener('click', () => {
             if (!savedData.pelagens) savedData.pelagens = {};
@@ -900,7 +899,7 @@ function renderSuperRareDetailView(container, name, slug) {
         furCard.innerHTML = `
             <img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';">
             <div class="info">${furInfo.displayName}</div>
-            <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
+            <button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
         `;
         furCard.addEventListener('click', () => {
             if (!savedData.super_raros) savedData.super_raros = {};
@@ -939,7 +938,7 @@ function renderDiamondsDetailView(container, name, slug) {
             <img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';">
             <div class="info-header"><span class="gender-tag">${furInfo.gender}</span><div class="info">${furInfo.displayName}</div></div>
             <div class="score-container">${isCompleted ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` : '<span class="score-add-btn">Adicionar Pontuação</span>'}</div>
-            <button class="fullscreen-btn" onclick="openModal(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
+            <button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
         `;
         const scoreContainer = furCard.querySelector('.score-container');
         scoreContainer.addEventListener('click', e => {
@@ -991,12 +990,8 @@ function renderGreatsDetailView(container, animalName, slug) {
 }
 
 function openGreatsTrophyModal(animalName, slug, furName) {
-    const existingModal = document.querySelector('.trophy-manager-modal');
-    if(existingModal) existingModal.remove();
-
-    const modal = document.createElement('div');
-    modal.className = 'trophy-manager-modal';
-    modal.onclick = (e) => { if(e.target === modal) modal.remove(); };
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = ''; // Limpa o modal
     
     const modalContent = document.createElement('div');
     modalContent.className = 'modal-content-box';
@@ -1015,7 +1010,7 @@ function openGreatsTrophyModal(animalName, slug, furName) {
             deleteBtn.className = 'delete-trophy-btn'; deleteBtn.innerHTML = '&times;';
             deleteBtn.onclick = () => {
                 if(confirm('Tem certeza que deseja remover este abate?')) {
-                    trophies.splice(index, 1); saveData(savedData); modal.remove();
+                    trophies.splice(index, 1); saveData(savedData); closeModal('form-modal');
                     const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
                     if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
                 }
@@ -1041,7 +1036,7 @@ function openGreatsTrophyModal(animalName, slug, furName) {
     buttonsDiv.className = 'modal-buttons';
     const cancelBtn = document.createElement('button');
     cancelBtn.className = 'back-button'; cancelBtn.textContent = 'Cancelar';
-    cancelBtn.onclick = () => modal.remove();
+    cancelBtn.onclick = () => closeModal('form-modal');
     
     const saveBtn = document.createElement('button');
     saveBtn.className = 'back-button'; saveBtn.style.cssText = 'background-color: var(--primary-color); color: #111;';
@@ -1059,13 +1054,14 @@ function openGreatsTrophyModal(animalName, slug, furName) {
         if (!savedData.greats[slug].furs[furName]) savedData.greats[slug].furs[furName] = { trophies: [] };
         savedData.greats[slug].furs[furName].trophies.push(newTrophy);
         checkAndSetGreatOneCompletion(slug, savedData.greats[slug]);
-        saveData(savedData); modal.remove();
+        saveData(savedData); closeModal('form-modal');
         const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
         if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
     };
     buttonsDiv.appendChild(cancelBtn); buttonsDiv.appendChild(saveBtn);
     modalContent.appendChild(buttonsDiv);
-    document.body.appendChild(modal);
+    
+    modal.style.display = 'flex';
 }
 
 function updateCardAppearance(card, slug, tabKey) {
@@ -1117,7 +1113,7 @@ function updateCardAppearance(card, slug, tabKey) {
 }
 
 
-// --- LÓGICA DO NOVO PAINEL DE PROGRESSO ---
+// --- LÓGICA DO PAINEL DE PROGRESSO ---
 
 function renderProgressView(container) {
     container.innerHTML = '';
@@ -1293,88 +1289,112 @@ function renderProgressDetail(detailContainer, categoryKey) {
     });
 }
 
-function openModal(imageUrl) {
-    const modal = document.getElementById('fullscreen-modal');
+// --- FUNÇÕES DE MODAL ---
+
+function openImageViewer(imageUrl) {
+    const modal = document.getElementById('image-viewer-modal');
     const modalImg = document.getElementById('modal-image');
     if (modal && modalImg) {
         modalImg.src = imageUrl;
         modal.style.display = "flex";
-        window.addEventListener('keydown', closeModalOnEscape);
     }
 }
 
-function closeModal() {
-    const modal = document.getElementById('fullscreen-modal');
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
     if (modal) {
         modal.style.display = "none";
-        window.removeEventListener('keydown', closeModalOnEscape);
-    }
-}
-
-function closeModalOnEscape(event) {
-    if (event.key === 'Escape') {
-        closeModal();
     }
 }
 
 // --- FUNÇÕES DE MONTAGENS MÚLTIPLAS ---
 
-function updateMultiMountChecklist(slug, gender, change) {
-    if (!savedData.multi_mount_checklist) {
-        savedData.multi_mount_checklist = {};
-    }
-    
-    const key = `${slug}-${gender}`;
-    
-    const currentCount = savedData.multi_mount_checklist[key] || 0;
-    const newCount = Math.max(0, currentCount + change);
+function getCompleteTrophyInventory() {
+    const inventory = [];
 
-    savedData.multi_mount_checklist[key] = newCount;
-    
-    saveData(savedData);
+    // 1. Pelagens Raras
+    if (savedData.pelagens) {
+        for (const slug in savedData.pelagens) {
+            for (const furName in savedData.pelagens[slug]) {
+                if (savedData.pelagens[slug][furName] === true) {
+                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim();
+                    inventory.push({ slug, gender, type: 'Pelagem Rara', detail: pureFur });
+                }
+            }
+        }
+    }
+    // 2. Diamantes
+    if (savedData.diamantes) {
+        for (const slug in savedData.diamantes) {
+            savedData.diamantes[slug].forEach(trophy => {
+                const gender = trophy.type.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+                inventory.push({ slug, gender, type: 'Diamante', detail: `Score ${trophy.score}` });
+            });
+        }
+    }
+    // 3. Super Raros
+     if (savedData.super_raros) {
+        for (const slug in savedData.super_raros) {
+            for (const furName in savedData.super_raros[slug]) {
+                if (savedData.super_raros[slug][furName] === true) {
+                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').replace('Diamante', '').trim();
+                    inventory.push({ slug, gender, type: 'Super Raro', detail: pureFur });
+                }
+            }
+        }
+    }
+    // 4. Great Ones
+    if (savedData.greats) {
+        for (const slug in savedData.greats) {
+            if (savedData.greats[slug].furs) {
+                for (const furName in savedData.greats[slug].furs) {
+                    if (savedData.greats[slug].furs[furName].trophies?.length > 0) {
+                        savedData.greats[slug].furs[furName].trophies.forEach(trophy => {
+                             inventory.push({ slug, gender: 'macho', type: 'Great One', detail: furName });
+                        });
+                    }
+                }
+            }
+        }
+    }
+    return inventory;
 }
 
 function checkMountRequirements(requiredAnimals) {
-    const collectedDiamonds = savedData.diamantes || {};
-    const manualChecklist = savedData.multi_mount_checklist || {};
-    const availableTrophies = {};
+    const inventory = getCompleteTrophyInventory();
+    const fulfilledRequirements = [];
+    let isComplete = true;
 
-    for (const slug in collectedDiamonds) {
-        collectedDiamonds[slug].forEach(trophy => {
-            const gender = trophy.type.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-            const key = `${slug}-${gender}`;
-            availableTrophies[key] = (availableTrophies[key] || 0) + 1;
+    // Criar uma cópia do inventário para poder "consumir" os troféus
+    const availableInventory = [...inventory];
+
+    for (const requirement of requiredAnimals) {
+        let fulfilled = false;
+        let fulfillingTrophy = null;
+
+        const foundIndex = availableInventory.findIndex(trophy => 
+            trophy.slug === requirement.slug && trophy.gender === requirement.gender
+        );
+
+        if (foundIndex !== -1) {
+            fulfilled = true;
+            fulfillingTrophy = availableInventory[foundIndex];
+            // Remove o troféu do inventário disponível para não ser usado duas vezes
+            availableInventory.splice(foundIndex, 1);
+        } else {
+            isComplete = false;
+        }
+        
+        fulfilledRequirements.push({
+            met: fulfilled,
+            requirement: requirement,
+            trophy: fulfillingTrophy
         });
     }
 
-    for (const key in manualChecklist) {
-        availableTrophies[key] = (availableTrophies[key] || 0) + (manualChecklist[key] || 0);
-    }
-    
-    const requiredCounts = {};
-    requiredAnimals.forEach(req => {
-        const key = `${req.slug}-${req.gender}`;
-        requiredCounts[key] = (requiredCounts[key] || 0) + 1;
-    });
-
-    let allRequirementsMet = true;
-    let collectedCount = 0;
-
-    for (const key in requiredCounts) {
-        const needed = requiredCounts[key];
-        const available = availableTrophies[key] || 0;
-        
-        collectedCount += Math.min(needed, available);
-
-        if (available < needed) {
-            allRequirementsMet = false;
-        }
-    }
-    
-    return {
-        isComplete: allRequirementsMet,
-        progress: { collected: collectedCount, total: requiredAnimals.length }
-    };
+    return { isComplete, fulfilledRequirements };
 }
 
 function renderMultiMountsView(container) {
@@ -1383,67 +1403,116 @@ function renderMultiMountsView(container) {
     grid.className = 'mounts-grid';
     container.appendChild(grid);
 
-    const sortedMounts = Object.values(multiMountsData).sort((a, b) => a.name.localeCompare(b.name));
+    const sortedMounts = Object.entries(multiMountsData).sort((a, b) => a[1].name.localeCompare(b[1].name));
 
-    sortedMounts.forEach(mount => {
+    sortedMounts.forEach(([mountKey, mount]) => {
         const status = checkMountRequirements(mount.animals);
-
+        const progressCount = status.fulfilledRequirements.filter(r => r.met).length;
+        
         const card = document.createElement('div');
         card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
+        card.dataset.mountKey = mountKey; // Adiciona a chave para o clique
         
-        let requirementsHTML = '<ul class="mount-requirements-list">';
-        
-        const groupedRequirements = {};
-        mount.animals.forEach(req => {
-            const key = `${req.slug}-${req.gender}`;
-            if (!groupedRequirements[key]) {
-                const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
-                groupedRequirements[key] = { ...req, animalName, count: 0 };
-            }
-            groupedRequirements[key].count++;
+        let animalsHTML = '<div class="mount-card-animals">';
+        mount.animals.forEach(animal => {
+            animalsHTML += `<img src="animais/${animal.slug}.png" title="${animal.slug}" onerror="this.style.display='none'">`;
         });
-
-        for(const key in groupedRequirements) {
-            const req = groupedRequirements[key];
-            const manualCount = savedData.multi_mount_checklist?.[key] || 0;
-            const icon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus';
-
-            requirementsHTML += `
-                <li class="requirement-item">
-                    <div class="requirement-info">
-                        <i class="fas ${icon}"></i>
-                        <span>${req.animalName} (x${req.count})</span>
-                    </div>
-                    <div class="requirement-controls">
-                        <span>Marcação Manual:</span>
-                        <button class="mount-control-btn minus" onclick="updateMultiMountChecklist('${req.slug}', '${req.gender}', -1)">-</button>
-                        <span class="manual-count">${manualCount}</span>
-                        <button class="mount-control-btn plus" onclick="updateMultiMountChecklist('${req.slug}', '${req.gender}', 1)">+</button>
-                    </div>
-                </li>
-            `;
-        }
-        requirementsHTML += '</ul>';
+        animalsHTML += '</div>';
 
         card.innerHTML = `
             <div class="mount-card-header">
                 <h3>${mount.name}</h3>
-                <div class="mount-progress" title="Progresso Total (Diamantes + Manual)">${status.progress.collected} / ${status.progress.total}</div>
+                <div class="mount-progress">${progressCount} / ${mount.animals.length}</div>
             </div>
-            ${requirementsHTML}
+            ${animalsHTML}
             ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i> Completo</div>' : ''}
         `;
         
+        card.addEventListener('click', () => renderMultiMountDetailModal(mountKey));
         grid.appendChild(card);
     });
 }
 
+function renderMultiMountDetailModal(mountKey) {
+    const mount = multiMountsData[mountKey];
+    if (!mount) return;
+
+    const status = checkMountRequirements(mount.animals);
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = ''; // Limpa o modal
+
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content-box';
+    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Detalhes: ${mount.name}</h3>`;
+
+    const detailList = document.createElement('ul');
+    detailList.className = 'mount-detail-list';
+
+    status.fulfilledRequirements.forEach(fulfillment => {
+        const req = fulfillment.requirement;
+        const trophy = fulfillment.trophy;
+        const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
+        const genderIcon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus';
+        
+        const li = document.createElement('li');
+        li.className = 'mount-detail-item';
+
+        let bodyHTML = '';
+        if (fulfillment.met) {
+            bodyHTML = `<div class="detail-item-body"><i class="fas fa-check-circle"></i> Cumprido com: <strong>${trophy.type}</strong> (${trophy.detail})</div>`;
+        } else {
+            bodyHTML = `<div class="detail-item-body"><i class="fas fa-times-circle"></i> Pendente</div>`;
+        }
+        
+        li.innerHTML = `
+            <div class="detail-item-header">
+                <i class="fas ${genderIcon}"></i>
+                <span>${animalName}</span>
+            </div>
+            ${bodyHTML}
+        `;
+        detailList.appendChild(li);
+    });
+
+    modalContent.appendChild(detailList);
+    
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'modal-buttons';
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'back-button';
+    closeBtn.textContent = 'Fechar';
+    closeBtn.onclick = () => closeModal('form-modal');
+    buttonsDiv.appendChild(closeBtn);
+    modalContent.appendChild(buttonsDiv);
+    
+    modal.appendChild(modalContent);
+    modal.style.display = 'flex';
+}
+
+// --- INICIALIZAÇÃO E EVENTOS GERAIS ---
 
 document.addEventListener('DOMContentLoaded', () => {
     appContainer = document.getElementById('app-container');
     renderNavigationHub();
-    const modal = document.getElementById('fullscreen-modal');
-    const closeBtn = document.querySelector('.modal-close');
-    if (closeBtn) closeBtn.addEventListener('click', closeModal);
-    if (modal) modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    
+    const imageModal = document.getElementById('image-viewer-modal');
+    const formModal = document.getElementById('form-modal');
+
+    // Eventos para fechar os modais
+    [imageModal, formModal].forEach(modal => {
+        if(modal) {
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) closeBtn.onclick = () => closeModal(modal.id);
+            modal.addEventListener('click', e => {
+                if (e.target === modal) closeModal(modal.id);
+            });
+        }
+    });
+
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeModal('image-viewer-modal');
+            closeModal('form-modal');
+        }
+    });
 });
