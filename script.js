@@ -527,6 +527,7 @@ const categorias = {
     greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
     super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug), icon: 'fas fa-star' },
     montagens: { title: 'Montagens Múltiplas', icon: 'fas fa-trophy' },
+    grind: { title: 'Contador de Grind', icon: 'fas fa-crosshairs' },
     reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
     progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
 };
@@ -601,6 +602,8 @@ function renderMainView(tabKey) {
         renderReservesList(contentContainer);
     } else if (tabKey === 'montagens') {
         renderMultiMountsView(contentContainer);
+    } else if (tabKey === 'grind') {
+        renderGrindSelectionView(contentContainer);
     } else {
         const filterInput = document.createElement('input');
         filterInput.type = 'text';
@@ -992,6 +995,7 @@ function renderGreatsDetailView(container, animalName, slug) {
 function openGreatsTrophyModal(animalName, slug, furName) {
     const modal = document.getElementById('form-modal');
     modal.innerHTML = ''; // Limpa o modal
+    modal.className = 'modal-overlay form-modal'; // Adiciona classe para distinguir
     
     const modalContent = document.createElement('div');
     modalContent.className = 'modal-content-box';
@@ -1367,7 +1371,6 @@ function checkMountRequirements(requiredAnimals) {
     const fulfilledRequirements = [];
     let isComplete = true;
 
-    // Criar uma cópia do inventário para poder "consumir" os troféus
     const availableInventory = [...inventory];
 
     for (const requirement of requiredAnimals) {
@@ -1381,7 +1384,6 @@ function checkMountRequirements(requiredAnimals) {
         if (foundIndex !== -1) {
             fulfilled = true;
             fulfillingTrophy = availableInventory[foundIndex];
-            // Remove o troféu do inventário disponível para não ser usado duas vezes
             availableInventory.splice(foundIndex, 1);
         } else {
             isComplete = false;
@@ -1411,7 +1413,7 @@ function renderMultiMountsView(container) {
         
         const card = document.createElement('div');
         card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
-        card.dataset.mountKey = mountKey; // Adiciona a chave para o clique
+        card.dataset.mountKey = mountKey;
         
         let animalsHTML = '<div class="mount-card-animals">';
         mount.animals.forEach(animal => {
@@ -1439,7 +1441,8 @@ function renderMultiMountDetailModal(mountKey) {
 
     const status = checkMountRequirements(mount.animals);
     const modal = document.getElementById('form-modal');
-    modal.innerHTML = ''; // Limpa o modal
+    modal.innerHTML = '';
+    modal.className = 'modal-overlay form-modal';
 
     const modalContent = document.createElement('div');
     modalContent.className = 'modal-content-box';
@@ -1489,6 +1492,123 @@ function renderMultiMountDetailModal(mountKey) {
     modal.style.display = 'flex';
 }
 
+// --- FUNÇÕES CONTADOR DE GRIND ---
+
+function renderGrindSelectionView(container) {
+    container.innerHTML = '<h2>Selecione um Animal para Grindar</h2>';
+    const albumGrid = document.createElement('div');
+    albumGrid.className = 'album-grid';
+    container.appendChild(albumGrid);
+
+    items.sort((a, b) => a.localeCompare(b)).forEach(name => {
+        const slug = slugify(name);
+        const card = document.createElement('div');
+        card.className = 'animal-card';
+        card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
+        card.addEventListener('click', () => renderReserveSelectionForGrind(container, slug));
+        albumGrid.appendChild(card);
+    });
+}
+
+function renderReserveSelectionForGrind(container, animalSlug) {
+    const animalName = items.find(item => slugify(item) === animalSlug);
+    container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
+    
+    const grid = document.createElement('div');
+    grid.className = 'album-grid reserves-grid'; 
+    container.appendChild(grid);
+
+    const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+
+    for (const [reserveKey, reserve] of sortedReserves) {
+        const card = document.createElement('div');
+        card.className = 'reserve-card';
+        card.innerHTML = `
+            <div class="reserve-card-bg" style="background-image: url('${reserve.image}')"></div>
+            <div class="reserve-card-overlay"></div>
+            <div class="reserve-card-content">
+                 <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
+            </div>
+        `;
+        card.addEventListener('click', () => {
+            if (!savedData.grindSessions) savedData.grindSessions = {};
+            if (!savedData.grindSessions[animalSlug]) savedData.grindSessions[animalSlug] = { logs: {} };
+            savedData.grindSessions[animalSlug].activeReserve = reserveKey;
+            saveData(savedData);
+            
+            renderGrindCounterView(animalSlug);
+        });
+        grid.appendChild(card);
+    }
+}
+
+function renderGrindCounterView(animalSlug) {
+    const mainContent = document.querySelector('.main-content');
+    const container = mainContent.querySelector('.content-container');
+    const animalName = items.find(item => slugify(item) === animalSlug);
+    const animalClass = "N/A"; 
+
+    mainContent.querySelector('.page-header h2').textContent = `Grind: ${animalName}`;
+    const backButton = mainContent.querySelector('.page-header .back-button');
+    backButton.innerHTML = `&larr; Mudar Animal`;
+    backButton.onclick = () => renderMainView('grind');
+
+    container.innerHTML = `
+        <div class="grind-container">
+            <div class="grind-header">
+                <img src="animais/${animalSlug}.png" class="grind-animal-icon" onerror="this.style.display='none'">
+                <h2>${animalName.toUpperCase()}</h2>
+                <span>Class: ${animalClass}</span>
+            </div>
+
+            <div class="counter-grid">
+                <div class="counter-box">
+                    <div class="box-header"><i class="fas fa-gem diamond"></i> Diamonds</div>
+                    <div class="box-content">
+                        <span class="count-value">0</span>
+                        <button class="add-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="counter-box">
+                    <div class="box-header"><i class="fas fa-paw rare"></i> Raros</div>
+                    <div class="box-content">
+                        <span class="count-value">0</span>
+                        <button class="add-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                 <div class="counter-box">
+                    <div class="box-header"><i class="fas fa-star-half-alt troll"></i> Trolls</div>
+                    <div class="box-content">
+                        <span class="count-value">0</span>
+                        <button class="add-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="counter-box">
+                    <div class="box-header"><i class="fas fa-star super-rare"></i> Super Raros</div>
+                    <div class="box-content">
+                        <span class="count-value">0</span>
+                        <button class="add-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="counter-box wide">
+                    <div class="box-header"><i class="fas fa-crown great-one"></i> Great One</div>
+                    <div class="box-content">
+                        <span class="count-value">0</span>
+                        <button class="add-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                 <div class="counter-box wide total">
+                    <div class="box-header"><i class="fas fa-crosshairs"></i> Total de Abates</div>
+                    <div class="box-content">
+                        <span class="count-value">0</span>
+                        <button class="add-btn"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
 // --- INICIALIZAÇÃO E EVENTOS GERAIS ---
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -1498,7 +1618,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const imageModal = document.getElementById('image-viewer-modal');
     const formModal = document.getElementById('form-modal');
 
-    // Eventos para fechar os modais
     [imageModal, formModal].forEach(modal => {
         if(modal) {
             const closeBtn = modal.querySelector('.modal-close');
