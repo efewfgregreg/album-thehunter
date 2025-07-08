@@ -59,6 +59,7 @@ const multiMountsData = { "a_fuga": { name: "A Fuga", animals: [ { slug: "veado_
 
 // Converte um nome (ex: "Veado de Cauda Branca") para um slug (ex: "veado_de_cauda_branca")
 function slugify(text) {
+    if (!text) return '';
     return text.toString().toLowerCase()
         .replace(/\s+/g, '_')           // Substitui espaços por _
         .replace(/[^\w\-]+/g, '')       // Remove caracteres inválidos
@@ -69,8 +70,8 @@ function slugify(text) {
 
 // Pega o nome de exibição de um animal a partir do seu slug
 function getAnimalName(slug) {
-    const found = Object.entries(items).find(([_, displayName]) => slugify(displayName) === slug);
-    return found ? found[1] : slug.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const found = items.find(displayName => slugify(displayName) === slug);
+    return found ? found : slug.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
 }
 
 
@@ -82,6 +83,8 @@ const appContainer = document.getElementById('app-container');
  * Renderiza o Hub de Navegação Principal
  */
 function renderNavigationHub() {
+    // Redefine o estilo do appContainer para o hub
+    appContainer.style.alignItems = 'center';
     appContainer.innerHTML = `
         <div class="navigation-hub">
             <h1 class="hub-title">ÁLBUM DE CAÇA</h1>
@@ -119,7 +122,9 @@ function renderNavigationHub() {
     document.querySelectorAll('.nav-card').forEach(card => {
         card.addEventListener('click', () => {
             const target = card.dataset.target;
-            // Simples roteador para chamar a função de renderização correta
+            // Altera o alinhamento para as páginas de conteúdo
+            appContainer.style.alignItems = 'flex-start';
+
             switch (target) {
                 case 'rares':
                     renderAnimalListView('Pelagens Raras', rareFursData, 'rares');
@@ -137,11 +142,9 @@ function renderNavigationHub() {
                      renderReservesView();
                      break;
                  case 'progress':
-                    // A função de progresso será chamada aqui
                     console.log("Painel de Progresso clicado");
                     break;
                  case 'grinds':
-                    // A função de grind será chamada aqui
                     console.log("Contador de Grind clicado");
                     break;
             }
@@ -151,9 +154,6 @@ function renderNavigationHub() {
 
 /**
  * Renderiza uma lista genérica de animais para uma categoria (Raros, Diamantes)
- * @param {string} title - O título da página (ex: "Pelagens Raras")
- * @param {object} dataObject - O objeto de dados a ser usado (rareFursData ou diamondFursData)
- * @param {string} category - A chave da categoria nos dados salvos ('rares', 'diamonds')
  */
 function renderAnimalListView(title, dataObject, category) {
     const animalSlugs = Object.keys(dataObject);
@@ -164,7 +164,7 @@ function renderAnimalListView(title, dataObject, category) {
         const imagePath = `animais/${slug}.png`;
         cardsHTML += `
             <div class="animal-card" data-slug="${slug}" data-category="${category}">
-                <img src="${imagePath}" alt="${animalName}" onerror="this.src='placeholder.png';">
+                <img src="${imagePath}" alt="${animalName}" onerror="this.onerror=null; this.src='placeholder.png';">
                 <div class="info">${animalName}</div>
             </div>
         `;
@@ -183,10 +183,8 @@ function renderAnimalListView(title, dataObject, category) {
         </div>
     `;
 
-    // Adiciona event listener para o botão de voltar
     document.querySelector('.back-button').addEventListener('click', renderNavigationHub);
 
-    // Adiciona event listeners para os cards de animais
     document.querySelectorAll('.animal-card').forEach(card => {
         card.addEventListener('click', () => {
             const slug = card.dataset.slug;
@@ -199,7 +197,6 @@ function renderAnimalListView(title, dataObject, category) {
         });
     });
     
-    // Lógica de filtragem
     document.querySelector('.filter-input').addEventListener('input', (e) => {
         const filterText = e.target.value.toLowerCase();
         document.querySelectorAll('.animal-card').forEach(card => {
@@ -215,27 +212,21 @@ function renderAnimalListView(title, dataObject, category) {
 
 /**
  * Renderiza a tela de detalhes das pelagens para um animal específico
- * @param {string} titlePrefix - "Pelagens Raras" ou "Diamantes"
- * @param {string} animalSlug - O slug do animal selecionado
- * @param {object} dataObject - O objeto de dados relevante
- * @param {string} category - 'rares' ou 'diamonds'
  */
 function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
     const animalName = getAnimalName(animalSlug);
     const furs = dataObject[animalSlug];
     let cardsHTML = '';
 
-    // Combina pelagens de macho e fêmea, evitando duplicatas
     const allFurs = [...new Set([...(furs.macho || []), ...(furs.femea || [])])];
     
     allFurs.sort().forEach(furName => {
         const imagePath = `peles/${animalSlug}/${slugify(furName)}.png`;
-        // Verifica se a pelagem já foi salva
         const isCompleted = savedData[category][animalSlug] && savedData[category][animalSlug].includes(furName);
         
         cardsHTML += `
             <div class="fur-card ${isCompleted ? 'completed' : 'incomplete'}" data-slug="${animalSlug}" data-fur="${furName}" data-category="${category}">
-                <img src="${imagePath}" alt="${furName}" onerror="this.style.display='none'">
+                <img src="${imagePath}" alt="${furName}" onerror="this.onerror=null; this.src='placeholder.png';">
                 <div class="info">${furName}</div>
             </div>
         `;
@@ -253,19 +244,16 @@ function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
         </div>
     `;
     
-    // Adiciona evento para o botão de voltar, passando os parâmetros corretos
     document.querySelector('.back-button-details').addEventListener('click', () => {
         renderAnimalListView(titlePrefix, dataObject, category);
     });
     
-    // Adiciona evento de clique para os cards de pelagem (para marcar/desmarcar)
     document.querySelectorAll('.fur-card').forEach(card => {
         card.addEventListener('click', () => {
             const slug = card.dataset.slug;
             const fur = card.dataset.fur;
             const cat = card.dataset.category;
 
-            // Garante que a estrutura exista
             if (!savedData[cat][slug]) {
                 savedData[cat][slug] = [];
             }
@@ -273,17 +261,15 @@ function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
             const furIndex = savedData[cat][slug].indexOf(fur);
 
             if (furIndex > -1) {
-                // Se já existe, remove (desmarcar)
                 savedData[cat][slug].splice(furIndex, 1);
                 card.classList.remove('completed');
                 card.classList.add('incomplete');
             } else {
-                // Se não existe, adiciona (marcar)
                 savedData[cat][slug].push(fur);
                 card.classList.add('completed');
                 card.classList.remove('incomplete');
             }
-            saveData(savedData); // Salva os dados após a alteração
+            saveData(savedData);
         });
     });
 }
@@ -332,7 +318,6 @@ function renderReservesView() {
 
 // --- INICIALIZAÇÃO DA APLICAÇÃO ---
 
-// Garante que o DOM está carregado antes de executar o script
 document.addEventListener('DOMContentLoaded', () => {
     renderNavigationHub();
 });
