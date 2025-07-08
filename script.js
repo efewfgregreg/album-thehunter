@@ -125,6 +125,387 @@ const reservesData = {
         animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"]
     }
 };
+const multiMountsData = {
+    "a_fuga": {
+        name: "A Fuga",
+        animals: [
+            { slug: "veado_vermelho", gender: "macho" },
+            { slug: "veado_vermelho", gender: "femea" }
+        ]
+    },
+    "abraco_do_urso": {
+        name: "Abraço do Urso",
+        animals: [
+            { slug: "urso_cinzento", gender: "macho" },
+            { slug: "urso_cinzento", gender: "macho" }
+        ]
+    },
+    "adeus_filho": {
+        name: "Adeus, Filho",
+        animals: [
+            { slug: "bisão_das_planícies", gender: "macho" },
+            { slug: "lobo_cinzento", gender: "macho" },
+            { slug: "lobo_cinzento", gender: "macho" }
+        ]
+    },
+    "admiralces": {
+        name: "Admiralces",
+        animals: [
+            { slug: "alce", gender: "macho" },
+            { slug: "codorniz_da_virgínia", gender: "macho" }
+        ]
+    },
+    "almoco_da_raposa": {
+        name: "Almoço da Raposa",
+        animals: [
+            { slug: "raposa_vermelha", gender: "macho" },
+            { slug: "lebre_da_cauda_branca", gender: "macho" }
+        ]
+    },
+    "banquete_no_ar": {
+        name: "Banquete no Ar",
+        animals: [
+            { slug: "raposa_vermelha", gender: "macho" },
+            { slug: "faisão_de_pescoço_anelado", gender: "macho" }
+        ]
+    },
+    "brincadeira_de_aves": {
+        name: "Brincadeira de Aves",
+        animals: [
+            { slug: "lagópode_escocês", gender: "macho" },
+            { slug: "cão_guaxinim", gender: "macho" }
+        ]
+    },
+    "brincando_de_briga": {
+        name: "Brincando de Briga",
+        animals: [
+            { slug: "lince_euroasiática", gender: "macho" },
+            { slug: "lince_euroasiática", gender: "femea" }
+        ]
+    },
+    "caudas_brancas_unidas": {
+        name: "Caudas Brancas Unidas",
+        animals: [
+            { slug: "veado_de_cauda_branca", gender: "macho" },
+            { slug: "veado_de_cauda_branca", gender: "macho" },
+            { slug: "veado_de_cauda_branca", gender: "macho" }
+        ]
+    },
+    "colisao": {
+        name: "Colisão",
+        animals: [
+            { slug: "veado_de_cauda_preta", gender: "macho" },
+            { slug: "onça_parda", gender: "macho" }
+        ]
+    },
+    "competicao_amistosa": {
+        name: "Competição Amistosa",
+        animals: [
+            { slug: "coiote", gender: "macho" },
+            { slug: "coiote", gender: "macho" },
+            { slug: "lebre_da_cauda_branca", gender: "macho" }
+        ]
+    },
+    "corcas_unidas": {
+        name: "Corças Unidas",
+        animals: [
+            { slug: "corça", gender: "macho" },
+            { slug: "corça", gender: "macho" },
+            { slug: "corça", gender: "macho" }
+        ]
+    },
+    "davi_e_golias": {
+        name: "Davi e Golias",
+        animals: [
+            { slug: "ganso_do_canadá", gender: "macho" },
+            { slug: "bisão_europeu", gender: "macho" }
+        ]
+    },
+    "de_cabeca": {
+        name: "De Cabeça",
+        animals: [
+            { slug: "ibex_de_beceite", gender: "macho" },
+            { slug: "ibex_de_gredos", gender: "macho" }
+        ]
+    },
+    "decolagem_de_emergencia": {
+        name: "Decolagem de Emergência",
+        animals: [
+            { slug: "coiote", gender: "macho" },
+            { slug: "pato_real", gender: "macho" },
+            { slug: "pato_real", gender: "macho" },
+            { slug: "pato_real", gender: "femea" }
+        ]
+    },
+    "despedida_do_solteiros": {
+        name: "Despedida dos Solteiros",
+        animals: [
+            { slug: "veado_mula", gender: "macho" },
+            { slug: "veado_mula", gender: "femea" },
+            { slug: "veado_mula", gender: "femea" }
+        ]
+    },
+    "dois_tipos_de_perus": {
+        name: "Dois Tipos de Perus",
+        animals: [
+            { slug: "peru_selvagem", gender: "macho" },
+            { slug: "peru_selvagem_do_rio_grande", gender: "macho" }
+        ]
+    },
+    "espionagem_tatica": {
+        name: "Espionagem Tática",
+        animals: [
+            { slug: "onça_parda", gender: "femea" },
+            { slug: "veado_de_roosevelt", gender: "macho" }
+        ]
+    },
+    "faisoes_em_fuga": {
+        name: "Faisões em Fuga",
+        animals: [
+            { slug: "faisão_de_pescoço_anelado", gender: "macho" },
+            { slug: "faisão_de_pescoço_anelado", gender: "macho" }
+        ]
+    },
+    "falso_tronco": {
+        name: "Falso Tronco",
+        animals: [
+            { slug: "jacaré_americano", gender: "macho" },
+            { slug: "guaxinim_comum", gender: "macho" }
+        ]
+    },
+    "fantasma_da_montanha": {
+        name: "Fantasma da Montanha",
+        animals: [
+            { slug: "leopardo_das_neves", gender: "macho" },
+            { slug: "carneiro_azul", gender: "macho" }
+        ]
+    },
+    "fartura_de_bisoes": {
+        name: "Fartura de Bisões",
+        animals: [
+            { slug: "bisão_europeu", gender: "macho" },
+            { slug: "bisão_europeu", gender: "macho" }
+        ]
+    },
+    "gamos_unidos": {
+        name: "Gamos Unidos",
+        animals: [
+            { slug: "gamo", gender: "macho" },
+            { slug: "gamo", gender: "macho" },
+            { slug: "gamo", gender: "macho" }
+        ]
+    },
+    "ganha_pao": {
+        name: "Ganha-pão",
+        animals: [
+            { slug: "búfalo_africano", gender: "macho" },
+            { slug: "leão", gender: "macho" },
+            { slug: "leão", gender: "femea" },
+            { slug: "leão", gender: "femea" }
+        ]
+    },
+    "gansos_zangados": {
+        name: "Gansos Zangados",
+        animals: [
+            { slug: "ganso_do_canadá", gender: "macho" },
+            { slug: "ganso_do_canadá", gender: "macho" }
+        ]
+    },
+    "gluglu": {
+        name: "Gluglu",
+        animals: [
+            { slug: "peru_selvagem", gender: "macho" },
+            { slug: "peru_selvagem", gender: "femea" },
+            { slug: "peru_selvagem", gender: "femea" }
+        ]
+    },
+    "lanchinho_de_tigre": {
+        name: "Lanchinho de Tigre",
+        animals: [
+            { slug: "tahr", gender: "macho" },
+            { slug: "tahr", gender: "femea" },
+            { slug: "tahr", gender: "femea" }
+        ]
+    },
+    "laod_a_lado": {
+        name: "Laod a Lado",
+        animals: [
+            { slug: "veado_de_cauda_branca", gender: "macho" },
+            { slug: "veado_de_cauda_branca", gender: "macho" }
+        ]
+    },
+    "lebres_rivais": {
+        name: "Lebres Rivais",
+        animals: [
+            { slug: "lebre_antílope", gender: "macho" },
+            { slug: "lebre_antílope", gender: "macho" }
+        ]
+    },
+    "lobo_alfa": {
+        name: "Lobo Alfa",
+        animals: [
+            { slug: "lobo_cinzento", gender: "macho" },
+            { slug: "lobo_cinzento", gender: "femea" },
+            { slug: "lobo_cinzento", gender: "femea" }
+        ]
+    },
+    "marujos_de_agua_doce": {
+        name: "Marujos de Água Doce",
+        animals: [
+            { slug: "faisão_de_pescoço_anelado", gender: "macho" },
+            { slug: "tetraz_grande", gender: "macho" },
+            { slug: "ganso_bravo", gender: "macho" },
+            { slug: "ganso_campestre_da_tundra", gender: "macho" }
+        ]
+    },
+    "necessidades_basicas": {
+        name: "Necessidades Básicas",
+        animals: [
+            { slug: "urso_negro", gender: "macho" },
+            { slug: "urso_negro", gender: "macho" }
+        ]
+    },
+    "o_grand_slam": {
+        name: "O Grand Slam",
+        animals: [
+            { slug: "ibex_de_beceite", gender: "macho" },
+            { slug: "ibex_de_gredos", gender: "macho" },
+            { slug: "ibex_de_ronda", gender: "macho" },
+            { slug: "ibex_espanhol_do_sudeste", gender: "macho" }
+        ]
+    },
+    "operador_suave": {
+        name: "Operador Suave",
+        animals: [
+            { slug: "tetraz_grande", gender: "macho" },
+            { slug: "tetraz_grande", gender: "femea" },
+            { slug: "tetraz_grande", gender: "femea" }
+        ]
+    },
+    "os_tres_patinhos": {
+        name: "Os Três Patinhos",
+        animals: [
+            { slug: "piadeira", gender: "macho" },
+            { slug: "zarro_castanho", gender: "macho" },
+            { slug: "frisada", gender: "macho" }
+        ]
+    },
+    "parceiros_no_crime": {
+        name: "Parceiros no Crime",
+        animals: [
+            { slug: "raposa_vermelha", gender: "macho" },
+            { slug: "raposa_vermelha", gender: "macho" }
+        ]
+    },
+    "presas_a_mostra": {
+        name: "Presas à Mostra",
+        animals: [
+            { slug: "muflão_ibérico", gender: "macho" },
+            { slug: "lobo_ibérico", gender: "macho" },
+            { slug: "lobo_ibérico", gender: "macho" },
+            { slug: "lobo_ibérico", gender: "macho" }
+        ]
+    },
+    "procos_do_mato_em_conflito": {
+        name: "Procos-do-Mato em Conflito",
+        animals: [
+            { slug: "caititu", gender: "macho" },
+            { slug: "caititu", gender: "macho" }
+        ]
+    },
+    "ramboru": {
+        name: "Ramboru",
+        animals: [
+            { slug: "canguru_cinza_oriental", gender: "macho" },
+            { slug: "canguru_cinza_oriental", gender: "macho" }
+        ]
+    },
+    "raposas_adversarias": {
+        name: "Raposas Adversárias",
+        animals: [
+            { slug: "raposa_vermelha", gender: "macho" },
+            { slug: "raposa_cinzenta", gender: "macho" }
+        ]
+    },
+    "realeza": {
+        name: "Realeza",
+        animals: [
+            { slug: "leão", gender: "macho" },
+            { slug: "leão", gender: "femea" }
+        ]
+    },
+    "rixa_de_aves": {
+        name: "Rixa de Aves",
+        animals: [
+            { slug: "galo_lira", gender: "macho" },
+            { slug: "galo_lira", gender: "macho" }
+        ]
+    },
+    "saindo_de_fininho": {
+        name: "Saindo de Fininho",
+        animals: [
+            { slug: "pato_real", gender: "macho" },
+            { slug: "pato_olho_de_ouro", gender: "macho" },
+            { slug: "zarro_negrinha", gender: "macho" },
+            { slug: "marrequinha_comum", gender: "macho" },
+            { slug: "piadeira", gender: "macho" },
+            { slug: "zarro_castanho", gender: "macho" },
+            { slug: "frisada", gender: "macho" }
+        ]
+    },
+    "tahr_angulo_amoroso": {
+        name: "Tahr-ângulo Amoroso",
+        animals: [
+            { slug: "tigre_de_bengala", gender: "macho" },
+            { slug: "cervo_do_pântano", gender: "macho" }
+        ]
+    },
+    "treno_vendido_separadamente": {
+        name: "Trenó Vendido Separadamente",
+        animals: [
+            { slug: "rena", gender: "macho" },
+            { slug: "rena", gender: "macho" },
+            { slug: "rena", gender: "macho" }
+        ]
+    },
+    "turma_dos_coelhos": {
+        name: "Turma dos Coelhos",
+        animals: [
+            { slug: "lebre_da_cauda_branca", gender: "macho" },
+            { slug: "lebre_da_cauda_branca", gender: "macho" },
+            { slug: "lebre_da_cauda_branca", gender: "femea" },
+            { slug: "lebre_da_cauda_branca", gender: "femea" }
+        ]
+    },
+    "um_crocodilo_sortudo": {
+        name: "Um Crocodilo Sortudo",
+        animals: [
+            { slug: "ganso_pega", gender: "macho" },
+            { slug: "crocodilo_de_água_salgada", gender: "macho" }
+        ]
+    },
+    "um_par_de_predadores": {
+        name: "Um Par de Predadores",
+        animals: [
+            { slug: "coiote", gender: "macho" },
+            { slug: "lince_pardo_do_mexico", gender: "macho" }
+        ]
+    },
+    "vigilancia": {
+        name: "Vigilância",
+        animals: [
+            { slug: "cudo_menor", gender: "macho" },
+            { slug: "cudo_menor", gender: "femea" }
+        ]
+    },
+    "viver_amar_lenhar": {
+        name: "Viver, Amar, Lenhar",
+        animals: [
+            { slug: "castor_norte_americano", gender: "macho" },
+            { slug: "castor_norte_americano", gender: "femea" }
+        ]
+    }
+};
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
 
@@ -137,6 +518,7 @@ const categorias = {
     diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
     greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
     super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug), icon: 'fas fa-star' },
+    montagens: { title: 'Montagens Múltiplas', icon: 'fas fa-trophy' },
     reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
     progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
 };
@@ -193,9 +575,6 @@ function renderMainView(tabKey) {
     const backButton = document.createElement('button');
     backButton.className = 'back-button';
     backButton.innerHTML = '&larr; Voltar ao Menu';
-
-    // ##### CORREÇÃO APLICADA AQUI #####
-    // Trocado addEventListener por .onclick para evitar múltiplos eventos.
     backButton.onclick = renderNavigationHub;
     
     header.appendChild(title);
@@ -212,6 +591,8 @@ function renderMainView(tabKey) {
         renderProgressView(contentContainer);
     } else if (tabKey === 'reservas') {
         renderReservesList(contentContainer);
+    } else if (tabKey === 'montagens') {
+        renderMultiMountsView(contentContainer);
     } else {
         const filterInput = document.createElement('input');
         filterInput.type = 'text';
@@ -926,6 +1307,81 @@ function closeModalOnEscape(event) {
     if (event.key === 'Escape') {
         closeModal();
     }
+}
+
+function checkMountRequirements(requiredAnimals) {
+    const collectedDiamonds = savedData.diamantes || {};
+    const availableTrophies = {};
+
+    for (const slug in collectedDiamonds) {
+        collectedDiamonds[slug].forEach(trophy => {
+            const gender = trophy.type.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+            const key = `${slug}-${gender}`;
+            availableTrophies[key] = (availableTrophies[key] || 0) + 1;
+        });
+    }
+
+    let collectedCount = 0;
+    const requirementsStatus = requiredAnimals.map(req => {
+        const key = `${req.slug}-${req.gender}`;
+        if (availableTrophies[key] && availableTrophies[key] > 0) {
+            collectedCount++;
+            availableTrophies[key]--;
+            return { ...req, met: true };
+        }
+        return { ...req, met: false };
+    });
+
+    return {
+        isComplete: collectedCount === requiredAnimals.length,
+        progress: { collected: collectedCount, total: requiredAnimals.length },
+        requirementsStatus
+    };
+}
+
+function renderMultiMountsView(container) {
+    container.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'mounts-grid';
+    container.appendChild(grid);
+
+    const sortedMounts = Object.values(multiMountsData).sort((a, b) => a.name.localeCompare(b.name));
+
+    sortedMounts.forEach(mount => {
+        const status = checkMountRequirements(mount.animals);
+        const animalName = items.find(item => slugify(item) === mount.animals[0].slug);
+
+        const card = document.createElement('div');
+        card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
+        
+        let requirementsHTML = '<ul class="mount-requirements-list">';
+        status.requirementsStatus.forEach(req => {
+            const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
+            const icon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus';
+            const statusIcon = req.met ? 'fa-check-circle' : 'fa-circle';
+            const statusColor = req.met ? 'var(--gold-color)' : 'var(--text-color)';
+            
+            requirementsHTML += `
+                <li class="requirement-item" style="color: ${statusColor};">
+                    <i class="fas ${statusIcon}"></i>
+                    <span>${animalName}</span>
+                    <i class="fas ${icon}"></i>
+                </li>
+            `;
+        });
+        requirementsHTML += '</ul>';
+
+        card.innerHTML = `
+            <div class="mount-card-header">
+                <h3>${mount.name}</h3>
+                <div class="mount-progress">${status.progress.collected} / ${status.progress.total}</div>
+            </div>
+            ${requirementsHTML}
+            ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i> Completo</div>' : ''}
+        `;
+        
+        grid.appendChild(card);
+    });
 }
 
 document.addEventListener('DOMContentLoaded', () => {
