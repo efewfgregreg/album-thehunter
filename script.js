@@ -34,6 +34,13 @@ function saveData(data) {
             renderMultiMountsView(container);
         }
 
+        // Adicionado para re-renderizar o contador de grind, se estiver ativo
+        const grindContainer = document.querySelector('.grind-container');
+        if (grindContainer) {
+            const animalSlug = grindContainer.dataset.animalSlug;
+            renderGrindCounterView(animalSlug);
+        }
+
     } catch (e) {
         console.error("Erro ao salvar dados no localStorage", e);
     }
@@ -1572,9 +1579,17 @@ function renderReserveSelectionForGrind(container, animalSlug) {
     grid.className = 'album-grid reserves-grid'; 
     container.appendChild(grid);
 
-    const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+    // FILTRA AS RESERVAS PARA MOSTRAR APENAS AS QUE CONTÊM O ANIMAL
+    const filteredReserves = Object.entries(reservesData)
+        .filter(([key, reserve]) => reserve.animals.includes(animalSlug))
+        .sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
-    for (const [reserveKey, reserve] of sortedReserves) {
+    if(filteredReserves.length === 0) {
+        grid.innerHTML = `<p>Aparentemente, este animal não existe em nenhuma reserva listada.</p>`;
+        return;
+    }
+
+    for (const [reserveKey, reserve] of filteredReserves) {
         const card = document.createElement('div');
         card.className = 'reserve-card';
         card.innerHTML = `
@@ -1607,56 +1622,58 @@ function renderGrindCounterView(animalSlug) {
     backButton.innerHTML = `&larr; Voltar para Dashboard`;
     backButton.onclick = () => renderMainView('grind');
 
-    container.innerHTML = `
-        <div class="grind-container">
-            <div class="grind-header">
-                <img src="animais/${animalSlug}.png" class="grind-animal-icon" onerror="this.style.display='none'">
-                <h2>${animalName.toUpperCase()}</h2>
-                <span>Class: ${animalClass}</span>
-            </div>
+    // Adiciona um atributo para sabermos qual grind está ativo
+    container.innerHTML = `<div class="grind-container" data-animal-slug="${animalSlug}"></div>`; 
+    const grindContainer = container.querySelector('.grind-container');
 
-            <div class="counter-grid">
-                <div class="counter-box">
-                    <div class="box-header"><i class="fas fa-gem diamond"></i> Diamonds</div>
-                    <div class="box-content">
-                        <span class="count-value">0</span>
-                        <button class="add-btn"><i class="fas fa-plus"></i></button>
-                    </div>
+    grindContainer.innerHTML = `
+        <div class="grind-header">
+            <img src="animais/${animalSlug}.png" class="grind-animal-icon" onerror="this.style.display='none'">
+            <h2>${animalName.toUpperCase()}</h2>
+            <span>Class: ${animalClass}</span>
+        </div>
+
+        <div class="counter-grid">
+            <div class="counter-box">
+                <div class="box-header"><i class="fas fa-gem diamond"></i> Diamonds</div>
+                <div class="box-content">
+                    <span class="count-value">0</span>
+                    <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
-                <div class="counter-box">
-                    <div class="box-header"><i class="fas fa-paw rare"></i> Raros</div>
-                    <div class="box-content">
-                        <span class="count-value">0</span>
-                        <button class="add-btn"><i class="fas fa-plus"></i></button>
-                    </div>
+            </div>
+            <div class="counter-box">
+                <div class="box-header"><i class="fas fa-paw rare"></i> Raros</div>
+                <div class="box-content">
+                    <span class="count-value">0</span>
+                    <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
-                 <div class="counter-box">
-                    <div class="box-header"><i class="fas fa-star-half-alt troll"></i> Trolls</div>
-                    <div class="box-content">
-                        <span class="count-value">0</span>
-                        <button class="add-btn"><i class="fas fa-plus"></i></button>
-                    </div>
+            </div>
+             <div class="counter-box">
+                <div class="box-header"><i class="fas fa-star-half-alt troll"></i> Trolls</div>
+                <div class="box-content">
+                    <span class="count-value">0</span>
+                    <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
-                <div class="counter-box">
-                    <div class="box-header"><i class="fas fa-star super-rare"></i> Super Raros</div>
-                    <div class="box-content">
-                        <span class="count-value">0</span>
-                        <button class="add-btn"><i class="fas fa-plus"></i></button>
-                    </div>
+            </div>
+            <div class="counter-box">
+                <div class="box-header"><i class="fas fa-star super-rare"></i> Super Raros</div>
+                <div class="box-content">
+                    <span class="count-value">0</span>
+                    <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
-                <div class="counter-box wide">
-                    <div class="box-header"><i class="fas fa-crown great-one"></i> Great One</div>
-                    <div class="box-content">
-                        <span class="count-value">0</span>
-                        <button class="add-btn"><i class="fas fa-plus"></i></button>
-                    </div>
+            </div>
+            <div class="counter-box wide">
+                <div class="box-header"><i class="fas fa-crown great-one"></i> Great One</div>
+                <div class="box-content">
+                    <span class="count-value">0</span>
+                    <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
-                 <div class="counter-box wide total">
-                    <div class="box-header"><i class="fas fa-crosshairs"></i> Total de Abates</div>
-                    <div class="box-content">
-                        <span class="count-value">0</span>
-                        <button class="add-btn"><i class="fas fa-plus"></i></button>
-                    </div>
+            </div>
+             <div class="counter-box wide total">
+                <div class="box-header"><i class="fas fa-crosshairs"></i> Total de Abates</div>
+                <div class="box-content">
+                    <span class="count-value">0</span>
+                    <button class="add-btn"><i class="fas fa-plus"></i></button>
                 </div>
             </div>
         </div>
