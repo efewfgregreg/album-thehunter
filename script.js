@@ -465,1252 +465,548 @@ const multiMountsData = {
             { slug: "marrequinha_comum", gender: "macho" },
             { slug: "piadeira", gender: "macho" },
             { slug: "zarro_castanho", gender: "macho" },
-            { slug: "frisada", gender: "macho" }
-        ]
-    },
-    "tahr_angulo_amoroso": {
-        name: "Tahr-ângulo Amoroso",
-        animals: [
-            { slug: "tigre_de_bengala", gender: "macho" },
-            { slug: "cervo_do_pântano", gender: "macho" }
-        ]
-    },
-    "treno_vendido_separadamente": {
-        name: "Trenó Vendido Separadamente",
-        animals: [
-            { slug: "rena", gender: "macho" },
-            { slug: "rena", gender: "macho" },
-            { slug: "rena", gender: "macho" }
-        ]
-    },
-    "turma_dos_coelhos": {
-        name: "Turma dos Coelhos",
-        animals: [
-            { slug: "lebre_da_cauda_branca", gender: "macho" },
-            { slug: "lebre_da_cauda_branca", gender: "macho" },
-            { slug: "lebre_da_cauda_branca", gender: "femea" },
-            { slug: "lebre_da_cauda_branca", gender: "femea" }
-        ]
-    },
-    "um_crocodilo_sortudo": {
-        name: "Um Crocodilo Sortudo",
-        animals: [
-            { slug: "ganso_pega", gender: "macho" },
-            { slug: "crocodilo_de_água_salgada", gender: "macho" }
-        ]
-    },
-    "um_par_de_predadores": {
-        name: "Um Par de Predadores",
-        animals: [
-            { slug: "coiote", gender: "macho" },
-            { slug: "lince_pardo_do_mexico", gender: "macho" }
-        ]
-    },
-    "vigilancia": {
-        name: "Vigilância",
-        animals: [
-            { slug: "cudo_menor", gender: "macho" },
-            { slug: "cudo_menor", gender: "femea" }
-        ]
-    },
-    "viver_amar_lenhar": {
-        name: "Viver, Amar, Lenhar",
-        animals: [
-            { slug: "castor_norte_americano", gender: "macho" },
-            { slug: "castor_norte_americano", gender: "femea" }
-        ]
-    }
-};
-
-// --- FUNÇÕES E LÓGICA PRINCIPAL ---
-
-function slugify(text) {
-    return text.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
-}
-
-const categorias = {
-    pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
-    diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
-    greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
-    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug), icon: 'fas fa-star' },
-    montagens: { title: 'Montagens Múltiplas', icon: 'fas fa-trophy' },
-    grind: { title: 'Contador de Grind', icon: 'fas fa-crosshairs' }, // <-- ESTA É A LINHA QUE ESTAVA FALTANDO
-    reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
-    progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
-};
-
-let appContainer;
-
-function checkAndSetGreatOneCompletion(slug, currentData) {
-    const requiredFurs = greatsFursData[slug];
-    if (!requiredFurs || !currentData) return;
-    currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
-}
-
-function renderNavigationHub() {
-    appContainer.innerHTML = '';
-    
-    const hub = document.createElement('div');
-    hub.className = 'navigation-hub';
-    
-    const title = document.createElement('h1');
-    title.className = 'hub-title';
-    title.textContent = 'Álbum de Caça';
-    hub.appendChild(title);
-
-    Object.keys(categorias).forEach(key => {
-        const cat = categorias[key];
-        const card = document.createElement('div');
-        card.className = 'nav-card';
-        card.innerHTML = `
-            <i class="${cat.icon || 'fas fa-question-circle'}"></i>
-            <span>${cat.title}</span>
-        `;
-        card.dataset.target = key;
-        card.addEventListener('click', () => renderMainView(key));
-        hub.appendChild(card);
-    });
-
-    appContainer.appendChild(hub);
-}
-
-function renderMainView(tabKey) {
-    appContainer.innerHTML = '';
-    const currentTab = categorias[tabKey];
-    if (!currentTab) return;
-
-    const mainContent = document.createElement('div');
-    mainContent.className = 'main-content';
-
-    const header = document.createElement('div');
-    header.className = 'page-header';
-    
-    const title = document.createElement('h2');
-    title.textContent = currentTab.title;
-    
-    const backButton = document.createElement('button');
-    backButton.className = 'back-button';
-    backButton.innerHTML = '&larr; Voltar ao Menu';
-    backButton.onclick = renderNavigationHub;
-    
-    header.appendChild(title);
-    header.appendChild(backButton);
-    mainContent.appendChild(header);
-    
-    const contentContainer = document.createElement('div');
-    contentContainer.className = 'content-container';
-    mainContent.appendChild(contentContainer);
-    
-    appContainer.appendChild(mainContent);
-
-    if (tabKey === 'progresso') {
-        renderProgressView(contentContainer);
-    } else if (tabKey === 'reservas') {
-        renderReservesList(contentContainer);
-    } else if (tabKey === 'montagens') {
-        renderMultiMountsView(contentContainer);
-    } else if (tabKey === 'grind') {
-        renderGrindDashboard(contentContainer);
-    } else {
-        const filterInput = document.createElement('input');
-        filterInput.type = 'text';
-        filterInput.className = 'filter-input';
-        filterInput.placeholder = 'Buscar animal...';
-        contentContainer.appendChild(filterInput);
-
-        const albumGrid = document.createElement('div');
-        albumGrid.className = 'album-grid';
-        contentContainer.appendChild(albumGrid);
-
-        (currentTab.items || []).sort((a, b) => a.localeCompare(b)).forEach(name => {
-            const card = createAnimalCard(name, tabKey);
-            albumGrid.appendChild(card);
-        });
-
-        filterInput.addEventListener('input', (event) => {
-            const searchTerm = event.target.value.toLowerCase();
-            albumGrid.querySelectorAll('.animal-card').forEach(card => {
-                const animalName = card.querySelector('.info').textContent.toLowerCase();
-                card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
-            });
-        });
-    }
-}
-
-function createAnimalCard(name, tabKey) {
-    const card = document.createElement('div');
-    card.className = 'animal-card';
-    const slug = slugify(name);
-    card.dataset.slug = slug;
-    card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
-    card.addEventListener('click', () => showDetailView(name, tabKey));
-    updateCardAppearance(card, slug, tabKey);
-    return card;
-}
-
-function showDetailView(name, tabKey, originReserveKey = null) {
-    if (originReserveKey) {
-        renderAnimalDossier(name, originReserveKey);
-    } else {
-        renderSimpleDetailView(name, tabKey);
-    }
-}
-
-function renderSimpleDetailView(name, tabKey) {
-    const mainContent = document.querySelector('.main-content');
-    const slug = slugify(name);
-
-    const contentContainer = mainContent.querySelector('.content-container');
-    contentContainer.innerHTML = '';
-    
-    mainContent.querySelector('.page-header h2').textContent = name;
-    const backButton = mainContent.querySelector('.page-header .back-button');
-    backButton.innerHTML = `&larr; Voltar para ${categorias[tabKey].title}`;
-    backButton.onclick = () => renderMainView(tabKey);
-    
-    const detailContent = contentContainer || mainContent;
-
-    if (tabKey === 'greats') {
-        renderGreatsDetailView(detailContent, name, slug);
-    } else if (tabKey === 'pelagens') {
-        renderRareFursDetailView(detailContent, name, slug);
-    } else if (tabKey === 'super_raros') {
-        renderSuperRareDetailView(detailContent, name, slug);
-    } else if (tabKey === 'diamantes') {
-        renderDiamondsDetailView(detailContent, name, slug);
-    }
-}
-
-function renderAnimalDossier(animalName, originReserveKey) {
-    const mainContent = document.querySelector('.main-content');
-    const slug = slugify(animalName);
-    
-    const contentContainer = mainContent.querySelector('.content-container');
-    contentContainer.innerHTML = '';
-
-    mainContent.querySelector('.page-header h2').textContent = `Dossiê: ${animalName}`;
-    const backButton = mainContent.querySelector('.page-header .back-button');
-    backButton.innerHTML = `&larr; Voltar para ${reservesData[originReserveKey].name}`;
-    backButton.onclick = () => showReserveDetailView(originReserveKey);
-
-    const dossierTabs = document.createElement('div');
-    dossierTabs.className = 'dossier-tabs';
-    
-    const dossierContent = document.createElement('div');
-    dossierContent.className = 'dossier-content';
-
-    const tabs = {
-        pelagens: { title: 'Pelagens Raras', renderFunc: renderRareFursDetailView },
-        diamantes: { title: 'Diamantes', renderFunc: renderDiamondsDetailView },
-        super_raros: { title: 'Super Raros', renderFunc: renderSuperRareDetailView },
-    };
-    if (greatsFursData[slug]) {
-        tabs.greats = { title: '<i class="fas fa-crown"></i> Great Ones', renderFunc: renderGreatsDetailView };
-    }
-
-    Object.entries(tabs).forEach(([key, value]) => {
-        const tab = document.createElement('div');
-        tab.className = 'dossier-tab';
-        tab.innerHTML = value.title;
-        tab.dataset.key = key;
-        dossierTabs.appendChild(tab);
-    });
-
-    contentContainer.appendChild(dossierTabs);
-    contentContainer.appendChild(dossierContent);
-    
-    dossierTabs.addEventListener('click', e => {
-        const tab = e.target.closest('.dossier-tab');
-        if(!tab) return;
-        
-        dossierTabs.querySelectorAll('.dossier-tab').forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        
-        const tabKey = tab.dataset.key;
-        tabs[tabKey].renderFunc(dossierContent, animalName, slug);
-    });
-    
-    dossierTabs.querySelector('.dossier-tab').click();
-}
-
-
-// --- LÓGICA DAS ABAS ESPECÍFICAS ---
-
-function renderReservesList(container) {
-    container.innerHTML = '';
-    const grid = document.createElement('div');
-    grid.className = 'album-grid reserves-grid'; 
-    container.appendChild(grid);
-
-    const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
-
-    for (const [reserveKey, reserve] of sortedReserves) {
-        const progress = calculateReserveProgress(reserveKey);
-        
-        const card = document.createElement('div');
-        card.className = 'reserve-card';
-        card.innerHTML = `
-            <div class="reserve-card-bg" style="background-image: url('${reserve.image}')"></div>
-            <div class="reserve-card-overlay"></div>
-            <div class="reserve-card-content">
-                <div class="reserve-card-stats">
-                    <span><i class="fas fa-paw"></i> ${progress.collectedRares}</span>
-                    <span><i class="fas fa-gem"></i> ${progress.collectedDiamonds}</span>
-                    <span><i class="fas fa-crown"></i> ${progress.collectedGreatOnes}</span>
-                </div>
-                <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
-            </div>
-        `;
-        card.addEventListener('click', () => showReserveDetailView(reserveKey));
-        grid.appendChild(card);
-    }
-}
-
-function showReserveDetailView(reserveKey) {
-    const mainContent = document.querySelector('.main-content');
-    const contentContainer = mainContent.querySelector('.content-container');
-    contentContainer.innerHTML = ''; 
-
-    const reserve = reservesData[reserveKey];
-    if (!reserve) return;
-
-    mainContent.querySelector('.page-header h2').textContent = reserve.name;
-    const backButton = mainContent.querySelector('.page-header .back-button');
-    backButton.innerHTML = `&larr; Voltar para Reservas`;
-    backButton.onclick = () => renderMainView('reservas');
-
-    const checklistContainer = document.createElement('div');
-    checklistContainer.className = 'animal-checklist';
-    
-    const animalNames = reserve.animals.map(slug => items.find(item => slugify(item) === slug)).filter(name => name);
-
-    animalNames.sort((a,b) => a.localeCompare(b)).forEach(animalName => {
-        const slug = slugify(animalName);
-        
-        const totalRares = (rareFursData[slug]?.macho.length || 0) + (rareFursData[slug]?.femea.length || 0);
-        const collectedRares = Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
-        const raresPercentage = totalRares > 0 ? (collectedRares / totalRares) * 100 : 0;
-
-        const totalDiamonds = (diamondFursData[slug]?.macho.length || 0) + (diamondFursData[slug]?.femea.length || 0);
-        const collectedDiamonds = new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
-        const diamondsPercentage = totalDiamonds > 0 ? (collectedDiamonds / totalDiamonds) * 100 : 0;
-        
-        const isGreatOne = greatsFursData.hasOwnProperty(slug);
-
-        const row = document.createElement('div');
-        row.className = 'animal-checklist-row';
-        row.innerHTML = `
-            <img class="animal-icon" src="animais/${slug}.png" onerror="this.src='animais/placeholder.png'">
-            <div class="animal-name">${animalName}</div>
-            <div class="mini-progress-bars">
-                <div class="mini-progress" title="Pelagens Raras: ${collectedRares}/${totalRares}">
-                    <i class="fas fa-paw"></i>
-                    <div class="mini-progress-bar-container"><div class="mini-progress-bar" style="width: ${raresPercentage}%"></div></div>
-                </div>
-                <div class="mini-progress" title="Diamantes: ${collectedDiamonds}/${totalDiamonds}">
-                    <i class="fas fa-gem"></i>
-                    <div class="mini-progress-bar-container"><div class="mini-progress-bar" style="width: ${diamondsPercentage}%"></div></div>
-                </div>
-            </div>
-            <i class="fas fa-crown great-one-indicator ${isGreatOne ? 'possible' : ''}" title="Pode ser Great One"></i>
-        `;
-        row.addEventListener('click', () => showDetailView(animalName, 'reservas', reserveKey));
-        checklistContainer.appendChild(row);
-    });
-
-    contentContainer.appendChild(checklistContainer);
-}
-
-function calculateReserveProgress(reserveKey) {
-    const reserveAnimals = reservesData[reserveKey]?.animals || [];
-    let progress = {
-        collectedRares: 0, totalRares: 0,
-        collectedDiamonds: 0, totalDiamonds: 0,
-        collectedGreatOnes: 0, totalGreatOnes: 0
-    };
-
-    reserveAnimals.forEach(slug => {
-        if (rareFursData[slug]) {
-            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
-            progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
-        }
-        if (diamondFursData[slug]) {
-            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
-            progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
-        }
-        if (greatsFursData[slug]) {
-            progress.totalGreatOnes += greatsFursData[slug].length;
-            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
-        }
-    });
-
-    return progress;
-}
-
-function renderRareFursDetailView(container, name, slug) {
-    container.innerHTML = '';
-    const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid';
-    container.appendChild(furGrid);
-    const speciesFurs = rareFursData[slug];
-    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
-        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
-        return;
-    }
-    const genderedFurs = [];
-    if (speciesFurs.macho) speciesFurs.macho.forEach(fur => genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur, gender: 'macho' }));
-    if (speciesFurs.femea) speciesFurs.femea.forEach(fur => genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur, gender: 'femea' }));
-    
-    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
-        const furCard = document.createElement('div');
-        const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
-        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender;
-        furCard.innerHTML = `
-            <img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';">
-            <div class="info">${furInfo.displayName}</div>
-            <button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
-        `;
-        furCard.addEventListener('click', () => {
-            if (!savedData.pelagens) savedData.pelagens = {};
-            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
-            const currentState = savedData.pelagens[slug][furInfo.displayName] || false;
-            savedData.pelagens[slug][furInfo.displayName] = !currentState;
-            saveData(savedData);
-            furCard.classList.toggle('completed', !currentState);
-            furCard.classList.toggle('incomplete', currentState);
-        });
-        furGrid.appendChild(furCard);
-    });
-}
-
-function renderSuperRareDetailView(container, name, slug) {
-    container.innerHTML = '';
-    const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid';
-    container.appendChild(furGrid);
-    
-    const speciesFurs = rareFursData[slug];
-    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
-        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>'; return;
-    }
-    const genderedFurs = [];
-    if (speciesFurs.macho) speciesFurs.macho.forEach(fur => genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur, gender: 'macho' }));
-    if (diamondFursData[slug]?.femea?.length > 0) speciesFurs.femea.forEach(fur => genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur, gender: 'femea' }));
-
-    if (genderedFurs.length === 0) {
-        furGrid.innerHTML = '<p>Nenhuma opção de Super Raro (Pelagem Rara + Diamante) disponível para este animal.</p>'; return;
-    }
-    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
-        const furCard = document.createElement('div');
-        const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true;
-        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender;
-        furCard.innerHTML = `
-            <img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';">
-            <div class="info">${furInfo.displayName}</div>
-            <button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
-        `;
-        furCard.addEventListener('click', () => {
-            if (!savedData.super_raros) savedData.super_raros = {};
-            if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
-            const currentState = savedData.super_raros[slug][furInfo.displayName] || false;
-            savedData.super_raros[slug][furInfo.displayName] = !currentState;
-            saveData(savedData);
-            furCard.classList.toggle('completed', !currentState);
-            furCard.classList.toggle('incomplete', currentState);
-        });
-        furGrid.appendChild(furCard);
-    });
-}
-
-function renderDiamondsDetailView(container, name, slug) {
-    container.innerHTML = '';
-    const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid';
-    container.appendChild(furGrid);
-
-    const speciesDiamondFurs = diamondFursData[slug];
-    if (!speciesDiamondFurs) { furGrid.innerHTML = '<p>Nenhuma pelagem de diamante listada para este animal.</p>'; return; }
-    const allPossibleFurs = [];
-    if (speciesDiamondFurs.macho) speciesDiamondFurs.macho.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Macho' }));
-    if (speciesDiamondFurs.femea) speciesDiamondFurs.femea.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Fêmea' }));
-    
-    allPossibleFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
-        const furCard = document.createElement('div');
-        furCard.className = 'fur-card';
-        const fullTrophyName = `${furInfo.gender} ${furInfo.displayName}`;
-        const highestScoreTrophy = (savedData.diamantes?.[slug] || []).filter(t => t.type === fullTrophyName).reduce((max, t) => t.score > max.score ? t : max, { score: -1 });
-        const isCompleted = highestScoreTrophy.score !== -1;
-        furCard.classList.add(isCompleted ? 'completed' : 'incomplete');
-        const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender.toLowerCase();
-        furCard.innerHTML = `
-            <img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';">
-            <div class="info-header"><span class="gender-tag">${furInfo.gender}</span><div class="info">${furInfo.displayName}</div></div>
-            <div class="score-container">${isCompleted ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` : '<span class="score-add-btn">Adicionar Pontuação</span>'}</div>
-            <button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>
-        `;
-        const scoreContainer = furCard.querySelector('.score-container');
-        scoreContainer.addEventListener('click', e => {
-            e.stopPropagation();
-            if (scoreContainer.querySelector('input')) return;
-            const currentScore = isCompleted ? highestScoreTrophy.score : '';
-            scoreContainer.innerHTML = `<input type="number" class="score-input" value="${currentScore}" placeholder="0.0">`;
-            const input = scoreContainer.querySelector('.score-input');
-            input.focus(); input.select();
-            const saveScore = () => {
-                if (input.value !== null && !isNaN(input.value) && input.value.trim() !== '') {
-                    if (!savedData.diamantes) savedData.diamantes = {};
-                    if (!Array.isArray(savedData.diamantes[slug])) savedData.diamantes[slug] = [];
-                    const otherTrophies = savedData.diamantes[slug].filter(t => t.type !== fullTrophyName);
-                    savedData.diamantes[slug] = [...otherTrophies, { id: Date.now(), type: fullTrophyName, score: parseFloat(input.value) }];
-                    saveData(savedData);
-                }
-                renderDiamondsDetailView(container, name, slug);
-            };
-            input.addEventListener('blur', saveScore);
-            input.addEventListener('keydown', e => { if (e.key === 'Enter') saveScore(); else if (e.key === 'Escape') renderDiamondsDetailView(container, name, slug); });
-        });
-        furGrid.appendChild(furCard);
-    });
-}
-
-function renderGreatsDetailView(container, animalName, slug) {
-    container.innerHTML = '';
-    const furGrid = document.createElement('div');
-    furGrid.className = 'fur-grid greats-grid';
-    container.appendChild(furGrid);
-
-    const fursInfo = greatsFursData[slug];
-    if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; }
-    fursInfo.forEach(furName => {
-        const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
-        const furCard = document.createElement('div');
-        furCard.className = `fur-card trophy-frame ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
-        const furSlug = slugify(furName);
-        furCard.innerHTML = `
-            <img src="animais/pelagens/great_${slug}_${furSlug}.png" alt="${furName}" onerror="this.onerror=null; this.src='animais/${slug}.png';">
-            <div class="info-plaque">
-                <div class="info">${furName}</div>
-                <div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div>
-            </div>`;
-        furCard.addEventListener('click', () => openGreatsTrophyModal(animalName, slug, furName));
-        furGrid.appendChild(furCard);
-    });
-}
-
-function openGreatsTrophyModal(animalName, slug, furName) {
-    const modal = document.getElementById('form-modal');
-    modal.innerHTML = ''; // Limpa o modal
-    modal.className = 'modal-overlay form-modal'; // Adiciona classe para distinguir
-    
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content-box';
-    modal.appendChild(modalContent);
-    
-    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Troféus de: ${furName}</h3>`;
-    const logList = document.createElement('ul');
-    logList.className = 'trophy-log-list';
-    const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
-    if(trophies.length === 0) { logList.innerHTML = '<li>Nenhum abate registrado.</li>'; }
-    else {
-        trophies.forEach((trophy, index) => {
-            const li = document.createElement('li');
-            li.innerHTML = `<span>Abate de ${new Date(trophy.date).toLocaleDateString()} (Grind: ${trophy.abates || 'N/A'})</span>`;
-            const deleteBtn = document.createElement('button');
-            deleteBtn.className = 'delete-trophy-btn'; deleteBtn.innerHTML = '&times;';
-            deleteBtn.onclick = () => {
-                if(confirm('Tem certeza que deseja remover este abate?')) {
-                    trophies.splice(index, 1); saveData(savedData); closeModal('form-modal');
-                    const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
-                    if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
-                }
-            };
-            li.appendChild(deleteBtn); logList.appendChild(li);
-        });
-    }
-    modalContent.appendChild(logList);
-
-    const form = document.createElement('div');
-    form.className = 'add-trophy-form';
-    form.innerHTML = `
-        <h4>Registrar Novo Abate</h4>
-        <table><tbody>
-            <tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr>
-            <tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr>
-            <tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr>
-            <tr><td>Data do Abate:</td><td><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></td></tr>
-        </tbody></table>`;
-    modalContent.appendChild(form);
-
-    const buttonsDiv = document.createElement('div');
-    buttonsDiv.className = 'modal-buttons';
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'back-button'; cancelBtn.textContent = 'Cancelar';
-    cancelBtn.onclick = () => closeModal('form-modal');
-    
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'back-button'; saveBtn.style.cssText = 'background-color: var(--primary-color); color: #111;';
-    saveBtn.textContent = 'Salvar Troféu';
-    saveBtn.onclick = () => {
-        const newTrophy = {
-            abates: form.querySelector('[name="abates"]').value,
-            diamantes: form.querySelector('[name="diamantes"]').value,
-            pelesRaras: form.querySelector('[name="pelesRaras"]').value,
-            date: form.querySelector('[name="date"]').value || new Date().toISOString().split('T')[0]
-        };
-        if (!savedData.greats) savedData.greats = {};
-        if (!savedData.greats[slug]) savedData.greats[slug] = {};
-        if (!savedData.greats[slug].furs) savedData.greats[slug].furs = {};
-        if (!savedData.greats[slug].furs[furName]) savedData.greats[slug].furs[furName] = { trophies: [] };
-        savedData.greats[slug].furs[furName].trophies.push(newTrophy);
-        checkAndSetGreatOneCompletion(slug, savedData.greats[slug]);
-        saveData(savedData); closeModal('form-modal');
-        const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
-        if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
-    };
-    buttonsDiv.appendChild(cancelBtn); buttonsDiv.appendChild(saveBtn);
-    modalContent.appendChild(buttonsDiv);
-    
-    modal.style.display = 'flex';
-}
-
-function updateCardAppearance(card, slug, tabKey) {
-    if (!card) return;
-    card.classList.remove('completed', 'inprogress', 'incomplete');
-    let status = 'incomplete';
-
-    if (tabKey === 'greats') {
-        const animalData = savedData.greats?.[slug] || {};
-        checkAndSetGreatOneCompletion(slug, animalData);
-        if (animalData.completo) {
-            status = 'completed';
-        } else {
-            const collectedFurs = animalData.furs ? Object.values(animalData.furs).filter(fur => fur.trophies?.length > 0).length : 0;
-            if (collectedFurs > 0) {
-                status = 'inprogress';
-            }
-        }
-    } else if (tabKey === 'diamantes') {
-        const diamondTrophies = savedData.diamantes?.[slug] || [];
-        if (diamondTrophies.length > 0) {
-            status = 'completed';
-        }
-    } else if (tabKey === 'super_raros') {
-        const speciesFurs = rareFursData?.[slug];
-        if (speciesFurs) {
-            const allPossibleSuperRares = [];
-            if (speciesFurs.macho) speciesFurs.macho.forEach(fur => allPossibleSuperRares.push(`Macho ${fur} Diamante`));
-            if (diamondFursData?.[slug]?.femea?.length > 0) {
-                speciesFurs.femea.forEach(fur => {
-                    if (diamondFursData[slug].femea.includes(fur)) {
-                         allPossibleSuperRares.push(`Fêmea ${fur} Diamante`);
-                    }
-                });
-            }
-            const collectedSuperRares = savedData.super_raros?.[slug] || {};
-            if (allPossibleSuperRares.some(sr => collectedSuperRares[sr] === true)) {
-                status = 'completed';
-            }
-        }
-    } else if (tabKey === 'pelagens') {
-        const pelagensData = savedData.pelagens?.[slug] || {};
-        if (Object.values(pelagensData).some(v => v === true)) {
-            status = 'completed';
-        }
-    }
-
-    card.classList.add(status);
-}
-
-
-// --- LÓGICA DO PAINEL DE PROGRESSO ---
-
-function renderProgressView(container) {
-    container.innerHTML = '';
-    
-    const wrapper = document.createElement('div');
-    wrapper.className = 'progress-view-container';
-    wrapper.id = 'progress-panel-main-container';
-
-    wrapper.appendChild(createLatestAchievementsPanel());
-
-    const progressPanel = document.createElement('div');
-    progressPanel.id = 'progress-panel';
-    updateProgressPanel(progressPanel);
-    wrapper.appendChild(progressPanel);
-
-    const resetButton = document.createElement('button');
-    resetButton.id = 'reset-progress-btn';
-    resetButton.textContent = 'Resetar Todo o Progresso';
-    resetButton.className = 'back-button';
-    resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;';
-    resetButton.onclick = () => {
-        if (confirm('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.')) {
-            localStorage.removeItem(saveDataKey);
-            location.reload();
-        }
-    };
-    container.appendChild(wrapper);
-    container.appendChild(resetButton);
-}
-
-
-function createLatestAchievementsPanel() {
-    const panel = document.createElement('div');
-    panel.className = 'latest-achievements-panel';
-    panel.innerHTML = '<h3><i class="fas fa-star"></i> Últimas Conquistas</h3>';
-    
-    const grid = document.createElement('div');
-    grid.className = 'achievements-grid';
-
-    const allTrophies = [];
-    if(savedData.diamantes) {
-        Object.entries(savedData.diamantes).forEach(([slug, trophies]) => {
-            const animalName = items.find(i => slugify(i) === slug) || slug;
-            trophies.forEach(trophy => allTrophies.push({ id: trophy.id, animalName, furName: trophy.type, slug, type: 'diamond' }));
-        });
-    }
-    if(savedData.greats) {
-        Object.entries(savedData.greats).forEach(([slug, greatOneData]) => {
-            const animalName = items.find(i => slugify(i) === slug) || slug;
-            if(greatOneData.furs) {
-                Object.entries(greatOneData.furs).forEach(([furName, furData]) => {
-                    (furData.trophies || []).forEach(trophy => allTrophies.push({ id: new Date(trophy.date).getTime(), animalName, furName, slug, type: 'greatone' }));
-                });
-            }
-        });
-    }
-
-    if (allTrophies.length === 0) {
-        grid.innerHTML = '<p style="color: var(--text-color-muted); grid-column: 1 / -1;">Nenhum troféu de destaque registrado ainda.</p>';
-    } else {
-        allTrophies.sort((a, b) => b.id - a.id).slice(0, 4).forEach(trophy => {
-            const card = document.createElement('div');
-            card.className = 'achievement-card';
-            const rotation = Math.random() * 6 - 3; 
-            card.style.transform = `rotate(${rotation}deg)`;
-            card.addEventListener('mouseenter', () => card.style.zIndex = 10);
-            card.addEventListener('mouseleave', () => card.style.zIndex = 1);
-
-            const animalSlug = trophy.slug;
-            let imagePathString;
-            if (trophy.type === 'diamond') {
-                const genderSlug = trophy.furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-                const pureFurName = trophy.furName.replace(/^(macho|fêmea|diamante)\s/gi, '').trim();
-                const furSlug = slugify(pureFurName);
-                
-                const specificPath = `animais/pelagens/${animalSlug}_${furSlug}_${genderSlug}.png`;
-                const neutralPath = `animais/pelagens/${animalSlug}_${furSlug}.png`;
-                const basePath = `animais/${animalSlug}.png`;
-                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${neutralPath}'; this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
-
-            } else if (trophy.type === 'greatone') {
-                const furSlug = slugify(trophy.furName);
-                const specificPath = `animais/pelagens/great_${animalSlug}_${furSlug}.png`;
-                const basePath = `animais/${animalSlug}.png`;
-                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
-            
-            } else { 
-                 imagePathString = `src="animais/${animalSlug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';"`;
-            }
-            card.innerHTML = `<img ${imagePathString}>
-                <div class="achievement-card-info">
-                    <div class="animal-name">${trophy.animalName}</div>
-                    <div class="fur-name">${trophy.furName.replace('Diamante','')}</div>
-                </div>`;
-            grid.appendChild(card);
-        });
-    }
-    panel.appendChild(grid);
-    return panel;
-}
-
-function updateProgressPanel(panel) {
-    const currentData = loadData();
-    const sections = {
-        pelagens: { title: "Progresso de Pelagens Raras", data: rareFursData, saved: currentData.pelagens || {}, type: 'boolean' },
-        super_raros: { title: "Progresso de Super Raros", data: rareFursData, saved: currentData.super_raros || {}, type: 'boolean_super' },
-        diamantes: { title: "Progresso de Diamantes", data: diamondFursData, saved: currentData.diamantes || {}, type: 'array' },
-        greats: { title: "Progresso de Great Ones", data: greatsFursData, saved: currentData.greats || {}, type: 'object' }
-    };
-
-    Object.keys(sections).forEach(key => {
-        const sectionInfo = sections[key];
-        let total = 0, collected = 0;
-        if(sectionInfo.type === 'boolean') {
-            Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); });
-            Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; });
-        } else if (sectionInfo.type === 'boolean_super') {
-             Object.entries(sectionInfo.data).forEach(([slug, s]) => { total += (s.macho?.length || 0); if (diamondFursData[slug]?.femea?.length > 0) total += (s.femea?.length || 0); });
-            Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; });
-        } else if(sectionInfo.type === 'array') {
-             Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); });
-            Object.values(sectionInfo.saved).forEach(s => { collected += new Set(s.map(t => t.type)).size; });
-        } else if (sectionInfo.type === 'object') {
-            Object.values(sectionInfo.data).forEach(f => total += f.length);
-            Object.values(sectionInfo.saved).forEach(s => { if(s.furs) collected += Object.values(s.furs).filter(f => f.trophies?.length > 0).length; });
-        }
-        const percentage = total > 0 ? (collected / total) * 100 : 0;
-        let medalClass = '';
-        if (percentage >= 75) medalClass = 'gold'; else if (percentage >= 50) medalClass = 'silver'; else if (percentage > 0) medalClass = 'bronze';
-        const sectionEl = document.createElement('div');
-        sectionEl.className = 'progress-section';
-        sectionEl.innerHTML = `
-            <div class="progress-header">
-                <div class="progress-title-container"><i class="fas fa-medal progress-medal ${medalClass}"></i><h3>${sectionInfo.title}</h3></div>
-                <div class="progress-label">${collected} / ${total}</div>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${percentage}%;"></div></div>`;
-        sectionEl.addEventListener('click', () => toggleProgressDetail(sectionEl, key));
-        panel.appendChild(sectionEl);
-    });
-}
-
-function toggleProgressDetail(sectionEl, categoryKey) {
-    const existingDetail = sectionEl.querySelector('.progress-detail-view');
-    if (existingDetail) { existingDetail.remove(); return; }
-    const detailView = document.createElement('div');
-    detailView.className = 'progress-detail-view';
-    renderProgressDetail(detailView, categoryKey);
-    sectionEl.appendChild(detailView);
-}
-
-function renderProgressDetail(detailContainer, categoryKey) {
-    const sourceData = categorias[categoryKey].items.map(slugify);
-    const savedDataForCategory = savedData[categoryKey] || {};
-    const progressByAnimal = {};
-    sourceData.forEach(slug => {
-        const animalName = items.find(i => slugify(i) === slug) || slug;
-        let total = 0, collected = 0;
-        switch(categoryKey) {
-            case 'pelagens': if(!rareFursData[slug]) return; total = (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0); collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length; break;
-            case 'diamantes': if(!diamondFursData[slug]) return; total = (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0); collected = new Set((savedDataForCategory[slug] || []).map(t => t.type)).size; break;
-            case 'greats': if(!greatsFursData[slug]) return; total = greatsFursData[slug].length; collected = Object.values(savedDataForCategory[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length; break;
-            case 'super_raros': if(!rareFursData[slug]) return; total = (rareFursData[slug].macho?.length || 0); if(diamondFursData[slug]?.femea?.length > 0) total += rareFursData[slug].femea?.length; collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length; break;
-        }
-        if (total > 0 && collected > 0) progressByAnimal[animalName] = { collected, total };
-    });
-    if (Object.keys(progressByAnimal).length === 0) { detailContainer.innerHTML = `<div class="progress-detail-item"><span class="label">Nenhum progresso nesta categoria ainda.</span></div>`; return; }
-    Object.entries(progressByAnimal).sort((a,b) => a[0].localeCompare(b[0])).forEach(([animalName, progress]) => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'progress-detail-item';
-        itemEl.innerHTML = `<span class="label">${animalName}</span> <span class="value">${progress.collected} / ${progress.total}</span>`;
-        detailContainer.appendChild(itemEl);
-    });
-}
-
-// --- FUNÇÕES DE MODAL ---
-
-function openImageViewer(imageUrl) {
-    const modal = document.getElementById('image-viewer-modal');
-    const modalImg = document.getElementById('modal-image');
-    if (modal && modalImg) {
-        modalImg.src = imageUrl;
-        modal.style.display = "flex";
-    }
-}
-
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = "none";
-    }
-}
-
-// --- FUNÇÕES DE MONTAGENS MÚLTIPLAS ---
-
-function getCompleteTrophyInventory() {
-    const inventory = [];
-
-    // 1. Pelagens Raras
-    if (savedData.pelagens) {
-        for (const slug in savedData.pelagens) {
-            for (const furName in savedData.pelagens[slug]) {
-                if (savedData.pelagens[slug][furName] === true) {
-                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim();
-                    inventory.push({ slug, gender, type: 'Pelagem Rara', detail: pureFur });
-                }
-            }
-        }
-    }
-    // 2. Diamantes
-    if (savedData.diamantes) {
-        for (const slug in savedData.diamantes) {
-            savedData.diamantes[slug].forEach(trophy => {
-                const gender = trophy.type.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-                inventory.push({ slug, gender, type: 'Diamante', detail: `Score ${trophy.score}` });
-            });
-        }
-    }
-    // 3. Super Raros
-     if (savedData.super_raros) {
-        for (const slug in savedData.super_raros) {
-            for (const furName in savedData.super_raros[slug]) {
-                if (savedData.super_raros[slug][furName] === true) {
-                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').replace('Diamante', '').trim();
-                    inventory.push({ slug, gender, type: 'Super Raro', detail: pureFur });
-                }
-            }
-        }
-    }
-    // 4. Great Ones
-    if (savedData.greats) {
-        for (const slug in savedData.greats) {
-            if (savedData.greats[slug].furs) {
-                for (const furName in savedData.greats[slug].furs) {
-                    if (savedData.greats[slug].furs[furName].trophies?.length > 0) {
-                        savedData.greats[slug].furs[furName].trophies.forEach(trophy => {
-                             inventory.push({ slug, gender: 'macho', type: 'Great One', detail: furName });
-                        });
-                    }
-                }
-            }
-        }
-    }
-    return inventory;
-}
-
-function checkMountRequirements(requiredAnimals) {
-    const inventory = getCompleteTrophyInventory();
-    const fulfilledRequirements = [];
-    let isComplete = true;
-
-    const availableInventory = [...inventory];
-
-    for (const requirement of requiredAnimals) {
-        let fulfilled = false;
-        let fulfillingTrophy = null;
-
-        const foundIndex = availableInventory.findIndex(trophy => 
-            trophy.slug === requirement.slug && trophy.gender === requirement.gender
-        );
-
-        if (foundIndex !== -1) {
-            fulfilled = true;
-            fulfillingTrophy = availableInventory[foundIndex];
-            availableInventory.splice(foundIndex, 1);
-        } else {
-            isComplete = false;
-        }
-        
-        fulfilledRequirements.push({
-            met: fulfilled,
-            requirement: requirement,
-            trophy: fulfillingTrophy
-        });
-    }
-
-    return { isComplete, fulfilledRequirements };
-}
-
-function renderMultiMountsView(container) {
-    container.innerHTML = '';
-    const grid = document.createElement('div');
-    grid.className = 'mounts-grid';
-    container.appendChild(grid);
-
-    const sortedMounts = Object.entries(multiMountsData).sort((a, b) => a[1].name.localeCompare(b[1].name));
-
-    sortedMounts.forEach(([mountKey, mount]) => {
-        const status = checkMountRequirements(mount.animals);
-        const progressCount = status.fulfilledRequirements.filter(r => r.met).length;
-        
-        const card = document.createElement('div');
-        card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
-        card.dataset.mountKey = mountKey;
-        
-        let animalsHTML = '<div class="mount-card-animals">';
-        mount.animals.forEach(animal => {
-            animalsHTML += `<img src="animais/${animal.slug}.png" title="${animal.slug}" onerror="this.style.display='none'">`;
-        });
-        animalsHTML += '</div>';
-
-        card.innerHTML = `
-            <div class="mount-card-header">
-                <h3>${mount.name}</h3>
-                <div class="mount-progress">${progressCount} / ${mount.animals.length}</div>
-            </div>
-            ${animalsHTML}
-            ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i> Completo</div>' : ''}
-        `;
-        
-        card.addEventListener('click', () => renderMultiMountDetailModal(mountKey));
-        grid.appendChild(card);
-    });
-}
-
-function renderMultiMountDetailModal(mountKey) {
-    const mount = multiMountsData[mountKey];
-    if (!mount) return;
-
-    const status = checkMountRequirements(mount.animals);
-    const modal = document.getElementById('form-modal');
-    modal.innerHTML = '';
-    modal.className = 'modal-overlay form-modal';
-
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content-box';
-    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Detalhes: ${mount.name}</h3>`;
-
-    const detailList = document.createElement('ul');
-    detailList.className = 'mount-detail-list';
-
-    status.fulfilledRequirements.forEach(fulfillment => {
-        const req = fulfillment.requirement;
-        const trophy = fulfillment.trophy;
-        const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
-        const genderIcon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus';
-        
-        const li = document.createElement('li');
-        li.className = 'mount-detail-item';
-
-        let bodyHTML = '';
-        if (fulfillment.met) {
-            bodyHTML = `<div class="detail-item-body"><i class="fas fa-check-circle"></i> Cumprido com: <strong>${trophy.type}</strong> (${trophy.detail})</div>`;
-        } else {
-            bodyHTML = `<div class="detail-item-body"><i class="fas fa-times-circle"></i> Pendente</div>`;
-        }
-        
-        li.innerHTML = `
-            <div class="detail-item-header">
-                <i class="fas ${genderIcon}"></i>
-                <span>${animalName}</span>
-            </div>
-            ${bodyHTML}
-        `;
-        detailList.appendChild(li);
-    });
-
-    modalContent.appendChild(detailList);
-    
-    const buttonsDiv = document.createElement('div');
-    buttonsDiv.className = 'modal-buttons';
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'back-button';
-    closeBtn.textContent = 'Fechar';
-    closeBtn.onclick = () => closeModal('form-modal');
-    buttonsDiv.appendChild(closeBtn);
-    modalContent.appendChild(buttonsDiv);
-    
-    modal.appendChild(modalContent);
-    modal.style.display = 'flex';
-}
-
-// --- FUNÇÕES CONTADOR DE GRIND ---
-
-function renderGrindDashboard(container) {
-    container.innerHTML = ''; 
-
-    const newGrindCard = document.createElement('div');
-    newGrindCard.className = 'new-grind-card';
-    newGrindCard.innerHTML = `
-        <i class="fas fa-plus-circle"></i>
-        <span>Iniciar Novo Grind</span>
-    `;
-    newGrindCard.addEventListener('click', () => renderGrindSelectionView(container));
-    container.appendChild(newGrindCard);
-
-    container.innerHTML += '<h3 class="section-divider">Grinds em Andamento</h3>';
-
-    const activeGrindsGrid = document.createElement('div');
-    activeGrindsGrid.className = 'active-grinds-grid';
-    container.appendChild(activeGrindsGrid);
-    
-    const sessions = savedData.grindSessions || {};
-
-    if (Object.keys(sessions).length === 0) {
-        activeGrindsGrid.innerHTML = '<p>Nenhum grind iniciado ainda.</p>';
-        return;
-    }
-
-    for (const [animalSlug, sessionData] of Object.entries(sessions)) {
-        const animalName = items.find(item => slugify(item) === animalSlug);
-        const reserve = reservesData[sessionData.activeReserve];
-
-        if (animalName && reserve) {
-            const card = document.createElement('div');
-            card.className = 'grind-session-card';
-            card.innerHTML = `
-                <div class="grind-session-bg" style="background-image: url('${reserve.image}')"></div>
-                <div class="grind-session-overlay"></div>
-                <div class="grind-session-content">
-                    <img class="animal-icon" src="animais/${animalSlug}.png" onerror="this.src='animais/placeholder.png'">
-                    <div class="session-info">
-                        <span class="animal-name">${animalName}</span>
-                        <span class="reserve-name">${reserve.name}</span>
-                    </div>
-                </div>
-            `;
-            card.addEventListener('click', () => renderGrindCounterView(animalSlug));
-            activeGrindsGrid.appendChild(card);
-        }
-    }
-}
-
-function renderGrindSelectionView(container) {
-    container.innerHTML = '<h2>Selecione um Animal para Grindar</h2>';
-    const albumGrid = document.createElement('div');
-    albumGrid.className = 'album-grid';
-    container.appendChild(albumGrid);
-
-    items.sort((a, b) => a.localeCompare(b)).forEach(name => {
-        const slug = slugify(name);
-        const card = document.createElement('div');
-        card.className = 'animal-card';
-        card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
-        card.addEventListener('click', () => renderReserveSelectionForGrind(container, slug));
-        albumGrid.appendChild(card);
-    });
-}
-
-function renderReserveSelectionForGrind(container, animalSlug) {
-    const animalName = items.find(item => slugify(item) === animalSlug);
-    container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
-    
-    const grid = document.createElement('div');
-    grid.className = 'album-grid reserves-grid'; 
-    container.appendChild(grid);
-
-    const validReserves = [];
-    // Loop mais seguro para evitar erros
-    for (const reserveKey in reservesData) {
-        // Garante que estamos pegando propriedades do próprio objeto
-        if (Object.prototype.hasOwnProperty.call(reservesData, reserveKey)) {
-            const reserve = reservesData[reserveKey];
-            // Verifica se a reserva e a lista de animais existem antes de usar
-            if (reserve && reserve.animals && reserve.animals.includes(animalSlug)) {
-                validReserves.push([reserveKey, reserve]);
+   Desta vez, acredito que o erro foi resolvido. A causa era um pouco mais complexa e envolvia a ordem em que os elementos da página eram criados e os eventos de clique eram adicionados.
+
+Abaixo estão os arquivos completos e revisados. A principal mudança está no arquivo `script.js`. Eu reestruturei algumas funções para garantir que os elementos da página sempre existam antes de tentarmos manipulá-los.
+
+Por favor, substitua os conteúdos dos seus dois arquivos por estes abaixo.
+
+---
+
+### Arquivo: `index.html` (Completo)
+
+*Nenhuma mudança neste arquivo, mas estou incluindo para garantir que você tenha a versão correta.*
+```html
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#181a1b">
+    <title>Álbum de Caça - theHunter: Call of the Wild</title>
+    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css)">
+    <style>
+        @import url('[https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap](https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap)');
+        
+        :root {
+            --bg-color: #181a1b;
+            --surface-color: #2c2f33;
+            --primary-color: #00bcd4;
+            --border-color: #4a5568;
+            --text-color: #e6e6e6;
+            --text-color-muted: #99aab5;
+            --gold-color: #ffd700;
+            --bronze-color: #cd7f32;
+            --silver-color: #c0c0c0;
+            --font-headings: 'Oswald', sans-serif;
+            --font-body: 'Nunito Sans', sans-serif;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-color);
+            overflow-x: hidden;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        /* --- ESTILOS GERAIS --- */
+        .main-content { padding: 20px 40px; background-color: rgba(24, 26, 27, 0.8); min-height: 100vh; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 25px; }
+        .page-header h2 { font-family: var(--font-headings); font-size: 2.5rem; }
+        .back-button { background: var(--surface-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 1rem; font-family: var(--font-headings); transition: all 0.2s ease; }
+        .back-button:hover { background: var(--primary-color); color: #111827; }
+        
+        /* --- HUB DE NAVEGAÇÃO (CORRIGIDO) --- */
+        .navigation-hub { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px; padding: 40px; min-height: 100vh; width: 100%; }
+        .hub-title { width: 100%; text-align: center; font-family: var(--font-headings); font-size: 4rem; letter-spacing: 3px; color: #f0f0f0; text-transform: uppercase; text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8); margin-bottom: 40px; }
+        .nav-card { background-color: rgba(44, 47, 51, 0.75); border: 1px solid var(--border-color); border-radius: 8px; width: 260px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; cursor: pointer; transition: all 0.3s ease; font-family: var(--font-headings); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color-muted); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
+        .nav-card i { font-size: 2rem; transition: color 0.3s ease; }
+        .nav-card:hover { transform: translateY(-10px) scale(1.03); background-color: rgba(64, 68, 75, 0.9); color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 25px rgba(0, 188, 212, 0.4); }
+        
+        /* --- GRIDES DE CARDS GERAIS (ANIMAIS, RESERVAS, PELAGENS) --- */
+        .filter-input { width: 100%; background-color: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-color); border-radius: 20px; padding: 10px 20px; font-size: 1rem; color: var(--text-color); transition: all 0.3s ease; margin-bottom: 30px; }
+        .filter-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 10px rgba(0, 188, 212, 0.5); }
+        .album-grid, .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        
+        /* ESTILO PARA CARD DE ANIMAL (TELA PRINCIPAL DE CADA CATEGORIA) */
+        .animal-card { background: linear-gradient(145deg, #383c4a, #2c2f33); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
+        .animal-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+        .animal-card img { width: 100%; height: 110px; object-fit: contain; margin-bottom: 15px; transition: all 0.3s ease-in-out; filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%); }
+        .animal-card:hover img { transform: scale(1.1); filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%) drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)); }
+        .animal-card .info { font-family: var(--font-headings); font-size: 1rem; color: var(--text-color); font-weight: 700; }
+        .animal-card.incomplete img { filter: grayscale(100%) brightness(0.5); }
+        .animal-card.incomplete .info { color: var(--text-color-muted); }
+        .animal-card.inprogress { border-color: #f0ad4e; }
+        .animal-card.inprogress img { filter: invert(70%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(70%) contrast(95%); }
+        .animal-card.completed { border-color: var(--primary-color); box-shadow: 0 0 20px rgba(0, 188, 212, 0.5); }
+        .animal-card.completed img { filter: invert(65%) sepia(74%) saturate(1450%) hue-rotate(145deg) brightness(95%) contrast(101%) drop-shadow(0 0 5px var(--primary-color)); }
+        .animal-card.completed::after { font-family: "Font Awesome 6 Free"; content: "\f058"; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--primary-color); background-color: var(--surface-color); border-radius: 50%; text-shadow: 0 0 8px rgba(0, 0, 0, 0.9); }
+        
+        /* --- ESTILO PARA OS CARDS DENTRO DAS PÁGINAS DE DETALHES (PELAGENS, DIAMANTES) --- */
+        .fur-card {
+            background: linear-gradient(145deg, #2c2f33, #232529);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 10px;
+            position: relative;
+        }
+        .fur-card:hover { transform: scale(1.05); }
+        .fur-card img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; }
+        .fur-card .info { font-family: var(--font-headings); font-size: 1rem; line-height: 1.3; font-weight: 700; }
+        .fullscreen-btn { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 28px; opacity: 0; transition: opacity 0.2s ease-in-out; z-index: 10; }
+        .fur-card:hover .fullscreen-btn { opacity: 1; }
+
+        /* ESTADOS DO .FUR-CARD */
+        .fur-card.incomplete img { filter: grayscale(80%) brightness(0.6); transition: all 0.3s ease; }
+        .fur-card.incomplete:hover img { filter: grayscale(50%) brightness(0.8); }
+        .fur-card.incomplete .info { color: var(--text-color-muted); }
+        
+        /* Ajuste para PELAGENS RARAS */
+        .dossier-content .fur-card.completed, .main-content .fur-grid .fur-card.completed { 
+            border-color: var(--primary-color); 
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+        }
+        .dossier-content .fur-card.completed .info, .main-content .fur-grid .fur-card.completed .info {
+            color: var(--primary-color);
+        }
+
+        /* Ajuste para DIAMANTES */
+        .main-content .fur-grid .fur-card.completed:not(.trophy-frame) {
+            border-color: var(--gold-color);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,215,0,0.1);
+        }
+        .main-content .fur-grid .fur-card.completed:not(.trophy-frame) .info {
+            color: var(--text-color);
+        }
+
+        /* ELEMENTOS INTERNOS DO CARD DE DIAMANTE */
+        .fur-card .info-header { margin-bottom: 10px; }
+        .fur-card .gender-tag { font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; background-color: rgba(0,0,0,0.2); color: var(--text-color-muted); font-weight: bold; text-transform: uppercase; }
+        .fur-card.completed .gender-tag { background-color: rgba(255, 215, 0, 0.1); color: var(--gold-color); }
+        .fur-card .score-container { margin-top: auto; padding: 8px; border-radius: 6px; background-color: rgba(0,0,0,0.2); transition: background-color 0.3s ease; cursor: pointer; }
+        .fur-card:hover .score-container { background-color: rgba(0,0,0,0.4); }
+        .fur-card .score-add-btn { font-weight: bold; color: var(--text-color-muted); font-size: 0.9rem; }
+        .fur-card .score-display { font-size: 1.2rem; font-weight: bold; color: var(--gold-color); }
+        .fur-card .score-display .fa-trophy { margin-right: 8px; font-size: 1rem; opacity: 0.8; }
+        .fur-card .score-input { width: 100%; background-color: var(--bg-color); border: 1px solid var(--gold-color); color: var(--gold-color); text-align: center; font-size: 1.2rem; border-radius: 4px; padding: 4px; font-family: var(--font-headings); }
+        .fur-card .score-input:focus { outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
+        .fur-card.completed img { filter: none; transition: all 0.3s ease; }
+        .fur-card.completed:hover img { transform: scale(1.05); }
+
+        /* --- MODAIS --- */
+        .modal-overlay { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content-viewer { max-width: 90%; max-height: 90%; object-fit: contain; }
+        .modal-close { position: absolute; top: 15px; right: 35px; color: #f1f1f1; font-size: 40px; font-weight: bold; transition: 0.3s; cursor: pointer; z-index: 1001; }
+        .modal-close:hover, .modal-close:focus { color: #bbb; text-decoration: none; }
+        .modal-content-box { background: var(--surface-color); padding: 25px; border-radius: 8px; border: 1px solid var(--border-color); width: 90%; max-width: 600px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); }
+        .modal-content-box h3 { border-bottom: 1px solid var(--primary-color); padding-bottom: 10px; margin-bottom: 15px; }
+        .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+
+        /* --- ESTILOS SALA DE TROFÉUS (GREAT ONES) --- */
+        .greats-grid { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url([https://www.transparenttextures.com/patterns/wood-pattern.png](https://www.transparenttextures.com/patterns/wood-pattern.png)); background-color: #4a3c31; padding: 25px; border-radius: 8px; gap: 25px; }
+        .fur-card.trophy-frame { background: linear-gradient(145deg, #4a3f3a, #3b322d); border: 8px solid #3b2e26; border-image: linear-gradient(145deg, #6d5b51, #3b2e26) 1; box-shadow: 0 10px 20px rgba(0,0,0,0.4), inset 0 0 15px rgba(0,0,0,0.5); padding: 10px; gap: 5px; }
+        .fur-card.trophy-frame:hover { box-shadow: 0 0 25px var(--gold-color), inset 0 0 15px rgba(0,0,0,0.5); }
+        .trophy-frame img { border: 2px solid #2a211c; }
+        .trophy-frame .info-plaque { background-color: rgba(0,0,0,0.3); padding: 8px 5px; border-radius: 4px; margin-top: 5px; }
+        .trophy-frame .info { color: var(--gold-color); font-size: 1rem; line-height: 1.1; }
+        .trophy-frame .kill-counter { color: var(--text-color-muted); font-size: 0.9rem; }
+        .trophy-frame .kill-counter .fa-trophy { color: var(--gold-color); margin-right: 5px; }
+        .trophy-frame.incomplete img { filter: grayscale(1) brightness(0.5); }
+        .trophy-frame.incomplete .info { color: var(--text-color-muted); }
+        .trophy-log-list { list-style: none; padding: 0; max-height: 150px; overflow-y: auto; margin-bottom: 15px; }
+        .trophy-log-list li { display: flex; justify-content: space-between; padding: 10px; background-color: var(--bg-color); border-radius: 4px; margin-bottom: 5px; }
+        .trophy-log-list .delete-trophy-btn { background: #d9534f; border: none; color: white; border-radius: 4px; cursor: pointer; padding: 0 10px; }
+        .add-trophy-form table { width: 100%; border-spacing: 0 10px; }
+        .add-trophy-form input { width: 100%; padding: 8px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 4px; }
+        
+        /* --- ESTILOS RESERVAS e DOSSIÊ --- */
+        .reserves-grid { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 25px; }
+        .reserve-card { height: 180px; position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid transparent; transition: all 0.3s ease; }
+        .reserve-card:hover { transform: scale(1.03); border-color: var(--primary-color); }
+        .reserve-card-bg { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; transition: transform 0.4s ease; }
+        .reserve-card:hover .reserve-card-bg { transform: scale(1.1); }
+        .reserve-card-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.1) 60%); }
+        .reserve-card-content { position: relative; z-index: 2; padding: 15px; display: flex; flex-direction: column; height: 100%; justify-content: flex-end; }
+        .reserve-card-logo { max-height: 50px; width: auto; max-width: 80%; margin-bottom: 10px; filter: drop-shadow(0 2px 3px black); }
+        .reserve-card-stats { display: flex; gap: 15px; font-size: 0.9rem; align-items: center; color: var(--text-color-muted); }
+        .reserve-card-stats i { color: var(--primary-color); }
+        .reserve-card-stats .fa-crown { color: var(--gold-color); }
+        .animal-checklist { display: flex; flex-direction: column; gap: 10px; }
+        .animal-checklist-row { display: grid; grid-template-columns: 50px 1fr auto; align-items: center; gap: 15px; background-color: var(--surface-color); padding: 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s ease; }
+        .animal-checklist-row:hover { background-color: #3c3f43; transform: translateX(5px); }
+        .animal-checklist-row .animal-icon { width: 40px; height: 40px; filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%); }
+        .animal-checklist-row .animal-name { font-family: var(--font-headings); font-size: 1.1rem; }
+        .animal-checklist-row .mini-progress-bars { display: flex; flex-direction: column; gap: 5px; }
+        .mini-progress { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; }
+        .mini-progress-bar-container { flex-grow: 1; height: 8px; background-color: var(--bg-color); border-radius: 4px; }
+        .mini-progress-bar { height: 100%; background-color: var(--primary-color); border-radius: 4px; }
+        .great-one-indicator { font-size: 1.5rem; color: var(--gold-color); opacity: 0.5; }
+        .great-one-indicator.possible { opacity: 1; }
+        .dossier-tabs { display: flex; border-bottom: 2px solid var(--border-color); margin-bottom: 20px; }
+        .dossier-tab { padding: 10px 20px; cursor: pointer; color: var(--text-color-muted); border-bottom: 3px solid transparent; transition: all 0.2s ease; font-family: var(--font-headings); }
+        .dossier-tab:hover { color: var(--text-color); }
+        .dossier-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
+        .dossier-tab .fa-crown { color: var(--gold-color); }
+        
+        /* --- ESTILOS PAINEL DE PROGRESSO (RESTAURADOS) --- */
+        .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
+        .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url([https://www.transparenttextures.com/patterns/leather.png](https://www.transparenttextures.com/patterns/leather.png)); background-color: #3a3834; padding: 20px; border-radius: 8px; border: 1px solid #5a554a; }
+        .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
+        .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; justify-items: center; }
+        .achievement-card { background-color: #f0ead6; padding: 10px 10px 15px 10px; border-radius: 4px; box-shadow: 3px 3px 8px rgba(0,0,0,0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; width: 90%; cursor: pointer; }
+        .achievement-card:hover { transform: scale(1.05); box-shadow: 6px 6px 12px rgba(0,0,0,0.5); z-index: 10; }
+        .achievement-card img { width: 100%; height: 100px; object-fit: cover; background-color: #333; border: 1px solid #ccc; }
+        .achievement-card-info { padding-top: 8px; text-align: center; }
+        .achievement-card-info .animal-name { font-family: var(--font-body); font-style: italic; font-size: 1rem; color: #444; font-weight: 700; }
+        .achievement-card-info .fur-name { font-size: 0.8rem; color: #666; }
+        #progress-panel { display: flex; flex-direction: column; gap: 20px; }
+        .progress-section { background-color: var(--surface-color); padding: 15px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; border: 1px solid var(--border-color); }
+        .progress-section:hover { background-color: #36393f; border-color: var(--primary-color); }
+        .progress-header { display: flex; justify-content: space-between; align-items: center; }
+        .progress-header h3 { margin: 0; font-family: var(--font-headings); }
+        .progress-title-container { display: flex; align-items: center; gap: 10px; }
+        .progress-medal { font-size: 1.5rem; }
+        .progress-medal.bronze { color: var(--bronze-color); }
+        .progress-medal.silver { color: var(--silver-color); }
+        .progress-medal.gold { color: var(--gold-color); }
+        .progress-label { text-align: right; color: var(--text-color-muted); font-size: 0.9rem; font-weight: bold; }
+        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; height: 12px; margin-top: 10px; }
+        .progress-bar-fill { background: linear-gradient(90deg, #43A047, #66BB6A); height: 100%; transition: width 0.5s ease; border-radius: 5px; }
+        .progress-detail-view { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; }
+        .progress-detail-item { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; }
+        .progress-detail-item .label { color: var(--text-color-muted); }
+        .progress-detail-item .value { font-weight: bold; }
+
+        /* --- ESTILOS PARA MONTAGENS MÚLTIPLAS E SEU MODAL --- */
+        .mounts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        .mount-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .mount-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+        }
+        .mount-card.completed {
+            border-color: var(--gold-color);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+        }
+        .mount-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .mount-card-header h3 {
+            font-family: var(--font-headings);
+            color: var(--text-color);
+            margin: 0;
+        }
+        .mount-progress {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text-color-muted);
+            background-color: var(--bg-color);
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+        .mount-card-animals {
+            display: flex;
+            gap: 5px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border-color);
+            filter: grayscale(0.5);
+            opacity: 0.7;
+        }
+        .mount-card-animals img {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            filter: invert(80%);
+        }
+        .mount-card.completed .mount-card-animals {
+            filter: grayscale(0);
+            opacity: 1;
+        }
+        .mount-card.completed .mount-card-animals img {
+            filter: invert(65%) sepia(74%) saturate(1450%) hue-rotate(145deg) brightness(95%) contrast(101%);
+        }
+        .mount-completed-banner {
+            position: absolute;
+            top: 15px;
+            right: -50px;
+            background-color: var(--gold-color);
+            color: var(--bg-color);
+            padding: 5px 40px;
+            font-weight: bold;
+            font-family: var(--font-headings);
+            transform: rotate(45deg);
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+            font-size: 0.8rem;
+        }
+        .mount-detail-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .mount-detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .mount-detail-item:last-child { border-bottom: none; }
+        .detail-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        .detail-item-header .fa-mars { color: #63b3ed; }
+        .detail-item-header .fa-venus { color: #f687b3; }
+        .detail-item-body {
+            font-size: 0.9rem;
+            padding-left: 26px;
+            color: var(--text-color-muted);
+        }
+        .detail-item-body .fa-check-circle { color: var(--gold-color); }
+        .detail-item-body .fa-times-circle { color: #d9534f; }
+        .detail-item-body strong { color: var(--text-color); }
+        
+        /* --- ESTILOS CONTADOR DE GRIND --- */
+        .grind-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        .grind-header {
+            text-align: center;
+            font-family: var(--font-headings);
+        }
+        .grind-header .grind-animal-icon {
+            width: 80px;
+            height: 80px;
+            filter: invert(1);
+            margin-bottom: 10px;
+        }
+        .grind-header h2 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+        }
+        .grind-header span {
+            font-size: 1.2rem;
+            color: var(--text-color-muted);
+        }
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        .counter-box {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .counter-box.wide {
+            grid-column: span 2;
+        }
+        @media (max-width: 800px) {
+            .counter-box.wide {
+                grid-column: span 1;
             }
         }
-    }
+        .counter-box .box-header {
+            font-family: var(--font-headings);
+            font-size: 1.1rem;
+            color: var(--text-color-muted);
+            margin-bottom: 15px;
+        }
+        .counter-box .box-header .fas {
+            margin-right: 10px;
+        }
+        .counter-box .box-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        .counter-box .count-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: var(--font-headings);
+        }
+        .counter-box .add-btn {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .counter-box .add-btn:hover {
+            background-color: var(--primary-color);
+            color: #111;
+        }
+        /* Cores dos Ícones */
+        .box-header .diamond { color: var(--primary-color); }
+        .box-header .rare { color: #d69e3a; }
+        .box-header .troll { color: #a07a53; }
+        .box-header .super-rare { color: #e8bd4a; text-shadow: 0 0 5px #ffc107; }
+        .box-header .great-one { color: var(--gold-color); }
+        .counter-box.total { background-color: #1e2124; }
 
-    // Ordena as reservas que são válidas
-    validReserves.sort(([, a], [, b]) => a.name.localeCompare(b.name));
+        /* --- ESTILOS DASHBOARD DE GRIND --- */
+        .new-grind-card {
+            background: var(--surface-color);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: var(--text-color-muted);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+        .new-grind-card:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background-color: #36393f;
+        }
+        .new-grind-card i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        .new-grind-card span {
+            font-family: var(--font-headings);
+            font-size: 1.5rem;
+        }
+        .section-divider {
+            text-align: center;
+            font-family: var(--font-headings);
+            color: var(--text-color-muted);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .active-grinds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .grind-session-card {
+            position: relative;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .grind-session-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,0,0,0.4);
+        }
+        .grind-session-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(2px) brightness(0.7);
+        }
+        .grind-session-overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgba(44,47,51,0.85) 0%, rgba(44,47,51,0.4) 100%);
+        }
+        .grind-session-content {
+            position: relative;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            height: 100%;
+        }
+        .grind-session-content .animal-icon {
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            filter: invert(1) drop-shadow(0 2px 3px black);
+            flex-shrink: 0;
+        }
+        .grind-session-content .session-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .session-info .animal-name {
+            font-family: var(--font-headings);
+            font-size: 1.5rem;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+        .session-info .reserve-name {
+            font-size: 1rem;
+            color: var(--text-color-muted);
+        }
+    </style>
+</head>
+<body>
+    <div id="app-container"></div>
 
-    if(validReserves.length === 0) {
-        grid.innerHTML = `<p>Aparentemente, este animal não existe em nenhuma reserva listada.</p>`;
-        return;
-    }
+    <div id="image-viewer-modal" class="modal-overlay">
+      <span class="modal-close">&times;</span>
+      <img class="modal-content-viewer" id="modal-image">
+    </div>
 
-    for (const [reserveKey, reserve] of validReserves) {
-        const card = document.createElement('div');
-        card.className = 'reserve-card';
-        card.innerHTML = `
-            <div class="reserve-card-bg" style="background-image: url('${reserve.image}')"></div>
-            <div class="reserve-card-overlay"></div>
-            <div class="reserve-card-content">
-                 <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
-            </div>
-        `;
-        card.addEventListener('click', () => {
-            if (!savedData.grindSessions) savedData.grindSessions = {};
-            if (!savedData.grindSessions[animalSlug]) savedData.grindSessions[animalSlug] = { logs: {} };
-            savedData.grindSessions[animalSlug].activeReserve = reserveKey;
-            saveData(savedData);
-            
-            renderGrindCounterView(animalSlug);
-        });
-        grid.appendChild(card);
-    }
+    <div id="form-modal" class="modal-overlay">
+        </div>
 
-}
-
-function renderGrindCounterView(animalSlug) {
-    const mainContent = document.querySelector('.main-content');
-    const container = mainContent.querySelector('.content-container');
-    const animalName = items.find(item => slugify(item) === animalSlug);
-    const animalClass = "N/A"; 
-
-    mainContent.querySelector('.page-header h2').textContent = `Grind: ${animalName}`;
-    const backButton = mainContent.querySelector('.page-header .back-button');
-    backButton.innerHTML = `&larr; Voltar para Dashboard`;
-    backButton.onclick = () => renderMainView('grind');
-
-    container.innerHTML = `<div class="grind-container" data-animal-slug="${animalSlug}"></div>`; 
-    const grindContainer = container.querySelector('.grind-container');
-
-    grindContainer.innerHTML = `
-        <div class="grind-header">
-            <img src="animais/${animalSlug}.png" class="grind-animal-icon" onerror="this.style.display='none'">
-            <h2>${animalName.toUpperCase()}</h2>
-            <span>Class: ${animalClass}</span>
-        </div>
-
-        <div class="counter-grid">
-            <div class="counter-box">
-                <div class="box-header"><i class="fas fa-gem diamond"></i> Diamonds</div>
-                <div class="box-content">
-                    <span class="count-value">0</span>
-                    <button class="add-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-            <div class="counter-box">
-                <div class="box-header"><i class="fas fa-paw rare"></i> Raros</div>
-                <div class="box-content">
-                    <span class="count-value">0</span>
-                    <button class="add-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-             <div class="counter-box">
-                <div class="box-header"><i class="fas fa-star-half-alt troll"></i> Trolls</div>
-                <div class="box-content">
-                    <span class="count-value">0</span>
-                    <button class="add-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-            <div class="counter-box">
-                <div class="box-header"><i class="fas fa-star super-rare"></i> Super Raros</div>
-                <div class="box-content">
-                    <span class="count-value">0</span>
-                    <button class="add-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-            <div class="counter-box wide">
-                <div class="box-header"><i class="fas fa-crown great-one"></i> Great One</div>
-                <div class="box-content">
-                    <span class="count-value">0</span>
-                    <button class="add-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-             <div class="counter-box wide total">
-                <div class="box-header"><i class="fas fa-crosshairs"></i> Total de Abates</div>
-                <div class="box-content">
-                    <span class="count-value">0</span>
-                    <button class="add-btn"><i class="fas fa-plus"></i></button>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-
-// --- INICIALIZAÇÃO E EVENTOS GERAIS ---
-
-document.addEventListener('DOMContentLoaded', () => {
-    appContainer = document.getElementById('app-container');
-    renderNavigationHub();
-    
-    const imageModal = document.getElementById('image-viewer-modal');
-    const formModal = document.getElementById('form-modal');
-
-    [imageModal, formModal].forEach(modal => {
-        if(modal) {
-            // A close button might not exist if the modal content is fully dynamic
-            const closeBtn = modal.querySelector('.modal-close');
-            if (closeBtn) closeBtn.onclick = () => closeModal(modal.id);
-            modal.addEventListener('click', e => {
-                if (e.target === modal) closeModal(modal.id);
-            });
-        }
-    });
-
-    window.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            closeModal('image-viewer-modal');
-            closeModal('form-modal');
-        }
-    });
-});
+    <script src="script.js" defer></script>
+</body>
+</html>
