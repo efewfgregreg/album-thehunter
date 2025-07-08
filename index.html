@@ -325,6 +325,98 @@
         .detail-item-body .fa-check-circle { color: var(--gold-color); }
         .detail-item-body .fa-times-circle { color: #d9534f; }
         .detail-item-body strong { color: var(--text-color); }
+        
+        /* --- ESTILOS CONTADOR DE GRIND --- */
+        .grind-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+        .grind-header {
+            text-align: center;
+            font-family: var(--font-headings);
+        }
+        .grind-header .grind-animal-icon {
+            width: 80px;
+            height: 80px;
+            filter: invert(1);
+            margin-bottom: 10px;
+        }
+        .grind-header h2 {
+            font-size: 2.5rem;
+            color: var(--text-color);
+        }
+        .grind-header span {
+            font-size: 1.2rem;
+            color: var(--text-color-muted);
+        }
+        .counter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            width: 100%;
+            max-width: 1000px;
+        }
+        .counter-box {
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        .counter-box.wide {
+            grid-column: span 2;
+        }
+        @media (max-width: 800px) {
+            .counter-box.wide {
+                grid-column: span 1;
+            }
+        }
+        .counter-box .box-header {
+            font-family: var(--font-headings);
+            font-size: 1.1rem;
+            color: var(--text-color-muted);
+            margin-bottom: 15px;
+        }
+        .counter-box .box-header .fas {
+            margin-right: 10px;
+        }
+        .counter-box .box-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+        .counter-box .count-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            font-family: var(--font-headings);
+        }
+        .counter-box .add-btn {
+            background-color: var(--border-color);
+            color: var(--text-color);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .counter-box .add-btn:hover {
+            background-color: var(--primary-color);
+            color: #111;
+        }
+        /* Cores dos Ícones */
+        .box-header .diamond { color: var(--primary-color); }
+        .box-header .rare { color: #d69e3a; }
+        .box-header .troll { color: #a07a53; }
+        .box-header .super-rare { color: #e8bd4a; text-shadow: 0 0 5px #ffc107; }
+        .box-header .great-one { color: var(--gold-color); }
+        .counter-box.total { background-color: #1e2124; }
+
     </style>
 </head>
 <body>
