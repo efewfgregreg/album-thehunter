@@ -1616,7 +1616,6 @@ function renderReserveSelectionForGrind(container, animalSlug) {
         grid.appendChild(card);
     }
 
-    }
 }
 
 function renderGrindCounterView(animalSlug) {
