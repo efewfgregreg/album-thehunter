@@ -200,6 +200,7 @@ function renderMainView(tabKey) {
     mainContent.appendChild(header);
     
     const contentContainer = document.createElement('div');
+    contentContainer.className = 'content-container';
     mainContent.appendChild(contentContainer);
     
     appContainer.appendChild(mainContent);
@@ -258,8 +259,8 @@ function renderSimpleDetailView(name, tabKey) {
     const mainContent = document.querySelector('.main-content');
     const slug = slugify(name);
 
-    const contentContainer = mainContent.querySelector('div:not(.page-header)');
-    if(contentContainer) contentContainer.innerHTML = '';
+    const contentContainer = mainContent.querySelector('.content-container');
+    contentContainer.innerHTML = '';
     
     mainContent.querySelector('.page-header h2').textContent = name;
     const backButton = mainContent.querySelector('.page-header .back-button');
@@ -283,7 +284,7 @@ function renderAnimalDossier(animalName, originReserveKey) {
     const mainContent = document.querySelector('.main-content');
     const slug = slugify(animalName);
     
-    const contentContainer = mainContent.querySelector('div:not(.page-header)');
+    const contentContainer = mainContent.querySelector('.content-container');
     contentContainer.innerHTML = '';
 
     mainContent.querySelector('.page-header h2').textContent = `Dossiê: ${animalName}`;
@@ -366,7 +367,7 @@ function renderReservesList(container) {
 
 function showReserveDetailView(reserveKey) {
     const mainContent = document.querySelector('.main-content');
-    const contentContainer = mainContent.querySelector('div:not(.page-header)');
+    const contentContainer = mainContent.querySelector('.content-container');
     contentContainer.innerHTML = ''; 
 
     const reserve = reservesData[reserveKey];
@@ -623,7 +624,7 @@ function openGreatsTrophyModal(animalName, slug, furName) {
             deleteBtn.onclick = () => {
                 if(confirm('Tem certeza que deseja remover este abate?')) {
                     trophies.splice(index, 1); saveData(savedData); modal.remove();
-                    const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > div:not(.page-header)');
+                    const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
                     if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
                 }
             };
@@ -667,7 +668,7 @@ function openGreatsTrophyModal(animalName, slug, furName) {
         savedData.greats[slug].furs[furName].trophies.push(newTrophy);
         checkAndSetGreatOneCompletion(slug, savedData.greats[slug]);
         saveData(savedData); modal.remove();
-        const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > div:last-child');
+        const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
         if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
     };
     buttonsDiv.appendChild(cancelBtn); buttonsDiv.appendChild(saveBtn);
