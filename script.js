@@ -1502,9 +1502,8 @@ function renderMultiMountDetailModal(mountKey) {
 // --- FUNÇÕES CONTADOR DE GRIND ---
 
 function renderGrindDashboard(container) {
-    container.innerHTML = ''; // Limpa a área
+    container.innerHTML = ''; 
 
-    // Botão para iniciar um novo grind
     const newGrindCard = document.createElement('div');
     newGrindCard.className = 'new-grind-card';
     newGrindCard.innerHTML = `
@@ -1514,10 +1513,8 @@ function renderGrindDashboard(container) {
     newGrindCard.addEventListener('click', () => renderGrindSelectionView(container));
     container.appendChild(newGrindCard);
 
-    // Divisor
     container.innerHTML += '<h3 class="section-divider">Grinds em Andamento</h3>';
 
-    // Grid para os grinds existentes
     const activeGrindsGrid = document.createElement('div');
     activeGrindsGrid.className = 'active-grinds-grid';
     container.appendChild(activeGrindsGrid);
@@ -1529,7 +1526,6 @@ function renderGrindDashboard(container) {
         return;
     }
 
-    // Cria um card para cada grind salvo
     for (const [animalSlug, sessionData] of Object.entries(sessions)) {
         const animalName = items.find(item => slugify(item) === animalSlug);
         const reserve = reservesData[sessionData.activeReserve];
@@ -1548,7 +1544,6 @@ function renderGrindDashboard(container) {
                     </div>
                 </div>
             `;
-            // Ao clicar, vai para a tela do contador daquele grind específico
             card.addEventListener('click', () => renderGrindCounterView(animalSlug));
             activeGrindsGrid.appendChild(card);
         }
@@ -1579,9 +1574,8 @@ function renderReserveSelectionForGrind(container, animalSlug) {
     grid.className = 'album-grid reserves-grid'; 
     container.appendChild(grid);
 
-    // FILTRA AS RESERVAS PARA MOSTRAR APENAS AS QUE CONTÊM O ANIMAL
     const filteredReserves = Object.entries(reservesData)
-        .filter(([key, reserve]) => reserve.animals.includes(animalSlug))
+        .filter(([key, reserve]) => reserve && reserve.animals && reserve.animals.includes(animalSlug))
         .sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
     if(filteredReserves.length === 0) {
@@ -1622,7 +1616,6 @@ function renderGrindCounterView(animalSlug) {
     backButton.innerHTML = `&larr; Voltar para Dashboard`;
     backButton.onclick = () => renderMainView('grind');
 
-    // Adiciona um atributo para sabermos qual grind está ativo
     container.innerHTML = `<div class="grind-container" data-animal-slug="${animalSlug}"></div>`; 
     const grindContainer = container.querySelector('.grind-container');
 
@@ -1692,6 +1685,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     [imageModal, formModal].forEach(modal => {
         if(modal) {
+            // A close button might not exist if the modal content is fully dynamic
             const closeBtn = modal.querySelector('.modal-close');
             if (closeBtn) closeBtn.onclick = () => closeModal(modal.id);
             modal.addEventListener('click', e => {
