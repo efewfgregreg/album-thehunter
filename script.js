@@ -193,7 +193,10 @@ function renderMainView(tabKey) {
     const backButton = document.createElement('button');
     backButton.className = 'back-button';
     backButton.innerHTML = '&larr; Voltar ao Menu';
-    backButton.addEventListener('click', renderNavigationHub);
+
+    // ##### CORREÇÃO APLICADA AQUI #####
+    // Trocado addEventListener por .onclick para evitar múltiplos eventos.
+    backButton.onclick = renderNavigationHub;
     
     header.appendChild(title);
     header.appendChild(backButton);
