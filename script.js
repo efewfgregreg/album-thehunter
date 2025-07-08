@@ -529,14 +529,14 @@ function slugify(text) {
 }
 
 const categorias = {
-    pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
-    diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
-    greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
-    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug), icon: 'fas fa-star' },
-    montagens: { title: 'Montagens Múltiplas', icon: 'fas fa-trophy' },
-    grind: { title: 'Contador de Grind', icon: 'fas fa-crosshairs' },
-    reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
-    progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
+    pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
+    diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
+    greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
+    super_raros: { title: 'Super Raros', items: Object.keys(rareFursData).filter(slug => (rareFursData[slug].macho?.length > 0) || (rareFursData[slug].femea?.length > 0)).map(slug => items.find(item => slugify(item) === slug) || slug), icon: 'fas fa-star' },
+    montagens: { title: 'Montagens Múltiplas', icon: 'fas fa-trophy' },
+    grind: { title: 'Contador de Grind', icon: 'fas fa-crosshairs' }, // <-- ESTA É A LINHA QUE ESTAVA FALTANDO
+    reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
+    progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
 };
 
 let appContainer;
@@ -1567,41 +1567,55 @@ function renderGrindSelectionView(container) {
 }
 
 function renderReserveSelectionForGrind(container, animalSlug) {
-    const animalName = items.find(item => slugify(item) === animalSlug);
-    container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
-    
-    const grid = document.createElement('div');
-    grid.className = 'album-grid reserves-grid'; 
-    container.appendChild(grid);
+    const animalName = items.find(item => slugify(item) === animalSlug);
+    container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
+    
+    const grid = document.createElement('div');
+    grid.className = 'album-grid reserves-grid'; 
+    container.appendChild(grid);
 
-    const filteredReserves = Object.entries(reservesData)
-        .filter(([key, reserve]) => reserve && reserve.animals && reserve.animals.includes(animalSlug))
-        .sort(([, a], [, b]) => a.name.localeCompare(b.name));
+    const validReserves = [];
+    // Loop mais seguro para evitar erros
+    for (const reserveKey in reservesData) {
+        // Garante que estamos pegando propriedades do próprio objeto
+        if (Object.prototype.hasOwnProperty.call(reservesData, reserveKey)) {
+            const reserve = reservesData[reserveKey];
+            // Verifica se a reserva e a lista de animais existem antes de usar
+            if (reserve && reserve.animals && reserve.animals.includes(animalSlug)) {
+                validReserves.push([reserveKey, reserve]);
+            }
+        }
+    }
 
-    if(filteredReserves.length === 0) {
-        grid.innerHTML = `<p>Aparentemente, este animal não existe em nenhuma reserva listada.</p>`;
-        return;
-    }
+    // Ordena as reservas que são válidas
+    validReserves.sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
-    for (const [reserveKey, reserve] of filteredReserves) {
-        const card = document.createElement('div');
-        card.className = 'reserve-card';
-        card.innerHTML = `
-            <div class="reserve-card-bg" style="background-image: url('${reserve.image}')"></div>
-            <div class="reserve-card-overlay"></div>
-            <div class="reserve-card-content">
-                 <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
-            </div>
-        `;
-        card.addEventListener('click', () => {
-            if (!savedData.grindSessions) savedData.grindSessions = {};
-            if (!savedData.grindSessions[animalSlug]) savedData.grindSessions[animalSlug] = { logs: {} };
-            savedData.grindSessions[animalSlug].activeReserve = reserveKey;
-            saveData(savedData);
-            
-            renderGrindCounterView(animalSlug);
-        });
-        grid.appendChild(card);
+    if(validReserves.length === 0) {
+        grid.innerHTML = `<p>Aparentemente, este animal não existe em nenhuma reserva listada.</p>`;
+        return;
+    }
+
+    for (const [reserveKey, reserve] of validReserves) {
+        const card = document.createElement('div');
+        card.className = 'reserve-card';
+        card.innerHTML = `
+            <div class="reserve-card-bg" style="background-image: url('${reserve.image}')"></div>
+            <div class="reserve-card-overlay"></div>
+            <div class="reserve-card-content">
+                 <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
+            </div>
+        `;
+        card.addEventListener('click', () => {
+            if (!savedData.grindSessions) savedData.grindSessions = {};
+            if (!savedData.grindSessions[animalSlug]) savedData.grindSessions[animalSlug] = { logs: {} };
+            savedData.grindSessions[animalSlug].activeReserve = reserveKey;
+            saveData(savedData);
+            
+            renderGrindCounterView(animalSlug);
+        });
+        grid.appendChild(card);
+    }
+
     }
 }
 
