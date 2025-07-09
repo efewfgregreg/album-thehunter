@@ -370,7 +370,7 @@
             font-style: italic;
         }
         .ranking-table-container {
-            overflow-x: auto; /* Garante que a tabela não quebre o layout em telas pequenas */
+            overflow-x: auto;
         }
         .ranking-table {
             width: 100%;
@@ -416,6 +416,85 @@
             filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%);
         }
 
+        /* --- ESTILOS DE AUTENTICAÇÃO --- */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .auth-box {
+            width: 100%;
+            max-width: 400px;
+            background-color: var(--surface-color);
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .auth-box h2 {
+            font-family: var(--font-headings);
+            margin-bottom: 10px;
+        }
+        .auth-box p {
+            color: var(--text-color-muted);
+            margin-bottom: 25px;
+        }
+        .auth-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            color: var(--text-color);
+            font-size: 1rem;
+        }
+        .auth-button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: #111;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .auth-button:hover {
+            background-color: #00acc1;
+        }
+        .link-button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+            margin-top: 20px;
+            text-decoration: underline;
+        }
+        .auth-error {
+            color: #ff4d4d;
+            margin-top: 15px;
+            min-height: 20px;
+        }
+        #logout-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .user-email {
+            font-size: 0.9rem;
+            color: var(--text-color-muted);
+        }
+        .page-header-logout-only {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            z-index: 100;
+        }
+
     </style>
 </head>
 <body>
@@ -425,6 +504,12 @@
       <img class="modal-content-viewer" id="modal-image">
     </div>
     <div id="form-modal" class="modal-overlay"></div>
+
+    <!-- SCRIPTS DO FIREBASE -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    
     <script src="script.js" defer></script>
 </body>
 </html>
