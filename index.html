@@ -244,6 +244,81 @@
         .great-one i { color: var(--gold-color); }
         #delete-grind-btn { background-color: #d9534f; border-color: #d43f3a; margin-top: 20px; align-self: center; }
         #delete-grind-btn:hover { background-color: #c9302c; border-color: #ac2925; color: #fff; }
+
+        /* --- ESTILOS MONTAGENS MÚLTIPLAS --- */
+        .mount-card {
+            background: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .mount-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
+        }
+        .mount-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .mount-card-header h3 {
+            font-family: var(--font-headings);
+            font-size: 1.2rem;
+            margin: 0;
+        }
+        .mount-progress {
+            font-size: 1rem;
+            font-weight: bold;
+            color: var(--text-color-muted);
+            background-color: rgba(0,0,0,0.2);
+            padding: 3px 8px;
+            border-radius: 5px;
+        }
+        .mount-card-animals {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            background-color: rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 6px;
+            min-height: 60px;
+            align-items: center;
+        }
+        .mount-card-animals img {
+            height: 40px;
+            width: auto;
+            filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%);
+        }
+        .mount-card.completed {
+            border-color: var(--gold-color);
+        }
+        .mount-card .mount-completed-banner {
+            position: absolute;
+            top: -30px;
+            right: -30px;
+            width: 60px;
+            height: 60px;
+            background-color: var(--gold-color);
+            transform: rotate(45deg);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .mount-card .mount-completed-banner i {
+            color: var(--surface-color);
+            transform: rotate(-45deg);
+            font-size: 1.2rem;
+            padding-bottom: 5px;
+        }
+
     </style>
 </head>
 <body>
