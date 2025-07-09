@@ -64,7 +64,7 @@
         .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 25px; justify-items: center; }
         .grinds-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
 
-        /* ESTILO PARA CARD DE ANIMAL (TELA PRINCIPAL DE CADA CATEGORIA) */
+        /* ESTILO PARA CARD DE ANIMAL */
         .animal-card { background: linear-gradient(145deg, #383c4a, #2c2f33); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
         .animal-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
         .animal-card img { width: 100%; height: 110px; object-fit: contain; margin-bottom: 15px; transition: all 0.3s ease-in-out; filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%); }
@@ -129,15 +129,15 @@
         .add-trophy-form input { width: 100%; padding: 8px; background-color: var(--bg-color); border: 1px solid var(--border-color); color: white; border-radius: 4px; }
         
         /* --- ESTILOS RESERVAS e DOSSIÊ --- */
-        .reserve-card { background: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; border: 1px solid var(--border-color); transition: all 0.3s ease; }
+        .reserve-card { background: var(--surface-color); border-radius: 8px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; border: 1px solid var(--border-color); transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .reserve-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0, 188, 212, 0.3); border-color: var(--primary-color);}
         .reserve-image-container { height: 140px; overflow: hidden; }
         .reserve-card-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
         .reserve-card:hover .reserve-card-image { transform: scale(1.1); }
-        .reserve-card-info-panel { padding: 15px; background-color: var(--surface-color); flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .reserve-card-info-panel { padding: 15px; background-color: var(--surface-color); flex-grow: 1; display: flex; flex-direction: column; justify-content: center; text-align: center;}
         .reserve-card-logo { width: 100%; max-height: 40px; object-fit: contain; margin-bottom: 15px; }
         .reserve-card-stats { display: flex; justify-content: space-around; font-size: 0.9rem; color: var(--text-color-muted); }
-        .reserve-card-stats span { display: flex; align-items: center; gap: 5px; }
+        .reserve-card-stats span { display: flex; align-items: center; gap: 5px; font-weight: bold; }
         .reserve-card-stats i { color: var(--primary-color); }
         .reserve-card-stats .fa-crown { color: var(--gold-color); }
         
