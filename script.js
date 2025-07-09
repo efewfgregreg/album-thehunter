@@ -185,7 +185,66 @@ function openGreatsTrophyModal(animalName, slug, furName) {
 }
 
 function updateCardAppearance(card, slug, tabKey) { if (!card) return; card.classList.remove('completed', 'inprogress', 'incomplete'); let status = 'incomplete'; if (tabKey === 'greats') { const animalData = savedData.greats?.[slug] || {}; checkAndSetGreatOneCompletion(slug, animalData); if (animalData.completo) { status = 'completed'; } else { const collectedFurs = animalData.furs ? Object.values(animalData.furs).filter(fur => fur.trophies?.length > 0).length : 0; if (collectedFurs > 0) { status = 'inprogress'; } } } else if (tabKey === 'diamantes') { const diamondTrophies = savedData.diamantes?.[slug] || []; if (diamondTrophies.length > 0) { status = 'completed'; } } else if (tabKey === 'super_raros') { const speciesFurs = rareFursData?.[slug]; if (speciesFurs) { const allPossibleSuperRares = []; if (speciesFurs.macho) speciesFurs.macho.forEach(fur => allPossibleSuperRares.push(`Macho ${fur} Diamante`)); if (diamondFursData?.[slug]?.femea?.length > 0) { speciesFurs.femea.forEach(fur => { if (diamondFursData[slug].femea.includes(fur)) { allPossibleSuperRares.push(`Fêmea ${fur} Diamante`); } }); } const collectedSuperRares = savedData.super_raros?.[slug] || {}; if (allPossibleSuperRares.some(sr => collectedSuperRares[sr] === true)) { status = 'completed'; } } } else if (tabKey === 'pelagens') { const pelagensData = savedData.pelagens?.[slug] || {}; if (Object.values(pelagensData).some(v => v === true)) { status = 'completed'; } } card.classList.add(status); }
-function renderProgressView(container) { container.innerHTML = ''; const wrapper = document.createElement('div'); wrapper.className = 'progress-view-container'; wrapper.id = 'progress-panel-main-container'; wrapper.appendChild(createLatestAchievementsPanel()); const progressPanel = document.createElement('div'); progressPanel.id = 'progress-panel'; updateProgressPanel(progressPanel); wrapper.appendChild(progressPanel); const resetButton = document.createElement('button'); resetButton.id = 'reset-progress-btn'; resetButton.textContent = 'Resetar Todo o Progresso'; resetButton.className = 'back-button'; resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;'; resetButton.onclick = () => { if (confirm('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.')) { localStorage.removeItem(saveDataKey); location.reload(); } }; container.appendChild(wrapper); container.appendChild(resetButton); }
+
+function renderProgressView(container) {
+    container.innerHTML = '';
+    const wrapper = document.createElement('div');
+    wrapper.className = 'progress-view-container';
+    wrapper.id = 'progress-panel-main-container';
+    wrapper.appendChild(createLatestAchievementsPanel());
+
+    // Crie um container para os botões de alternância
+    const viewToggleButtons = document.createElement('div');
+    viewToggleButtons.style.cssText = 'display: flex; gap: 10px; margin-bottom: 20px;';
+    
+    const showProgressBtn = document.createElement('button');
+    showProgressBtn.textContent = 'Ver Progresso Geral';
+    showProgressBtn.className = 'back-button';
+    
+    const showRankingBtn = document.createElement('button');
+    showRankingBtn.textContent = 'Ver Ranking de Caça';
+    showRankingBtn.className = 'back-button';
+    
+    viewToggleButtons.appendChild(showProgressBtn);
+    viewToggleButtons.appendChild(showRankingBtn);
+    wrapper.appendChild(viewToggleButtons);
+
+    // Crie um container para o conteúdo que será alternado
+    const contentArea = document.createElement('div');
+    wrapper.appendChild(contentArea);
+    
+    // Lógica para alternar as visualizações
+    showProgressBtn.onclick = () => {
+        contentArea.innerHTML = '';
+        const progressPanel = document.createElement('div');
+        progressPanel.id = 'progress-panel';
+        updateProgressPanel(progressPanel);
+        contentArea.appendChild(progressPanel);
+    };
+    
+    showRankingBtn.onclick = () => {
+        renderHuntingRankingView(contentArea);
+    };
+
+    const resetButton = document.createElement('button');
+    resetButton.id = 'reset-progress-btn';
+    resetButton.textContent = 'Resetar Todo o Progresso';
+    resetButton.className = 'back-button';
+    resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;';
+    resetButton.onclick = () => {
+        if (confirm('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.')) {
+            localStorage.removeItem(saveDataKey);
+            location.reload();
+        }
+    };
+    
+    container.appendChild(wrapper);
+    container.appendChild(resetButton);
+
+    // Inicia mostrando o painel de progresso por padrão
+    showProgressBtn.click();
+}
+
 function createLatestAchievementsPanel() { const panel = document.createElement('div'); panel.className = 'latest-achievements-panel'; panel.innerHTML = '<h3><i class="fas fa-star"></i> Últimas Conquistas</h3>'; const grid = document.createElement('div'); grid.className = 'achievements-grid'; const allTrophies = []; if(savedData.diamantes) { Object.entries(savedData.diamantes).forEach(([slug, trophies]) => { const animalName = items.find(i => slugify(i) === slug) || slug; trophies.forEach(trophy => allTrophies.push({ id: trophy.id, animalName, furName: trophy.type, slug, type: 'diamond' })); }); } if(savedData.greats) { Object.entries(savedData.greats).forEach(([slug, greatOneData]) => { const animalName = items.find(i => slugify(i) === slug) || slug; if(greatOneData.furs) { Object.entries(greatOneData.furs).forEach(([furName, furData]) => { (furData.trophies || []).forEach(trophy => allTrophies.push({ id: new Date(trophy.date).getTime(), animalName, furName, slug, type: 'greatone' })); }); } }); } if (allTrophies.length === 0) { grid.innerHTML = '<p style="color: var(--text-color-muted); grid-column: 1 / -1;">Nenhum troféu de destaque registrado ainda.</p>'; } else { allTrophies.sort((a, b) => b.id - a.id).slice(0, 4).forEach(trophy => { const card = document.createElement('div'); card.className = 'achievement-card'; const rotation = Math.random() * 6 - 3; card.style.transform = `rotate(${rotation}deg)`; card.addEventListener('mouseenter', () => card.style.zIndex = 10); card.addEventListener('mouseleave', () => card.style.zIndex = 1); const animalSlug = trophy.slug; let imagePathString; if (trophy.type === 'diamond') { const genderSlug = trophy.furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea'; const pureFurName = trophy.furName.replace(/^(macho|fêmea|diamante)\s/gi, '').trim(); const furSlug = slugify(pureFurName); const specificPath = `animais/pelagens/${animalSlug}_${furSlug}_${genderSlug}.png`; const neutralPath = `animais/pelagens/${animalSlug}_${furSlug}.png`; const basePath = `animais/${animalSlug}.png`; imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${neutralPath}'; this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`; } else if (trophy.type === 'greatone') { const furSlug = slugify(trophy.furName); const specificPath = `animais/pelagens/great_${animalSlug}_${furSlug}.png`; const basePath = `animais/${animalSlug}.png`; imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`; } else { imagePathString = `src="animais/${animalSlug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';"`; } card.innerHTML = `<img ${imagePathString}><div class="achievement-card-info"><div class="animal-name">${trophy.animalName}</div><div class="fur-name">${trophy.furName.replace('Diamante','')}</div></div>`; grid.appendChild(card); }); } panel.appendChild(grid); return panel; }
 function updateProgressPanel(panel) { const currentData = loadData(); const sections = { pelagens: { title: "Progresso de Pelagens Raras", data: rareFursData, saved: currentData.pelagens || {}, type: 'boolean' }, super_raros: { title: "Progresso de Super Raros", data: rareFursData, saved: currentData.super_raros || {}, type: 'boolean_super' }, diamantes: { title: "Progresso de Diamantes", data: diamondFursData, saved: currentData.diamantes || {}, type: 'array' }, greats: { title: "Progresso de Great Ones", data: greatsFursData, saved: currentData.greats || {}, type: 'object' } }; Object.keys(sections).forEach(key => { const sectionInfo = sections[key]; let total = 0, collected = 0; if(sectionInfo.type === 'boolean') { Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); }); Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; }); } else if (sectionInfo.type === 'boolean_super') { Object.entries(sectionInfo.data).forEach(([slug, s]) => { total += (s.macho?.length || 0); if (diamondFursData[slug]?.femea?.length > 0) total += (s.femea?.length || 0); }); Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; }); } else if(sectionInfo.type === 'array') { Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); }); Object.values(sectionInfo.saved).forEach(s => { collected += new Set(s.map(t => t.type)).size; }); } else if (sectionInfo.type === 'object') { Object.values(sectionInfo.data).forEach(f => total += f.length); Object.values(sectionInfo.saved).forEach(s => { if(s.furs) collected += Object.values(s.furs).filter(f => f.trophies?.length > 0).length; }); } const percentage = total > 0 ? (collected / total) * 100 : 0; let medalClass = ''; if (percentage >= 75) medalClass = 'gold'; else if (percentage >= 50) medalClass = 'silver'; else if (percentage > 0) medalClass = 'bronze'; const sectionEl = document.createElement('div'); sectionEl.className = 'progress-section'; sectionEl.innerHTML = `<div class="progress-header"><div class="progress-title-container"><i class="fas fa-medal progress-medal ${medalClass}"></i><h3>${sectionInfo.title}</h3></div><div class="progress-label">${collected} / ${total}</div></div><div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${percentage}%;"></div></div>`; sectionEl.addEventListener('click', () => toggleProgressDetail(sectionEl, key)); panel.appendChild(sectionEl); }); }
 function toggleProgressDetail(sectionEl, categoryKey) { const existingDetail = sectionEl.querySelector('.progress-detail-view'); if (existingDetail) { existingDetail.remove(); return; } const detailView = document.createElement('div'); detailView.className = 'progress-detail-view'; renderProgressDetail(detailView, categoryKey); sectionEl.appendChild(detailView); }
@@ -250,7 +309,6 @@ function renderGrindHubView(container) {
         grid.innerHTML = '<p class="no-grinds-message">Nenhum grind iniciado. Clique no botão acima para começar!</p>';
     }
 }
-
 function renderNewGrindAnimalSelection(container) {
     container.innerHTML = '<h2>Selecione um Animal para o Novo Grind</h2>';
     const albumGrid = document.createElement('div');
@@ -265,7 +323,6 @@ function renderNewGrindAnimalSelection(container) {
         albumGrid.appendChild(card);
     });
 }
-
 function renderReserveSelectionForGrind(container, animalSlug) {
     const animalName = items.find(item => slugify(item) === animalSlug);
     container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
@@ -297,7 +354,6 @@ function renderReserveSelectionForGrind(container, animalSlug) {
         grid.appendChild(card);
     }
 }
-
 function renderGrindCounterView(sessionId) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) { console.error("Sessão de grind não encontrada!", sessionId); renderMainView('grind'); return; }
@@ -410,7 +466,6 @@ function renderGrindCounterView(sessionId) {
         }
     });
 }
-
 function syncTrophyToAlbum(animalSlug, rarityType, details) {
     if (!savedData) return;
     
@@ -454,8 +509,6 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
             break;
     }
 }
-
-
 function openGrindDetailModal(sessionId, rarityType) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) return;
@@ -524,6 +577,87 @@ function openGrindDetailModal(sessionId, rarityType) {
     };
 
     modal.style.display = 'flex';
+}
+
+/**
+ * Agrega as estatísticas de todas as sessões de grind, totalizando por espécie.
+ */
+function getAggregatedGrindStats() {
+    const allAnimalSlugs = items.map(name => slugify(name));
+    const stats = {};
+
+    // 1. Inicializa as estatísticas para TODOS os animais, para que todos apareçam na lista.
+    allAnimalSlugs.forEach(slug => {
+        stats[slug] = {
+            animalSlug: slug,
+            animalName: items.find(i => slugify(i) === slug) || slug,
+            totalKills: 0,
+            diamonds: 0,
+            rares: 0,
+            superRares: 0,
+            greatOnes: 0
+        };
+    });
+
+    // 2. Percorre as sessões de grind e soma os valores.
+    if (savedData.grindSessions && savedData.grindSessions.length > 0) {
+        savedData.grindSessions.forEach(session => {
+            const slug = session.animalSlug;
+            if (stats[slug]) {
+                stats[slug].totalKills += session.counts.total || 0;
+                stats[slug].diamonds += session.counts.diamonds || 0;
+                stats[slug].rares += session.counts.rares?.length || 0;
+                stats[slug].superRares += session.counts.super_rares?.length || 0;
+                stats[slug].greatOnes += session.counts.great_ones?.length || 0;
+            }
+        });
+    }
+
+    // 3. Converte o objeto em um array e ordena por nome de animal para a exibição inicial.
+    return Object.values(stats).sort((a, b) => a.animalName.localeCompare(b.animalName));
+}
+
+/**
+ * Renderiza a tabela de ranking de caça dentro de um container.
+ */
+function renderHuntingRankingView(container) {
+    const stats = getAggregatedGrindStats();
+
+    container.innerHTML = `
+        <div class="ranking-header">
+            <h3>Ranking de Caça</h3>
+            <p>Estatísticas agregadas de todas as sessões do Contador de Grind.</p>
+        </div>
+        <div class="ranking-table-container">
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Animal</th>
+                        <th><i class="fas fa-crosshairs"></i> Abates</th>
+                        <th><i class="fas fa-gem"></i> Diamantes</th>
+                        <th><i class="fas fa-paw"></i> Raros</th>
+                        <th><i class="fas fa-star"></i> Super Raros</th>
+                        <th><i class="fas fa-crown"></i> Great Ones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${stats.map(animalStat => `
+                        <tr>
+                            <td data-label="Animal">
+                                <img src="animais/${animalStat.animalSlug}.png" class="animal-icon-table" onerror="this.style.display='none'">
+                                <span>${animalStat.animalName}</span>
+                            </td>
+                            <td data-label="Abates">${animalStat.totalKills}</td>
+                            <td data-label="Diamantes">${animalStat.diamonds}</td>
+                            <td data-label="Raros">${animalStat.rares}</td>
+                            <td data-label="Super Raros">${animalStat.superRares}</td>
+                            <td data-label="Great Ones">${greatsFursData[animalStat.animalSlug] ? animalStat.greatOnes : 'N/A'}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
 }
 
 document.addEventListener('DOMContentLoaded', () => {

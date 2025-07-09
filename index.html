@@ -355,6 +355,67 @@
         .detail-item-body .fa-check-circle { color: #28a745; } 
         .detail-item-body .fa-times-circle { color: #dc3545; }
 
+        /* --- ESTILOS RANKING DE CAÇA --- */
+        .ranking-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .ranking-header h3 {
+            font-family: var(--font-headings);
+            font-size: 1.8rem;
+            color: var(--primary-color);
+        }
+        .ranking-header p {
+            color: var(--text-color-muted);
+            font-style: italic;
+        }
+        .ranking-table-container {
+            overflow-x: auto; /* Garante que a tabela não quebre o layout em telas pequenas */
+        }
+        .ranking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+        .ranking-table th, .ranking-table td {
+            padding: 12px 15px;
+            text-align: center;
+        }
+        .ranking-table thead {
+            background-color: var(--surface-color);
+        }
+        .ranking-table th {
+            font-family: var(--font-headings);
+            letter-spacing: 1px;
+            font-size: 1rem;
+            color: var(--text-color-muted);
+        }
+        .ranking-table th i {
+            margin-right: 8px;
+            color: var(--primary-color);
+        }
+        .ranking-table tbody tr {
+            border-bottom: 1px solid var(--border-color);
+        }
+        .ranking-table tbody tr:nth-of-type(even) {
+            background-color: rgba(44, 47, 51, 0.5);
+        }
+        .ranking-table tbody tr:hover {
+            background-color: #3c3f43;
+        }
+        .ranking-table td[data-label="Animal"] {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        .animal-icon-table {
+            width: 35px;
+            height: 35px;
+            filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%);
+        }
+
     </style>
 </head>
 <body>
