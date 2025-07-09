@@ -57,7 +57,7 @@ function getAnimalName(slug) {
 const appContainer = document.getElementById('app-container');
 
 function renderNavigationHub() {
-    appContainer.classList.add('hub-mode'); // Adiciona a classe para centralizar
+    appContainer.classList.add('hub-mode');
     appContainer.innerHTML = `
         <div class="navigation-hub">
             <h1 class="hub-title">ÁLBUM DE CAÇA</h1>
@@ -72,7 +72,7 @@ function renderNavigationHub() {
 
     document.querySelectorAll('.nav-card').forEach(card => {
         card.addEventListener('click', () => {
-            appContainer.classList.remove('hub-mode'); // Remove a classe para alinhar no topo
+            appContainer.classList.remove('hub-mode');
             const target = card.dataset.target;
             switch (target) {
                 case 'rares': 
@@ -82,22 +82,29 @@ function renderNavigationHub() {
                     renderAnimalListView('Diamantes', diamondFursData, 'diamonds');
                     break;
                 case 'greats':
-                    renderGreatsView(); // Chama a nova função
+                    renderGreatsView();
+                    break;
+                case 'mounts':
+                    renderMultiMountsView();
                     break;
                 default: 
-                    appContainer.innerHTML = `
-                        <div class="main-content">
-                            <div class="page-header">
-                                <h2>Seção em Construção</h2>
-                                <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
-                            </div>
-                            <p>A seção "${target}" ainda não foi implementada.</p>
-                        </div>`;
-                    document.querySelector('.back-button').addEventListener('click', renderNavigationHub);
+                    showConstructionPage(target);
                     break;
             }
         });
     });
+}
+
+function showConstructionPage(target) {
+    appContainer.innerHTML = `
+        <div class="main-content">
+            <div class="page-header">
+                <h2>Seção em Construção</h2>
+                <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            </div>
+            <p>A seção "${target}" ainda não foi implementada.</p>
+        </div>`;
+    document.querySelector('.back-button').addEventListener('click', renderNavigationHub);
 }
 
 function renderAnimalListView(title, dataObject, category) {
@@ -109,7 +116,7 @@ function renderAnimalListView(title, dataObject, category) {
             const imagePath = `animais/${slug}.png`;
             return `
                 <div class="animal-card" data-slug="${slug}" data-category="${category}">
-                    <img src="${imagePath}" alt="${animalName}" onerror="this.onerror=null; this.src='placeholder.png';">
+                    <img src="${imagePath}" alt="${animalName}" onerror="this.style.display='none'">
                     <div class="info">${animalName}</div>
                 </div>`;
         }).join('');
@@ -120,7 +127,6 @@ function renderAnimalListView(title, dataObject, category) {
                 <h2>${title}</h2>
                 <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
             </div>
-            <input type="text" class="filter-input" placeholder="Filtrar por nome do animal...">
             <div class="album-grid">${cardsHTML}</div>
         </div>`;
 
@@ -131,13 +137,6 @@ function renderAnimalListView(title, dataObject, category) {
             const slug = card.dataset.slug;
             const cat = card.dataset.category;
             renderFurDetailsView(title, slug, dataObject, cat);
-        });
-    });
-    
-    document.querySelector('.filter-input').addEventListener('input', e => {
-        const filterText = e.target.value.toLowerCase();
-        document.querySelectorAll('.animal-card').forEach(card => {
-            card.style.display = card.querySelector('.info').textContent.toLowerCase().includes(filterText) ? '' : 'none';
         });
     });
 }
@@ -152,7 +151,7 @@ function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
         const isCompleted = savedData[category]?.[animalSlug]?.includes(furName);
         return `
             <div class="fur-card ${isCompleted ? 'completed' : 'incomplete'}" data-slug="${animalSlug}" data-fur="${furName}" data-category="${category}">
-                <img src="${imagePath}" alt="${furName}" onerror="this.onerror=null; this.src='placeholder.png';">
+                <img src="${imagePath}" alt="${furName}" onerror="this.style.display='none'">
                 <div class="info">${furName}</div>
             </div>`;
     }).join('');
@@ -160,7 +159,7 @@ function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
     appContainer.innerHTML = `
         <div class="main-content">
             <div class="page-header">
-                <h2>${getAnimalName(animalSlug)}</h2>
+                <h2>${animalName}</h2>
                 <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar para ${titlePrefix}</button>
             </div>
             <div class="fur-grid">${cardsHTML}</div>
@@ -189,25 +188,19 @@ function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
     });
 }
 
-/**
- * NOVA FUNÇÃO: Renderiza a Sala de Troféus dos Great Ones
- */
 function renderGreatsView() {
     let contentHTML = '';
-    // Itera sobre cada animal que pode ser um Great One
     for (const animalSlug in greatsFursData) {
         const animalName = getAnimalName(animalSlug);
         const furs = greatsFursData[animalSlug];
 
-        // Cria os cards para cada tipo de pelagem do Great One
         const furCardsHTML = furs.sort().map(furName => {
             const imagePath = `peles/${animalSlug}/${slugify(furName)}.png`;
-            // Verifica se este Great One específico foi salvo
             const isCompleted = savedData.greats[animalSlug] && savedData.greats[animalSlug].includes(furName);
-
+            // CORREÇÃO: Removido o card aninhado. Usamos apenas a estrutura do .trophy-frame
             return `
                 <div class="fur-card trophy-frame ${isCompleted ? 'completed' : 'incomplete'}" data-slug="${animalSlug}" data-fur="${furName}">
-                    <img src="${imagePath}" alt="${furName}" onerror="this.onerror=null; this.src='placeholder.png';">
+                    <img src="${imagePath}" alt="${furName}" onerror="this.style.display='none'">
                     <div class="info-plaque">
                         <div class="info">${furName}</div>
                     </div>
@@ -215,11 +208,9 @@ function renderGreatsView() {
             `;
         }).join('');
 
-        // Adiciona uma sub-seção para o animal
         contentHTML += `
             <h3 style="font-family: var(--font-headings); margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">${animalName}</h3>
-            <div class="fur-grid">${furCardsHTML}</div>
-        `;
+            <div class="fur-grid">${furCardsHTML}</div>`;
     }
 
     appContainer.innerHTML = `
@@ -228,24 +219,19 @@ function renderGreatsView() {
                 <h2>Sala de Troféus - Great Ones</h2>
                 <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
             </div>
-            <div class="greats-grid">
+            <div class="greats-grid-container">
                 ${contentHTML}
             </div>
-        </div>
-    `;
+        </div>`;
 
     document.querySelector('.back-button').addEventListener('click', renderNavigationHub);
 
-    // Adiciona evento de clique para marcar/desmarcar os Great Ones
     document.querySelectorAll('.trophy-frame').forEach(card => {
         card.addEventListener('click', () => {
             const { slug, fur } = card.dataset;
-
             savedData.greats = savedData.greats || {};
             savedData.greats[slug] = savedData.greats[slug] || [];
-
             const furIndex = savedData.greats[slug].indexOf(fur);
-
             if (furIndex > -1) {
                 savedData.greats[slug].splice(furIndex, 1);
             } else {
@@ -258,6 +244,53 @@ function renderGreatsView() {
     });
 }
 
+function renderMultiMountsView() {
+    const mountsHTML = Object.keys(multiMountsData).map(mountKey => {
+        const mount = multiMountsData[mountKey];
+        const isCompleted = savedData.mounts[mountKey];
+
+        const animalsHTML = mount.animals.map((animal, index) => {
+            const plusIcon = index < mount.animals.length - 1 ? `<i class="fas fa-plus plus-icon"></i>` : '';
+            return `
+                <img src="animais/${animal.slug}.png" alt="${getAnimalName(animal.slug)}" title="${getAnimalName(animal.slug)}">
+                ${plusIcon}
+            `;
+        }).join('');
+
+        return `
+            <div class="mount-card ${isCompleted ? 'completed' : 'incomplete'}" data-mount-key="${mountKey}">
+                <div class="mount-card-header">
+                    <h3>${mount.name}</h3>
+                </div>
+                <div class="mount-card-animals">
+                    ${animalsHTML}
+                </div>
+            </div>
+        `;
+    }).join('');
+
+    appContainer.innerHTML = `
+        <div class="main-content">
+            <div class="page-header">
+                <h2>Montagens Múltiplas</h2>
+                <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            </div>
+            <div class="mounts-grid">${mountsHTML}</div>
+        </div>
+    `;
+
+    document.querySelector('.back-button').addEventListener('click', renderNavigationHub);
+
+    document.querySelectorAll('.mount-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const mountKey = card.dataset.mountKey;
+            savedData.mounts[mountKey] = !savedData.mounts[mountKey]; // Inverte o estado
+            card.classList.toggle('completed');
+            card.classList.toggle('incomplete');
+            saveData(savedData);
+        });
+    });
+}
 
 // --- INICIALIZAÇÃO DA APLICAÇÃO ---
 document.addEventListener('DOMContentLoaded', renderNavigationHub);
