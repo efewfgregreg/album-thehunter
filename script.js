@@ -6,17 +6,15 @@ function loadData() {
         let parsedData = data ? JSON.parse(data) : {};
 
         // --- Migração de Dados de Grind ---
-        // Verifica se existe o formato antigo de grind e o converte para o novo
         if (parsedData.grindSessions && !Array.isArray(parsedData.grindSessions)) {
             console.log("Migrando dados de grind para o novo formato...");
             const newGrindSessions = [];
             for (const animalSlug in parsedData.grindSessions) {
                 const oldSession = parsedData.grindSessions[animalSlug];
                 if (oldSession.activeReserve) {
-                    // Tenta adivinhar os contadores do formato antigo (se existirem)
                     const counts = oldSession.logs || {};
                     newGrindSessions.push({
-                        id: `${animalSlug}_${oldSession.activeReserve}`, // Cria um ID único
+                        id: `${animalSlug}_${oldSession.activeReserve}`,
                         animalSlug: animalSlug,
                         reserveKey: oldSession.activeReserve,
                         counts: {
@@ -31,15 +29,12 @@ function loadData() {
                 }
             }
             parsedData.grindSessions = newGrindSessions;
-            // Salva os dados migrados imediatamente
             localStorage.setItem(saveDataKey, JSON.stringify(parsedData));
             console.log("Migração concluída.");
         }
-        // Garante que grindSessions seja um array se não existir
         if (!parsedData.grindSessions) {
             parsedData.grindSessions = [];
         }
-
 
         if (parsedData.diamantes) {
             for (const slug in parsedData.diamantes) {
@@ -52,7 +47,7 @@ function loadData() {
     } catch (e) {
         console.error("Erro ao carregar dados do localStorage", e);
         localStorage.clear();
-        return { grindSessions: [] }; // Retorna o formato correto em caso de erro
+        return { grindSessions: [] };
     }
 }
 
@@ -1031,8 +1026,8 @@ function renderGreatsDetailView(container, animalName, slug) {
 
 function openGreatsTrophyModal(animalName, slug, furName) {
     const modal = document.getElementById('form-modal');
-    modal.innerHTML = ''; // Limpa o modal
-    modal.className = 'modal-overlay form-modal'; // Adiciona classe para distinguir
+    modal.innerHTML = ''; 
+    modal.className = 'modal-overlay form-modal'; 
     
     const modalContent = document.createElement('div');
     modalContent.className = 'modal-content-box';
@@ -1353,7 +1348,6 @@ function closeModal(modalId) {
 function getCompleteTrophyInventory() {
     const inventory = [];
 
-    // 1. Pelagens Raras
     if (savedData.pelagens) {
         for (const slug in savedData.pelagens) {
             for (const furName in savedData.pelagens[slug]) {
@@ -1365,7 +1359,6 @@ function getCompleteTrophyInventory() {
             }
         }
     }
-    // 2. Diamantes
     if (savedData.diamantes) {
         for (const slug in savedData.diamantes) {
             savedData.diamantes[slug].forEach(trophy => {
@@ -1374,7 +1367,6 @@ function getCompleteTrophyInventory() {
             });
         }
     }
-    // 3. Super Raros
      if (savedData.super_raros) {
         for (const slug in savedData.super_raros) {
             for (const furName in savedData.super_raros[slug]) {
@@ -1386,7 +1378,6 @@ function getCompleteTrophyInventory() {
             }
         }
     }
-    // 4. Great Ones
     if (savedData.greats) {
         for (const slug in savedData.greats) {
             if (savedData.greats[slug].furs) {
@@ -1407,13 +1398,11 @@ function checkMountRequirements(requiredAnimals) {
     const inventory = getCompleteTrophyInventory();
     const fulfilledRequirements = [];
     let isComplete = true;
-
     const availableInventory = [...inventory];
 
     for (const requirement of requiredAnimals) {
         let fulfilled = false;
         let fulfillingTrophy = null;
-
         const foundIndex = availableInventory.findIndex(trophy => 
             trophy.slug === requirement.slug && trophy.gender === requirement.gender
         );
@@ -1432,7 +1421,6 @@ function checkMountRequirements(requiredAnimals) {
             trophy: fulfillingTrophy
         });
     }
-
     return { isComplete, fulfilledRequirements };
 }
 
@@ -1535,7 +1523,6 @@ function renderGrindHubView(container) {
     container.innerHTML = `<div class="grind-hub-container"></div>`;
     const hubContainer = container.querySelector('.grind-hub-container');
 
-    // Botão para iniciar novo grind
     const newGrindButton = document.createElement('div');
     newGrindButton.className = 'new-grind-btn';
     newGrindButton.innerHTML = `<i class="fas fa-plus-circle"></i><span>Iniciar Novo Grind</span>`;
@@ -1604,9 +1591,17 @@ function renderReserveSelectionForGrind(container, animalSlug) {
     grid.className = 'album-grid reserves-grid'; 
     container.appendChild(grid);
 
-    const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+    // MODIFICADO: Filtra as reservas para mostrar apenas as que contêm o animal selecionado
+    const availableReserves = Object.entries(reservesData)
+        .filter(([reserveKey, reserveData]) => reserveData.animals.includes(animalSlug))
+        .sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
-    for (const [reserveKey, reserve] of sortedReserves) {
+    if (availableReserves.length === 0) {
+        grid.innerHTML = `<p class="no-grinds-message">Nenhuma reserva encontrada para caçar ${animalName}.</p>`;
+        return;
+    }
+
+    for (const [reserveKey, reserve] of availableReserves) {
         const card = document.createElement('div');
         card.className = 'reserve-card';
         card.innerHTML = `
@@ -1728,7 +1723,6 @@ function renderGrindCounterView(sessionId) {
             const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
             if(currentSession) {
                 currentSession.counts[type]++;
-                // Não incrementa o total quando o próprio botão de total é clicado
                 if (type !== 'total') {
                     currentSession.counts.total++;
                     container.querySelector('.counter-box.total .count-value').textContent = currentSession.counts.total;
@@ -1750,6 +1744,7 @@ function renderGrindCounterView(sessionId) {
         }
     });
 }
+
 
 // --- INICIALIZAÇÃO E EVENTOS GERAIS ---
 
