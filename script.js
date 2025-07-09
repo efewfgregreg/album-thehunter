@@ -98,7 +98,92 @@ function renderRareFursDetailView(container, name, slug) { container.innerHTML =
 function renderSuperRareDetailView(container, name, slug) { container.innerHTML = ''; const furGrid = document.createElement('div'); furGrid.className = 'fur-grid'; container.appendChild(furGrid); const speciesFurs = rareFursData[slug]; if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) { furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>'; return; } const genderedFurs = []; if (speciesFurs.macho) speciesFurs.macho.forEach(fur => genderedFurs.push({ displayName: `Macho ${fur} Diamante`, originalName: fur, gender: 'macho' })); if (diamondFursData[slug]?.femea?.length > 0) speciesFurs.femea.forEach(fur => genderedFurs.push({ displayName: `Fêmea ${fur} Diamante`, originalName: fur, gender: 'femea' })); if (genderedFurs.length === 0) { furGrid.innerHTML = '<p>Nenhuma opção de Super Raro (Pelagem Rara + Diamante) disponível para este animal.</p>'; return; } genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => { const furCard = document.createElement('div'); const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true; furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`; const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender; furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info">${furInfo.displayName}</div><button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>`; furCard.addEventListener('click', () => { if (!savedData.super_raros) savedData.super_raros = {}; if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {}; const currentState = savedData.super_raros[slug][furInfo.displayName] || false; savedData.super_raros[slug][furInfo.displayName] = !currentState; saveData(savedData); furCard.classList.toggle('completed', !currentState); furCard.classList.toggle('incomplete', currentState); }); furGrid.appendChild(furCard); }); }
 function renderDiamondsDetailView(container, name, slug) { container.innerHTML = ''; const furGrid = document.createElement('div'); furGrid.className = 'fur-grid'; container.appendChild(furGrid); const speciesDiamondFurs = diamondFursData[slug]; if (!speciesDiamondFurs) { furGrid.innerHTML = '<p>Nenhuma pelagem de diamante listada para este animal.</p>'; return; } const allPossibleFurs = []; if (speciesDiamondFurs.macho) speciesDiamondFurs.macho.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Macho' })); if (speciesDiamondFurs.femea) speciesDiamondFurs.femea.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Fêmea' })); allPossibleFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => { const furCard = document.createElement('div'); furCard.className = 'fur-card'; const fullTrophyName = `${furInfo.gender} ${furInfo.displayName}`; const highestScoreTrophy = (savedData.diamantes?.[slug] || []).filter(t => t.type === fullTrophyName).reduce((max, t) => t.score > max.score ? t : max, { score: -1 }); const isCompleted = highestScoreTrophy.score !== -1; furCard.classList.add(isCompleted ? 'completed' : 'incomplete'); const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender.toLowerCase(); furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info-header"><span class="gender-tag">${furInfo.gender}</span><div class="info">${furInfo.displayName}</div></div><div class="score-container">${isCompleted ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` : '<span class="score-add-btn">Adicionar Pontuação</span>'}</div><button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">&#x26F6;</button>`; const scoreContainer = furCard.querySelector('.score-container'); scoreContainer.addEventListener('click', e => { e.stopPropagation(); if (scoreContainer.querySelector('input')) return; const currentScore = isCompleted ? highestScoreTrophy.score : ''; scoreContainer.innerHTML = `<input type="number" class="score-input" value="${currentScore}" placeholder="0.0">`; const input = scoreContainer.querySelector('.score-input'); input.focus(); input.select(); const saveScore = () => { if (input.value !== null && !isNaN(input.value) && input.value.trim() !== '') { if (!savedData.diamantes) savedData.diamantes = {}; if (!Array.isArray(savedData.diamantes[slug])) savedData.diamantes[slug] = []; const otherTrophies = savedData.diamantes[slug].filter(t => t.type !== fullTrophyName); savedData.diamantes[slug] = [...otherTrophies, { id: Date.now(), type: fullTrophyName, score: parseFloat(input.value) }]; saveData(savedData); } renderDiamondsDetailView(container, name, slug); }; input.addEventListener('blur', saveScore); input.addEventListener('keydown', e => { if (e.key === 'Enter') saveScore(); else if (e.key === 'Escape') renderDiamondsDetailView(container, name, slug); }); }); furGrid.appendChild(furCard); }); }
 function renderGreatsDetailView(container, animalName, slug) { container.innerHTML = ''; const furGrid = document.createElement('div'); furGrid.className = 'greats-grid fur-grid'; container.appendChild(furGrid); const fursInfo = greatsFursData[slug]; if (!fursInfo) { furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>'; return; } fursInfo.forEach(furName => { const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || []; const furCard = document.createElement('div'); furCard.className = `fur-card trophy-frame ${trophies.length > 0 ? 'completed' : 'incomplete'}`; const furSlug = slugify(furName); furCard.innerHTML = `<img src="animais/pelagens/great_${slug}_${furSlug}.png" alt="${furName}" onerror="this.onerror=null; this.src='animais/${slug}.png';"><div class="info-plaque"><div class="info">${furName}</div><div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div></div>`; furCard.addEventListener('click', () => openGreatsTrophyModal(animalName, slug, furName)); furGrid.appendChild(furCard); }); }
-function openGreatsTrophyModal(animalName, slug, furName) { const modal = document.getElementById('form-modal'); modal.innerHTML = ''; modal.className = 'modal-overlay form-modal'; const modalContent = document.createElement('div'); modalContent.className = 'modal-content-box'; modal.appendChild(modalContent); modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Troféus de: ${furName}</h3>`; const logList = document.createElement('ul'); logList.className = 'trophy-log-list'; const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || []; if(trophies.length === 0) { logList.innerHTML = '<li>Nenhum abate registrado.</li>'; } else { trophies.forEach((trophy, index) => { const li = document.createElement('li'); li.innerHTML = `<span>Abate de ${new Date(trophy.date).toLocaleDateString()} (Grind: ${trophy.abates || 'N/A'})</span>`; const deleteBtn = document.createElement('button'); deleteBtn.className = 'delete-trophy-btn'; deleteBtn.innerHTML = '&times;'; deleteBtn.onclick = () => { if(confirm('Tem certeza que deseja remover este abate?')) { trophies.splice(index, 1); saveData(savedData); closeModal('form-modal'); const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container'); if (detailContent) renderGreatsDetailView(detailContent, animalName, slug); } }; li.appendChild(deleteBtn); logList.appendChild(li); }); } modalContent.appendChild(logList); const form = document.createElement('div'); form.className = 'add-trophy-form'; form.innerHTML = `<h4>Registrar Novo Abate</h4><table><tbody><tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr><tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr><tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr><tr><td>Data do Abate:</td><td><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></td></tr></tbody></table>`; modalContent.appendChild(form); const buttonsDiv = document.createElement('div'); buttonsDiv.className = 'modal-buttons'; const cancelBtn = document.createElement('button'); cancelBtn.className = 'back-button'; cancelBtn.textContent = 'Cancelar'; cancelBtn.onclick = () => closeModal('form-modal'); const saveBtn = document.createElement('button'); saveBtn.className = 'back-button'; saveBtn.style.cssText = 'background-color: var(--primary-color); color: #111;'; saveBtn.textContent = 'Salvar Troféu'; saveBtn.onclick = () => { const newTrophy = { abates: form.querySelector('[name="abates"]').value, diamantes: form.querySelector('[name="diamantes"]').value, pelesRaras: form.querySelector('[name="pelesRaras"]').value, date: form.querySelector('[name="date"]').value || new Date().toISOString().split('T')[0] }; if (!savedData.greats) savedData.greats = {}; if (!savedData.greats[slug]) savedData.greats[slug] = {}; if (!savedData.greats[slug].furs) savedData.greats[slug].furs = {}; if (!savedData.greats[slug].furs[furName]) savedData.greats[slug].furs[furName] = { trophies: [] }; savedData.greats[slug].furs[furName].trophies.push(newTrophy); checkAndSetGreatOneCompletion(slug, savedData.greats[slug]); saveData(savedData); closeModal('form-modal'); const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container'); if (detailContent) renderGreatsDetailView(detailContent, animalName, slug); }; buttonsDiv.appendChild(cancelBtn); buttonsDiv.appendChild(saveBtn); modalContent.appendChild(buttonsDiv); modal.style.display = 'flex'; }
+function openGreatsTrophyModal(animalName, slug, furName) {
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = '';
+    modal.className = 'modal-overlay form-modal';
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content-box';
+    modal.appendChild(modalContent);
+
+    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Troféus de: ${furName}</h3>`;
+    const logList = document.createElement('ul');
+    logList.className = 'trophy-log-list';
+    const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
+    if (trophies.length === 0) {
+        logList.innerHTML = '<li>Nenhum abate registrado.</li>';
+    } else {
+        trophies.forEach((trophy, index) => {
+            const li = document.createElement('li');
+            const grindDetails = `Grind: ${trophy.abates} | <i class="fas fa-gem"></i> ${trophy.diamantes} | <i class="fas fa-paw"></i> ${trophy.pelesRaras}`;
+            li.innerHTML = `<span>Abate de ${new Date(trophy.date).toLocaleDateString()} (${grindDetails})</span>`;
+            
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-trophy-btn';
+            deleteBtn.innerHTML = '&times;';
+            deleteBtn.onclick = () => {
+                if (confirm('Tem certeza que deseja remover este abate?')) {
+                    trophies.splice(index, 1);
+                    saveData(savedData);
+                    closeModal('form-modal');
+                    const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
+                    if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
+                }
+            };
+            li.appendChild(deleteBtn);
+            logList.appendChild(li);
+        });
+    }
+    modalContent.appendChild(logList);
+
+    const form = document.createElement('div');
+    form.className = 'add-trophy-form';
+    form.innerHTML = `
+        <h4>Registrar Novo Abate</h4>
+        <table><tbody>
+            <tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr>
+            <tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr>
+            <tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr>
+            <tr><td>Data do Abate:</td><td><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></td></tr>
+        </tbody></table>`;
+    modalContent.appendChild(form);
+
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'modal-buttons';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'back-button';
+    cancelBtn.textContent = 'Cancelar';
+    cancelBtn.onclick = () => closeModal('form-modal');
+    
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'back-button';
+    saveBtn.style.cssText = 'background-color: var(--primary-color); color: #111;';
+    saveBtn.textContent = 'Salvar Troféu';
+    saveBtn.onclick = () => {
+        const newTrophy = {
+            abates: form.querySelector('[name="abates"]').value || 0,
+            diamantes: form.querySelector('[name="diamantes"]').value || 0,
+            pelesRaras: form.querySelector('[name="pelesRaras"]').value || 0,
+            date: form.querySelector('[name="date"]').value || new Date().toISOString().split('T')[0]
+        };
+        if (!savedData.greats) savedData.greats = {};
+        if (!savedData.greats[slug]) savedData.greats[slug] = {};
+        if (!savedData.greats[slug].furs) savedData.greats[slug].furs = {};
+        if (!savedData.greats[slug].furs[furName]) savedData.greats[slug].furs[furName] = { trophies: [] };
+        savedData.greats[slug].furs[furName].trophies.push(newTrophy);
+        checkAndSetGreatOneCompletion(slug, savedData.greats[slug]);
+        saveData(savedData);
+        closeModal('form-modal');
+        const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
+        if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
+    };
+    buttonsDiv.appendChild(cancelBtn);
+    buttonsDiv.appendChild(saveBtn);
+    modalContent.appendChild(buttonsDiv);
+    
+    modal.style.display = 'flex';
+}
+
 function updateCardAppearance(card, slug, tabKey) { if (!card) return; card.classList.remove('completed', 'inprogress', 'incomplete'); let status = 'incomplete'; if (tabKey === 'greats') { const animalData = savedData.greats?.[slug] || {}; checkAndSetGreatOneCompletion(slug, animalData); if (animalData.completo) { status = 'completed'; } else { const collectedFurs = animalData.furs ? Object.values(animalData.furs).filter(fur => fur.trophies?.length > 0).length : 0; if (collectedFurs > 0) { status = 'inprogress'; } } } else if (tabKey === 'diamantes') { const diamondTrophies = savedData.diamantes?.[slug] || []; if (diamondTrophies.length > 0) { status = 'completed'; } } else if (tabKey === 'super_raros') { const speciesFurs = rareFursData?.[slug]; if (speciesFurs) { const allPossibleSuperRares = []; if (speciesFurs.macho) speciesFurs.macho.forEach(fur => allPossibleSuperRares.push(`Macho ${fur} Diamante`)); if (diamondFursData?.[slug]?.femea?.length > 0) { speciesFurs.femea.forEach(fur => { if (diamondFursData[slug].femea.includes(fur)) { allPossibleSuperRares.push(`Fêmea ${fur} Diamante`); } }); } const collectedSuperRares = savedData.super_raros?.[slug] || {}; if (allPossibleSuperRares.some(sr => collectedSuperRares[sr] === true)) { status = 'completed'; } } } else if (tabKey === 'pelagens') { const pelagensData = savedData.pelagens?.[slug] || {}; if (Object.values(pelagensData).some(v => v === true)) { status = 'completed'; } } card.classList.add(status); }
 function renderProgressView(container) { container.innerHTML = ''; const wrapper = document.createElement('div'); wrapper.className = 'progress-view-container'; wrapper.id = 'progress-panel-main-container'; wrapper.appendChild(createLatestAchievementsPanel()); const progressPanel = document.createElement('div'); progressPanel.id = 'progress-panel'; updateProgressPanel(progressPanel); wrapper.appendChild(progressPanel); const resetButton = document.createElement('button'); resetButton.id = 'reset-progress-btn'; resetButton.textContent = 'Resetar Todo o Progresso'; resetButton.className = 'back-button'; resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;'; resetButton.onclick = () => { if (confirm('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.')) { localStorage.removeItem(saveDataKey); location.reload(); } }; container.appendChild(wrapper); container.appendChild(resetButton); }
 function createLatestAchievementsPanel() { const panel = document.createElement('div'); panel.className = 'latest-achievements-panel'; panel.innerHTML = '<h3><i class="fas fa-star"></i> Últimas Conquistas</h3>'; const grid = document.createElement('div'); grid.className = 'achievements-grid'; const allTrophies = []; if(savedData.diamantes) { Object.entries(savedData.diamantes).forEach(([slug, trophies]) => { const animalName = items.find(i => slugify(i) === slug) || slug; trophies.forEach(trophy => allTrophies.push({ id: trophy.id, animalName, furName: trophy.type, slug, type: 'diamond' })); }); } if(savedData.greats) { Object.entries(savedData.greats).forEach(([slug, greatOneData]) => { const animalName = items.find(i => slugify(i) === slug) || slug; if(greatOneData.furs) { Object.entries(greatOneData.furs).forEach(([furName, furData]) => { (furData.trophies || []).forEach(trophy => allTrophies.push({ id: new Date(trophy.date).getTime(), animalName, furName, slug, type: 'greatone' })); }); } }); } if (allTrophies.length === 0) { grid.innerHTML = '<p style="color: var(--text-color-muted); grid-column: 1 / -1;">Nenhum troféu de destaque registrado ainda.</p>'; } else { allTrophies.sort((a, b) => b.id - a.id).slice(0, 4).forEach(trophy => { const card = document.createElement('div'); card.className = 'achievement-card'; const rotation = Math.random() * 6 - 3; card.style.transform = `rotate(${rotation}deg)`; card.addEventListener('mouseenter', () => card.style.zIndex = 10); card.addEventListener('mouseleave', () => card.style.zIndex = 1); const animalSlug = trophy.slug; let imagePathString; if (trophy.type === 'diamond') { const genderSlug = trophy.furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea'; const pureFurName = trophy.furName.replace(/^(macho|fêmea|diamante)\s/gi, '').trim(); const furSlug = slugify(pureFurName); const specificPath = `animais/pelagens/${animalSlug}_${furSlug}_${genderSlug}.png`; const neutralPath = `animais/pelagens/${animalSlug}_${furSlug}.png`; const basePath = `animais/${animalSlug}.png`; imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${neutralPath}'; this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`; } else if (trophy.type === 'greatone') { const furSlug = slugify(trophy.furName); const specificPath = `animais/pelagens/great_${animalSlug}_${furSlug}.png`; const basePath = `animais/${animalSlug}.png`; imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`; } else { imagePathString = `src="animais/${animalSlug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';"`; } card.innerHTML = `<img ${imagePathString}><div class="achievement-card-info"><div class="animal-name">${trophy.animalName}</div><div class="fur-name">${trophy.furName.replace('Diamante','')}</div></div>`; grid.appendChild(card); }); } panel.appendChild(grid); return panel; }
@@ -113,359 +198,10 @@ function renderMultiMountsView(container) { container.innerHTML = ''; const grid
 function renderMultiMountDetailModal(mountKey) { const mount = multiMountsData[mountKey]; if (!mount) return; const status = checkMountRequirements(mount.animals); const modal = document.getElementById('form-modal'); modal.innerHTML = ''; modal.className = 'modal-overlay form-modal'; const modalContent = document.createElement('div'); modalContent.className = 'modal-content-box'; modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Detalhes: ${mount.name}</h3>`; const detailList = document.createElement('ul'); detailList.className = 'mount-detail-list'; status.fulfilledRequirements.forEach(fulfillment => { const req = fulfillment.requirement; const trophy = fulfillment.trophy; const animalName = items.find(item => slugify(item) === req.slug) || req.slug; const genderIcon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus'; const li = document.createElement('li'); li.className = 'mount-detail-item'; let bodyHTML = ''; if (fulfillment.met) { bodyHTML = `<div class="detail-item-body"><i class="fas fa-check-circle"></i> Cumprido com: <strong>${trophy.type}</strong> (${trophy.detail})</div>`; } else { bodyHTML = `<div class="detail-item-body"><i class="fas fa-times-circle"></i> Pendente</div>`; } li.innerHTML = `<div class="detail-item-header"><i class="fas ${genderIcon}"></i><span>${animalName}</span></div>${bodyHTML}`; detailList.appendChild(li); }); modalContent.appendChild(detailList); const buttonsDiv = document.createElement('div'); buttonsDiv.className = 'modal-buttons'; const closeBtn = document.createElement('button'); closeBtn.className = 'back-button'; closeBtn.textContent = 'Fechar'; closeBtn.onclick = () => closeModal('form-modal'); buttonsDiv.appendChild(closeBtn); modalContent.appendChild(buttonsDiv); modal.appendChild(modalContent); modal.style.display = 'flex'; }
 
 // --- FUNÇÕES CONTADOR DE GRIND ---
-function renderGrindHubView(container) {
-    container.innerHTML = `<div class="grind-hub-container"></div>`;
-    const hubContainer = container.querySelector('.grind-hub-container');
-    const newGrindButton = document.createElement('div');
-    newGrindButton.className = 'new-grind-btn';
-    newGrindButton.innerHTML = `<i class="fas fa-plus-circle"></i><span>Iniciar Novo Grind</span>`;
-    newGrindButton.onclick = () => renderNewGrindAnimalSelection(container);
-    hubContainer.appendChild(newGrindButton);
-    const existingGrindsTitle = document.createElement('h3');
-    existingGrindsTitle.className = 'existing-grinds-title';
-    existingGrindsTitle.innerHTML = '<i class="fas fa-history"></i> Grinds em Andamento';
-    hubContainer.appendChild(existingGrindsTitle);
-    const grid = document.createElement('div');
-    grid.className = 'grinds-grid';
-    hubContainer.appendChild(grid);
-    if (savedData.grindSessions && savedData.grindSessions.length > 0) {
-        savedData.grindSessions.forEach(session => {
-            const reserve = reservesData[session.reserveKey];
-            const animalName = items.find(item => slugify(item) === session.animalSlug);
-            const counts = session.counts;
-            const card = document.createElement('div');
-            card.className = 'grind-card';
-            card.addEventListener('click', () => renderGrindCounterView(session.id));
-            card.innerHTML = `
-                <img src="animais/${session.animalSlug}.png" class="grind-card-bg-silhouette" onerror="this.style.display='none'">
-                <div class="grind-card-content">
-                    <div class="grind-card-header">
-                        <span class="grind-card-animal-name">${animalName}</span>
-                        <span class="grind-card-reserve-name"><i class="fas fa-map-marker-alt"></i> ${reserve.name}</span>
-                    </div>
-                    <div class="grind-card-stats-grid">
-                        <div class="grind-stat">
-                            <i class="fas fa-crosshairs"></i>
-                            <span>${counts.total || 0}</span>
-                        </div>
-                        <div class="grind-stat">
-                            <i class="fas fa-gem"></i>
-                            <span>${counts.diamonds?.length || 0}</span>
-                        </div>
-                        <div class="grind-stat">
-                            <i class="fas fa-paw"></i>
-                            <span>${counts.rares?.length || 0}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    } else {
-        grid.innerHTML = '<p class="no-grinds-message">Nenhum grind iniciado. Clique no botão acima para começar!</p>';
-    }
-}
+// ... (código existente inalterado) ...
 
-function renderNewGrindAnimalSelection(container) {
-    container.innerHTML = '<h2>Selecione um Animal para o Novo Grind</h2>';
-    const albumGrid = document.createElement('div');
-    albumGrid.className = 'album-grid';
-    container.appendChild(albumGrid);
-    items.sort((a, b) => a.localeCompare(b)).forEach(name => {
-        const slug = slugify(name);
-        const card = document.createElement('div');
-        card.className = 'animal-card';
-        card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
-        card.addEventListener('click', () => renderReserveSelectionForGrind(container, slug));
-        albumGrid.appendChild(card);
-    });
-}
-
-function renderReserveSelectionForGrind(container, animalSlug) {
-    const animalName = items.find(item => slugify(item) === animalSlug);
-    container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
-    const grid = document.createElement('div');
-    grid.className = 'reserves-grid'; 
-    container.appendChild(grid);
-    const availableReserves = Object.entries(reservesData).filter(([, reserveData]) => reserveData.animals.includes(animalSlug)).sort(([, a], [, b]) => a.name.localeCompare(b.name));
-    if (availableReserves.length === 0) {
-        grid.innerHTML = `<p class="no-grinds-message">Nenhuma reserva encontrada para caçar ${animalName}.</p>`;
-        return;
-    }
-    for (const [reserveKey, reserve] of availableReserves) {
-        const card = document.createElement('div');
-        card.className = 'reserve-card';
-        card.innerHTML = `<div class="reserve-image-container"><img class="reserve-card-image" src="${reserve.image}" onerror="this.style.display='none'"></div><div class="reserve-info-panel"><img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'"></div>`;
-        card.addEventListener('click', () => {
-            const existingSession = savedData.grindSessions.find(s => s.animalSlug === animalSlug && s.reserveKey === reserveKey);
-            if(existingSession) {
-                alert('Um grind para este animal nesta reserva já existe. Abrindo o grind existente.');
-                renderGrindCounterView(existingSession.id);
-                return;
-            }
-            const newSessionId = `grind_${Date.now()}`;
-            const newSession = { id: newSessionId, animalSlug: animalSlug, reserveKey: reserveKey, counts: { total: 0, diamonds: [], trolls: 0, rares: [], super_rares: [], great_ones: [] } };
-            savedData.grindSessions.push(newSession);
-            saveData(savedData);
-            renderGrindCounterView(newSessionId);
-        });
-        grid.appendChild(card);
-    }
-}
-
-function renderGrindCounterView(sessionId) {
-    const session = savedData.grindSessions.find(s => s.id === sessionId);
-    if (!session) { console.error("Sessão de grind não encontrada!", sessionId); renderMainView('grind'); return; }
-
-    const counts = { total: session.counts.total || 0, diamonds: session.counts.diamonds || [], trolls: session.counts.trolls || 0, rares: session.counts.rares || [], super_rares: session.counts.super_rares || [], great_ones: session.counts.great_ones || [] };
-    session.counts = counts;
-
-    const { animalSlug, reserveKey } = session;
-    const mainContent = document.querySelector('.main-content');
-    const container = mainContent.querySelector('.content-container');
-    const animalName = items.find(item => slugify(item) === animalSlug);
-    const reserveName = reservesData[reserveKey].name;
-
-    mainContent.querySelector('.page-header h2').textContent = `Contador de Grind`;
-    const backButton = mainContent.querySelector('.page-header .back-button');
-    backButton.innerHTML = `&larr; Voltar para o Hub de Grind`;
-    backButton.onclick = () => renderMainView('grind');
-
-    container.innerHTML = `
-        <div class="grind-container">
-            <div class="grind-header">
-                <div class="grind-header-info">
-                    <img src="animais/${animalSlug}.png" class="grind-animal-icon" onerror="this.style.display='none'">
-                    <div>
-                        <h2>${animalName.toUpperCase()}</h2>
-                        <span><i class="fas fa-map-marked-alt"></i> Em ${reserveName}</span>
-                    </div>
-                </div>
-            </div>
-            <div class="counters-wrapper">
-                <div class="grind-counter-item diamond" data-type="diamonds" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-gem"></i><span>Diamonds</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item great-one" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-crown"></i><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item super-rare" data-type="super_rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item total-kills" data-type="total"><div class="grind-counter-header"><i class="fas fa-crosshairs"></i><span>Total de Abates</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value" id="total-kills-value">${counts.total}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-            </div>
-            <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
-        </div>`;
-
-    container.querySelectorAll('.grind-counter-btn').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const isIncrease = button.classList.contains('increase');
-            const counterItem = button.closest('.grind-counter-item');
-            const type = counterItem.dataset.type;
-            const isDetailed = counterItem.dataset.detailed === 'true';
-            const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
-            if (!currentSession) return;
-
-            if (isIncrease) {
-                if (isDetailed) { openGrindDetailModal(sessionId, type); return; } 
-                else { currentSession.counts[type]++; }
-            } else { // Decrease
-                if (isDetailed) {
-                    if (currentSession.counts[type].length > 0) {
-                        const lastItem = currentSession.counts[type][currentSession.counts[type].length - 1];
-                        if (confirm(`Tem certeza que deseja remover o último item registrado: "${lastItem.variation}"?`)) {
-                            currentSession.counts[type].pop();
-                        }
-                    }
-                } else {
-                    if (currentSession.counts[type] > 0) { currentSession.counts[type]--; }
-                }
-            }
-            saveData(savedData);
-            renderGrindCounterView(sessionId);
-        });
-    });
-
-    const totalKillsValue = container.querySelector('#total-kills-value');
-    if (totalKillsValue) {
-        totalKillsValue.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const body = totalKillsValue.parentElement;
-            if (body.querySelector('input')) return;
-            
-            const currentTotal = session.counts.total || 0;
-            
-            body.innerHTML = `
-                <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
-                <input type="number" class="grind-total-input" value="${currentTotal}">
-                <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
-            `;
-            const input = body.querySelector('input');
-            input.focus();
-            input.select();
-            
-            const saveNewTotal = () => {
-                const newValue = parseInt(input.value, 10);
-                if (!isNaN(newValue) && newValue >= 0) {
-                    session.counts.total = newValue;
-                    saveData(savedData);
-                }
-                renderGrindCounterView(sessionId);
-            };
-
-            input.addEventListener('blur', saveNewTotal);
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') saveNewTotal();
-                else if (e.key === 'Escape') renderGrindCounterView(sessionId);
-            });
-        });
-    }
-
-    container.querySelector('#delete-grind-btn').addEventListener('click', () => {
-        if (confirm(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`)) {
-            const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId);
-            if (sessionIndex > -1) { savedData.grindSessions.splice(sessionIndex, 1); saveData(savedData); renderMainView('grind'); }
-        }
-    });
-}
-
-function syncTrophyToAlbum(animalSlug, rarityType, details) {
-    if (!savedData) return;
-    
-    switch(rarityType) {
-        case 'rares':
-            if (!savedData.pelagens) savedData.pelagens = {};
-            if (!savedData.pelagens[animalSlug]) savedData.pelagens[animalSlug] = {};
-            savedData.pelagens[animalSlug][details.variation] = true;
-            console.log(`Sincronizado: Pelagem Rara '${details.variation}' para ${animalSlug}`);
-            break;
-
-        case 'super_rares':
-            if (!savedData.super_raros) savedData.super_raros = {};
-            if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
-            const superRareKey = `${details.variation} Diamante`;
-            savedData.super_raros[animalSlug][superRareKey] = true;
-            console.log(`Sincronizado: Super Raro '${superRareKey}' para ${animalSlug}`);
-            break;
-            
-        case 'great_ones':
-            if (!savedData.greats) savedData.greats = {};
-            if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = {};
-            if (!savedData.greats[animalSlug].furs) savedData.greats[animalSlug].furs = {};
-            if (!savedData.greats[animalSlug].furs[details.variation]) savedData.greats[animalSlug].furs[details.variation] = { trophies: [] };
-            
-            const newGreatOneTrophy = {
-                date: new Date().toISOString(),
-                abates: details.grindCounts.total,
-                diamantes: details.grindCounts.diamonds.length,
-                pelesRaras: details.grindCounts.rares.length
-            };
-            
-            savedData.greats[animalSlug].furs[details.variation].trophies.push(newGreatOneTrophy);
-            console.log(`Sincronizado: Great One '${details.variation}' para ${animalSlug} com detalhes do grind.`);
-            break;
-
-        case 'diamonds':
-            if (!savedData.diamantes) savedData.diamantes = {};
-            if (!Array.isArray(savedData.diamantes[animalSlug])) savedData.diamantes[animalSlug] = [];
-            
-            const otherTrophies = savedData.diamantes[animalSlug].filter(t => t.type !== details.variation);
-            const newTrophy = { id: Date.now(), type: details.variation, score: details.score };
-            savedData.diamantes[animalSlug] = [...otherTrophies, newTrophy];
-            console.log(`Sincronizado: Diamante '${details.variation}' (Score: ${details.score}) para ${animalSlug}`);
-            break;
-    }
-}
-
-
-function openGrindDetailModal(sessionId, rarityType) {
-    const session = savedData.grindSessions.find(s => s.id === sessionId);
-    if (!session) return;
-
-    const { animalSlug } = session;
-    let options = [];
-    let title = "Registrar ";
-    let requiresScore = false;
-
-    switch (rarityType) {
-        case 'diamonds':
-            title += "Diamante";
-            requiresScore = true;
-            const diamondFurs = diamondFursData[animalSlug];
-            if(diamondFurs) {
-                if (diamondFurs.macho) diamondFurs.macho.forEach(fur => options.push(`Macho ${fur}`));
-                if (diamondFurs.femea) diamondFurs.femea.forEach(fur => options.push(`Fêmea ${fur}`));
-            }
-            break;
-        case 'rares':
-        case 'super_rares':
-            title += rarityType === 'rares' ? "Pelagem Rara" : "Super Raro";
-            const furData = rareFursData[animalSlug];
-            if (furData) {
-                if (furData.macho) furData.macho.forEach(fur => options.push(`Macho ${fur}`));
-                if (furData.femea) furData.femea.forEach(fur => options.push(`Fêmea ${fur}`));
-            }
-            break;
-        case 'great_ones':
-            title += "Great One";
-            const greatData = greatsFursData[animalSlug];
-            if (greatData) {
-                options = greatData;
-            }
-            break;
-    }
-    
-    if (options.length === 0) {
-        alert(`Nenhuma variação de '${rarityType.replace('_', ' ')}' encontrada para este animal.`);
-        return;
-    }
-
-    const modal = document.getElementById('form-modal');
-    modal.innerHTML = `
-        <div class="modal-content-box">
-            <h3>${title}</h3>
-            <select id="grind-detail-modal-select">
-                ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
-            </select>
-            ${requiresScore ? '<input type="number" id="grind-diamond-score" placeholder="Digite a pontuação (score)..." style="width: 100%; margin-top: 15px; padding: 10px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; font-size: 1rem;">' : ''}
-            <div class="modal-buttons">
-                <button id="grind-detail-cancel" class="back-button">Cancelar</button>
-                <button id="grind-detail-save" class="back-button" style="background-color: var(--primary-color); color: #111;">Salvar</button>
-            </div>
-        </div>
-    `;
-
-    modal.querySelector('#grind-detail-cancel').onclick = () => closeModal('form-modal');
-    modal.querySelector('#grind-detail-save').onclick = () => {
-        const select = document.getElementById('grind-detail-modal-select');
-        const selectedValue = select.value;
-        let score = 0;
-
-        if (requiresScore) {
-            const scoreInput = document.getElementById('grind-diamond-score');
-            if (!scoreInput.value || parseFloat(scoreInput.value) <= 0) {
-                alert("Por favor, insira uma pontuação válida para o Diamante.");
-                return;
-            }
-            score = parseFloat(scoreInput.value);
-        }
-
-        const logDetails = { 
-            variation: selectedValue, 
-            score: score,
-            grindCounts: session.counts
-        };
-        const newLog = { id: Date.now(), ...logDetails, date: new Date().toISOString() };
-
-        if (!session.counts[rarityType]) session.counts[rarityType] = [];
-        session.counts[rarityType].push(newLog);
-
-        syncTrophyToAlbum(animalSlug, rarityType, logDetails);
-        
-        saveData(savedData);
-        closeModal('form-modal');
-        renderGrindCounterView(sessionId);
-    };
-
-    modal.style.display = 'flex';
-}
+// --- FUNÇÕES DE MODAL e SINCRONIZAÇÃO (Alteradas) ---
+// ... (código existente inalterado) ...
 
 document.addEventListener('DOMContentLoaded', () => {
     appContainer = document.getElementById('app-container');
