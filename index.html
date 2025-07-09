@@ -114,77 +114,21 @@
         .grind-header-info span i { margin-right: 5px; }
         .grind-animal-icon { width: 80px; height: 80px; filter: invert(1); }
 
-        .counters-wrapper {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-        }
-        .grind-counter-item {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-        }
-        .grind-counter-item.total-kills {
-            grid-column: 1 / -1;
-            background-color: #1e2124;
-        }
-        .grind-counter-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-family: var(--font-headings);
-            font-size: 1.2rem;
-            color: var(--text-color-muted);
-            margin-bottom: 15px;
-        }
+        .counters-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
+        .grind-counter-item { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; text-align: center; }
+        .grind-counter-item.total-kills { grid-column: 1 / -1; background-color: #1e2124; }
+        .grind-counter-header { display: flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--font-headings); font-size: 1.2rem; color: var(--text-color-muted); margin-bottom: 15px; }
         .grind-counter-header i { font-size: 1.5rem; }
-        .grind-counter-body {
-            background-color: rgba(0,0,0,0.2);
-            border-radius: 6px;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-        }
-        /* Desabilita o cursor de ponteiro para os botões, para que não interfira com o clique no corpo */
-        .grind-counter-body button { cursor: default; }
-
-        .grind-counter-value {
-            font-size: 2.2rem;
-            font-weight: bold;
-            font-family: var(--font-headings);
-        }
-        .grind-counter-add-btn {
-            background-color: var(--border-color);
-            color: var(--text-color);
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .grind-counter-add-btn:hover { background-color: var(--primary-color); color: #111; }
-        .grind-total-input {
-            width: 100%;
-            font-size: 2.2rem;
-            text-align: center;
-            background-color: var(--bg-color);
-            border: 1px solid var(--primary-color);
-            color: var(--text-color);
-            border-radius: 4px;
-            font-family: var(--font-headings);
-            padding: 0;
-        }
+        .grind-counter-body { background-color: rgba(0,0,0,0.2); border-radius: 6px; padding: 10px; display: flex; align-items: center; justify-content: space-between; }
+        
+        .grind-counter-value { font-size: 2.2rem; font-weight: bold; font-family: var(--font-headings); flex-grow: 1; cursor: pointer; }
+        
+        .grind-counter-btn { background-color: var(--border-color); color: var(--text-color); border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; }
+        .grind-counter-btn.increase:hover { background-color: var(--primary-color); color: #111; }
+        .grind-counter-btn.decrease:hover { background-color: #d9534f; color: #fff; }
+        
+        .grind-total-input { width: 100%; font-size: 2.2rem; text-align: center; background-color: var(--bg-color); border: 1px solid var(--primary-color); color: var(--text-color); border-radius: 4px; font-family: var(--font-headings); padding: 0; }
         .grind-total-input:focus { outline: none; }
-
 
         .diamond i { color: var(--primary-color); }
         .rare i { color: #d69e3a; }
@@ -192,10 +136,7 @@
         .super-rare i { color: #e8bd4a; text-shadow: 0 0 5px #ffc107; }
         .great-one i { color: var(--gold-color); }
 
-        #delete-grind-btn {
-            background-color: #d9534f; border-color: #d43f3a;
-            margin-top: 20px; align-self: center;
-        }
+        #delete-grind-btn { background-color: #d9534f; border-color: #d43f3a; margin-top: 20px; align-self: center; }
         #delete-grind-btn:hover { background-color: #c9302c; border-color: #ac2925; color: #fff; }
     </style>
 </head>

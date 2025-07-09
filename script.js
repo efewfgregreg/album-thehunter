@@ -73,7 +73,7 @@ function saveData(data) {
 
 const savedData = loadData();
 
-// --- CONSTANTES DE DADOS ---
+// --- CONSTANTES DE DADOS (invariável) ---
 const rareFursData = { "alce": { macho: ["Albino", "Melanístico", "Malhado", "Café"], femea: ["Albino", "Melanístico", "Malhado"] }, "antilocapra": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] }, "antílope_negro": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] }, "bantengue": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "bisão_das_planícies": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "bisão_europeu": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "búfalo_africano": { macho: ["Albino", "Leucismo"], femea: ["Albino", "Leucismo"] }, "búfalo_dágua": { macho: ["Albino", "Laranja"], femea: ["Albino", "Laranja"] }, "cabra_da_montanha": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "cabra_de_leque": { macho: ["Albino"], femea: ["Albino"] }, "cabra_selvagem": { macho: ["Albino", "Preto", "Cores Mistas"], femea: ["Albino", "Preto"] }, "caititu": { macho: ["Albino", "Melânico", "Ochre", "Leucismo"], femea: ["Albino", "Melânico", "Ochre", "Leucismo"] }, "camurça": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "canguru_cinza_oriental": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "caribu": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "carneiro_azul": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "carneiro_selvagem": { macho: ["Albino"], femea: ["Albino"] }, "cervo_porco_indiano": { macho: ["Malhado", "Leucismo"], femea: ["Malhado", "Leucismo"] }, "cervo_almiscarado": { macho: ["Albino", "Melânico", "Malhado"], femea: [] }, "cervo_de_timor": { macho: ["Albino", "leucistico", "malhado variação 1", "malhado variação 2"], femea: ["leucistico"] }, "cervo_do_pântano": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] }, "cervo_sika": { macho: ["Albino", "pintado vermelho"], femea: ["Albino", "pintado vermelho"] }, "chital": { macho: ["Albino", "malhado", "melanico"], femea: ["Albino", "malhado", "melanico"] }, "chacal_listrado": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "codorna_de_restolho": { macho: ["Albino", "Pardo Escuro"], femea: ["Albino"] }, "codorniz_da_virgínia": { macho: ["Albino"], femea: ["Albino"] }, "coelho_da_flórida": { macho: ["Albino", "melanico"], femea: ["Albino", "melanico"] }, "coelho_europeu": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "coiote": { macho: ["Albino", "Melânico", "malhado"], femea: ["Albino", "Melânico", "malhado"] }, "corça": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "crocodilo_de_água_salgada": { macho: ["Albino", "Melânico", "Pardo Claro", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "Pardo Claro", "malhado variação 1", "malhado variação 2"] }, "cudo_menor": { macho: ["Albino"], femea: ["Albino"] }, "cão_guaxinim": { macho: ["Albino", "Laranja", "Pardo escuro", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Laranja", "Pardo escuro", "malhado variação 1", "malhado variação 2"] }, "faisão_de_pescoço_anelado": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "faisão": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "frisada": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "galinha_montês": { macho: ["Pálida", "Híbrido", "Escuro"], femea: ["Pálida", "Híbrido", "Escuro"] }, "galo_lira": { macho: ["leucismo variação 1", "leucismo variação 2", "leucismo variação 3", "melanico variação 1", "melanico variação 2"], femea: ["Laranja"] }, "gamo": { macho: ["Albino", "Melânico", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico"] }, "ganso_bravo": { macho: ["Híbrido", "leucismo variação 1", "leucismo variação 2", "leucismo variação 3", "leucismo variação 4", "leucismo variação 5"], femea: ["Híbrido", "leucismo variação 1", "leucismo variação 2", "leucismo variação 3", "leucismo variação 4", "leucismo variação 5"] }, "ganso_campestre_da_tundra": { macho: ["leucismo variação 1", "leucismo variação 2", "leucismo variação 3"], femea: ["leucismo variação 1", "leucismo variação 2", "leucismo variação 3"] }, "ganso_pega": { macho: ["Melânico", "leucismo variação 1", "leucismo variação 2", "malhado variação 1", "malhado variação 2"], femea: ["Melânico", "leucismo variação 1", "leucismo variação 2", "malhado variação 1", "malhado variação 2"] }, "ganso_do_canadá": { macho: ["Cinza", "Melânico", "Leucismo cinza claro", "hibrido branco"], femea: ["Cinza", "Melânico", "Leucismo cinza claro", "hibrido branco"] }, "ganso_das_neves": { macho: ["Albino", "Melânico", "variação azul", "hibrido", "intermediario"], femea: ["Albino", "Melânico", "variação azul", "hibrido", "intermediario"] }, "gnu_de_cauda_preta": { macho: ["Albino"], femea: ["Albino", "Coroado"] }, "guaxinim_comum": { macho: ["Albino", "Melânico", "loiro malhado", "cinza malhado"], femea: ["Albino", "Melânico", "loiro malhado", "cinza malhado"] }, "iaque_selvagem": { macho: ["Ouro", "Leucismo", "albino variação 1", "albino variação 2"], femea: ["Ouro", "Leucismo", "albino variação 1", "albino variação 2", "marrom profundo", "preto profundo"] }, "ibex_de_beceite": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "jacaré_americano": { macho: ["Albino", "Melânico", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "malhado variação 1", "malhado variação 2"] }, "javali": { macho: ["Albino", "Melânico", "preto e dourado"], femea: ["Albino", "Melânico", "preto e dourado"] }, "javali_africano": { macho: ["Albino"], femea: ["Albino", "Vermelho"] }, "lagópode_branco": { macho: ["Branco", "muda variação 1", "muda variação 2"], femea: ["Branco", "muda variação 1", "muda variação 2", "mosqueado variação 1", "mosqueado variação 2"] }, "lagópode_escocês": { macho: ["Branco"], femea: ["Branco"] }, "lebre_antílope": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "lebre_da_eurásia": { macho: ["Albino", "Branco", "muda variação 1", "muda variação 2", "pardo claro", "pardo escuro", "cinza claro", "cinza escuro"], femea: ["Albino", "Branco", "muda variação 1", "muda variação 2"] }, "lebre_peluda": { macho: ["Albino", "Branco"], femea: ["Albino", "Branco"] }, "lebre_da_cauda_branca": { macho: ["Albino"], femea: ["Albino"] }, "lebre_nuca_dourada": { macho: ["cinza claro"], femea: ["cinza claro"] }, "lebre_europeia": { macho: ["albino", "melanico"], femea: ["albino", "melanico"] }, "leopardo_das_neves": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "leão": { macho: ["Albino", "amarelado", "pardo escuro"], femea: ["Albino", "amarelado", "pardo escuro"] }, "lince_pardo_do_méxico": { macho: ["Albino", "Melânico", "Azul"], femea: ["Albino", "Melânico", "Azul"] }, "lince_euroasiática": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "lobo_cinzento": { macho: ["Albino", "Melânico", "cinza escuro", "clara de ovo", "marrom averelhado"], femea: ["Albino", "Melânico", "cinza escuro", "clara de ovo", "marrom averelhado"] }, "lobo_ibérico": { macho: ["Albino", "Melânico", "fantasma", "ogro", "sombra", "inverno", "oliva", "prístino"], femea: ["Albino", "Melânico", "fantasma", "ogro", "sombra", "inverno", "oliva", "prístino"] }, "marreca_carijó": { macho: ["Melânico"], femea: ["bege"] }, "marrequinha_comum": { macho: ["híbrido azul", "híbrido verde", "Leucismo variação 1", "Leucismo variação 2"], femea: ["Leucismo"] }, "marrequinha_americana": { macho: ["Albino", "Verde Claro", "malhado variação 1", "malhado variação 2", "malhado variação 3"], femea: ["malhado variação 1", "malhado variação 2"] }, "muflão_ibérico": { macho: ["Albino", "Melânico", "cinza"], femea: ["Albino", "Melânico", "cinza"] }, "muntjac_vermelho_do_norte": { macho: ["Albino", "Melânico", "Leucismo variação 1", "Leucismo variação 2", "Vermelho variação 1", "Vermelho variação 2"], femea: ["Albino", "Melânico", "Leucismo variação 1", "Leucismo variação 2"] }, "nilgó": { macho: ["Malhado variação 1", "Malhado variação 2"], femea: ["Malhado variação 1", "Malhado variação 2"] }, "onça_parda": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "oryx_do_cabo": { macho: ["bege", "escuro", "ouro"], femea: ["bege", "escuro", "ouro"] }, "pato_olho_de_ouro": { macho: ["eclipse", "leucismo variação 1", "leucismo variação 2"], femea: ["escuro", "leucismo variação 1", "leucismo variação 2"] }, "pato_harlequim": { macho: ["Albino", "Melânico"], femea: ["Albino", "cinza", "escuro"] }, "pato_real": { macho: ["Melânico"], femea: ["Melânico", "amarelado"] }, "peru": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "peru_selvagem": { macho: ["Albino", "Melânico", "Leucismo", "bronze"], femea: ["Albino", "Melânico", "Leucismo"] }, "peru_selvagem_do_rio_grande": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "piadeira": { macho: ["híbrido", "eclipse", "leucismo variação 1", "leucismo variação 2"], femea: ["leucismo variação 1", "leucismo variação 2"] }, "porco_selvagem": { macho: ["Albino", "rosa", "manchas pretas variação 1", "manchas pretas variação 2", "hibrido marrom variação 1", "hibrido marrom variação 2", "marrom escuro variação 1", "marrom escuro variação 2"], femea: ["rosa"] }, "raposa_tibetana": { macho: ["Albino", "Melânico", "areia", "esfumaçado", "Leucismo"], femea: ["Albino", "Melânico", "areia", "esfumaçado", "Leucismo"] }, "raposa_cinzenta": { macho: ["Albino", "Melânico", "Leucismo", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "Leucismo", "malhado variação 1", "malhado variação 2"] }, "raposa_vermelha": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "rena": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] }, "sambar": { macho: ["Albino", "leucismo variação 1", "leucismo variação 2", "malhado variação 1", "malhado variação 2", "gradiente escuro"], femea: ["Albino", "Malhado", "Leucismo"] }, "tahr": { macho: ["Albino", "branco", "vermelho", "preto", "vermelho escuro", "pardo escuro"], femea: ["Albino", "branco", "vermelho"] }, "tetraz_grande": { macho: ["pálido", "Leucismo"], femea: ["Leucismo"] }, "tigre_de_bengala": { macho: ["Albino", "Melânico", "branco", "branco sem listras", "ouro", "pseudo melanico variação 1", "pseudo melanico variação 2", "pseudo melanico branco variação 1", "pseudo melanico branco variação 2"], femea: ["Albino", "Melânico", "branco", "branco sem listras", "ouro", "pseudo melanico variação 1", "pseudo melanico variação 2", "pseudo melanico branco variação 1", "pseudo melanico branco variação 2"] }, "urso_cinzento": { macho: ["Albino", "Marrom"], femea: ["Albino"] }, "urso_negro": { macho: ["Amarelado", "Marrom", "canela"], femea: ["Amarelado", "Marrom", "canela"] }, "urso_pardo": { macho: ["Albino", "Melanico"], femea: ["Albino", "Melanico"] }, "veado_das_montanhas_rochosas": { macho: ["Albino", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "malhado variação 1", "malhado variação 2"] }, "veado_de_cauda_branca": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "veado_de_cauda_preta": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "veado_de_roosevelt": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "veado_mula": { macho: ["Albino", "Melânico", "diluído", "malhado variação 1", "malhado variação 2"], femea: ["Albino", "Melânico", "diluído", "malhado variação 1", "malhado variação 2"] }, "veado_vermelho": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] }, "zarro_negrinha": { macho: ["Albino", "eclipse", "leucismo variação 1", "leucismo variação 2"], femea: ["leucismo variação 1", "leucismo variação 2"] }, "zarro_castanho": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "ibex_espanhol_do_sudeste": { macho: ["Albino", "Melânico", "laranja", "cinza claro", "castanho acinzentado", "marrom hibrido"], femea: ["Albino", "Melânico"] }, "ibex_de_gredos": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "ibex_de_ronda": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] }, "tetraz_azul": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "marreca_arrebio": { macho: ["Albino", "Melânico", "malhado"], femea: ["Albino", "Melânico", "Leucismo", "malhado", "brilhante", "eritristico"] }, "pato_carolino": { macho: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"], femea: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"] }, "castor_norte_americano": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "caribu_da_floresta_boreal": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "cervo_canadense": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] }, "bisão_da_floresta": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] } };
 const greatsFursData = { "alce": ["Fábula Dois Tons", "Cinza lendário", "Bétula lendária", "Carvalho Fabuloso", "Fabuloso Salpicado", "Abeto lendário"], "urso_negro": ["Creme Lendário", "Espírito Lendário", "Castanho Lendário", "Pintado Lendário", "Gelo Lendário 2", "Gelo Lendário"], "veado_de_cauda_branca": ["Pardo", "Pardo Escuro", "Bronzeado", "Malhado"], "gamo": ["Café Lendário", "Pintado Lendário", "Dourado Lendário", "Misto Lendário", "Prata Lendário"], "raposa": ["A lendária Lua de Sangue", "Bengala de doce lendária", "A lendária flor de cerejeira", "Alcaçuz lendário", "A lendária papoula da meia-noite", "Floco de Neve Místico Fabuloso", "Hortelã-pimenta lendária", "Fábula Rosebud Frost", "A lendária Beladona Escarlate"], "veado_vermelho": ["Pintado Lendário"], "tahr": ["Dourado Lendário", "Cicatrizes Lendárias", "Cinza Lendário", "Café com Leite Lendário", "Crânio Lendário", "Metade Lendária", "Neve Lendário"], "veado_mula": ["Chuva de Gotículas Lendárias", "Via Láctea Lendária", "Sopro de Pétalas Lendário", "Manto Crepuscular Lendário", "Enigma Teia de Aranha Lendário", "Listras de Canela Lendário"], "faisão": ["Rubi Lendário", "Pérola Lendário", "Granada Lendário", "Safira Lendário", "Obsidiana Lendário", "Citrino Lendário", "Esmeralda Lendário", "Morganita Lendário"] };
 const items = ["Alce","Antilocapra","Antílope Negro","Bantengue","Bisão da Floresta","Bisão das Planícies","Bisão Europeu","Búfalo Africano","Búfalo D'Água","Cabra da Montanha","Cabra de Leque","Cabra Selvagem","Caititu","Camurça","Canguru-cinza Oriental", "Chacal Listrado", "Caribu","Caribu da Floresta Boreal","Carneiro Azul","Carneiro Selvagem","Castor Norte-Americano","Cervo Almiscarado","Cervo Canadense","Cervo do Pântano","Cervo de Timor","Cervo Sika","Cervo-porco Indiano","Chital","Codorna-de-restolho","Codorniz da Virgínia","Coelho da Flórida","Coelho Europeu","Coiote","Corça","Crocodilo de Água Salgada","Cudo Menor","Faisão de Pescoço Anelado","Frisada","Galo Lira","Gamo","Ganso Bravo","Ganso Campestre da Tundra","Ganso das Neves","Ganso do Canadá","Ganso Pega","Gnu de Cauda Preta","Guaxinim Comum","Iaque Selvagem","Ibex de Beceite","Ibex de Gredos","Ibex de Ronda","Ibex Espanhol do Sudeste","Jacaré Americano","Javali","Javali Africano", "Lebre Europeia", "Lebre-antílope","Lebre-da-cauda-branca","Lebre Da Eurásia","Lebre Nuca Dourada","Lebre Peluda","Leão","Leopardo das Neves","Lince Euroasiática","Lince Pardo do México","Lobo Cinzento","Lobo Ibérico","Marreca Arrebio","Marreca Carijó","Marrequinha Americana","Marrequinha Comum","Muflão Ibérico","Muntjac vermelho do norte","Nilgó","Onça Parda","Oryx do Cabo","Pato Carolino","Pato Harlequim","Pato Olho de Ouro","Pato Real","Peru","Peru Selvagem","Peru Selvagem do Rio Grande","Piadeira","Porco Selvagem","Raposa cinzenta","Raposa tibetana","Raposa Vermelha","Rena","Sambar","Tahr","Tetraz Azul","Tetraz Grande","Tigre-de-Bengala","Urso Cinzento","Urso Negro","Urso Pardo","Veado das Montanhas Rochosas","Veado de Cauda Branca","Veado de Cauda Preta","Veado-Mula","Veado de Roosevelt","Veado Vermelho","Cão Guaxinim","Lagópode-Branco","Lagópode-Escocês","Galinha-Montês","Zarro-Negrinha","Zarro-castanho"];
@@ -766,11 +766,7 @@ function createLatestAchievementsPanel() {
             } else { 
                 imagePathString = `src="animais/${animalSlug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';"`;
             }
-            card.innerHTML = `<img ${imagePathString}>
-                <div class="achievement-card-info">
-                    <div class="animal-name">${trophy.animalName}</div>
-                    <div class="fur-name">${trophy.furName.replace('Diamante','')}</div>
-                </div>`;
+            card.innerHTML = `<img ${imagePathString}><div class="achievement-card-info"><div class="animal-name">${trophy.animalName}</div><div class="fur-name">${trophy.furName.replace('Diamante','')}</div></div>`;
             grid.appendChild(card);
         });
     }
@@ -778,267 +774,17 @@ function createLatestAchievementsPanel() {
     return panel;
 }
 
-function updateProgressPanel(panel) {
-    const currentData = loadData();
-    const sections = {
-        pelagens: { title: "Progresso de Pelagens Raras", data: rareFursData, saved: currentData.pelagens || {}, type: 'boolean' },
-        super_raros: { title: "Progresso de Super Raros", data: rareFursData, saved: currentData.super_raros || {}, type: 'boolean_super' },
-        diamantes: { title: "Progresso de Diamantes", data: diamondFursData, saved: currentData.diamantes || {}, type: 'array' },
-        greats: { title: "Progresso de Great Ones", data: greatsFursData, saved: currentData.greats || {}, type: 'object' }
-    };
+function updateProgressPanel(panel) { const currentData = loadData(); const sections = { pelagens: { title: "Progresso de Pelagens Raras", data: rareFursData, saved: currentData.pelagens || {}, type: 'boolean' }, super_raros: { title: "Progresso de Super Raros", data: rareFursData, saved: currentData.super_raros || {}, type: 'boolean_super' }, diamantes: { title: "Progresso de Diamantes", data: diamondFursData, saved: currentData.diamantes || {}, type: 'array' }, greats: { title: "Progresso de Great Ones", data: greatsFursData, saved: currentData.greats || {}, type: 'object' } }; Object.keys(sections).forEach(key => { const sectionInfo = sections[key]; let total = 0, collected = 0; if(sectionInfo.type === 'boolean') { Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); }); Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; }); } else if (sectionInfo.type === 'boolean_super') { Object.entries(sectionInfo.data).forEach(([slug, s]) => { total += (s.macho?.length || 0); if (diamondFursData[slug]?.femea?.length > 0) total += (s.femea?.length || 0); }); Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; }); } else if(sectionInfo.type === 'array') { Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); }); Object.values(sectionInfo.saved).forEach(s => { collected += new Set(s.map(t => t.type)).size; }); } else if (sectionInfo.type === 'object') { Object.values(sectionInfo.data).forEach(f => total += f.length); Object.values(sectionInfo.saved).forEach(s => { if(s.furs) collected += Object.values(s.furs).filter(f => f.trophies?.length > 0).length; }); } const percentage = total > 0 ? (collected / total) * 100 : 0; let medalClass = ''; if (percentage >= 75) medalClass = 'gold'; else if (percentage >= 50) medalClass = 'silver'; else if (percentage > 0) medalClass = 'bronze'; const sectionEl = document.createElement('div'); sectionEl.className = 'progress-section'; sectionEl.innerHTML = `<div class="progress-header"><div class="progress-title-container"><i class="fas fa-medal progress-medal ${medalClass}"></i><h3>${sectionInfo.title}</h3></div><div class="progress-label">${collected} / ${total}</div></div><div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${percentage}%;"></div></div>`; sectionEl.addEventListener('click', () => toggleProgressDetail(sectionEl, key)); panel.appendChild(sectionEl); }); }
+function toggleProgressDetail(sectionEl, categoryKey) { const existingDetail = sectionEl.querySelector('.progress-detail-view'); if (existingDetail) { existingDetail.remove(); return; } const detailView = document.createElement('div'); detailView.className = 'progress-detail-view'; renderProgressDetail(detailView, categoryKey); sectionEl.appendChild(detailView); }
+function renderProgressDetail(detailContainer, categoryKey) { const sourceData = categorias[categoryKey].items.map(slugify); const savedDataForCategory = savedData[categoryKey] || {}; const progressByAnimal = {}; sourceData.forEach(slug => { const animalName = items.find(i => slugify(i) === slug) || slug; let total = 0, collected = 0; switch(categoryKey) { case 'pelagens': if(!rareFursData[slug]) return; total = (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0); collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length; break; case 'diamantes': if(!diamondFursData[slug]) return; total = (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0); collected = new Set((savedDataForCategory[slug] || []).map(t => t.type)).size; break; case 'greats': if(!greatsFursData[slug]) return; total = greatsFursData[slug].length; collected = Object.values(savedDataForCategory[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length; break; case 'super_raros': if(!rareFursData[slug]) return; total = (rareFursData[slug].macho?.length || 0); if(diamondFursData[slug]?.femea?.length > 0) total += rareFursData[slug].femea?.length; collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length; break; } if (total > 0 && collected > 0) progressByAnimal[animalName] = { collected, total }; }); if (Object.keys(progressByAnimal).length === 0) { detailContainer.innerHTML = `<div class="progress-detail-item"><span class="label">Nenhum progresso nesta categoria ainda.</span></div>`; return; } Object.entries(progressByAnimal).sort((a,b) => a[0].localeCompare(b[0])).forEach(([animalName, progress]) => { const itemEl = document.createElement('div'); itemEl.className = 'progress-detail-item'; itemEl.innerHTML = `<span class="label">${animalName}</span> <span class="value">${progress.collected} / ${progress.total}</span>`; detailContainer.appendChild(itemEl); }); }
+function openImageViewer(imageUrl) { const modal = document.getElementById('image-viewer-modal'); const modalImg = document.getElementById('modal-image'); if (modal && modalImg) { modalImg.src = imageUrl; modal.style.display = "flex"; } }
+function closeModal(modalId) { const modal = document.getElementById(modalId); if (modal) { modal.style.display = "none"; } }
+function getCompleteTrophyInventory() { const inventory = []; if (savedData.pelagens) { for (const slug in savedData.pelagens) { for (const furName in savedData.pelagens[slug]) { if (savedData.pelagens[slug][furName] === true) { const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea'; const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim(); inventory.push({ slug, gender, type: 'Pelagem Rara', detail: pureFur }); } } } } if (savedData.diamantes) { for (const slug in savedData.diamantes) { savedData.diamantes[slug].forEach(trophy => { const gender = trophy.type.toLowerCase().startsWith('macho') ? 'macho' : 'femea'; inventory.push({ slug, gender, type: 'Diamante', detail: `Score ${trophy.score}` }); }); } } if (savedData.super_raros) { for (const slug in savedData.super_raros) { for (const furName in savedData.super_raros[slug]) { if (savedData.super_raros[slug][furName] === true) { const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea'; const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').replace('Diamante', '').trim(); inventory.push({ slug, gender, type: 'Super Raro', detail: pureFur }); } } } } if (savedData.greats) { for (const slug in savedData.greats) { if (savedData.greats[slug].furs) { for (const furName in savedData.greats[slug].furs) { if (savedData.greats[slug].furs[furName].trophies?.length > 0) { savedData.greats[slug].furs[furName].trophies.forEach(trophy => { inventory.push({ slug, gender: 'macho', type: 'Great One', detail: furName }); }); } } } } } return inventory; }
+function checkMountRequirements(requiredAnimals) { const inventory = getCompleteTrophyInventory(); const fulfilledRequirements = []; let isComplete = true; const availableInventory = [...inventory]; for (const requirement of requiredAnimals) { let fulfilled = false; let fulfillingTrophy = null; const foundIndex = availableInventory.findIndex(trophy => trophy.slug === requirement.slug && trophy.gender === requirement.gender); if (foundIndex !== -1) { fulfilled = true; fulfillingTrophy = availableInventory[foundIndex]; availableInventory.splice(foundIndex, 1); } else { isComplete = false; } fulfilledRequirements.push({ met: fulfilled, requirement: requirement, trophy: fulfillingTrophy }); } return { isComplete, fulfilledRequirements }; }
+function renderMultiMountsView(container) { container.innerHTML = ''; const grid = document.createElement('div'); grid.className = 'mounts-grid'; container.appendChild(grid); const sortedMounts = Object.entries(multiMountsData).sort((a, b) => a[1].name.localeCompare(b[1].name)); sortedMounts.forEach(([mountKey, mount]) => { const status = checkMountRequirements(mount.animals); const progressCount = status.fulfilledRequirements.filter(r => r.met).length; const card = document.createElement('div'); card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`; card.dataset.mountKey = mountKey; let animalsHTML = '<div class="mount-card-animals">'; mount.animals.forEach(animal => { animalsHTML += `<img src="animais/${animal.slug}.png" title="${animal.slug}" onerror="this.style.display='none'">`; }); animalsHTML += '</div>'; card.innerHTML = `<div class="mount-card-header"><h3>${mount.name}</h3><div class="mount-progress">${progressCount} / ${mount.animals.length}</div></div>${animalsHTML}${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i></div>' : ''}`; card.addEventListener('click', () => renderMultiMountDetailModal(mountKey)); grid.appendChild(card); }); }
+function renderMultiMountDetailModal(mountKey) { const mount = multiMountsData[mountKey]; if (!mount) return; const status = checkMountRequirements(mount.animals); const modal = document.getElementById('form-modal'); modal.innerHTML = ''; modal.className = 'modal-overlay form-modal'; const modalContent = document.createElement('div'); modalContent.className = 'modal-content-box'; modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Detalhes: ${mount.name}</h3>`; const detailList = document.createElement('ul'); detailList.className = 'mount-detail-list'; status.fulfilledRequirements.forEach(fulfillment => { const req = fulfillment.requirement; const trophy = fulfillment.trophy; const animalName = items.find(item => slugify(item) === req.slug) || req.slug; const genderIcon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus'; const li = document.createElement('li'); li.className = 'mount-detail-item'; let bodyHTML = ''; if (fulfillment.met) { bodyHTML = `<div class="detail-item-body"><i class="fas fa-check-circle"></i> Cumprido com: <strong>${trophy.type}</strong> (${trophy.detail})</div>`; } else { bodyHTML = `<div class="detail-item-body"><i class="fas fa-times-circle"></i> Pendente</div>`; } li.innerHTML = `<div class="detail-item-header"><i class="fas ${genderIcon}"></i><span>${animalName}</span></div>${bodyHTML}`; detailList.appendChild(li); }); modalContent.appendChild(detailList); const buttonsDiv = document.createElement('div'); buttonsDiv.className = 'modal-buttons'; const closeBtn = document.createElement('button'); closeBtn.className = 'back-button'; closeBtn.textContent = 'Fechar'; closeBtn.onclick = () => closeModal('form-modal'); buttonsDiv.appendChild(closeBtn); modalContent.appendChild(buttonsDiv); modal.appendChild(modalContent); modal.style.display = 'flex'; }
 
-    Object.keys(sections).forEach(key => {
-        const sectionInfo = sections[key];
-        let total = 0, collected = 0;
-        if(sectionInfo.type === 'boolean') {
-            Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); });
-            Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; });
-        } else if (sectionInfo.type === 'boolean_super') {
-             Object.entries(sectionInfo.data).forEach(([slug, s]) => { total += (s.macho?.length || 0); if (diamondFursData[slug]?.femea?.length > 0) total += (s.femea?.length || 0); });
-            Object.values(sectionInfo.saved).forEach(s => { collected += Object.values(s).filter(c => c === true).length; });
-        } else if(sectionInfo.type === 'array') {
-             Object.values(sectionInfo.data).forEach(s => { total += (s.macho?.length || 0) + (s.femea?.length || 0); });
-            Object.values(sectionInfo.saved).forEach(s => { collected += new Set(s.map(t => t.type)).size; });
-        } else if (sectionInfo.type === 'object') {
-            Object.values(sectionInfo.data).forEach(f => total += f.length);
-            Object.values(sectionInfo.saved).forEach(s => { if(s.furs) collected += Object.values(s.furs).filter(f => f.trophies?.length > 0).length; });
-        }
-        const percentage = total > 0 ? (collected / total) * 100 : 0;
-        let medalClass = '';
-        if (percentage >= 75) medalClass = 'gold'; else if (percentage >= 50) medalClass = 'silver'; else if (percentage > 0) medalClass = 'bronze';
-        const sectionEl = document.createElement('div');
-        sectionEl.className = 'progress-section';
-        sectionEl.innerHTML = `
-            <div class="progress-header">
-                <div class="progress-title-container"><i class="fas fa-medal progress-medal ${medalClass}"></i><h3>${sectionInfo.title}</h3></div>
-                <div class="progress-label">${collected} / ${total}</div>
-            </div>
-            <div class="progress-bar-container"><div class="progress-bar-fill" style="width: ${percentage}%;"></div></div>`;
-        sectionEl.addEventListener('click', () => toggleProgressDetail(sectionEl, key));
-        panel.appendChild(sectionEl);
-    });
-}
-
-function toggleProgressDetail(sectionEl, categoryKey) {
-    const existingDetail = sectionEl.querySelector('.progress-detail-view');
-    if (existingDetail) { existingDetail.remove(); return; }
-    const detailView = document.createElement('div');
-    detailView.className = 'progress-detail-view';
-    renderProgressDetail(detailView, categoryKey);
-    sectionEl.appendChild(detailView);
-}
-
-function renderProgressDetail(detailContainer, categoryKey) {
-    const sourceData = categorias[categoryKey].items.map(slugify);
-    const savedDataForCategory = savedData[categoryKey] || {};
-    const progressByAnimal = {};
-    sourceData.forEach(slug => {
-        const animalName = items.find(i => slugify(i) === slug) || slug;
-        let total = 0, collected = 0;
-        switch(categoryKey) {
-            case 'pelagens': if(!rareFursData[slug]) return; total = (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0); collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length; break;
-            case 'diamantes': if(!diamondFursData[slug]) return; total = (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0); collected = new Set((savedDataForCategory[slug] || []).map(t => t.type)).size; break;
-            case 'greats': if(!greatsFursData[slug]) return; total = greatsFursData[slug].length; collected = Object.values(savedDataForCategory[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length; break;
-            case 'super_raros': if(!rareFursData[slug]) return; total = (rareFursData[slug].macho?.length || 0); if(diamondFursData[slug]?.femea?.length > 0) total += rareFursData[slug].femea?.length; collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length; break;
-        }
-        if (total > 0 && collected > 0) progressByAnimal[animalName] = { collected, total };
-    });
-    if (Object.keys(progressByAnimal).length === 0) { detailContainer.innerHTML = `<div class="progress-detail-item"><span class="label">Nenhum progresso nesta categoria ainda.</span></div>`; return; }
-    Object.entries(progressByAnimal).sort((a,b) => a[0].localeCompare(b[0])).forEach(([animalName, progress]) => {
-        const itemEl = document.createElement('div');
-        itemEl.className = 'progress-detail-item';
-        itemEl.innerHTML = `<span class="label">${animalName}</span> <span class="value">${progress.collected} / ${progress.total}</span>`;
-        detailContainer.appendChild(itemEl);
-    });
-}
-
-function openImageViewer(imageUrl) {
-    const modal = document.getElementById('image-viewer-modal');
-    const modalImg = document.getElementById('modal-image');
-    if (modal && modalImg) {
-        modalImg.src = imageUrl;
-        modal.style.display = "flex";
-    }
-}
-
-function closeModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (modal) {
-        modal.style.display = "none";
-    }
-}
-
-function getCompleteTrophyInventory() {
-    const inventory = [];
-
-    if (savedData.pelagens) {
-        for (const slug in savedData.pelagens) {
-            for (const furName in savedData.pelagens[slug]) {
-                if (savedData.pelagens[slug][furName] === true) {
-                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim();
-                    inventory.push({ slug, gender, type: 'Pelagem Rara', detail: pureFur });
-                }
-            }
-        }
-    }
-    if (savedData.diamantes) {
-        for (const slug in savedData.diamantes) {
-            savedData.diamantes[slug].forEach(trophy => {
-                const gender = trophy.type.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-                inventory.push({ slug, gender, type: 'Diamante', detail: `Score ${trophy.score}` });
-            });
-        }
-    }
-     if (savedData.super_raros) {
-        for (const slug in savedData.super_raros) {
-            for (const furName in savedData.super_raros[slug]) {
-                if (savedData.super_raros[slug][furName] === true) {
-                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
-                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').replace('Diamante', '').trim();
-                    inventory.push({ slug, gender, type: 'Super Raro', detail: pureFur });
-                }
-            }
-        }
-    }
-    if (savedData.greats) {
-        for (const slug in savedData.greats) {
-            if (savedData.greats[slug].furs) {
-                for (const furName in savedData.greats[slug].furs) {
-                    if (savedData.greats[slug].furs[furName].trophies?.length > 0) {
-                        savedData.greats[slug].furs[furName].trophies.forEach(trophy => {
-                             inventory.push({ slug, gender: 'macho', type: 'Great One', detail: furName });
-                        });
-                    }
-                }
-            }
-        }
-    }
-    return inventory;
-}
-
-function checkMountRequirements(requiredAnimals) {
-    const inventory = getCompleteTrophyInventory();
-    const fulfilledRequirements = [];
-    let isComplete = true;
-    const availableInventory = [...inventory];
-
-    for (const requirement of requiredAnimals) {
-        let fulfilled = false;
-        let fulfillingTrophy = null;
-        const foundIndex = availableInventory.findIndex(trophy => 
-            trophy.slug === requirement.slug && trophy.gender === requirement.gender
-        );
-
-        if (foundIndex !== -1) {
-            fulfilled = true;
-            fulfillingTrophy = availableInventory[foundIndex];
-            availableInventory.splice(foundIndex, 1);
-        } else {
-            isComplete = false;
-        }
-        
-        fulfilledRequirements.push({
-            met: fulfilled,
-            requirement: requirement,
-            trophy: fulfillingTrophy
-        });
-    }
-    return { isComplete, fulfilledRequirements };
-}
-
-function renderMultiMountsView(container) {
-    container.innerHTML = '';
-    const grid = document.createElement('div');
-    grid.className = 'mounts-grid';
-    container.appendChild(grid);
-
-    const sortedMounts = Object.entries(multiMountsData).sort((a, b) => a[1].name.localeCompare(b[1].name));
-
-    sortedMounts.forEach(([mountKey, mount]) => {
-        const status = checkMountRequirements(mount.animals);
-        const progressCount = status.fulfilledRequirements.filter(r => r.met).length;
-        
-        const card = document.createElement('div');
-        card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
-        card.dataset.mountKey = mountKey;
-        
-        let animalsHTML = '<div class="mount-card-animals">';
-        mount.animals.forEach(animal => {
-            animalsHTML += `<img src="animais/${animal.slug}.png" title="${animal.slug}" onerror="this.style.display='none'">`;
-        });
-        animalsHTML += '</div>';
-
-        card.innerHTML = `
-            <div class="mount-card-header">
-                <h3>${mount.name}</h3>
-                <div class="mount-progress">${progressCount} / ${mount.animals.length}</div>
-            </div>
-            ${animalsHTML}
-            ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i></div>' : ''}
-        `;
-        
-        card.addEventListener('click', () => renderMultiMountDetailModal(mountKey));
-        grid.appendChild(card);
-    });
-}
-
-function renderMultiMountDetailModal(mountKey) {
-    const mount = multiMountsData[mountKey];
-    if (!mount) return;
-
-    const status = checkMountRequirements(mount.animals);
-    const modal = document.getElementById('form-modal');
-    modal.innerHTML = '';
-    modal.className = 'modal-overlay form-modal';
-
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content-box';
-    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Detalhes: ${mount.name}</h3>`;
-
-    const detailList = document.createElement('ul');
-    detailList.className = 'mount-detail-list';
-
-    status.fulfilledRequirements.forEach(fulfillment => {
-        const req = fulfillment.requirement;
-        const trophy = fulfillment.trophy;
-        const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
-        const genderIcon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus';
-        
-        const li = document.createElement('li');
-        li.className = 'mount-detail-item';
-
-        let bodyHTML = '';
-        if (fulfillment.met) {
-            bodyHTML = `<div class="detail-item-body"><i class="fas fa-check-circle"></i> Cumprido com: <strong>${trophy.type}</strong> (${trophy.detail})</div>`;
-        } else {
-            bodyHTML = `<div class="detail-item-body"><i class="fas fa-times-circle"></i> Pendente</div>`;
-        }
-        
-        li.innerHTML = `
-            <div class="detail-item-header">
-                <i class="fas ${genderIcon}"></i>
-                <span>${animalName}</span>
-            </div>
-            ${bodyHTML}
-        `;
-        detailList.appendChild(li);
-    });
-
-    modalContent.appendChild(detailList);
-    
-    const buttonsDiv = document.createElement('div');
-    buttonsDiv.className = 'modal-buttons';
-    const closeBtn = document.createElement('button');
-    closeBtn.className = 'back-button';
-    closeBtn.textContent = 'Fechar';
-    closeBtn.onclick = () => closeModal('form-modal');
-    buttonsDiv.appendChild(closeBtn);
-    modalContent.appendChild(buttonsDiv);
-    
-    modal.appendChild(modalContent);
-    modal.style.display = 'flex';
-}
+// --- FUNÇÕES CONTADOR DE GRIND ---
 
 function renderGrindHubView(container) {
     container.innerHTML = `<div class="grind-hub-container"></div>`;
@@ -1170,7 +916,18 @@ function renderGrindCounterView(sessionId) {
         return;
     }
 
-    const { animalSlug, reserveKey, counts } = session;
+    // Garante que a estrutura de dados esteja correta
+    const counts = {
+        total: session.counts.total || 0,
+        diamonds: session.counts.diamonds || 0,
+        trolls: session.counts.trolls || 0,
+        rares: session.counts.rares || [],
+        super_rares: session.counts.super_rares || [],
+        great_ones: session.counts.great_ones || [],
+    };
+    session.counts = counts;
+
+    const { animalSlug, reserveKey } = session;
     const mainContent = document.querySelector('.main-content');
     const container = mainContent.querySelector('.content-container');
     const animalName = items.find(item => slugify(item) === animalSlug);
@@ -1197,43 +954,49 @@ function renderGrindCounterView(sessionId) {
                 <div class="grind-counter-item diamond" data-type="diamonds">
                     <div class="grind-counter-header"><i class="fas fa-gem"></i><span>Diamonds</span></div>
                     <div class="grind-counter-body">
-                        <span class="grind-counter-value">${counts.diamonds || 0}</span>
-                        <button class="grind-counter-add-btn"><i class="fas fa-plus"></i></button>
+                        <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="grind-counter-value">${counts.diamonds}</span>
+                        <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
                 <div class="grind-counter-item rare" data-type="rares" data-detailed="true">
                     <div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div>
                     <div class="grind-counter-body">
-                        <span class="grind-counter-value">${counts.rares?.length || 0}</span>
-                        <button class="grind-counter-add-btn"><i class="fas fa-plus"></i></button>
+                        <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="grind-counter-value">${counts.rares.length}</span>
+                        <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
                 <div class="grind-counter-item troll" data-type="trolls">
                     <div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div>
                     <div class="grind-counter-body">
-                        <span class="grind-counter-value">${counts.trolls || 0}</span>
-                        <button class="grind-counter-add-btn"><i class="fas fa-plus"></i></button>
+                         <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="grind-counter-value">${counts.trolls}</span>
+                        <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
                 <div class="grind-counter-item great-one" data-type="great_ones" data-detailed="true">
                     <div class="grind-counter-header"><i class="fas fa-crown"></i><span>Great One</span></div>
                     <div class="grind-counter-body">
-                        <span class="grind-counter-value">${counts.great_ones?.length || 0}</span>
-                        <button class="grind-counter-add-btn"><i class="fas fa-plus"></i></button>
+                        <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="grind-counter-value">${counts.great_ones.length}</span>
+                        <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
                 <div class="grind-counter-item super-rare" data-type="super_rares" data-detailed="true">
                     <div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div>
                     <div class="grind-counter-body">
-                        <span class="grind-counter-value">${counts.super_rares?.length || 0}</span>
-                        <button class="grind-counter-add-btn"><i class="fas fa-plus"></i></button>
+                        <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="grind-counter-value">${counts.super_rares.length}</span>
+                        <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
                 <div class="grind-counter-item total-kills" data-type="total">
                     <div class="grind-counter-header"><i class="fas fa-crosshairs"></i><span>Total de Abates</span></div>
                     <div class="grind-counter-body">
-                        <span class="grind-counter-value">${counts.total || 0}</span>
-                        <button class="grind-counter-add-btn"><i class="fas fa-plus"></i></button>
+                        <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="grind-counter-value" id="total-kills-value">${counts.total}</span>
+                        <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
             </div>
@@ -1241,25 +1004,74 @@ function renderGrindCounterView(sessionId) {
         </div>
     `;
 
-    container.querySelectorAll('.grind-counter-add-btn').forEach(button => {
+    // Lógica para todos os botões (+ e -)
+    container.querySelectorAll('.grind-counter-btn').forEach(button => {
         button.addEventListener('click', () => {
+            const isIncrease = button.classList.contains('increase');
             const counterItem = button.closest('.grind-counter-item');
             const type = counterItem.dataset.type;
             const isDetailed = counterItem.dataset.detailed === 'true';
             
-            if (isDetailed) {
-                openGrindDetailModal(sessionId, type);
-            } else {
-                const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
-                if (currentSession) {
+            const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
+            if (!currentSession) return;
+
+            if (isIncrease) {
+                if (isDetailed) {
+                    openGrindDetailModal(sessionId, type);
+                } else {
                     currentSession.counts[type]++;
-                    saveData(savedData);
-                    renderGrindCounterView(sessionId);
+                }
+            } else { // Decrease
+                if (isDetailed) {
+                    if (currentSession.counts[type].length > 0) {
+                        const lastItem = currentSession.counts[type][currentSession.counts[type].length - 1];
+                        if (confirm(`Tem certeza que deseja remover o último item registrado: "${lastItem.variation}"?`)) {
+                            currentSession.counts[type].pop();
+                        }
+                    }
+                } else {
+                    if (currentSession.counts[type] > 0) {
+                        currentSession.counts[type]--;
+                    }
                 }
             }
+            saveData(savedData);
+            renderGrindCounterView(sessionId);
         });
     });
 
+    // Lógica para editar o total de abates diretamente
+    const totalKillsValue = container.querySelector('#total-kills-value');
+    if (totalKillsValue) {
+        totalKillsValue.addEventListener('click', () => {
+            const body = totalKillsValue.parentElement;
+            if (body.querySelector('input')) return;
+
+            const currentTotal = session.counts.total || 0;
+            body.innerHTML = `<input type="number" class="grind-total-input" value="${currentTotal}">`;
+            
+            const input = body.querySelector('.grind-total-input');
+            input.focus();
+            input.select();
+
+            const saveNewTotal = () => {
+                const newValue = parseInt(input.value, 10);
+                if (!isNaN(newValue) && newValue >= 0) {
+                    session.counts.total = newValue;
+                    saveData(savedData);
+                }
+                renderGrindCounterView(sessionId);
+            };
+
+            input.addEventListener('blur', saveNewTotal);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') saveNewTotal();
+                else if (e.key === 'Escape') renderGrindCounterView(sessionId);
+            });
+        });
+    }
+
+    // Lógica para o botão de excluir
     container.querySelector('#delete-grind-btn').addEventListener('click', () => {
         if(confirm(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}? Esta ação não pode ser desfeita.`)) {
             const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId);
