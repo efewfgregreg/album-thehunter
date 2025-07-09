@@ -55,7 +55,8 @@
         .nav-card:hover { transform: translateY(-10px) scale(1.03); background-color: rgba(64, 68, 75, 0.9); color: var(--primary-color); border-color: var(--primary-color); box-shadow: 0 0 25px rgba(0, 188, 212, 0.4); }
         
         /* --- GRIDES DE CARDS GERAIS --- */
-        .album-grid, .fur-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .album-grid, .fur-grid, .mounts-grid, .reserves-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+        .reserves-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
         
         /* ESTILO PARA CARD DE ANIMAL */
         .animal-card { background: linear-gradient(145deg, #383c4a, #2c2f33); border: 1px solid #4a5568; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); }
@@ -69,6 +70,8 @@
         
         /* --- ESTILO PARA CARDS DE DETALHES --- */
         .fur-card { background: linear-gradient(145deg, #2c2f33, #232529); box-shadow: 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; text-align: center; transition: all 0.3s ease; border: 2px solid transparent; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; position: relative; }
+        .fur-card:hover .fullscreen-btn { opacity: 1; }
+        .fullscreen-btn { position: absolute; top: 8px; right: 8px; background-color: rgba(0, 0, 0, 0.6); color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; line-height: 28px; opacity: 0; transition: opacity 0.2s ease-in-out; z-index: 10; }
         .fur-card.incomplete img { filter: grayscale(80%) brightness(0.6); }
         .fur-card.completed:not(.trophy-frame) { border-color: var(--gold-color); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); }
 
@@ -79,6 +82,19 @@
         .modal-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
         #grind-detail-modal-select { width: 100%; padding: 10px; background: var(--bg-color); border: 1px solid var(--border-color); color: var(--text-color); border-radius: 4px; font-size: 1rem; }
         
+        /* --- ESTILOS RESERVAS --- */
+        .reserve-card { height: 180px; position: relative; border-radius: 8px; overflow: hidden; cursor: pointer; display: flex; flex-direction: column; justify-content: space-between; border: 2px solid transparent; transition: all 0.3s ease; }
+        .reserve-card:hover { transform: scale(1.03); border-color: var(--primary-color); }
+        .reserve-card-bg { position: absolute; top:0; left:0; width:100%; height:100%; background-size: cover; background-position: center; transition: transform 0.4s ease; }
+        .reserve-card:hover .reserve-card-bg { transform: scale(1.1); }
+        .reserve-card-overlay { position: absolute; top:0; left:0; width:100%; height:100%; background: linear-gradient(to top, rgba(0,0,0,0.9) 20%, rgba(0,0,0,0.2) 60%); }
+        .reserve-card-content { position: relative; z-index: 2; padding: 15px; display: flex; flex-direction: column; height: 100%; justify-content: flex-end; }
+        
+        /* --- ESTILOS MONTAGENS --- */
+        .mounts-grid { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+        .mount-card { background: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 15px; transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer; }
+        .mount-card:hover { transform: translateY(-5px); border-color: var(--primary-color); }
+
         /* --- ESTILOS HUB DE GRIND --- */
         .grind-hub-container { display: flex; flex-direction: column; gap: 40px; }
         .new-grind-btn { background: linear-gradient(45deg, var(--primary-color), #00d4c3); color: var(--bg-color); padding: 25px; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; font-family: var(--font-headings); text-transform: uppercase; letter-spacing: 2px; border: none; }
@@ -88,65 +104,18 @@
         .existing-grinds-title { font-family: var(--font-headings); font-size: 1.8rem; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin: 0; }
         .existing-grinds-title i { margin-right: 10px; color: var(--primary-color); }
         .no-grinds-message { text-align: center; color: var(--text-color-muted); font-style: italic; grid-column: 1 / -1; padding: 40px; background-color: rgba(0,0,0,0.2); border-radius: 8px; }
-        .grinds-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; }
-        
-        /* NOVO DESIGN DO CARD DE SESSÃO DE GRIND */
-        .grind-card {
-            background-color: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 180px;
-        }
-        .grind-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-color);
-            box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2);
-        }
-        .grind-card-bg-silhouette {
-            position: absolute;
-            right: -20px;
-            bottom: -10px;
-            height: 80%;
-            width: auto;
-            opacity: 0.05;
-            filter: invert(1);
-            transition: all 0.3s ease;
-        }
-        .grind-card:hover .grind-card-bg-silhouette {
-            opacity: 0.1;
-            transform: scale(1.05);
-        }
+        .grinds-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+        .grind-card { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 20px; position: relative; overflow: hidden; cursor: pointer; transition: all 0.3s ease; display: flex; flex-direction: column; justify-content: space-between; min-height: 180px; }
+        .grind-card:hover { transform: translateY(-5px); border-color: var(--primary-color); box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2); }
+        .grind-card-bg-silhouette { position: absolute; right: -20px; bottom: -10px; height: 80%; width: auto; opacity: 0.05; filter: invert(1); transition: all 0.3s ease; }
+        .grind-card:hover .grind-card-bg-silhouette { opacity: 0.1; transform: scale(1.05); }
         .grind-card-content { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; }
-        .grind-card-header { margin-bottom: auto; } /* Empurra as estatísticas para baixo */
-        .grind-card-animal-name {
-            font-family: var(--font-headings);
-            font-size: 2rem;
-            color: var(--text-color);
-            display: block;
-            line-height: 1.1;
-            text-transform: uppercase;
-        }
-        .grind-card-reserve-name {
-            font-size: 0.9rem;
-            color: var(--text-color-muted);
-        }
+        .grind-card-header { margin-bottom: auto; }
+        .grind-card-animal-name { font-family: var(--font-headings); font-size: 2rem; color: var(--text-color); display: block; line-height: 1.1; text-transform: uppercase; }
+        .grind-card-reserve-name { font-size: 0.9rem; color: var(--text-color-muted); }
         .grind-card-reserve-name i { margin-right: 4px; }
-        .grind-card-stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid var(--border-color);
-        }
+        .grind-card-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
         .grind-stat { text-align: center; }
         .grind-stat i { font-size: 1.2rem; display: block; margin-bottom: 5px; }
         .grind-stat span { font-size: 1.5rem; font-family: var(--font-headings); font-weight: bold; }
@@ -162,29 +131,23 @@
         .grind-header-info span { font-size: 1.1rem; color: var(--text-color-muted); }
         .grind-header-info span i { margin-right: 5px; }
         .grind-animal-icon { width: 80px; height: 80px; filter: invert(1); }
-
         .counters-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; width: 100%; max-width: 1200px; }
         .grind-counter-item { background-color: var(--surface-color); border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; text-align: center; }
         .grind-counter-item.total-kills { grid-column: 1 / -1; background-color: #1e2124; }
         .grind-counter-header { display: flex; align-items: center; justify-content: center; gap: 10px; font-family: var(--font-headings); font-size: 1.2rem; color: var(--text-color-muted); margin-bottom: 15px; }
         .grind-counter-header i { font-size: 1.5rem; }
         .grind-counter-body { background-color: rgba(0,0,0,0.2); border-radius: 6px; padding: 10px; display: flex; align-items: center; justify-content: space-between; }
-        
         .grind-counter-value { font-size: 2.2rem; font-weight: bold; font-family: var(--font-headings); flex-grow: 1; cursor: pointer; }
-        
         .grind-counter-btn { background-color: var(--border-color); color: var(--text-color); border: none; width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer; transition: all 0.2s ease; }
         .grind-counter-btn.increase:hover { background-color: var(--primary-color); color: #111; }
         .grind-counter-btn.decrease:hover { background-color: #d9534f; color: #fff; }
-        
-        .grind-total-input { width: 100%; font-size: 2.2rem; text-align: center; background-color: var(--bg-color); border: 1px solid var(--primary-color); color: var(--text-color); border-radius: 4px; font-family: var(--font-headings); padding: 0; }
+        .grind-total-input { width: auto; flex-grow: 1; font-size: 2.2rem; text-align: center; background-color: var(--bg-color); border: 1px solid var(--primary-color); color: var(--text-color); border-radius: 4px; font-family: var(--font-headings); padding: 0; margin: 0 10px; }
         .grind-total-input:focus { outline: none; }
-
         .diamond i { color: var(--primary-color); }
         .rare i { color: #d69e3a; }
         .troll i { color: #a07a53; }
         .super-rare i { color: #e8bd4a; text-shadow: 0 0 5px #ffc107; }
         .great-one i { color: var(--gold-color); }
-
         #delete-grind-btn { background-color: #d9534f; border-color: #d43f3a; margin-top: 20px; align-self: center; }
         #delete-grind-btn:hover { background-color: #c9302c; border-color: #ac2925; color: #fff; }
     </style>
