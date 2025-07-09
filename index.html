@@ -319,6 +319,42 @@
             padding-bottom: 5px;
         }
 
+        /* --- ESTILOS MODAL DETALHES DE MONTAGEM --- */
+        .mount-detail-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .mount-detail-item {
+            background-color: var(--bg-color);
+            border-radius: 6px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+        }
+        .detail-item-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: var(--font-headings);
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+        .detail-item-header .fa-mars { color: #6495ED; } 
+        .detail-item-header .fa-venus { color: #FF69B4; }
+        .detail-item-body {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-color-muted);
+            padding-left: 25px; 
+        }
+        .detail-item-body .fa-check-circle { color: #28a745; } 
+        .detail-item-body .fa-times-circle { color: #dc3545; }
+
     </style>
 </head>
 <body>
