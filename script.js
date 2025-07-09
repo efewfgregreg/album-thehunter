@@ -81,7 +81,9 @@ function renderNavigationHub() {
                 case 'diamonds':
                     renderAnimalListView('Diamantes', diamondFursData, 'diamonds');
                     break;
-                // Adicione outros 'cases' aqui conforme for implementando as seções
+                case 'greats':
+                    renderGreatsView(); // Chama a nova função
+                    break;
                 default: 
                     appContainer.innerHTML = `
                         <div class="main-content">
@@ -159,12 +161,12 @@ function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
         <div class="main-content">
             <div class="page-header">
                 <h2>${getAnimalName(animalSlug)}</h2>
-                <button class="back-button-details"><i class="fas fa-arrow-left"></i> Voltar para ${titlePrefix}</button>
+                <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar para ${titlePrefix}</button>
             </div>
             <div class="fur-grid">${cardsHTML}</div>
         </div>`;
     
-    document.querySelector('.back-button-details').addEventListener('click', () => {
+    document.querySelector('.back-button').addEventListener('click', () => {
         renderAnimalListView(titlePrefix, dataObject, category);
     });
     
@@ -186,6 +188,76 @@ function renderFurDetailsView(titlePrefix, animalSlug, dataObject, category) {
         });
     });
 }
+
+/**
+ * NOVA FUNÇÃO: Renderiza a Sala de Troféus dos Great Ones
+ */
+function renderGreatsView() {
+    let contentHTML = '';
+    // Itera sobre cada animal que pode ser um Great One
+    for (const animalSlug in greatsFursData) {
+        const animalName = getAnimalName(animalSlug);
+        const furs = greatsFursData[animalSlug];
+
+        // Cria os cards para cada tipo de pelagem do Great One
+        const furCardsHTML = furs.sort().map(furName => {
+            const imagePath = `peles/${animalSlug}/${slugify(furName)}.png`;
+            // Verifica se este Great One específico foi salvo
+            const isCompleted = savedData.greats[animalSlug] && savedData.greats[animalSlug].includes(furName);
+
+            return `
+                <div class="fur-card trophy-frame ${isCompleted ? 'completed' : 'incomplete'}" data-slug="${animalSlug}" data-fur="${furName}">
+                    <img src="${imagePath}" alt="${furName}" onerror="this.onerror=null; this.src='placeholder.png';">
+                    <div class="info-plaque">
+                        <div class="info">${furName}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Adiciona uma sub-seção para o animal
+        contentHTML += `
+            <h3 style="font-family: var(--font-headings); margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">${animalName}</h3>
+            <div class="fur-grid">${furCardsHTML}</div>
+        `;
+    }
+
+    appContainer.innerHTML = `
+        <div class="main-content">
+            <div class="page-header">
+                <h2>Sala de Troféus - Great Ones</h2>
+                <button class="back-button"><i class="fas fa-arrow-left"></i> Voltar ao Menu</button>
+            </div>
+            <div class="greats-grid">
+                ${contentHTML}
+            </div>
+        </div>
+    `;
+
+    document.querySelector('.back-button').addEventListener('click', renderNavigationHub);
+
+    // Adiciona evento de clique para marcar/desmarcar os Great Ones
+    document.querySelectorAll('.trophy-frame').forEach(card => {
+        card.addEventListener('click', () => {
+            const { slug, fur } = card.dataset;
+
+            savedData.greats = savedData.greats || {};
+            savedData.greats[slug] = savedData.greats[slug] || [];
+
+            const furIndex = savedData.greats[slug].indexOf(fur);
+
+            if (furIndex > -1) {
+                savedData.greats[slug].splice(furIndex, 1);
+            } else {
+                savedData.greats[slug].push(fur);
+            }
+            card.classList.toggle('completed');
+            card.classList.toggle('incomplete');
+            saveData(savedData);
+        });
+    });
+}
+
 
 // --- INICIALIZAÇÃO DA APLICAÇÃO ---
 document.addEventListener('DOMContentLoaded', renderNavigationHub);
