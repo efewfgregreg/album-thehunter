@@ -198,10 +198,122 @@ function renderMultiMountsView(container) { container.innerHTML = ''; const grid
 function renderMultiMountDetailModal(mountKey) { const mount = multiMountsData[mountKey]; if (!mount) return; const status = checkMountRequirements(mount.animals); const modal = document.getElementById('form-modal'); modal.innerHTML = ''; modal.className = 'modal-overlay form-modal'; const modalContent = document.createElement('div'); modalContent.className = 'modal-content-box'; modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Detalhes: ${mount.name}</h3>`; const detailList = document.createElement('ul'); detailList.className = 'mount-detail-list'; status.fulfilledRequirements.forEach(fulfillment => { const req = fulfillment.requirement; const trophy = fulfillment.trophy; const animalName = items.find(item => slugify(item) === req.slug) || req.slug; const genderIcon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus'; const li = document.createElement('li'); li.className = 'mount-detail-item'; let bodyHTML = ''; if (fulfillment.met) { bodyHTML = `<div class="detail-item-body"><i class="fas fa-check-circle"></i> Cumprido com: <strong>${trophy.type}</strong> (${trophy.detail})</div>`; } else { bodyHTML = `<div class="detail-item-body"><i class="fas fa-times-circle"></i> Pendente</div>`; } li.innerHTML = `<div class="detail-item-header"><i class="fas ${genderIcon}"></i><span>${animalName}</span></div>${bodyHTML}`; detailList.appendChild(li); }); modalContent.appendChild(detailList); const buttonsDiv = document.createElement('div'); buttonsDiv.className = 'modal-buttons'; const closeBtn = document.createElement('button'); closeBtn.className = 'back-button'; closeBtn.textContent = 'Fechar'; closeBtn.onclick = () => closeModal('form-modal'); buttonsDiv.appendChild(closeBtn); modalContent.appendChild(buttonsDiv); modal.appendChild(modalContent); modal.style.display = 'flex'; }
 
 // --- FUNÇÕES CONTADOR DE GRIND ---
-// ... (código existente inalterado) ...
+// ... (O corpo das funções não listadas abaixo permanece o mesmo) ...
 
 // --- FUNÇÕES DE MODAL e SINCRONIZAÇÃO (Alteradas) ---
-// ... (código existente inalterado) ...
+function syncTrophyToAlbum(animalSlug, rarityType, details) {
+    if (!savedData) return;
+    
+    switch(rarityType) {
+        case 'rares':
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[animalSlug]) savedData.pelagens[animalSlug] = {};
+            savedData.pelagens[animalSlug][details.variation] = true;
+            console.log(`Sincronizado: Pelagem Rara '${details.variation}' para ${animalSlug}`);
+            break;
+
+        case 'super_rares':
+            if (!savedData.super_raros) savedData.super_raros = {};
+            if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
+            const superRareKey = `${details.variation} Diamante`;
+            savedData.super_raros[animalSlug][superRareKey] = true;
+            console.log(`Sincronizado: Super Raro '${superRareKey}' para ${animalSlug}`);
+            break;
+            
+        case 'great_ones':
+            if (!savedData.greats) savedData.greats = {};
+            if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = {};
+            if (!savedData.greats[animalSlug].furs) savedData.greats[animalSlug].furs = {};
+            if (!savedData.greats[animalSlug].furs[details.variation]) {
+                savedData.greats[animalSlug].furs[details.variation] = { trophies: [] };
+            }
+            
+            const newGreatOneTrophy = {
+                date: new Date().toISOString(),
+                abates: details.grindCounts.total,
+                diamantes: details.grindCounts.diamonds, // CORRIGIDO: Usa o número, não o tamanho do array
+                pelesRaras: details.grindCounts.rares.length
+            };
+            
+            savedData.greats[animalSlug].furs[details.variation].trophies.push(newGreatOneTrophy);
+            console.log(`Sincronizado: Great One '${details.variation}' para ${animalSlug} com detalhes do grind.`);
+            break;
+
+        case 'diamonds':
+            // Esta sincronização foi removida conforme solicitado, o contador é simples.
+            break;
+    }
+}
+
+function openGrindDetailModal(sessionId, rarityType) {
+    const session = savedData.grindSessions.find(s => s.id === sessionId);
+    if (!session) return;
+
+    const { animalSlug } = session;
+    let options = [];
+    let title = "Registrar ";
+
+    switch (rarityType) {
+        case 'rares':
+        case 'super_rares':
+            title += rarityType === 'rares' ? "Pelagem Rara" : "Super Raro";
+            const furData = rareFursData[animalSlug];
+            if (furData) {
+                if (furData.macho) furData.macho.forEach(fur => options.push(`Macho ${fur}`));
+                if (furData.femea) furData.femea.forEach(fur => options.push(`Fêmea ${fur}`));
+            }
+            break;
+        case 'great_ones':
+            title += "Great One";
+            const greatData = greatsFursData[animalSlug];
+            if (greatData) {
+                options = greatData;
+            }
+            break;
+    }
+    
+    if (options.length === 0) {
+        alert(`Nenhuma variação de '${rarityType.replace('_', ' ')}' encontrada para este animal.`);
+        return;
+    }
+
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = `
+        <div class="modal-content-box">
+            <h3>${title}</h3>
+            <select id="grind-detail-modal-select">
+                ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+            </select>
+            <div class="modal-buttons">
+                <button id="grind-detail-cancel" class="back-button">Cancelar</button>
+                <button id="grind-detail-save" class="back-button" style="background-color: var(--primary-color); color: #111;">Salvar</button>
+            </div>
+        </div>
+    `;
+
+    modal.querySelector('#grind-detail-cancel').onclick = () => closeModal('form-modal');
+    modal.querySelector('#grind-detail-save').onclick = () => {
+        const select = document.getElementById('grind-detail-modal-select');
+        const selectedValue = select.value;
+
+        const logDetails = { 
+            variation: selectedValue, 
+            grindCounts: session.counts 
+        };
+        const newLog = { id: Date.now(), variation: selectedValue, date: new Date().toISOString() };
+
+        if (!session.counts[rarityType]) session.counts[rarityType] = [];
+        session.counts[rarityType].push(newLog);
+
+        syncTrophyToAlbum(animalSlug, rarityType, logDetails);
+        
+        saveData(savedData);
+        closeModal('form-modal');
+        renderGrindCounterView(sessionId);
+    };
+
+    modal.style.display = 'flex';
+}
 
 document.addEventListener('DOMContentLoaded', () => {
     appContainer = document.getElementById('app-container');
