@@ -311,9 +311,18 @@ function renderGrindHubView(container) {
 }
 function renderNewGrindAnimalSelection(container) {
     container.innerHTML = '<h2>Selecione um Animal para o Novo Grind</h2>';
+
+    // Cria o campo de busca
+    const filterInput = document.createElement('input');
+    filterInput.type = 'text';
+    filterInput.className = 'filter-input'; // Reutiliza a classe de estilo existente
+    filterInput.placeholder = 'Buscar animal...';
+    container.appendChild(filterInput);
+
     const albumGrid = document.createElement('div');
     albumGrid.className = 'album-grid';
     container.appendChild(albumGrid);
+
     items.sort((a, b) => a.localeCompare(b)).forEach(name => {
         const slug = slugify(name);
         const card = document.createElement('div');
@@ -321,6 +330,16 @@ function renderNewGrindAnimalSelection(container) {
         card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
         card.addEventListener('click', () => renderReserveSelectionForGrind(container, slug));
         albumGrid.appendChild(card);
+    });
+
+    // Adiciona a lógica para filtrar os resultados em tempo real
+    filterInput.addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        albumGrid.querySelectorAll('.animal-card').forEach(card => {
+            const animalName = card.querySelector('.info').textContent.toLowerCase();
+            // Mostra o card se o nome do animal incluir o termo buscado, senão, esconde.
+            card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
+        });
     });
 }
 function renderReserveSelectionForGrind(container, animalSlug) {
