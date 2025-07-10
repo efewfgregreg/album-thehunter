@@ -11,6 +11,7 @@ const firebaseConfig = {
   measurementId: "G-3G5VBWBEDL"
 };
 
+
 // Inicializa os serviços do Firebase que vamos usar
 const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth(); // Serviço de Autenticação
