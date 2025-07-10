@@ -13,7 +13,7 @@
         :root {
             --bg-color: #181a1b;
             --surface-color: #2c2f33;
-            --primary-color: #00bcd4;
+            --primary-color: #00bcd4; /* Ciano original, mas não mais usado para progresso */
             --border-color: #4a5568;
             --text-color: #e6e6e6;
             --text-color-muted: #99aab5;
@@ -22,6 +22,10 @@
             --silver-color: #c0c0c0;
             --font-headings: 'Oswald', sans-serif;
             --font-body: 'Nunito Sans', sans-serif;
+
+            /* Novas cores para o progresso dos cards */
+            --completed-color: #4CAF50; /* Um verde bonito */
+            --inprogress-color: #FFC107; /* Um amarelo/laranja */
         }
 
         * { 
@@ -71,15 +75,15 @@
         .animal-card:hover img { transform: scale(1.1); filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%) drop-shadow(0 0 8px rgba(255, 255, 255, 0.7)); }
         .animal-card .info { font-family: var(--font-headings); font-size: 1rem; color: var(--text-color); font-weight: 700; }
         
-        /* Completed state (100% complete) */
-        .animal-card.completed { border-color: var(--gold-color); box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
-        .animal-card.completed img { filter: invert(85%) sepia(30%) saturate(500%) hue-rotate(10deg) brightness(105%) contrast(101%) drop-shadow(0 0 8px var(--gold-color)); }
-        .animal-card.completed::after { font-family: "Font Awesome 6 Free"; content: "\f058"; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--gold-color); background-color: var(--surface-color); border-radius: 50%; text-shadow: 0 0 8px rgba(0, 0, 0, 0.9); }
+        /* Completed state (100% complete) - VERDE */
+        .animal-card.completed { border-color: var(--completed-color); box-shadow: 0 0 20px rgba(76, 175, 80, 0.5); }
+        .animal-card.completed img { filter: invert(85%) sepia(30%) saturate(500%) hue-rotate(100deg) brightness(95%) contrast(101%) drop-shadow(0 0 8px var(--completed-color)); }
+        .animal-card.completed::after { font-family: "Font Awesome 6 Free"; content: "\f058"; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--completed-color); background-color: var(--surface-color); border-radius: 50%; text-shadow: 0 0 8px rgba(0, 0, 0, 0.9); }
         
-        /* In Progress state (at least one, but not all) */
-        .animal-card.inprogress { border-color: var(--primary-color); }
-        .animal-card.inprogress img { filter: invert(65%) sepia(74%) saturate(1450%) hue-rotate(145deg) brightness(95%) contrast(101%) drop-shadow(0 0 5px var(--primary-color)); }
-        .animal-card.inprogress::after { font-family: "Font Awesome 6 Free"; content: "\f110"; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--primary-color); background-color: var(--surface-color); border-radius: 50%; text-shadow: 0 0 8px rgba(0, 0, 0, 0.9); animation: spin 2s linear infinite; }
+        /* In Progress state (at least one, but not all) - AMARELO */
+        .animal-card.inprogress { border-color: var(--inprogress-color); }
+        .animal-card.inprogress img { filter: invert(85%) sepia(30%) saturate(500%) hue-rotate(30deg) brightness(95%) contrast(101%) drop-shadow(0 0 5px var(--inprogress-color)); }
+        .animal-card.inprogress::after { font-family: "Font Awesome 6 Free"; content: "\f110"; font-weight: 900; position: absolute; top: 10px; right: 10px; font-size: 1.5rem; color: var(--inprogress-color); background-color: var(--surface-color); border-radius: 50%; text-shadow: 0 0 8px rgba(0, 0, 0, 0.9); animation: spin 2s linear infinite; }
         
         @keyframes spin {
             0% { transform: rotate(0deg); }
@@ -97,17 +101,17 @@
         .fur-card.incomplete:hover img { filter: grayscale(50%) brightness(0.8); }
         .fur-card.incomplete .info { color: var(--text-color-muted); }
         /* Completed state for detail cards */
-        .dossier-content .fur-card.completed, .main-content .fur-grid .fur-card.completed { border-color: var(--primary-color); box-shadow: 0 0 15px rgba(0, 188, 212, 0.3); }
-        .dossier-content .fur-card.completed .info, .main-content .fur-grid .fur-card.completed .info { color: var(--primary-color); }
-        .main-content .fur-grid .fur-card.completed:not(.trophy-frame) { border-color: var(--gold-color); box-shadow: 0 0 15px rgba(255, 215, 0, 0.3), 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(255,215,0,0.1); }
+        .dossier-content .fur-card.completed, .main-content .fur-grid .fur-card.completed { border-color: var(--completed-color); box-shadow: 0 0 15px rgba(76, 175, 80, 0.3); }
+        .dossier-content .fur-card.completed .info, .main-content .fur-grid .fur-card.completed .info { color: var(--completed-color); }
+        .main-content .fur-grid .fur-card.completed:not(.trophy-frame) { border-color: var(--completed-color); box-shadow: 0 0 15px rgba(76, 175, 80, 0.3), 0 4px 15px rgba(0,0,0,0.2), inset 0 1px 2px rgba(76, 175, 80, 0.1); }
         .main-content .fur-grid .fur-card.completed:not(.trophy-frame) .info { color: var(--text-color); }
         .fur-card .info-header { margin-bottom: 10px; }
         .fur-card .gender-tag { font-size: 0.75rem; padding: 2px 6px; border-radius: 4px; background-color: rgba(0,0,0,0.2); color: var(--text-color-muted); font-weight: bold; text-transform: uppercase; }
-        .fur-card.completed .gender-tag { background-color: rgba(255, 215, 0, 0.1); color: var(--gold-color); }
+        .fur-card.completed .gender-tag { background-color: rgba(76, 175, 80, 0.1); color: var(--completed-color); }
         .fur-card .score-container { margin-top: auto; padding: 8px; border-radius: 6px; background-color: rgba(0,0,0,0.2); transition: background-color 0.3s ease; cursor: pointer; }
         .fur-card:hover .score-container { background-color: rgba(0,0,0,0.4); }
         .fur-card .score-add-btn { font-weight: bold; color: var(--text-color-muted); font-size: 0.9rem; }
-        .fur-card .score-display { font-size: 1.2rem; font-weight: bold; color: var(--gold-color); }
+        .fur-card .score-display { font-size: 1.2rem; font-weight: bold; color: var(--gold-color); } /* Mantém dourado para o score */
         .fur-card .score-display .fa-trophy { margin-right: 8px; font-size: 1rem; opacity: 0.8; }
         .fur-card .score-input { width: 100%; background-color: var(--bg-color); border: 1px solid var(--gold-color); color: var(--gold-color); text-align: center; font-size: 1.2rem; border-radius: 4px; padding: 4px; font-family: var(--font-headings); }
         .fur-card .score-input:focus { outline: none; box-shadow: 0 0 10px rgba(255, 215, 0, 0.5); }
@@ -175,7 +179,7 @@
         .dossier-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .dossier-tab .fa-crown { color: var(--gold-color); }
         
-        /* --- ESTILOS PAINEL DE PROGRESSO --- */
+        /* --- ESTILOS PAINEL DE PROGESSO --- */
         .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
         .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://www.transparenttextures.com/patterns/leather.png); background-color: #3a3834; padding: 20px; border-radius: 8px; border: 1px solid #5a554a; }
         .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
