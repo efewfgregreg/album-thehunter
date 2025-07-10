@@ -159,10 +159,8 @@ function renderDiamondsDetailView(container, name, slug) {
                 if (!savedData.diamantes) savedData.diamantes = {};
                 if (!Array.isArray(savedData.diamantes[slug])) savedData.diamantes[slug] = [];
 
-                // Remove o troféu antigo, se existir
                 let otherTrophies = savedData.diamantes[slug].filter(t => t.type !== fullTrophyName);
 
-                // Se a pontuação for válida e maior que 0, adiciona o novo troféu
                 if (!isNaN(scoreValue) && scoreValue > 0) {
                     otherTrophies.push({ id: Date.now(), type: fullTrophyName, score: scoreValue });
                 }
@@ -271,7 +269,7 @@ function openGreatsTrophyModal(animalName, slug, furName) {
 function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
     card.classList.remove('completed', 'inprogress', 'incomplete');
-    let status = 'incomplete'; // Status padrão
+    let status = 'incomplete';
 
     if (tabKey === 'greats') {
         const animalData = savedData.greats?.[slug] || {};
@@ -300,15 +298,15 @@ function updateCardAppearance(card, slug, tabKey) {
     } else if (tabKey === 'super_raros') {
         const collectedSuperRares = savedData.super_raros?.[slug] || {};
         const collectedCount = Object.values(collectedSuperRares).filter(v => v === true).length;
-
         const speciesFurs = rareFursData[slug];
         if (speciesFurs) {
             let totalCount = 0;
-            if (speciesFurs.macho) totalCount += speciesFurs.macho.length;
+            if (speciesFurs.macho) {
+                totalCount += speciesFurs.macho.length;
+            }
             if (speciesFurs.femea && diamondFursData[slug]?.femea?.length > 0) {
                 totalCount += speciesFurs.femea.length;
             }
-            
             if (totalCount > 0 && collectedCount >= totalCount) {
                 status = 'completed';
             } else if (collectedCount > 0) {
@@ -318,11 +316,9 @@ function updateCardAppearance(card, slug, tabKey) {
     } else if (tabKey === 'pelagens') {
         const collectedData = savedData.pelagens?.[slug] || {};
         const collectedCount = Object.values(collectedData).filter(v => v === true).length;
-
         const speciesData = rareFursData[slug];
         if (speciesData) {
             const totalCount = (speciesData.macho?.length || 0) + (speciesData.femea?.length || 0);
-
             if (totalCount > 0 && collectedCount >= totalCount) {
                 status = 'completed';
             } else if (collectedCount > 0) {
@@ -638,7 +634,7 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
             console.log(`Sincronizado: Pelagem Rara '${details.variation}' para ${animalSlug}`);
             break;
 
-        case 'super_rares':
+        case 'super_raros':
             if (!savedData.super_raros) savedData.super_raros = {};
             if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
             const superRareKey = `${details.variation} Diamante`;
