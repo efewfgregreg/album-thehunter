@@ -627,7 +627,7 @@ function renderDiamondsDetailView(container, name, slug) {
 function renderGreatsDetailView(container, animalName, slug) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
-    furGrid.className = 'greats-grid fur-grid';
+    furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
 
     const fursInfo = greatsFursData[slug];
@@ -753,11 +753,13 @@ function updateCardAppearance(card, slug, tabKey) {
         case 'greats':
             const animalData = savedData.greats?.[slug] || {};
             checkAndSetGreatOneCompletion(slug, animalData); // Garante que o status 'completo' seja atualizado
+            const totalGreatFurs = greatsFursData[slug]?.length || 0; // Total de pelagens Great One para este animal
+
             if (animalData.completo) {
                 status = 'completed';
             } else {
                 const collectedFurs = animalData.furs ? Object.values(animalData.furs).filter(fur => fur.trophies?.length > 0).length : 0;
-                if (collectedFurs > 0) {
+                if (collectedFurs > 0 && collectedFurs < totalGreatFurs) { // Em progresso se coletou alguns, mas não todos
                     status = 'inprogress';
                 }
             }
@@ -765,7 +767,7 @@ function updateCardAppearance(card, slug, tabKey) {
 
         case 'diamantes':
             const collectedDiamondTrophies = savedData.diamantes?.[slug] || [];
-            collectedCount = new Set(collectedDiamondTrophies.map(t => t.type)).size;
+            collectedCount = new Set(collectedDiamondTrophies.map(t => t.type)).size; // Conta tipos únicos de diamantes coletados
             
             const speciesDiamondData = diamondFursData[slug];
             if (speciesDiamondData) {
@@ -786,7 +788,6 @@ function updateCardAppearance(card, slug, tabKey) {
             const speciesDiamondFursForSuper = diamondFursData[slug];
             
             if (speciesRareFursForSuper) {
-                // Calcula o total de super raros possíveis para este animal
                 let possibleSuperRares = 0;
                 if (speciesRareFursForSuper.macho && speciesDiamondFursForSuper?.macho) {
                     speciesRareFursForSuper.macho.forEach(rareFur => {
@@ -827,6 +828,8 @@ function updateCardAppearance(card, slug, tabKey) {
             break;
     }
     
+    // Log para depuração
+    console.log(`updateCardAppearance for ${card.querySelector('.info').textContent} (slug: ${slug}) in ${tabKey}: collected=${collectedCount}, total=${totalCount}, status=${status}`);
     card.classList.add(status);
 }
 
