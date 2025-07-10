@@ -2,13 +2,12 @@
 // ======== INICIALIZAÇÃO DO FIREBASE (COM SEUS DADOS) ========
 // =================================================================
 const firebaseConfig = {
-  apiKey: "AIzaSyD_vgZDTseipBQgo2oXJeZUyczCEzWg_8w",
+  apiKey: "AIzaSyD_vgZDTseipBQgo2oXJezUyczCEzWg_8w",
   authDomain: "album-thehunter.firebaseapp.com",
   projectId: "album-thehunter",
   storageBucket: "album-thehunter.firebasestorage.app",
   messagingSenderId: "369481100721",
-  appId: "1:369481100721:web:e5ce08c635536fb7e0a190",
-  measurementId: "G-3G5VBWBEDL"
+  appId: "1:369481100721:web:e5ce08c635536fb7e0a190"
 };
 
 // Inicializa os serviços do Firebase que vamos usar
@@ -208,7 +207,50 @@ function openGreatsTrophyModal(animalName, slug, furName) {
     modal.style.display = 'flex';
 }
 
-function updateCardAppearance(card, slug, tabKey) { if (!card) return; card.classList.remove('completed', 'inprogress', 'incomplete'); let status = 'incomplete'; if (tabKey === 'greats') { const animalData = savedData.greats?.[slug] || {}; checkAndSetGreatOneCompletion(slug, animalData); if (animalData.completo) { status = 'completed'; } else { const collectedFurs = animalData.furs ? Object.values(animalData.furs).filter(fur => fur.trophies?.length > 0).length : 0; if (collectedFurs > 0) { status = 'inprogress'; } } } else if (tabKey === 'diamantes') { const diamondTrophies = savedData.diamantes?.[slug] || []; if (diamondTrophies.length > 0) { status = 'completed'; } } else if (tabKey === 'super_raros') { const speciesFurs = rareFursData?.[slug]; if (speciesFurs) { const allPossibleSuperRares = []; if (speciesFurs.macho) speciesFurs.macho.forEach(fur => allPossibleSuperRares.push(`Macho ${fur} Diamante`)); if (diamondFursData?.[slug]?.femea?.length > 0) { speciesFurs.femea.forEach(fur => { if (diamondFursData[slug].femea.includes(fur)) { allPossibleSuperRares.push(`Fêmea ${fur} Diamante`); } }); } const collectedSuperRares = savedData.super_raros?.[slug] || {}; if (allPossibleSuperRares.some(sr => collectedSuperRares[sr] === true)) { status = 'completed'; } } } else if (tabKey === 'pelagens') { const pelagensData = savedData.pelagens?.[slug] || {}; if (Object.values(pelagensData).some(v => v === true)) { status = 'completed'; } } card.classList.add(status); }
+function updateCardAppearance(card, slug, tabKey) {
+    if (!card) return;
+    card.classList.remove('completed', 'inprogress', 'incomplete');
+    let status = 'incomplete'; // Status padrão
+
+    if (tabKey === 'greats') {
+        const animalData = savedData.greats?.[slug] || {};
+        checkAndSetGreatOneCompletion(slug, animalData);
+        if (animalData.completo) {
+            status = 'completed';
+        } else {
+            const collectedFurs = animalData.furs ? Object.values(animalData.furs).filter(fur => fur.trophies?.length > 0).length : 0;
+            if (collectedFurs > 0) {
+                status = 'inprogress';
+            }
+        }
+    } else if (tabKey === 'diamantes') {
+        const diamondTrophies = savedData.diamantes?.[slug] || [];
+        if (diamondTrophies.length > 0) {
+            status = 'completed'; 
+        }
+    } else if (tabKey === 'super_raros') {
+        const collectedSuperRares = savedData.super_raros?.[slug] || {};
+        if (Object.values(collectedSuperRares).some(v => v === true)) {
+            status = 'completed'; 
+        }
+    } else if (tabKey === 'pelagens') {
+        const collectedData = savedData.pelagens?.[slug] || {};
+        const collectedCount = Object.values(collectedData).filter(v => v === true).length;
+
+        const speciesData = rareFursData[slug];
+        if (speciesData) {
+            const totalCount = (speciesData.macho?.length || 0) + (speciesData.femea?.length || 0);
+
+            if (totalCount > 0 && collectedCount >= totalCount) {
+                status = 'completed';
+            } else if (collectedCount > 0) {
+                status = 'inprogress';
+            }
+        }
+    }
+    
+    card.classList.add(status);
+}
 
 function renderProgressView(container) {
     container.innerHTML = '';
@@ -254,8 +296,6 @@ function renderProgressView(container) {
     resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;';
     resetButton.onclick = () => {
         if (confirm('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.')) {
-            // Na Fase 2, isso também precisará apagar os dados do Firestore
-            localStorage.removeItem(saveDataKey); 
             const defaultData = getDefaultDataStructure();
             saveData(defaultData); // Salva a estrutura vazia na nuvem
             location.reload();
