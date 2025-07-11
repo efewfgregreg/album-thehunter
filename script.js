@@ -112,7 +112,7 @@ const rareFursData = {
     "caititu": { macho: ["Albino", "Melânico", "Ochre", "Leucismo"], femea: ["Albino", "Melânico", "Ochre", "Leucismo"] },
     "camurça": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "canguru_cinza_oriental": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
-    "caribu": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
+    "caribu": { macho: ["Albino", "Melânico", "Leucismo","Malhado"], femea: ["Albino", "Melânico", "Leucismo","Malhado"] },
     "carneiro_azul": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "carneiro_selvagem": { macho: ["Albino", "Malhado variação 1", "Malhado variação 2"], femea: ["Albino", "Malhado variação 1", "Malhado variação 2"] },
     "cervo_porco_indiano": { macho: ["Malhado", "Leucismo"], femea: ["Malhado", "Leucismo"] },
@@ -205,7 +205,7 @@ const rareFursData = {
     "marreca_arrebio": { macho: ["Albino", "Melânico", "malhado"], femea: ["Albino", "Melânico", "Leucismo", "malhado", "brilhante", "eritristico"] },
     "pato_carolino": { macho: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"], femea: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"] },
     "castor_norte_americano": { macho: ["Albino", "Melânico", "Leucismo","Malhado"], femea: ["Albino", "Melânico", "Leucismo","Malhado"] },
-    "caribu_da_floresta_boreal": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
+    "caribu_da_floresta_boreal": { macho: ["Albino", "Melânico", "Leucismo","Malhado"], femea: ["Albino", "Melânico", "Leucismo","Malhado"] },
     "cervo_canadense": { macho: ["Albino", "Melânico", "Leucismo", "Malhado"], femea: ["Albino", "Melânico", "Leucismo", "Malhado"] },
     "bisão_da_floresta": { macho: ["Albino", "Melânico", "Leucismo", "Malhado", "Pardo Escuro"], femea: ["Albino", "Melânico", "Leucismo","Malhado","Pardo Escuro"] }
 };
