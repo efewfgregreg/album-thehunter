@@ -387,25 +387,32 @@
             font-style: italic;
         }
         .ranking-table-container {
-            overflow-x: auto;
+            overflow-x: auto; /* Permite scroll horizontal em telas pequenas */
+            background-color: var(--surface-color); /* Fundo para o container da tabela */
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
         }
         .ranking-table {
             width: 100%;
             border-collapse: collapse;
             font-size: 0.95rem;
+            table-layout: fixed; /* Ajuda a distribuir colunas igualmente */
         }
         .ranking-table th, .ranking-table td {
             padding: 12px 15px;
             text-align: center;
+            vertical-align: middle; /* Alinha o conteúdo verticalmente */
         }
         .ranking-table thead {
             background-color: var(--surface-color);
+            border-bottom: 2px solid var(--primary-color); /* Linha divisória no cabeçalho */
         }
         .ranking-table th {
             font-family: var(--font-headings);
             letter-spacing: 1px;
             font-size: 1rem;
             color: var(--text-color-muted);
+            text-transform: uppercase;
         }
         .ranking-table th i {
             margin-right: 8px;
@@ -414,22 +421,27 @@
         .ranking-table tbody tr {
             border-bottom: 1px solid var(--border-color);
         }
+        .ranking-table tbody tr:last-child {
+            border-bottom: none; /* Remove a borda da última linha */
+        }
         .ranking-table tbody tr:nth-of-type(even) {
-            background-color: rgba(44, 47, 51, 0.5);
+            background-color: rgba(44, 47, 51, 0.5); /* Fundo mais claro para linhas pares */
         }
         .ranking-table tbody tr:hover {
             background-color: #3c3f43;
         }
         .ranking-table td[data-label="Animal"] {
-            display: flex;
+            display: flex; /* Mantém flex para alinhar imagem e texto */
             align-items: center;
             gap: 15px;
             text-align: left;
             font-weight: bold;
+            color: var(--text-color); /* Garante que o texto do animal seja visível */
         }
-        .animal-icon-table {
+        .table-animal-icon { /* Usando a classe que você já está aplicando no script */
             width: 35px;
             height: 35px;
+            object-fit: contain;
             filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%);
         }
 

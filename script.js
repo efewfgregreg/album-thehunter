@@ -546,7 +546,8 @@ function renderAnimalDossier(animalName, originReserveKey) {
         dossierTabs.querySelectorAll('.dossier-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         const tabKey = tab.dataset.key;
-        tabs[tabKey].renderFunc(dossierContent, animalName, slug);
+        // Passa o originReserveKey para a função de renderização correspondente
+        tabs[tabKey].renderFunc(dossierContent, animalName, slug, originReserveKey);
     });
     // Ativa a primeira aba por padrão
     dossierTabs.querySelector('.dossier-tab').click();
@@ -677,7 +678,7 @@ function calcularReserveProgress(reserveKey) {
 }
 
 // Renderiza a visualização de detalhes de pelagens raras
-function renderRareFursDetailView(container, name, slug) {
+function renderRareFursDetailView(container, name, slug, originReserveKey = null) { // Adicionado originReserveKey
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -707,14 +708,18 @@ function renderRareFursDetailView(container, name, slug) {
             savedData.pelagens[slug][furInfo.displayName] = !currentState;
             saveData(savedData);
             // Re-renderiza a visualização para que a aparência do card principal seja atualizada
-            renderSimpleDetailView(name, 'pelagens');
+            if (originReserveKey) {
+                renderAnimalDossier(name, originReserveKey);
+            } else {
+                renderSimpleDetailView(name, 'pelagens');
+            }
         });
         furGrid.appendChild(furCard);
     });
 }
 
 // Renderiza a visualização de detalhes de super raros
-function renderSuperRareDetailView(container, name, slug) {
+function renderSuperRareDetailView(container, name, slug, originReserveKey = null) { // Adicionado originReserveKey
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -779,7 +784,11 @@ function renderSuperRareDetailView(container, name, slug) {
             
             saveData(savedData);
             // Re-renderiza a visualização para que a aparência do card seja atualizada
-            renderSimpleDetailView(name, 'super_raros');
+            if (originReserveKey) {
+                renderAnimalDossier(name, originReserveKey);
+            } else {
+                renderSimpleDetailView(name, 'super_raros');
+            }
         });
         furGrid.appendChild(furCard);
     });
@@ -787,7 +796,7 @@ function renderSuperRareDetailView(container, name, slug) {
 
 
 // Renderiza a visualização de detalhes de diamantes
-function renderDiamondsDetailView(container, name, slug) {
+function renderDiamondsDetailView(container, name, slug, originReserveKey = null) { // Adicionado originReserveKey
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -841,7 +850,11 @@ function renderDiamondsDetailView(container, name, slug) {
                 savedData.diamantes[slug] = otherTrophies;
                 saveData(savedData);
                 // Re-renderiza a visualização de detalhes para refletir as mudanças
-                renderDiamondsDetailView(container, name, slug);
+                if (originReserveKey) {
+                    renderAnimalDossier(name, originReserveKey);
+                } else {
+                    renderDiamondsDetailView(container, name, slug);
+                }
                 // Atualiza a aparência do card principal na view de categoria
                 const mainCard = document.querySelector(`.animal-card[data-slug="${slug}"]`);
                 if (mainCard) {
@@ -852,7 +865,13 @@ function renderDiamondsDetailView(container, name, slug) {
             input.addEventListener('blur', saveScore);
             input.addEventListener('keydown', e => {
                 if (e.key === 'Enter') saveScore();
-                else if (e.key === 'Escape') renderDiamondsDetailView(container, name, slug);
+                else if (e.key === 'Escape') {
+                    if (originReserveKey) {
+                        renderAnimalDossier(name, originReserveKey);
+                    } else {
+                        renderDiamondsDetailView(container, name, slug);
+                    }
+                }
             });
         });
         furGrid.appendChild(furCard);
@@ -860,7 +879,7 @@ function renderDiamondsDetailView(container, name, slug) {
 }
 
 // Renderiza a visualização de detalhes de Great Ones
-function renderGreatsDetailView(container, animalName, slug) {
+function renderGreatsDetailView(container, animalName, slug, originReserveKey = null) { // Adicionado originReserveKey
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -878,13 +897,13 @@ function renderGreatsDetailView(container, animalName, slug) {
         furCard.className = `fur-card trophy-frame ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furName);
         furCard.innerHTML = `<img src="animais/pelagens/great_${slug}_${furSlug}.png" alt="${furName}" onerror="this.onerror=null; this.src='animais/${slug}.png';"><div class="info-plaque"><div class="info">${furName}</div><div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div></div>`;
-        furCard.addEventListener('click', () => openGreatsTrophyModal(animalName, slug, furName));
+        furCard.addEventListener('click', () => openGreatsTrophyModal(animalName, slug, furName, originReserveKey)); // Passa originReserveKey
         furGrid.appendChild(furCard);
     });
 }
 
 // Abre o modal de troféus de Great Ones
-async function openGreatsTrophyModal(animalName, slug, furName) { // Adicionado 'async' aqui
+async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey = null) { // Adicionado 'originReserveKey'
     const modal = document.getElementById('form-modal');
     modal.innerHTML = '';
     modal.className = 'modal-overlay form-modal';
@@ -907,13 +926,19 @@ async function openGreatsTrophyModal(animalName, slug, furName) { // Adicionado 
             const deleteBtn = document.createElement('button');
             deleteBtn.className = 'delete-trophy-btn';
             deleteBtn.innerHTML = '×';
-            deleteBtn.onclick = async () => { // Adicionado 'async' aqui
+            deleteBtn.onclick = async () => {
                 if (await showCustomAlert('Tem certeza que deseja remover este abate?', 'Confirmar Exclusão', true)) {
                     trophies.splice(index, 1);
                     saveData(savedData);
                     closeModal('form-modal');
                     const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
-                    if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
+                    if (detailContent) {
+                        if (originReserveKey) { // Se estiver no contexto do dossiê, re-renderiza o dossiê
+                            renderAnimalDossier(animalName, originReserveKey);
+                        } else { // Caso contrário, re-renderiza a visualização Greats normal
+                            renderGreatsDetailView(detailContent, animalName, slug);
+                        }
+                    }
                 }
             };
             li.appendChild(deleteBtn);
@@ -930,7 +955,7 @@ async function openGreatsTrophyModal(animalName, slug, furName) { // Adicionado 
             <tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr>
             <tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr>
             <tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr>
-            <tr><td>Dados de Abatimento:</td><td><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></td></tr>
+            <tr><td>Data de Abatimento:</td><td><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></td></tr>
         </tbody></table>`;
     modalContent.appendChild(form);
 
@@ -955,13 +980,21 @@ async function openGreatsTrophyModal(animalName, slug, furName) { // Adicionado 
         if (!savedData.greats) savedData.greats = {};
         if (!savedData.greats[slug]) savedData.greats[slug] = {};
         if (!savedData.greats[slug].furs) savedData.greats[slug].furs = {};
-        if (!savedData.greats[slug].furs[furName]) savedData.greats[slug].furs[furName] = { trophies: [] };
+        if (!savedData.greats[slug].furs[furName]) {
+            savedData.greats[slug].furs[furName] = { trophies: [] };
+        }
         savedData.greats[slug].furs[furName].trophies.push(newTrophy);
         checkAndSetGreatOneCompletion(slug, savedData.greats[slug]);
         saveData(savedData);
         closeModal('form-modal');
         const detailContent = document.querySelector('.dossier-content') || document.querySelector('.main-content > .content-container');
-        if (detailContent) renderGreatsDetailView(detailContent, animalName, slug);
+        if (detailContent) {
+            if (originReserveKey) { // Se estiver no contexto do dossiê, re-renderiza o dossiê
+                renderAnimalDossier(animalName, originReserveKey);
+            } else { // Caso contrário, re-renderiza a visualização Greats normal
+                renderGreatsDetailView(detailContent, animalName, slug);
+            }
+        }
     };
     buttonsDiv.appendChild(cancelBtn);
     buttonsDiv.appendChild(saveBtn);
@@ -1137,7 +1170,7 @@ function renderProgressView(container) {
     resetButton.textContent = 'Resetar Todo o Progresso';
     resetButton.className = 'back-button';
     resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;';
-    resetButton.onclick = async () => { // Adicionado 'async' aqui
+    resetButton.onclick = async () => {
         if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
             const defaultData = getDefaultDataStructure();
             savedData = defaultData; // Atualiza savedData localmente antes de salvar
@@ -1470,7 +1503,7 @@ function getCompleteTrophyInventory() {
                     const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
                     // Para Super Raro, o furName já é o que vem do display, como "Macho Albino", "Fêmea Malhado"
                     // Não precisamos remover "Diamante" daqui, pois ele não é adicionado ao salvar na nova lógica
-                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim(); 
+                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim();    
                     inventory.push({ slug, gender, type: 'Super Raro', detail: pureFur });
                 }
             }
@@ -1713,7 +1746,7 @@ function renderNewGrindAnimalSelection(container) {
 }
 
 // Renderiza a seleção de reserva para um novo grind
-async function renderReserveSelectionForGrind(container, animalSlug) { // Adicionado 'async' aqui
+async function renderReserveSelectionForGrind(container, animalSlug) {
     const animalName = items.find(item => slugify(item) === animalSlug);
     container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
 
@@ -1739,7 +1772,7 @@ async function renderReserveSelectionForGrind(container, animalSlug) { // Adicio
                 <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
             </div>
         `;
-        card.addEventListener('click', async () => { // Adicionado 'async' aqui
+        card.addEventListener('click', async () => {
             const existingSession = savedData.grindSessions.find(s => s.animalSlug === animalSlug && s.reserveKey === reserveKey);
             if(existingSession) {
                 await showCustomAlert('Um grind para este animal nesta reserva já existe. Abrindo o grind existente.');
@@ -1757,7 +1790,7 @@ async function renderReserveSelectionForGrind(container, animalSlug) { // Adicio
 }
 
 // Renderiza a visualização do contador de grind
-async function renderGrindCounterView(sessionId) { // Adicionado 'async' aqui
+async function renderGrindCounterView(sessionId) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) { console.error("Sessão de grind não encontrada!", sessionId); renderMainView('grind'); return; }
 
@@ -1806,7 +1839,7 @@ async function renderGrindCounterView(sessionId) { // Adicionado 'async' aqui
         </div>`;
 
     container.querySelectorAll('.grind-counter-btn').forEach(button => {
-        button.addEventListener('click', async (e) => { // Adicionado 'async' aqui
+        button.addEventListener('click', async (e) => {
             e.stopPropagation();
             const isIncrease = button.classList.contains('increase');
             const counterItem = button.closest('.grind-counter-item');
@@ -1824,7 +1857,7 @@ async function renderGrindCounterView(sessionId) { // Adicionado 'async' aqui
                         const lastItem = currentSession.counts[type][currentSession.counts[type].length - 1];
                         // Simplificado para apenas mostrar o nome da variação (removendo "Macho/Fêmea" e "Diamante" para a mensagem)
                         const cleanVariationName = lastItem.variation.replace(/^(Macho|Fêmea)\s|\sDiamante$/gmi, '').trim();
-                        if (await showCustomAlert(`Tem certeza que deseja remover o último item registrado: "${cleanVariationName}"?`, 'Confirmar Exclusão', true)) { // Adicionado 'await' aqui
+                        if (await showCustomAlert(`Tem certeza que deseja remover o último item registrado: "${cleanVariationName}"?`, 'Confirmar Exclusão', true)) {
                             currentSession.counts[type].pop();
                         }
                     }
@@ -1872,8 +1905,8 @@ async function renderGrindCounterView(sessionId) { // Adicionado 'async' aqui
         });
     }
 
-    container.querySelector('#delete-grind-btn').addEventListener('click', async () => { // Adicionado 'async' aqui
-        if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) { // Adicionado 'await' aqui
+    container.querySelector('#delete-grind-btn').addEventListener('click', async () => {
+        if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) {
             const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId);
             if (sessionIndex > -1) {
                 savedData.grindSessions.splice(sessionIndex, 1);
@@ -1900,7 +1933,7 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
             if (!savedData.super_raros) savedData.super_raros = {};
             if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
             // O nome da pelagem super rara é a variação selecionada no modal (ex: "Macho Albino", "Fêmea Malhado")
-            const superRareKey = details.variation; 
+            const superRareKey = details.variation;    
             savedData.super_raros[animalSlug][superRareKey] = true;
             console.log(`Sincronizado: Super Raro '${superRareKey}' para ${animalSlug}`);
             break;
@@ -1933,7 +1966,7 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
 }
 
 // Abre o modal de detalhes do grind (para pelagens raras, super raros, great ones)
-async function openGrindDetailModal(sessionId, rarityType) { // Adicionado 'async' aqui
+async function openGrindDetailModal(sessionId, rarityType) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) return;
 
@@ -1981,7 +2014,7 @@ async function openGrindDetailModal(sessionId, rarityType) { // Adicionado 'asyn
     }
 
     if (options.length === 0) {
-        await showCustomAlert(`Nenhuma variação de '${rarityType.replace('_', ' ')}' encontrada para este animal que se encaixe nos critérios de diamante.`, 'Aviso'); // Adicionado 'await' aqui
+        await showCustomAlert(`Nenhuma variação de '${rarityType.replace('_', ' ')}' encontrada para este animal que se encaixe nos critérios de diamante.`, 'Aviso');
         return;
     }
 
