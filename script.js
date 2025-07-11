@@ -118,7 +118,7 @@ const rareFursData = {
     "cervo_porco_indiano": { macho: ["Malhado", "Leucismo"], femea: ["Malhado", "Leucismo"] },
     "cervo_almiscarado": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "cervo_de_timor": { macho: ["Albino", "leucistico", "malhado variação 1", "malhado variação 2"], femea: ["leucistico"] },
-    "cervo_do_pântano": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] },
+    "cervo_do_pântano": { macho: ["Albino", "Malhado", "Leucismo","Melânico"], femea: ["Albino", "Malhado", "Leucismo","Melânico"] },
     "cervo_sika": { macho: ["Albino", "pintado vermelho"], femea: ["Albino", "pintado vermelho"] },
     "chital": { macho: ["Albino", "malhado", "melanico"], femea: ["Albino", "malhado", "melanico"] },
     "chacal_listrado": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
