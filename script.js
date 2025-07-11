@@ -311,7 +311,7 @@ const diamondFursData = {
     "urso_negro": { macho: ["Escuro", "Preto", "Cinzento"], femea: ["Cinzento"] },
     "urso_pardo": { macho: ["Canela", "Amarelo", "Pardo escuro", "Ouro", "Cinza", "Pardo claro", "Pardo avermelhado", "Espírito"], femea: [] },
     "veado_das_montanhas_rochosas": { macho: ["Cinza Claro", "Pardo", "Pardo Claro"], femea: [] },
-    "veado_de_cauda_branca": { macho: ["Bronzeado", "Pardo", "Pardo Escuro", "Albino"], femea: ["Albino"] },
+    "veado_de_cauda_branca": { macho: ["Bronzeado", "Pardo", "Pardo Escuro"], femea: [] },
     "veado_de_cauda_preta": { macho: ["Cinza Escuro", "Cinzento", "Pardo e Cinza"], femea: [] },
     "veado_mula": { macho: ["Cinzento", "Pardo", "Amarelado"], femea: [] },
     "veado_de_roosevelt": { macho: ["Bronzeado", "Laranja", "Pardo"], femea: [] },
