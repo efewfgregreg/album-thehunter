@@ -112,22 +112,27 @@ const categorias = {
     pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
     diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
     greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
-    // A lista de Super Raros é gerada dinamicamente com base nas pelagens raras que também podem ser diamante
     super_raros: {
         title: 'Super Raros',
-        items: Object.keys(rareFursData).filter(animalSlug => {
-            const rareMachoFurs = rareFursData[animalSlug]?.macho || [];
-            const rareFemeaFurs = rareFursData[animalSlug]?.femea || [];
-            const diamondMachoFurs = diamondFursData[animalSlug]?.macho || [];
-            const diamondFemeaFurs = diamondFursData[animalSlug]?.femea || [];
+        items: (() => {
+            const superRareAnimals = new Set();
+            for (const animalSlug in rareFursData) {
+                const rareMachoFurs = rareFursData[animalSlug]?.macho || [];
+                const rareFemeaFurs = rareFursData[animalSlug]?.femea || [];
+                const diamondMachoFurs = diamondFursData[animalSlug]?.macho || [];
+                const diamondFemeaFurs = diamondFursData[animalSlug]?.femea || [];
 
-            // Verifica se há alguma pelagem rara para macho que também seja diamante para macho
-            const hasMachoSuperRare = rareMachoFurs.some(rareFur => diamondMachoFurs.includes(rareFur));
-            // Verifica se há alguma pelagem rara para fêmea que também seja diamante para fêmea
-            const hasFemeaSuperRare = rareFemeaFurs.some(rareFur => diamondFemeaFurs.includes(rareFur));
+                // Check if any rare male fur is also a diamond male fur
+                const hasMachoSuperRare = rareMachoFurs.some(rareFur => diamondMachoFurs.includes(rareFur));
+                // Check if any rare female fur is also a diamond female fur
+                const hasFemeaSuperRare = rareFemeaFurs.some(rareFur => diamondFemeaFurs.includes(rareFur));
 
-            return hasMachoSuperRare || hasFemeaSuperRare;
-        }).map(slug => items.find(item => slugify(item) === slug) || slug), // Mapeia de volta para os nomes de exibição
+                if (hasMachoSuperRare || hasFemeaSuperRare) {
+                    superRareAnimals.add(items.find(item => slugify(item) === animalSlug) || animalSlug);
+                }
+            }
+            return Array.from(superRareAnimals);
+        })(),
         icon: 'fas fa-star'
     },
     montagens: { title: 'Montagens Múltiplas', icon: 'fas fa-trophy' },
@@ -135,6 +140,7 @@ const categorias = {
     reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
     progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
 };
+
 
 let appContainer;
 
@@ -507,10 +513,11 @@ function renderSuperRareDetailView(container, name, slug) {
 
     const genderedSuperRares = [];
 
-    // Itera sobre as pelagens raras para encontrar aquelas que também são diamante
+    // Itera sobre as pelagens raras para encontrar aquelas que também são diamante, por gênero
     if (speciesRareFurs?.macho) {
         speciesRareFurs.macho.forEach(rareFur => {
             if (speciesDiamondFurs?.macho?.includes(rareFur)) {
+                // Only include if it's a rare fur that can also be a diamond for this gender
                 genderedSuperRares.push({ displayName: `Macho ${rareFur} Diamante`, originalName: rareFur, gender: 'macho' });
             }
         });
@@ -519,10 +526,12 @@ function renderSuperRareDetailView(container, name, slug) {
     if (speciesRareFurs?.femea) {
         speciesRareFurs.femea.forEach(rareFur => {
             if (speciesDiamondFurs?.femea?.includes(rareFur)) {
+                // Only include if it's a rare fur that can also be a diamond for this gender
                 genderedSuperRares.push({ displayName: `Fêmea ${rareFur} Diamante`, originalName: rareFur, gender: 'femea' });
             }
         });
     }
+
 
     if (genderedSuperRares.length === 0) {
         furGrid.innerHTML = '<p>Nenhuma opção de Super Raro (Pelagem Rara + Diamante) disponível para este animal.</p>';
@@ -780,39 +789,36 @@ function updateCardAppearance(card, slug, tabKey) {
             break;
 
         case 'super_raros':
-            // Para Super Raros, a lógica de contagem é a mesma da última vez,
-            // que verifica se há pelagens raras que também são diamante.
+            // Recalculates possible super rares for this animal based on current data
+            let possibleSuperRares = 0;
+            const sRareFurs = rareFursData[slug];
+            const sDiamondFurs = diamondFursData[slug];
+
+            if (sRareFurs && sDiamondFurs) {
+                if (sRareFurs.macho && sDiamondFurs.macho) {
+                    sRareFurs.macho.forEach(rareFur => {
+                        if (sDiamondFurs.macho.includes(rareFur)) {
+                            possibleSuperRares++;
+                        }
+                    });
+                }
+                if (sRareFurs.femea && sDiamondFurs.femea) {
+                    sRareFurs.femea.forEach(rareFur => {
+                        if (sDiamondFurs.femea.includes(rareFur)) {
+                            possibleSuperRares++;
+                        }
+                    });
+                }
+            }
+            totalCount = possibleSuperRares;
+
             const collectedSuperRares = savedData.super_raros?.[slug] || {};
             collectedCount = Object.values(collectedSuperRares).filter(v => v === true).length;
             
-            const speciesRareFursForSuper = rareFursData[slug];
-            const speciesDiamondFursForSuper = diamondFursData[slug];
-            
-            if (speciesRareFursForSuper) {
-                let possibleSuperRares = 0;
-                // Conta as combinações de pelagem rara + diamante para macho
-                if (speciesRareFursForSuper.macho && speciesDiamondFursForSuper?.macho) {
-                    speciesRareFursForSuper.macho.forEach(rareFur => {
-                        if (speciesDiamondFursForSuper.macho.includes(rareFur)) {
-                            possibleSuperRares++;
-                        }
-                    });
-                }
-                // Conta as combinações de pelagem rara + diamante para fêmea
-                if (speciesRareFursForSuper.femea && speciesDiamondFursForSuper?.femea) {
-                    speciesRareFursForSuper.femea.forEach(rareFur => {
-                        if (speciesDiamondFursForSuper.femea.includes(rareFur)) {
-                            possibleSuperRares++;
-                        }
-                    });
-                }
-                totalCount = possibleSuperRares;
-
-                if (totalCount > 0 && collectedCount === totalCount) { // 100% coletado
-                    status = 'completed';
-                } else if (collectedCount > 0 && collectedCount < totalCount) { // Em progresso
-                    status = 'inprogress';
-                }
+            if (totalCount > 0 && collectedCount === totalCount) {
+                status = 'completed';
+            } else if (collectedCount > 0 && collectedCount < totalCount) {
+                status = 'inprogress';
             }
             break;
 
@@ -1098,8 +1104,8 @@ function renderProgressDetail(detailContainer, categoryKey) {
                 collected = Object.values(savedDataForCategory[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
                 break;
             case 'super_raros':
-                // Para Super Raros no detalhe do progresso, mostramos o total de combinações raras+diamante
-                // e quantas delas foram coletadas.
+                // For Super Rares in progress detail, we show the total of rare+diamond combinations
+                // and how many of them have been collected.
                 let possibleSuperRares = 0;
                 if (rareFursData[slug]?.macho && diamondFursData[slug]?.macho) {
                     rareFursData[slug].macho.forEach(rareFur => {
@@ -1119,7 +1125,7 @@ function renderProgressDetail(detailContainer, categoryKey) {
                 collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length;
                 break;
         }
-        if (total > 0 || collected > 0) { // Mostra mesmo se não houver progresso, mas houver itens possíveis
+        if (total > 0 || collected > 0) { // Show even if no progress, but there are possible items
             progressByAnimal[animalName] = { collected, total };
         }
     });
@@ -1182,7 +1188,7 @@ function getCompleteTrophyInventory() {
         }
     }
 
-    // Super Raros (assumindo que Super Raros são marcados como concluídos)
+    // Super Raros (assuming that Super Rares are marked as completed)
     if (savedData.super_raros) {
         for (const slug in savedData.super_raros) {
             for (const furName in savedData.super_raros[slug]) {
@@ -1225,7 +1231,7 @@ function checkMountRequirements(requiredAnimals) {
         let fulfilled = false;
         let fulfillingTrophy = null;
 
-        // Tenta encontrar um troféu no inventário que satisfaça o requisito
+        // Tries to find a trophy in the inventory that satisfies the requirement
         const foundIndex = availableInventory.findIndex(trophy =>
             trophy.slug === requirement.slug &&
             trophy.gender === requirement.gender
@@ -1234,7 +1240,7 @@ function checkMountRequirements(requiredAnimals) {
         if (foundIndex !== -1) {
             fulfilled = true;
             fulfillingTrophy = availableInventory[foundIndex];
-            // Remove o troféu do inventário disponível para que não seja reutilizado
+            // Removes the trophy from the available inventory so it can't be reused
             availableInventory.splice(foundIndex, 1);
         } else {
             isComplete = false;
@@ -1614,8 +1620,8 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
         case 'super_rares':
             if (!savedData.super_raros) savedData.super_raros = {};
             if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
-            // O nome da pelagem super rara é a variação + " Diamante"
-            const superRareKey = `${details.variation}`; // O nome da variação já deve incluir "Diamante" se for o caso
+            // The super rare fur name is the variation + " Diamante"
+            const superRareKey = `${details.variation}`; // The variation name should already include "Diamante" if applicable
             savedData.super_raros[animalSlug][superRareKey] = true;
             console.log(`Sincronizado: Super Raro '${superRareKey}' para ${animalSlug}`);
             break;
@@ -1640,9 +1646,9 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
             break;
 
         case 'diamonds':
-            // Não há sincronização detalhada para diamantes a partir do grind,
-            // pois a pontuação é gerenciada diretamente na tela de Diamantes.
-            // O contador de grind apenas registra a ocorrência.
+            // There's no detailed synchronization for diamonds from grind,
+            // as the score is managed directly on the Diamonds screen.
+            // The grind counter only records the occurrence.
             break;
     }
 }
@@ -1673,14 +1679,14 @@ function openGrindDetailModal(sessionId, rarityType) {
                 if (speciesRareFurs.macho && speciesDiamondFurs.macho) {
                     speciesRareFurs.macho.forEach(rareFur => {
                         if (speciesDiamondFurs.macho.includes(rareFur)) {
-                            options.push(`Macho ${rareFur} Diamante`); // Adiciona "Diamante" ao nome
+                            options.push(`Macho ${rareFur} Diamante`); // Adds "Diamante" to the name
                         }
                     });
                 }
                 if (speciesRareFurs.femea && speciesDiamondFurs.femea) {
                     speciesRareFurs.femea.forEach(rareFur => {
                         if (speciesDiamondFurs.femea.includes(rareFur)) {
-                            options.push(`Fêmea ${rareFur} Diamante`); // Adiciona "Diamante" ao nome
+                            options.push(`Fêmea ${rareFur} Diamante`); // Adds "Diamante" to the name
                         }
                     });
                 }
@@ -1721,18 +1727,18 @@ function openGrindDetailModal(sessionId, rarityType) {
 
         const logDetails = {    
             variation: selectedValue,
-            grindCounts: session.counts    // Passa as contagens atuais do grind
+            grindCounts: session.counts    // Pass current grind counts
         };
         const newLog = { id: Date.now(), variation: selectedValue, date: new Date().toISOString() };
 
         if (!session.counts[rarityType]) session.counts[rarityType] = [];
         session.counts[rarityType].push(newLog);
 
-        syncTrophyToAlbum(animalSlug, rarityType, logDetails); // Sincroniza com o álbum principal
+        syncTrophyToAlbum(animalSlug, rarityType, logDetails); // Sync to main album
         
         saveData(savedData);
         closeModal('form-modal');
-        renderGrindCounterView(sessionId); // Re-renderiza o contador de grind
+        renderGrindCounterView(sessionId); // Re-render the grind counter
     };
 
     modal.style.display = 'flex';
@@ -1922,14 +1928,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             savedData = await loadDataFromFirestore();
             
-            renderNavigationHub();    // Renderiza o hub de navegação após carregar os dados
+            renderNavigationHub();    // Render the navigation hub after loading data
         } else {
             currentUser = null;
-            renderLoginForm(); // Mostra a tela de login se não houver usuário logado
+            renderLoginForm(); // Show the login screen if no user is logged in
         }
     });
 
-    // Configura os modais de visualização de imagem e formulário
+    // Configure image viewer and form modals
     const imageModal = document.getElementById('image-viewer-modal');
     const formModal = document.getElementById('form-modal');
     [imageModal, formModal].forEach(modal => {
@@ -1942,7 +1948,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Fecha modais com a tecla ESC
+    // Close modals with ESC key
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             closeModal('image-viewer-modal');
