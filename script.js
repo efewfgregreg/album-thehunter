@@ -268,7 +268,7 @@ const diamondFursData = {
     "ibex_espanhol_do_sudeste": { macho: ["pardo hibrido", "pardo acinzentado", "cinza claro", "laranja"], femea: [] },
     "javali": { macho: ["Preto e Dourado", "pardo claro variação 1", "pardo claro variação 2"], femea: [] },
     "javali_africano": { macho: ["Cinzento Escuro", "Pardo Avermelhado"], femea: [] },
-    "lebre_antílope": { macho: ["Cinzento", "Mosqueado", "Pardo Escuro"], femea: [] },
+    "lebre_antílope": { macho: ["Cinzento", "Mosqueado", "Pardo Escuro", "Pardo"], femea: [] },
     "jacaré_americano": { macho: ["Pardo_Escuro", "Oliva"], femea: [] },
     "lebre_da_cauda_branca": { macho: ["Bege", "Cinzento", "Pardo", "Pardo Claro"], femea: [] },
     "lebre_da_eurásia": { macho: ["Cinza Claro", "Cinza Escuro", "Pardo Claro", "Pardo Escuro"], femea: ["Cinza Claro", "Cinza Escuro", "Pardo Claro", "Pardo Escuro"] }, // Corrigido
