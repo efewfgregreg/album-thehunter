@@ -1,0 +1,155 @@
+1. Layton Lake
+2. Hirschfelden
+3. Medved Taiga
+4. Vurhonga Savanna
+
+5. Parque Fernando
+
+6. Yukon Valley
+
+7. Cuatro Colinas
+
+8. Silver Ridge Peaks
+
+9. Te Awaroa
+
+10. Rancho del Arroyo
+
+11. Mississippi Acres
+12. Revontuli Coast
+
+13. New England Mountains
+
+14. Emerald Coast
+
+emerald_coast_canguru_cinza_oriental_hotspot
+
+emerald_coast_codorna_de_restolho_hotspot
+
+emerald_coast_raposa_vermelha_hotspot
+
+emerald_coast_cabra_selvagem_hotspot
+
+emerald_coast_cervo_porco_indiano_hotspot
+
+emerald_coast_porco_selvagem_hotspot
+
+emerald_coast_veado_vermelho_hotspot
+
+emerald_coast_sambar_hotspot
+
+emerald_coast_cervo_de_timor_hotspot
+
+emerald_coast_gamo_hotspot
+
+emerald_coast_bantengue_hotspot
+
+emerald_coast_crocodilo_de_agua_salgada_hotspot
+
+emerald_coast_ganso_pega_hotspot
+
+emerald_coast_chital_hotspot
+
+15. Sundarpatan
+
+sundarpatan_antilope_negro_hotspot
+
+sundarpatan_ganso_bravo_hotspot
+
+sundarpatan_lebre_peluda_hotspot
+
+sundarpatan_muntjac_vermelho_do_norte_hotspot
+
+sundarpatan_raposa_tibetana_hotspot
+
+sundarpatan_tahr_hotspot
+
+sundarpatan_carneiro_azul_hotspot
+
+sundarpatan_cervo_do_pantano_hotspot
+
+sundarpatan_nilgo_hotspot
+
+sundarpatan_bufalo_dagua_hotspot
+
+sundarpatan_leopardo_das_neves_hotspot
+
+sundarpatan_iaque_selvagem_hotspot
+
+sundarpatan_tigre_de_bengala_hotspot
+
+sundarpatan_javali_hotspot
+
+16. Salzwiesen Park
+
+salzwiesen_coelho_europeu_hotspot
+
+salzwiesen_frisada_hotspot
+
+salzwiesen_galo_lira_hotspot
+
+salzwiesen_guaxinim_comum_hotspot
+
+salzwiesen_raposa_vermelha_hotspot
+
+salzwiesen_ganso_campestre_da_tundra_hotspot
+
+salzwiesen_faisao_de_pescoco_anelado_hotspot
+
+salzwiesen_cao_guaxinim_hotspot
+
+salzwiesen_ganso_bravo_hotspot
+
+salzwiesen_marrequinha_comum_hotspot
+
+salzwiesen_pato_olho_de_ouro_hotspot
+
+salzwiesen_pato_real_hotspot
+
+salzwiesen_piadeira_hotspot
+
+salzwiesen_zarro_negrinha_hotspot
+
+salzwiesen_zarro_castanho_hotspot
+
+salzwiesen_veado_de_cauda_preta_hotspot
+
+17. Askiy Ridge
+
+askiy_ridge_alce_hotspot
+
+askiy_ridge_caribu_da_floresta_boreal_hotspot
+
+askiy_ridge_urso_negro_hotspot
+
+askiy_ridge_veado_mula_hotspot
+
+askiy_ridge_bisao_da_floresta_hotspot
+
+askiy_ridge_cabra_da_montanha_hotspot
+
+askiy_ridge_antilocapra_hotspot
+
+askiy_ridge_tetraz_azul_hotspot
+
+askiy_ridge_pato_real_hotspot
+
+askiy_ridge_pato_carolino_hotspot
+
+askiy_ridge_marreca_arrebio_hotspot
+
+askiy_ridge_ganso_do_canada_hotspot
+
+askiy_ridge_ganso_das_neves_hotspot
+
+askiy_ridge_lobo_cinzento_hotspot
+
+askiy_ridge_cervo_canadense_hotspot
+
+askiy_ridge_veado_de_cauda_branca_hotspot
+
+askiy_ridge_faisao_de_pescoco_anelado_hotspot
+
+askiy_ridge_carneiro_selvagem_hotspot
+
+askiy_ridge_castor_norte_americano_hotspot
