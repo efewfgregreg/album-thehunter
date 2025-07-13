@@ -2162,7 +2162,7 @@ function renderHotspotGalleryView(container, reserveKey) {
         const card = document.createElement('div');
         card.className = 'hotspot-card';
         card.innerHTML = `
-            <img src="${imagePath}" alt="Mapa de Hotspot ${animal.name}" onerror="this.onerror=null;this.src='animais/placeholder.png';">
+            <img src="${imagePath}" alt="Mapa de Hotspot ${animal.name}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';">
             <div class="info-overlay">
                 <span class="animal-name">${animal.name}</span>
                 <span class="hotspot-label"><i class="fas fa-map-marker-alt"></i> Hotspot</span>
@@ -2194,7 +2194,7 @@ function renderHotspotDetailModal(reserveKey, animalSlug) {
         <span class="modal-close" onclick="closeModal('image-viewer-modal')">&times;</span>
         <div class="hotspot-detail-content">
             <div class="hotspot-image-container">
-                <img class="modal-content-viewer" src="${imagePath}" alt="Mapa de Hotspot ${animalName} em ${reserveName}" onerror="this.onerror=null;this.src='animais/placeholder.png';">
+                <img class="modal-content-viewer" src="${imagePath}" alt="Mapa de Hotspot ${animalName} em ${reserveName}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';">
             </div>
             <div class="hotspot-info-panel">
                 <h3>${animalName} - ${reserveName}</h3>
@@ -2225,7 +2225,7 @@ function renderHotspotDetailView(container, animalName, slug, originReserveKey) 
 
     container.innerHTML = `
         <div class="hotspot-dossier-card">
-            <img src="${imagePath}" alt="Mapa de Hotspot ${animalName}" onerror="this.onerror=null;this.src='animais/placeholder.png';" class="hotspot-dossier-image">
+            <img src="${imagePath}" alt="Mapa de Hotspot ${animalName}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';" class="hotspot-dossier-image">
             <div class="hotspot-dossier-info">
                 <div class="info-row"><strong>Pontuação Máxima:</strong> <span>${hotspotInfo.maxScore || 'N/A'}</span></div>
                 <div class="info-row"><strong>Estimativa de Peso Máximo:</strong> <span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
@@ -2828,15 +2828,15 @@ function createLatestAchievementsPanel() {
                 const specificPath = `animais/pelagens/${animalSlug}_${furSlug}_${gender}.png`;
                 const neutralPath = `animais/pelagens/${animalSlug}_${furSlug}.png`;
                 const basePath = `animais/${animalSlug}.png`;
-                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${neutralPath}'; this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
+                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${neutralPath}'; this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.jpg';"`;
             } else if (trophy.type === 'greatone') {
                 const furSlug = slugify(trophy.furName);
                 const specificPath = `animais/pelagens/great_${animalSlug}_${furSlug}.png`;
                 const basePath = `animais/${animalSlug}.png`;
-                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.png';"`;
+                imagePathString = `src="${specificPath}" onerror="this.onerror=null; this.src='${basePath}'; this.onerror=null; this.src='animais/placeholder.jpg';"`;
             } else {
                 // Fallback para outros tipos ou se não houver imagem específica
-                imagePathString = `src="animais/${animalSlug}.png" onerror="this.onerror=null;this.src='animais/placeholder.png';"`;
+                imagePathString = `src="animais/${animalSlug}.jpg" onerror="this.onerror=null;this.src='animais/placeholder.jpg';"`;
             }
 
             card.innerHTML = `
