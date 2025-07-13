@@ -55,7 +55,16 @@
 
         
         /* --- HUB DE NAVEGAÇÃO --- */
-        .navigation-hub { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 30px; padding: 40px; min-height: 100vh; width: 100%; }
+        .navigation-hub { 
+            display: flex; 
+            flex-wrap: wrap; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 30px; 
+            padding: 40px; 
+            min-height: 100vh; 
+            width: 100%; 
+        }
         .hub-title { width: 100%; text-align: center; font-family: var(--font-headings); font-size: 4rem; letter-spacing: 3px; color: #f0f0f0; text-transform: uppercase; text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8); margin-bottom: 40px; }
         .nav-card { background-color: rgba(44, 47, 51, 0.75); border: 1px solid var(--border-color); border-radius: 8px; width: 260px; height: 100px; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 10px; cursor: pointer; transition: all 0.3s ease; font-family: var(--font-headings); font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-color-muted); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); }
         .nav-card i { font-size: 2rem; transition: color 0.3s ease; }
@@ -664,39 +673,42 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            max-width: 95vw; /* Aumentado para mais espaço */
+            max-width: 95vw;
             width: 100%;
             padding: 20px;
             background-color: var(--surface-color);
             border-radius: 8px;
             border: 1px solid var(--border-color);
             position: relative;
-            max-height: 95vh; /* Aumentado para ocupar mais altura da tela */
-            overflow-y: auto; /* Garante rolagem se o conteúdo for muito grande */
-            box-sizing: border-box; /* Garante que padding e border não aumentem o tamanho total */
+            max-height: 95vh;
+            overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .hotspot-detail-content .hotspot-image-container {
             width: 100%;
-            /* Definir uma altura explícita ou min-height para o container da imagem */
-            /* Isso dará à imagem espaço para se expandir mais com object-fit: contain */
-            min-height: 40vh; /* Pelo menos 40% da altura da viewport */
-            max-height: 60vh; /* Máximo de 60% da altura da viewport para deixar espaço para o texto */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            position: relative;
+            /* Use a proporção correta para o padding-bottom se você souber a relação largura/altura das suas imagens */
+            /* Por exemplo, se a maioria das suas imagens for 1920x1080 (16:9), use 56.25% */
+            /* Se for mais quadrada, como 1200x900 (4:3), use 75% */
+            /* Estou deixando 65% como um palpite razoável para a maioria dos casos de mapas. */
+            padding-bottom: 65%; /* (Altura / Largura) * 100% */
             background-color: var(--bg-color);
             border-radius: 6px;
             overflow: hidden;
             box-sizing: border-box;
         }
         .hotspot-detail-content .modal-content-viewer {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 100%; /* A imagem preenche o container da imagem */
+            height: 100%;
             display: block;
             max-width: none;
             max-height: none;
-            object-fit: contain; /* Redimensiona a imagem para caber inteira no contêiner */
+            object-fit: contain; /* Mantém a imagem dentro do contêiner sem cortar ou distorcer */
+            transform-origin: center center; /* Garante que o zoom comece do centro por padrão */
         }
 
         .hotspot-detail-content .hotspot-info-panel {
@@ -705,7 +717,7 @@
             background-color: var(--bg-color);
             border-radius: 6px;
             border: 1px solid var(--border-color);
-            flex-shrink: 0; /* Impede que o painel de informações encolha */
+            flex-shrink: 0;
         }
 
         .hotspot-detail-content .hotspot-info-panel h3 {
@@ -757,7 +769,20 @@
             border: 1px solid var(--primary-color);
             box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
             object-fit: contain;
+            position: relative;
+            padding-bottom: 65%; /* Mantenha a proporção consistente com o modal maior */
+            background-color: var(--bg-color);
+            overflow: hidden;
         }
+        .hotspot-dossier-image img { 
+             position: absolute;
+             top: 0;
+             left: 0;
+             width: 100%;
+             height: 100%;
+             object-fit: contain;
+        }
+
         .hotspot-dossier-info {
             width: 100%;
             padding: 10px;
@@ -827,12 +852,11 @@
             .hotspot-detail-content {
                 padding: 10px;
                 gap: 15px;
-                max-width: 98vw; /* Aumentado para quase 100% em mobile */
-                max-height: 98vh; /* Aumentado para quase 100% em mobile */
+                max-width: 98vw;
+                max-height: 98vh;
             }
             .hotspot-detail-content .hotspot-image-container {
-                min-height: 30vh; /* Reduzir um pouco a altura mínima em mobile se precisar de mais espaço para o texto */
-                max-height: 50vh; /* Ajustar conforme necessário em mobile */
+                padding-bottom: 65%; /* Manter a mesma proporção ou ajustar para mobile se necessário */
             }
             .hotspot-detail-content .hotspot-info-panel h3 {
                 font-size: 1.4rem;
@@ -873,6 +897,8 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     
+    <script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js"></script> 
+
     <script src="script.js" defer></script>
 </body>
 </html>
