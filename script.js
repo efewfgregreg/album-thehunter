@@ -334,1660 +334,6 @@ const diamondFursData = {
 const reservesData = { layton_lake: { name: "Lagos de Layton", image: "reservas/layton_lake.png", animals: ["alce", "veado_de_cauda_branca", "veado_de_cauda_preta", "veado_de_roosevelt", "urso_negro", "coiote", "pato_real", "lebre_da_cauda_branca"] }, hirschfelden: { name: "Hirschfelden", image: "reservas/hirschfelden.png", animals: ["gamo", "corça", "veado_vermelho", "javali", "bisão_europeu", "raposa_vermelha", "ganso_do_canadá", "coelho_europeu", "faisão_de_pescoço_anelado"] }, medved_taiga: { name: "Taiga Medved", image: "reservas/medved_taiga.png", animals: ["alce", "rena_da_montanha", "tetraz_grande", "cervo_almiscarado", "urso_pardo", "javali", "lince_euroasiática", "lobo_cinzento"] }, vurhonga_savanna: { name: "Savana Vurhonga", image: "reservas/vurhonga_savanna.png", animals: ["chacal_listrado", "lebre_nuca_dourada", "piadeira", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "órix_do_cabo", "antílope_negro"] }, parque_fernando: { name: "Parque Fernando", image: "reservas/parque_fernando.png", animals: ["veado_vermelho", "marreca_carijó", "caititu", "veado_mula", "onça_parda", "antílope_negro", "búfalo_dágua", "chital"] }, yukon_valley: { name: "Vale do Yukon", image: "reservas/yukon_valley.png", animals: ["caribu", "ganso_do_canadá", "alce", "urso_cinzento", "lobo_cinzento", "bisão_das_planícies", "raposa_vermelha", "pato_harlequim"] }, cuatro_colinas: { name: "Cuatro Colinas", image: "reservas/cuatro_colinas.png", animals: ["ibex_de_gredos", "faisão_de_pescoço_anelado", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "mouflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"] }, silver_ridge_peaks: { name: "Picos de Silver Ridge", image: "reservas/silver_ridge_peaks.png", animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_selvagem"] }, te_awaroa: { name: "Te Awaroa", image: "reservas/te_awaroa.png", animals: ["veado_vermelho","gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_selvagem", "camurça", "coelho_europeu", "pato_real"] }, rancho_del_arroyo: { name: "Rancho del Arroyo", image: "reservas/rancho_del_arroyo.png", animals: ["veado_mula", "veado_de_cauda_branca", "carneiro_selvagem", "antilocapra", "caititu", "coiote", "lince_pardo_do_mexico", "peru_selvagem_do_rio_grande", "faisão_de_pescoço_anelado", "lebre_antílope"] }, mississippi_acres: { name: "Mississippi Acres", image: "reservas/mississippi_acres.png", animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"] }, revontuli_coast: { name: "Costa de Revontuli", image: "reservas/revontuli_coast.png", animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha", "veado_de_cauda_preta"] }, new_england_mountains: { name: "New England Mountains", image: "reservas/new_england_mountains.png", animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta", "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"] }, emerald_coast: { name: "Emerald Coast", image: "reservas/emerald_coast.png", animals: ["canguru_cinza_oriental", "codorna_de_restolho", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"] }, sundarpatan: { name: "Sundarpatan", image: "reservas/sundarpatan.png", animals: ["antílope_negro", "ganso_bravo","lebre_peluda", "muntjac_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala", "javali"] }, salzwiesen: { name: "Salzwiesen Park", image: "reservas/salzwiesen.png", animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho", "veado_de_cauda_preta"] }, askiy_ridge: { name: "Askiy Ridge", image: "reservas/askiy_ridge.png", animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"] } };
 const multiMountsData = { "a_fuga": { name: "A Fuga", animals: [{ slug: "veado_vermelho", gender: "macho" },{ slug: "veado_vermelho", gender: "femea" }] }, "abraco_do_urso": { name: "Abraço do Urso", animals: [{ slug: "urso_cinzento", gender: "macho" },{ slug: "urso_cinzento", gender: "macho" }] }, "adeus_filho": { name: "Adeus, Filho", animals: [{ slug: "bisão_das_planícies", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" }] }, "admiralces": { name: "Admiralces", animals: [{ slug: "alce", gender: "macho" },{ slug: "codorniz_da_virgínia", gender: "macho" }] }, "almoco_da_raposa": { name: "Almoço da Raposa", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "banquete_no_ar": { name: "Banquete no Ar", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "brincadeira_de_aves": { name: "Brincadeira de Aves", animals: [{ slug: "lagópode_escocês", gender: "macho" },{ slug: "cão_guaxinim", gender: "macho" }] }, "brincando_de_briga": { name: "Brincando de Briga", animals: [{ slug: "lince_euroasiática", gender: "macho" },{ slug: "lince_euroasiática", gender: "femea" }] }, "caudas_brancas_unidas": { name: "Caudas Brancas Unidas", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "colisao": { name: "Colisão", animals: [{ slug: "veado_de_cauda_preta", gender: "macho" },{ slug: "onça_parda", gender: "macho" }] }, "competicao_amistosa": { name: "Competição Amistosa", animals: [{ slug: "coiote", gender: "macho" },{ slug: "coiote", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "corcas_unidas": { name: "Corças Unidas", animals: [{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" }] }, "davi_e_golias": { name: "Davi e Golias", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "de_cabeca": { name: "De Cabeça", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" }] }, "decolagem_de_emergencia": { name: "Decolagem de Emergência", animals: [{ slug: "coiote", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "femea" }] }, "despedida_do_solteiros": { name: "Despedida dos Solteiros", animals: [{ slug: "veado_mula", gender: "macho" },{ slug: "veado_mula", gender: "femea" },{ slug: "veado_mula", gender: "femea" }] }, "dois_tipos_de_perus": { name: "Dois Tipos de Perus", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem_do_rio_grande", gender: "macho" }] }, "espionagem_tatica": { name: "Espionagem Tática", animals: [{ slug: "onça_parda", gender: "femea" },{ slug: "veado_de_roosevelt", gender: "macho" }] }, "faisoes_em_fuga": { name: "Faisões em Fuga", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "falso_tronco": { name: "Falso Tronco", animals: [{ slug: "jacaré_americano", gender: "macho" },{ slug: "guaxinim_comum", gender: "macho" }] }, "fantasma_da_montanha": { name: "Fantasma da Montanha", animals: [{ slug: "leopardo_das_neves", gender: "macho" },{ slug: "carneiro_azul", gender: "macho" }] }, "fartura_de_bisoes": { name: "Fartura de Bisões", animals: [{ slug: "bisão_europeu", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "gamos_unidos": { name: "Gamos Unidos", animals: [{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" }] }, "ganha_pao": { name: "Ganha-pão", animals: [{ slug: "búfalo_africano", gender: "macho" },{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" },{ slug: "leão", gender: "femea" }] }, "gansos_zangados": { name: "Gansos Zangados", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "ganso_do_canadá", gender: "macho" }] }, "gluglu": { name: "Gluglu", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem", gender: "femea" },{ slug: "peru_selvagem", gender: "femea" }] }, "lanchinho_de_tigre": { name: "Lanchinho de Tigre", animals: [{ slug: "tahr", gender: "macho" },{ slug: "tahr", gender: "femea" },{ slug: "tahr", gender: "femea" }] }, "laod_a_lado": { name: "Laod a Lado", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "lebres_rivais": { name: "Lebres Rivais", animals: [{ slug: "lebre_antílope", gender: "macho" },{ slug: "lebre_antílope", gender: "macho" }] }, "lobo_alfa": { name: "Lobo Alfa", animals: [{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "femea" },{ slug: "lobo_cinzento", gender: "femea" }] }, "marujos_de_agua_doce": { name: "Marujos de Água Doce", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "tetraz_grande", gender: "macho" },{ slug: "ganso_bravo", gender: "macho" },{ slug: "ganso_campestre_da_tundra", gender: "macho" }] }, "necessidades_basicas": { name: "Necessidades Básicas", animals: [{ slug: "urso_negro", gender: "macho" },{ slug: "urso_negro", gender: "macho" }] }, "o_grand_slam": { name: "O Grand Slam", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" },{ slug: "ibex_de_ronda", gender: "macho" },{ slug: "ibex_espanhol_do_sudeste", gender: "macho" }] }, "operador_suave": { name: "Operador Suave", animals: [{ slug: "tetraz_grande", gender: "macho" },{ slug: "tetraz_grande", gender: "femea" },{ slug: "tetraz_grande", gender: "femea" }] }, "os_tres_patinhos": { name: "Os Três Patinhos", animals: [{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "parceiros_no_crime": { name: "Parceiros no Crime", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_vermelha", gender: "macho" }] }, "presas_a_mostra": { name: "Presas à Mostra", animals: [{ slug: "mouflão_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" }] }, "procos_do_mato_em_conflito": { name: "Procos-do-Mato em Conflito", animals: [{ slug: "caititu", gender: "macho" },{ slug: "caititu", gender: "macho" }] }, "ramboru": { name: "Ramboru", animals: [{ slug: "canguru_cinzento_oriental", gender: "macho" },{ slug: "canguru_cinzento_oriental", gender: "macho" }] }, "raposas_adversarias": { name: "Raposas Adversárias", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_cinzenta", gender: "macho" }] }, "realeza": { name: "Realeza", animals: [{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" }] }, "rixa_de_aves": { name: "Rixa de Aves", animals: [{ slug: "galo_lira", gender: "macho" },{ slug: "galo_lira", gender: "macho" }] }, "saindo_de_fininho": { name: "Saindo de Fininho", animals: [{ slug: "pato_real", gender: "macho" },{ slug: "pato_olho_de_ouro", gender: "macho" },{ slug: "zarro_negrinha", gender: "macho" },{ slug: "marrequinha_comum", gender: "macho" },{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "tahr_angulo_amoroso": { name: "Tahr-ângulo Amoroso", animals: [{ slug: "tigre_de_bengala", gender: "macho" },{ slug: "cervo_do_pântano", gender: "macho" }] }, "treno_vendido_separadamente": { name: "Trenó Vendido Separadamente", animals: [{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" }] }, "turma_dos_coelhos": { name: "Turma dos Coelhos", animals: [{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "femea" },{ slug: "lebre_da_cauda_branca", gender: "femea" }] }, "um_crocodilo_sortudo": { name: "Um Crocodilo Sortudo", animals: [{ slug: "ganso_pega", gender: "macho" },{ slug: "crocodilo_de_água_salgada", gender: "macho" }] }, "um_par_de_predadores": { name: "Um Par de Predadores", animals: [{ slug: "coiote", gender: "macho" },{ slug: "lince_pardo_do_mexico", gender: "macho" }] }, "vigilancia": { name: "Vigilância", animals: [{ slug: "cudo_menor", gender: "macho" },{ slug: "cudo_menor", gender: "femea" }] }, "viver_amar_lenhar": { name: "Viver, Amar, Lenhar", animals: [{ slug: "castor_norte_americano", gender: "macho" },{ slug: "castor_norte_americano", gender: "femea" }] } };
 
-// Nova constante com os dados de hotspot
-const hotspotData = {
-    "layton_lake": {
-        "alce": {
-            mapImage: "layton_lake_alce_hotspot",
-            maxScore: 274.99,
-            maxWeightEstimate: "545-620 KG",
-            needZonesPotential: "12:00 - 16:00",
-            animalClass: "8",
-            maxLevel: "5 (Médio)"
-        },
-        "veado_de_cauda_branca": {
-            mapImage: "layton_lake_veado_de_cauda_branca_hotspot",
-            maxScore: 255.09,
-            maxWeightEstimate: "75-100 KG",
-            needZonesPotential: "08:00 - 12:00",
-            animalClass: "4",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "veado_de_cauda_preta": {
-            mapImage: "layton_lake_veado_de_cauda_preta_hotspot",
-            maxScore: 177.58,
-            maxWeightEstimate: "81-95 KG",
-            needZonesPotential: "16:00 - 20:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "veado_de_roosevelt": {
-            mapImage: "layton_lake_veado_de_roosevelt_hotspot",
-            maxScore: 380.84,
-            maxWeightEstimate: "450-500 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "5 (Médio)"
-        },
-        "urso_negro": {
-            mapImage: "layton_lake_urso_negro_hotspot",
-            maxScore: 22.8,
-            maxWeightEstimate: "227-290 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "coiote": {
-            mapImage: "layton_lake_coiote_hotspot",
-            maxScore: 56.87,
-            maxWeightEstimate: "24-27 KG",
-            needZonesPotential: "00:00 - 04:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "pato_real": {
-            mapImage: "layton_lake_pato_real_hotspot",
-            maxScore: 19.61,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "lebre_da_cauda_branca": {
-            mapImage: "layton_lake_lebre_da_cauda_branca_hotspot",
-            maxScore: 6.33,
-            maxWeightEstimate: "5-6 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "peru_selvagem": { // Assumindo "Peru Merriami" é um tipo de peru selvagem
-            mapImage: "layton_lake_peru_selvagem_hotspot",
-            maxScore: 4.62,
-            maxWeightEstimate: "9-11 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        }
-    },
-    "hirschfelden": {
-        "gamo": {
-            mapImage: "hirschfelden_gamo_hotspot",
-            maxScore: 249.99,
-            maxWeightEstimate: "82-100 KG",
-            needZonesPotential: "10:00-13:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "corça": {
-            mapImage: "hirschfelden_corca_hotspot",
-            maxScore: 81.86,
-            maxWeightEstimate: "29-35 KG",
-            needZonesPotential: "14:00-17:00",
-            animalClass: "3",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "veado_vermelho": {
-            mapImage: "hirschfelden_veado_vermelho_hotspot",
-            maxScore: 251.07,
-            maxWeightEstimate: "210-240 KG",
-            needZonesPotential: "06:00-10:00",
-            animalClass: "6",
-            maxLevel: "9 (Lendário)"
-        },
-        "javali": {
-            mapImage: "hirschfelden_javali_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "186-240 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "bisão_europeu": {
-            mapImage: "hirschfelden_bisao_europeu_hotspot",
-            maxScore: 127.62,
-            maxWeightEstimate: "765-920 KG",
-            needZonesPotential: "10:00-14:00",
-            animalClass: "9",
-            maxLevel: "5 (Médio)"
-        },
-        "raposa_vermelha": {
-            mapImage: "hirschfelden_raposa_vermelha_hotspot",
-            maxScore: 14.05,
-            maxWeightEstimate: "12-15 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "ganso_do_canadá": {
-            mapImage: "hirschfelden_ganso_do_canada_hotspot",
-            maxScore: 8.59,
-            maxWeightEstimate: "8-9 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "coelho_europeu": {
-            mapImage: "hirschfelden_coelho_europeu_hotspot",
-            maxScore: 2.42,
-            maxWeightEstimate: "2 KG",
-            needZonesPotential: "O DIA TODO", // Tocas Potencial
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "faisão_de_pescoço_anelado": {
-            mapImage: "hirschfelden_faisao_de_pescoco_anelado_hotspot",
-            maxScore: 20.29,
-            maxWeightEstimate: null, // Campo vazio
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        }
-    },
-    "medved_taiga": {
-        "alce": {
-            mapImage: "medved_taiga_alce_hotspot",
-            maxScore: 274.99,
-            maxWeightEstimate: "545-620 KG",
-            needZonesPotential: "12:00 - 16:00",
-            animalClass: "8",
-            maxLevel: "5 (Médio)"
-        },
-        "rena_da_montanha": {
-            mapImage: "medved_taiga_rena_da_montanha_hotspot",
-            maxScore: 430.23,
-            maxWeightEstimate: "156-182 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "tetraz_grande": {
-            mapImage: "medved_taiga_tetraz_grande_hotspot",
-            maxScore: 4.64,
-            maxWeightEstimate: "4-5 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "cervo_almiscarado": {
-            mapImage: "medved_taiga_cervo_almiscarado_hotspot",
-            maxScore: 249,
-            maxWeightEstimate: "14-17 KG",
-            needZonesPotential: "08:00 - 12:00",
-            animalClass: "2",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "urso_pardo": {
-            mapImage: "medved_taiga_urso_pardo_hotspot",
-            maxScore: 27.7,
-            maxWeightEstimate: "389-452 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "javali": {
-            mapImage: "medved_taiga_javali_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "186-240 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "4", // Javali em Medved é Classe 4, diferente de Hirschfelden
-            maxLevel: "5 (Médio)"
-        },
-        "lince_euroasiática": {
-            mapImage: "medved_taiga_lince_euroasiatica_hotspot",
-            maxScore: 27.68,
-            maxWeightEstimate: "35-45 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "3",
-            maxLevel: "9 (Lendário)"
-        },
-        "lobo_cinzento": {
-            mapImage: "medved_taiga_lobo_cinzento_hotspot",
-            maxScore: 39,
-            maxWeightEstimate: "67-80 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "5",
-            maxLevel: "9 (Lendário)"
-        }
-    },
-    "vurhonga_savanna": {
-        "chacal_listrado": {
-            mapImage: "vurhonga_savanna_chacal_listrado_hotspot",
-            maxScore: 29.10,
-            maxWeightEstimate: "12-14 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "lebre_nuca_dourada": {
-            mapImage: "vurhonga_savanna_lebre_nuca_dourada_hotspot",
-            maxScore: 5.37,
-            maxWeightEstimate: "4-5 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "piadeira": {
-            mapImage: "vurhonga_savanna_piadeira_hotspot",
-            maxScore: 905,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "cudo_menor": {
-            mapImage: "vurhonga_savanna_cudo_menor_hotspot",
-            maxScore: 151.64,
-            maxWeightEstimate: "91-105 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "cabra_de_leque": {
-            mapImage: "vurhonga_savanna_cabra_de_leque_hotspot",
-            maxScore: 78.55,
-            maxWeightEstimate: "38-42 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "javali_africano": {
-            mapImage: "vurhonga_savanna_javali_africano_hotspot",
-            maxScore: 58.19,
-            maxWeightEstimate: "123-150 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "gnu_de_cauda_preta": {
-            mapImage: "vurhonga_savanna_gnu_de_cauda_preta_hotspot",
-            maxScore: 37.69,
-            maxWeightEstimate: "265-290 KG",
-            needZonesPotential: "06:00-09:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "búfalo_africano": {
-            mapImage: "vurhonga_savanna_bufalo_africano_hotspot",
-            maxScore: 151.35,
-            maxWeightEstimate: "802-950 KG",
-            needZonesPotential: "09:00-12:00",
-            animalClass: "9",
-            maxLevel: "9 (Lendário)"
-        },
-        "leão": {
-            mapImage: "vurhonga_savanna_leao_hotspot",
-            maxScore: 48.50,
-            maxWeightEstimate: "236-270 KG",
-            needZonesPotential: "12:00-15:00",
-            animalClass: "9",
-            maxLevel: "9 (Lendário)"
-        },
-        "órix_do_cabo": {
-            mapImage: "vurhonga_savanna_orix_do_cabo_hotspot",
-            maxScore: 337.59,
-            maxWeightEstimate: "210-240 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "antílope_negro": {
-            mapImage: "vurhonga_savanna_antilope_negro_hotspot",
-            maxScore: 132.26,
-            maxWeightEstimate: "44-51 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        }
-    },
-    "parque_fernando": {
-        "veado_vermelho": {
-            mapImage: "parque_fernando_veado_vermelho_hotspot",
-            maxScore: 251.07,
-            maxWeightEstimate: "210-240 KG",
-            needZonesPotential: "06:00-10:00",
-            animalClass: "6",
-            maxLevel: "9 (Lendário)"
-        },
-        "marreca_carijó": {
-            mapImage: "parque_fernando_marreca_carijo_hotspot",
-            maxScore: 4.62,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "caititu": {
-            mapImage: "parque_fernando_caititu_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "26-31 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "veado_mula": {
-            mapImage: "parque_fernando_veado_mula_hotspot",
-            maxScore: 312.17,
-            maxWeightEstimate: "175-210 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "onça_parda": {
-            mapImage: "parque_fernando_onca_parda_hotspot",
-            maxScore: 39,
-            maxWeightEstimate: "86-105 KG",
-            needZonesPotential: "21:00-00:00",
-            animalClass: "5",
-            maxLevel: "9 (Lendário)"
-        },
-        "antílope_negro": {
-            mapImage: "parque_fernando_antilope_negro_hotspot",
-            maxScore: 132.26,
-            maxWeightEstimate: "44-51 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "búfalo_dágua": {
-            mapImage: "parque_fernando_bufalo_dagua_hotspot",
-            maxScore: 167.54,
-            maxWeightEstimate: "1067-1250 KG",
-            needZonesPotential: "12:00-15:00",
-            animalClass: "9",
-            maxLevel: "9 (Lendário)"
-        },
-        "chital": {
-            mapImage: "parque_fernando_chital_hotspot",
-            maxScore: 217.29,
-            maxWeightEstimate: "67-75 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        }
-    },
-    "yukon_valley": {
-        "caribu": {
-            mapImage: "yukon_valley_caribu_hotspot",
-            maxScore: 430.23,
-            maxWeightEstimate: "161-190KG",
-            needZonesPotential: "04:00-08:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "ganso_do_canadá": {
-            mapImage: "yukon_valley_ganso_do_canada_hotspot",
-            maxScore: 8.59,
-            maxWeightEstimate: "8-9 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "alce": {
-            mapImage: "yukon_valley_alce_hotspot",
-            maxScore: 274.99,
-            maxWeightEstimate: "545-620 KG",
-            needZonesPotential: "12:00 - 16:00",
-            animalClass: "8",
-            maxLevel: "5 (Médio)"
-        },
-        "urso_cinzento": {
-            mapImage: "yukon_valley_urso_cinzento_hotspot",
-            maxScore: 66.94,
-            maxWeightEstimate: "551-680 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "8",
-            maxLevel: "9 (Lendário)"
-        },
-        "lobo_cinzento": {
-            mapImage: "yukon_valley_lobo_cinzento_hotspot",
-            maxScore: 39,
-            maxWeightEstimate: "67-80 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "5",
-            maxLevel: "9 (Lendário)"
-        },
-        "bisão_das_planícies": {
-            mapImage: "yukon_valley_bisao_das_planicies_hotspot",
-            maxScore: 183.5,
-            maxWeightEstimate: "987-1200 KG",
-            needZonesPotential: "08:00-12:00",
-            animalClass: "9",
-            maxLevel: "5 (Médio)"
-        },
-        "raposa_vermelha": {
-            mapImage: "yukon_valley_raposa_vermelha_hotspot",
-            maxScore: 14.05,
-            maxWeightEstimate: "12-15 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "pato_harlequim": {
-            mapImage: "yukon_valley_pato_harlequim_hotspot",
-            maxScore: 7.23,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        }
-    },
-    "cuatro_colinas": {
-        "ibex_de_gredos": {
-            mapImage: "cuatro_colinas_ibex_de_gredos_hotspot",
-            maxScore: 100.17,
-            maxWeightEstimate: "85-102 KG",
-            needZonesPotential: "10:00-14:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "faisão_de_pescoço_anelado": {
-            mapImage: "cuatro_colinas_faisao_de_pescoco_anelado_hotspot",
-            maxScore: 20.29,
-            maxWeightEstimate: "2-3 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "ibex_de_beceite": {
-            mapImage: "cuatro_colinas_ibex_de_beceite_hotspot",
-            maxScore: 191.63,
-            maxWeightEstimate: "91-110 KG",
-            needZonesPotential: "10:00-14:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "ibex_espanhol_do_sudeste": {
-            mapImage: "cuatro_colinas_ibex_espanhol_do_sudeste_hotspot",
-            maxScore: 89.68,
-            maxWeightEstimate: "74-87 KG",
-            needZonesPotential: "10:00-14:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "ibex_de_ronda": {
-            mapImage: "cuatro_colinas_ibex_de_ronda_hotspot",
-            maxScore: 107.98,
-            maxWeightEstimate: "61-70 KG",
-            needZonesPotential: "10:00-14:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "mouflão_ibérico": {
-            mapImage: "cuatro_colinas_mouflao_iberico_hotspot",
-            maxScore: 179.56,
-            maxWeightEstimate: "52-60 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "lobo_ibérico": {
-            mapImage: "cuatro_colinas_lobo_iberico_hotspot",
-            maxScore: 39,
-            maxWeightEstimate: "45-50 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "5",
-            maxLevel: "9 (Lendário)"
-        },
-        "javali": {
-            mapImage: "cuatro_colinas_javali_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "186-240 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "corça": {
-            mapImage: "cuatro_colinas_corca_hotspot",
-            maxScore: 81.86,
-            maxWeightEstimate: "29-35 KG",
-            needZonesPotential: "14:00-17:00",
-            animalClass: "3",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "lebre_europeia": {
-            mapImage: "cuatro_colinas_lebre_europeia_hotspot",
-            maxScore: 6.5,
-            maxWeightEstimate: "5-7 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "veado_vermelho": {
-            mapImage: "cuatro_colinas_veado_vermelho_hotspot",
-            maxScore: 251.07,
-            maxWeightEstimate: "210-240 KG",
-            needZonesPotential: "06:00-10:00",
-            animalClass: "6",
-            maxLevel: "9 (Lendário)"
-        }
-    },
-    "silver_ridge_peaks": {
-        "antilocapra": {
-            mapImage: "silver_ridge_peaks_antilocapra_hotspot",
-            maxScore: 108,
-            maxWeightEstimate: "57-65 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "carneiro_selvagem": {
-            mapImage: "silver_ridge_peaks_carneiro_selvagem_hotspot",
-            maxScore: 196.93,
-            maxWeightEstimate: "132-160 KG",
-            needZonesPotential: "12:00-16:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "bisão_das_planícies": {
-            mapImage: "silver_ridge_peaks_bisao_das_planicies_hotspot",
-            maxScore: 183.5,
-            maxWeightEstimate: "987-1200 KG",
-            needZonesPotential: "08:00-12:00",
-            animalClass: "9",
-            maxLevel: "5 (Médio)"
-        },
-        "cabra_da_montanha": {
-            mapImage: "silver_ridge_peaks_cabra_da_montanha_hotspot",
-            maxScore: 107.67,
-            maxWeightEstimate: "120-145 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "veado_mula": {
-            mapImage: "silver_ridge_peaks_veado_mula_hotspot",
-            maxScore: 312.17,
-            maxWeightEstimate: "175-210 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "onça_parda": {
-            mapImage: "silver_ridge_peaks_onca_parda_hotspot",
-            maxScore: 39,
-            maxWeightEstimate: "86-105 KG",
-            needZonesPotential: "21:00-00:00",
-            animalClass: "5",
-            maxLevel: "9 (Lendário)"
-        },
-        "urso_negro": {
-            mapImage: "silver_ridge_peaks_urso_negro_hotspot",
-            maxScore: 22.8,
-            maxWeightEstimate: "227-290 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "veado_das_montanhas_rochosas": {
-            mapImage: "silver_ridge_peaks_veado_das_montanhas_rochosas_hotspot",
-            maxScore: 481.41,
-            maxWeightEstimate: "410-480 KG",
-            needZonesPotential: "04:00-08:00",
-            animalClass: "7",
-            maxLevel: "5 (Médio)"
-        },
-        "peru_selvagem": { // Assumindo "Peru Merriami" aqui também
-            mapImage: "silver_ridge_peaks_peru_selvagem_hotspot",
-            maxScore: 4.62,
-            maxWeightEstimate: "9-11 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        }
-    },
-    "te_awaroa": {
-        "veado_vermelho": {
-            mapImage: "te_awaroa_veado_vermelho_hotspot",
-            maxScore: 251.07,
-            maxWeightEstimate: "210-240 KG",
-            needZonesPotential: "06:00-10:00",
-            animalClass: "6",
-            maxLevel: "9 (Lendário)"
-        },
-        "gamo": {
-            mapImage: "te_awaroa_gamo_hotspot",
-            maxScore: 249.99,
-            maxWeightEstimate: "82-100 KG",
-            needZonesPotential: "10:00-13:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "cabra_selvagem": {
-            mapImage: "te_awaroa_cabra_selvagem_hotspot",
-            maxScore: 208.71,
-            maxWeightEstimate: "43-50 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "porco_selvagem": {
-            mapImage: "te_awaroa_porco_selvagem_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "161-205 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "cervo_sika": {
-            mapImage: "te_awaroa_cervo_sika_hotspot",
-            maxScore: 198.74,
-            maxWeightEstimate: "62-75 KG",
-            needZonesPotential: "10:00-13:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "tahr": {
-            mapImage: "te_awaroa_tahr_hotspot",
-            maxScore: 101.87,
-            maxWeightEstimate: "117-140 KG",
-            needZonesPotential: "04:00-07:00, 07:00-11:00, 14:00-17:00, 17:00-20:00", // Zonas de Comida
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "peru_selvagem": { // Assumindo "Peru Merriami" aqui também
-            mapImage: "te_awaroa_peru_selvagem_hotspot",
-            maxScore: 4.62,
-            maxWeightEstimate: "9-11 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "camurça": {
-            mapImage: "te_awaroa_camurca_hotspot",
-            maxScore: 58,
-            maxWeightEstimate: "57-65 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "coelho_europeu": {
-            mapImage: "te_awaroa_coelho_europeu_hotspot",
-            maxScore: 2.42,
-            maxWeightEstimate: "2 KG",
-            needZonesPotential: "O DIA TODO", // Tocas Potencial
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_real": {
-            mapImage: "te_awaroa_pato_real_hotspot",
-            maxScore: 19.61,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        }
-    },
-    "rancho_del_arroyo": {
-        "veado_mula": {
-            mapImage: "rancho_del_arroyo_veado_mula_hotspot",
-            maxScore: 312.17,
-            maxWeightEstimate: "175-210 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "veado_de_cauda_branca": {
-            mapImage: "rancho_del_arroyo_veado_de_cauda_branca_hotspot",
-            maxScore: 255.09,
-            maxWeightEstimate: "75-100 KG",
-            needZonesPotential: "08:00 - 12:00",
-            animalClass: "4",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "carneiro_selvagem": {
-            mapImage: "rancho_del_arroyo_carneiro_selvagem_hotspot",
-            maxScore: 196.93,
-            maxWeightEstimate: "132-160 KG",
-            needZonesPotential: "12:00-16:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "antilocapra": {
-            mapImage: "rancho_del_arroyo_antilocapra_hotspot",
-            maxScore: 108,
-            maxWeightEstimate: "57-65 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "caititu": {
-            mapImage: "rancho_del_arroyo_caititu_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "26-31 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "coiote": {
-            mapImage: "rancho_del_arroyo_coiote_hotspot",
-            maxScore: 56.87,
-            maxWeightEstimate: "24-27 KG",
-            needZonesPotential: "09:00 - 00:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "lince_pardo_do_mexico": {
-            mapImage: "rancho_del_arroyo_lince_pardo_do_mexico_hotspot",
-            maxScore: 27.68,
-            maxWeightEstimate: "35-45 KG",
-            needZonesPotential: "03:00 - 06:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "peru_selvagem_do_rio_grande": {
-            mapImage: "rancho_del_arroyo_peru_selvagem_do_rio_grande_hotspot",
-            maxScore: 4.62,
-            maxWeightEstimate: "9-11 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "faisão_de_pescoço_anelado": {
-            mapImage: "rancho_del_arroyo_faisao_de_pescoco_anelado_hotspot",
-            maxScore: 20.29,
-            maxWeightEstimate: null, // Campo vazio
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "lebre_antílope": {
-            mapImage: "rancho_del_arroyo_lebre_antilope_hotspot",
-            maxScore: 6.33,
-            maxWeightEstimate: "3-4 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        }
-    },
-    "mississippi_acres": {
-        "veado_de_cauda_branca": {
-            mapImage: "mississippi_acres_veado_de_cauda_branca_hotspot",
-            maxScore: 255.09,
-            maxWeightEstimate: "75-100 KG",
-            needZonesPotential: "08:00 - 12:00",
-            animalClass: "4",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "codorniz_da_virgínia": {
-            mapImage: "mississippi_acres_codorniz_da_virgínia_hotspot",
-            maxScore: 238,
-            maxWeightEstimate: "0 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "marrequinha_americana": {
-            mapImage: "mississippi_acres_marrequinha_americana_hotspot",
-            maxScore: 480,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "peru": {
-            mapImage: "mississippi_acres_peru_hotspot",
-            maxScore: 4.6,
-            maxWeightEstimate: "9-11 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "porco_selvagem": {
-            mapImage: "mississippi_acres_porco_selvagem_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "161-205 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "urso_negro": {
-            mapImage: "mississippi_acres_urso_negro_hotspot",
-            maxScore: 22.8,
-            maxWeightEstimate: "227-290 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "raposa_cinzenta": {
-            mapImage: "mississippi_acres_raposa_cinzenta_hotspot",
-            maxScore: 6.43,
-            maxWeightEstimate: "5-6 KG",
-            needZonesPotential: "17:00 - 20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "guaxinim_comum": {
-            mapImage: "mississippi_acres_guaxinim_comum_hotspot",
-            maxScore: 12,
-            maxWeightEstimate: "10-13 KG",
-            needZonesPotential: "00:00 - 03:00",
-            animalClass: "2",
-            maxLevel: "5 (Médio)"
-        },
-        "coelho_da_flórida": {
-            mapImage: "mississippi_acres_coelho_da_florida_hotspot",
-            maxScore: 1.97,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "jacaré_americano": {
-            mapImage: "mississippi_acres_jacare_americano_hotspot",
-            maxScore: 492,
-            maxWeightEstimate: "416-530 KG",
-            needZonesPotential: "08:00 - 12:00, 12:00 - 16:00, 16:00 - 20:00", // Zonas de Descanso
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        }
-    },
-    "revontuli_coast": {
-        "galinha_montês": {
-            mapImage: "revontuli_coast_galinha_montes_hotspot",
-            maxScore: 435,
-            maxWeightEstimate: "0.41-0.45 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "veado_de_cauda_branca": {
-            mapImage: "revontuli_coast_veado_de_cauda_branca_hotspot",
-            maxScore: 255.09,
-            maxWeightEstimate: "75-100 KG",
-            needZonesPotential: "08:00 - 12:00",
-            animalClass: "4",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "urso_pardo": {
-            mapImage: "revontuli_coast_urso_pardo_hotspot",
-            maxScore: 27.7,
-            maxWeightEstimate: "389-452 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "alce": {
-            mapImage: "revontuli_coast_alce_hotspot",
-            maxScore: 274.99,
-            maxWeightEstimate: "545-620 KG",
-            needZonesPotential: "12:00 - 16:00",
-            animalClass: "8",
-            maxLevel: "5 (Médio)"
-        },
-        "ganso_bravo": {
-            mapImage: "revontuli_coast_ganso_bravo_hotspot",
-            maxScore: 3.85,
-            maxWeightEstimate: "3-4 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "ganso_campestre_da_tundra": {
-            mapImage: "revontuli_coast_ganso_campestre_da_tundra_hotspot",
-            maxScore: null,
-            maxWeightEstimate: null,
-            needZonesPotential: null,
-            animalClass: null,
-            maxLevel: null
-        },
-        "ganso_do_canadá": {
-            mapImage: "revontuli_coast_ganso_do_canada_hotspot",
-            maxScore: 8.59,
-            maxWeightEstimate: "8-9 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "lagópode_branco": {
-            mapImage: "revontuli_coast_lagopode_branco_hotspot",
-            maxScore: null,
-            maxWeightEstimate: null,
-            needZonesPotential: null,
-            animalClass: null,
-            maxLevel: null
-        },
-        "lagópode_escocês": {
-            mapImage: "revontuli_coast_lagopode_escoces_hotspot",
-            maxScore: null,
-            maxWeightEstimate: null,
-            needZonesPotential: null,
-            animalClass: null,
-            maxLevel: null
-        },
-        "pato_real": {
-            mapImage: "revontuli_coast_pato_real_hotspot",
-            maxScore: 19.61,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "piadeira": {
-            mapImage: "revontuli_coast_piadeira_hotspot",
-            maxScore: 905,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "tetraz_grande": {
-            mapImage: "revontuli_coast_tetraz_grande_hotspot",
-            maxScore: 4.64,
-            maxWeightEstimate: "4-5 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "cão_guaxinim": {
-            mapImage: "revontuli_coast_cao_guaxinim_hotspot",
-            maxScore: null,
-            maxWeightEstimate: null,
-            needZonesPotential: null,
-            animalClass: null,
-            maxLevel: null
-        },
-        "lince_euroasiática": {
-            mapImage: "revontuli_coast_lince_euroasiatica_hotspot",
-            maxScore: 27.68,
-            maxWeightEstimate: "35-45 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "3",
-            maxLevel: "9 (Lendário)"
-        },
-        "galo_lira": {
-            mapImage: "revontuli_coast_galo_lira_hotspot",
-            maxScore: null,
-            maxWeightEstimate: null,
-            needZonesPotential: null,
-            animalClass: null,
-            maxLevel: null
-        },
-        "lebre_da_eurásia": {
-            mapImage: "revontuli_coast_lebre_da_eurasia_hotspot",
-            maxScore: null,
-            maxWeightEstimate: null,
-            needZonesPotential: null,
-            animalClass: null,
-            maxLevel: null
-        },
-        "marrequinha_comum": {
-            mapImage: "revontuli_coast_marrequinha_comum_hotspot",
-            maxScore: 354,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_olho_de_ouro": {
-            mapImage: "revontuli_coast_pato_olho_de_ouro_hotspot",
-            maxScore: 1230,
-            maxWeightEstimate: "0-1 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "zarro_negrinha": {
-            mapImage: "revontuli_coast_zarro_negrinha_hotspot",
-            maxScore: 963,
-            maxWeightEstimate: "0-1 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "veado_de_cauda_preta": {
-            mapImage: "revontuli_coast_veado_de_cauda_preta_hotspot",
-            maxScore: 177.58,
-            maxWeightEstimate: "81-95 KG",
-            needZonesPotential: "16:00 - 20:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        }
-    },
-    "new_england_mountains": {
-        "alce": {
-            mapImage: "new_england_mountains_alce_hotspot",
-            maxScore: 274.99,
-            maxWeightEstimate: "545-620 KG",
-            needZonesPotential: "12:00 - 16:00",
-            animalClass: "8",
-            maxLevel: "5 (Médio)"
-        },
-        "codorniz_da_virgínia": {
-            mapImage: "new_england_mountains_codorniz_da_virgínia_hotspot",
-            maxScore: 238,
-            maxWeightEstimate: "0 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "coelho_da_flórida": {
-            mapImage: "new_england_mountains_coelho_da_florida_hotspot",
-            maxScore: 1.97,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "faisão_de_pescoço_anelado": {
-            mapImage: "new_england_mountains_faisao_de_pescoco_anelado_hotspot",
-            maxScore: 20.29,
-            maxWeightEstimate: null, // Campo vazio
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "marrequinha_americana": {
-            mapImage: "new_england_mountains_marrequinha_americana_hotspot",
-            maxScore: 480,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_olho_de_ouro": {
-            mapImage: "new_england_mountains_pato_olho_de_ouro_hotspot",
-            maxScore: 1230,
-            maxWeightEstimate: "0-1 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_real": {
-            mapImage: "new_england_mountains_pato_real_hotspot",
-            maxScore: 19.61,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "peru_selvagem": {
-            mapImage: "new_england_mountains_peru_selvagem_hotspot",
-            maxScore: 4.6,
-            maxWeightEstimate: "9-11 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "guaxinim_comum": {
-            mapImage: "new_england_mountains_guaxinim_comum_hotspot",
-            maxScore: 12,
-            maxWeightEstimate: "10-13 KG",
-            needZonesPotential: "03:00 - 06:00",
-            animalClass: "2",
-            maxLevel: "5 (Médio)"
-        },
-        "lince_pardo_do_mexico": {
-            mapImage: "new_england_mountains_lince_pardo_do_mexico_hotspot",
-            maxScore: 27.68,
-            maxWeightEstimate: "35-45 KG",
-            needZonesPotential: "03:00 - 06:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "raposa_cinzenta": {
-            mapImage: "new_england_mountains_raposa_cinzenta_hotspot",
-            maxScore: 6.43,
-            maxWeightEstimate: "5-6 KG",
-            needZonesPotential: "17:00 - 20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "veado_de_cauda_branca": {
-            mapImage: "new_england_mountains_veado_de_cauda_branca_hotspot",
-            maxScore: 255.09,
-            maxWeightEstimate: "75-100 KG",
-            needZonesPotential: "08:00 - 12:00",
-            animalClass: "4",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "urso_negro": {
-            mapImage: "new_england_mountains_urso_negro_hotspot",
-            maxScore: 22.8,
-            maxWeightEstimate: "227-290 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "coiote": {
-            mapImage: "new_england_mountains_coiote_hotspot",
-            maxScore: 56.87,
-            maxWeightEstimate: "24-27 KG",
-            needZonesPotential: "00:00 - 04:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "raposa_vermelha": {
-            mapImage: "new_england_mountains_raposa_vermelha_hotspot",
-            maxScore: 14.05,
-            maxWeightEstimate: "12-15 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "gamo": {
-            mapImage: "new_england_mountains_gamo_hotspot",
-            maxScore: 249.99,
-            maxWeightEstimate: "82-100 KG",
-            needZonesPotential: "10:00-13:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        }
-    },
-    "emerald_coast": {
-        "canguru_cinza_oriental": {
-            mapImage: "emerald_coast_canguru_cinza_oriental_hotspot",
-            maxScore: 492,
-            maxWeightEstimate: "53-66 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "4",
-            maxLevel: "9 (Lendário)"
-        },
-        "codorna_de_restolho": {
-            mapImage: "emerald_coast_codorna_de_restolho_hotspot",
-            maxScore: 238,
-            maxWeightEstimate: "0.12-0.13 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "raposa_vermelha": {
-            mapImage: "emerald_coast_raposa_vermelha_hotspot",
-            maxScore: 14.05,
-            maxWeightEstimate: "12-15 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "cabra_selvagem": {
-            mapImage: "emerald_coast_cabra_selvagem_hotspot",
-            maxScore: 208.71,
-            maxWeightEstimate: "43-50 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "cervo_porco_indiano": {
-            mapImage: "emerald_coast_cervo_porco_indiano_hotspot",
-            maxScore: 108.68,
-            maxWeightEstimate: "43-50 KG",
-            needZonesPotential: "13:00-17:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "porco_selvagem": {
-            mapImage: "emerald_coast_porco_selvagem_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "161-205 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "veado_vermelho": {
-            mapImage: "emerald_coast_veado_vermelho_hotspot",
-            maxScore: 251.07,
-            maxWeightEstimate: "210-240 KG",
-            needZonesPotential: "06:00-10:00",
-            animalClass: "6",
-            maxLevel: "9 (Lendário)"
-        },
-        "sambar": {
-            mapImage: "emerald_coast_sambar_hotspot",
-            maxScore: 166.43,
-            maxWeightEstimate: "270-300 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "cervo_de_timor": {
-            mapImage: "emerald_coast_cervo_de_timor_hotspot",
-            maxScore: 148.78,
-            maxWeightEstimate: "145-172 KG",
-            needZonesPotential: "20:00-00:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "gamo": {
-            mapImage: "emerald_coast_gamo_hotspot",
-            maxScore: 249.99,
-            maxWeightEstimate: "82-100 KG",
-            needZonesPotential: "10:00-13:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "bantengue": {
-            mapImage: "emerald_coast_bantengue_hotspot",
-            maxScore: 137,
-            maxWeightEstimate: "747-800 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "9",
-            maxLevel: "5 (Médio)"
-        },
-        "crocodilo_de_água_salgada": {
-            mapImage: "emerald_coast_crocodilo_de_agua_salgada_hotspot",
-            maxScore: 1015,
-            maxWeightEstimate: "856-1100 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "ganso_pega": {
-            mapImage: "emerald_coast_ganso_pega_hotspot",
-            maxScore: 3.85,
-            maxWeightEstimate: "2-3 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "chital": {
-            mapImage: "emerald_coast_chital_hotspot",
-            maxScore: 217.29,
-            maxWeightEstimate: "67-75 KG",
-            needZonesPotential: "03:00-06:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        }
-    },
-    "sundarpatan": {
-        "antílope_negro": {
-            mapImage: "sundarpatan_antilope_negro_hotspot",
-            maxScore: 132.26,
-            maxWeightEstimate: "44-51 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "ganso_bravo": {
-            mapImage: "sundarpatan_ganso_bravo_hotspot",
-            maxScore: 3.85,
-            maxWeightEstimate: "3-4 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "lebre_peluda": {
-            mapImage: "sundarpatan_lebre_peluda_hotspot",
-            maxScore: 3.28,
-            maxWeightEstimate: "2-3 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "muntjac_vermelho_do_norte": {
-            mapImage: "sundarpatan_muntjac_vermelho_do_norte_hotspot",
-            maxScore: 35.24,
-            maxWeightEstimate: "23-28 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "2",
-            maxLevel: "5 (Médio)"
-        },
-        "raposa_tibetana": {
-            mapImage: "sundarpatan_raposa_tibetana_hotspot",
-            maxScore: 6.37,
-            maxWeightEstimate: "5-6 kg",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "tahr": {
-            mapImage: "sundarpatan_tahr_hotspot",
-            maxScore: 101.87,
-            maxWeightEstimate: "117-140 KG",
-            needZonesPotential: "04:00-07:00, 07:00-11:00, 14:00-17:00, 17:00-20:00", // Zonas de Comida
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "carneiro_azul": {
-            mapImage: "sundarpatan_carneiro_azul_hotspot",
-            maxScore: 154.08,
-            maxWeightEstimate: "65-75 KG",
-            needZonesPotential: "14:00-17:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "cervo_do_pântano": {
-            mapImage: "sundarpatan_cervo_do_pantano_hotspot",
-            maxScore: 226.05,
-            maxWeightEstimate: "242-280 KG",
-            needZonesPotential: "12:00-15:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "nilgó": {
-            mapImage: "sundarpatan_nilgo_hotspot",
-            maxScore: 94.89,
-            maxWeightEstimate: "256-308 KG",
-            needZonesPotential: "08:00-12:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "búfalo_dágua": {
-            mapImage: "sundarpatan_bufalo_dagua_hotspot",
-            maxScore: 167.54,
-            maxWeightEstimate: "1067-1250 KG",
-            needZonesPotential: "12:00-15:00",
-            animalClass: "9",
-            maxLevel: "9 (Lendário)"
-        },
-        "leopardo_das_neves": {
-            mapImage: "sundarpatan_leopardo_das_neves_hotspot",
-            maxScore: 29,
-            maxWeightEstimate: "63-75 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "4",
-            maxLevel: "9 (Lendário)"
-        },
-        "iaque_selvagem": {
-            mapImage: "sundarpatan_iaque_selvagem_hotspot",
-            maxScore: 273.23,
-            maxWeightEstimate: "1025-1200 KG",
-            needZonesPotential: "08:00-12:00",
-            animalClass: "9",
-            maxLevel: "9 (Lendário)"
-        },
-        "tigre_de_bengala": {
-            mapImage: "sundarpatan_tigre_de_bengala_hotspot",
-            maxScore: 57,
-            maxWeightEstimate: "272-324",
-            needZonesPotential: "04:00-07:00",
-            animalClass: "9",
-            maxLevel: "9 (Lendário)"
-        },
-        "javali": {
-            mapImage: "sundarpatan_javali_hotspot",
-            maxScore: 144.25,
-            maxWeightEstimate: "186-240 KG",
-            needZonesPotential: "00:00-03:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        }
-    },
-    "salzwiesen": {
-        "coelho_europeu": {
-            mapImage: "salzwiesen_coelho_europeu_hotspot",
-            maxScore: 2.42,
-            maxWeightEstimate: "2 KG",
-            needZonesPotential: "O DIA TODO", // Tocas Potencial
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "frisada": {
-            mapImage: "salzwiesen_frisada_hotspot",
-            maxScore: 1050,
-            maxWeightEstimate: "0-1 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "galo_lira": {
-            mapImage: "salzwiesen_galo_lira_hotspot",
-            maxScore: 120,
-            maxWeightEstimate: "0-1 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "guaxinim_comum": {
-            mapImage: "salzwiesen_guaxinim_comum_hotspot",
-            maxScore: 12,
-            maxWeightEstimate: "10-13 KG",
-            needZonesPotential: "00:00 - 03:00",
-            animalClass: "2",
-            maxLevel: "5 (Médio)"
-        },
-        "raposa_vermelha": {
-            mapImage: "salzwiesen_raposa_vermelha_hotspot",
-            maxScore: 14.05,
-            maxWeightEstimate: "12-15 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "ganso_campestre_da_tundra": {
-            mapImage: "salzwiesen_ganso_campestre_da_tundra_hotspot",
-            maxScore: 3.16,
-            maxWeightEstimate: "2-3 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "faisão_de_pescoço_anelado": {
-            mapImage: "salzwiesen_faisao_de_pescoco_anelado_hotspot",
-            maxScore: 20.29,
-            maxWeightEstimate: null, // Campo vazio
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "cão_guaxinim": {
-            mapImage: "salzwiesen_cao_guaxinim_hotspot",
-            maxScore: 9.29,
-            maxWeightEstimate: "8-10 kg",
-            needZonesPotential: "10:00-13:00",
-            animalClass: "2",
-            maxLevel: "9 (Lendário)"
-        },
-        "ganso_bravo": {
-            mapImage: "salzwiesen_ganso_bravo_hotspot",
-            maxScore: 3.85,
-            maxWeightEstimate: "3-4 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "marrequinha_comum": {
-            mapImage: "salzwiesen_marrequinha_comum_hotspot",
-            maxScore: 354,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_olho_de_ouro": {
-            mapImage: "salzwiesen_pato_olho_de_ouro_hotspot",
-            maxScore: 1230,
-            maxWeightEstimate: "0-1 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_real": {
-            mapImage: "salzwiesen_pato_real_hotspot",
-            maxScore: 19.61,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "piadeira": {
-            mapImage: "salzwiesen_piadeira_hotspot",
-            maxScore: 905,
-            maxWeightEstimate: "0 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "zarro_negrinha": {
-            mapImage: "salzwiesen_zarro_negrinha_hotspot",
-            maxScore: 963,
-            maxWeightEstimate: "0-1 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "zarro_castanho": {
-            mapImage: "salzwiesen_zarro_castanho_hotspot",
-            maxScore: 1050,
-            maxWeightEstimate: "0-1 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "veado_de_cauda_preta": {
-            mapImage: "salzwiesen_veado_de_cauda_preta_hotspot",
-            maxScore: 177.58,
-            maxWeightEstimate: "81-95 KG",
-            needZonesPotential: "16:00 - 20:00",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        }
-    },
-    "askiy_ridge": {
-        "alce": {
-            mapImage: "askiy_ridge_alce_hotspot",
-            maxScore: 274.99,
-            maxWeightEstimate: "545-620 KG",
-            needZonesPotential: "12:00 - 16:00",
-            animalClass: "8",
-            maxLevel: "5 (Médio)"
-        },
-        "caribu_da_floresta_boreal": {
-            mapImage: "askiy_ridge_caribu_da_floresta_boreal_hotspot",
-            maxScore: 430.23,
-            maxWeightEstimate: "161-190 KG",
-            needZonesPotential: "20:00 - 00:00",
-            animalClass: "6",
-            maxLevel: "5 (Médio)"
-        },
-        "urso_negro": {
-            mapImage: "askiy_ridge_urso_negro_hotspot",
-            maxScore: 22.8,
-            maxWeightEstimate: "227-290 KG",
-            needZonesPotential: "04:00 - 08:00",
-            animalClass: "7",
-            maxLevel: "9 (Lendário)"
-        },
-        "veado_mula": {
-            mapImage: "askiy_ridge_veado_mula_hotspot",
-            maxScore: 312.17,
-            maxWeightEstimate: "175-210 KG",
-            needZonesPotential: "15:00-18:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "bisão_da_floresta": {
-            mapImage: "askiy_ridge_bisao_da_floresta_hotspot",
-            maxScore: 158,
-            maxWeightEstimate: "1112-1350 KG",
-            needZonesPotential: "08:00-12:00",
-            animalClass: "9",
-            maxLevel: "5 (Médio)"
-        },
-        "cabra_da_montanha": {
-            mapImage: "askiy_ridge_cabra_da_montanha_hotspot",
-            maxScore: 107.67,
-            maxWeightEstimate: "120-145 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "4",
-            maxLevel: "5 (Médio)"
-        },
-        "antilocapra": {
-            mapImage: "askiy_ridge_antilocapra_hotspot",
-            maxScore: 108,
-            maxWeightEstimate: "57-65 KG",
-            needZonesPotential: "18:00-21:00",
-            animalClass: "3",
-            maxLevel: "5 (Médio)"
-        },
-        "tetraz_azul": {
-            mapImage: "askiy_ridge_tetraz_azul_hotspot",
-            maxScore: 151,
-            maxWeightEstimate: "1.38-1.60 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_real": {
-            mapImage: "askiy_ridge_pato_real_hotspot",
-            maxScore: 19.61,
-            maxWeightEstimate: "1-2 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "pato_carolino": {
-            mapImage: "askiy_ridge_pato_carolino_hotspot",
-            maxScore: 670,
-            maxWeightEstimate: "0 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "marreca_arrebio": {
-            mapImage: "askiy_ridge_marreca_arrebio_hotspot",
-            maxScore: 1040,
-            maxWeightEstimate: "0-1 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "ganso_do_canadá": {
-            mapImage: "askiy_ridge_ganso_do_canada_hotspot",
-            maxScore: 8.59,
-            maxWeightEstimate: "8-9 KG",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "ganso_das_neves": {
-            mapImage: "askiy_ridge_ganso_das_neves_hotspot",
-            maxScore: 3.85,
-            maxWeightEstimate: "3-4 kg",
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "5 (Médio)"
-        },
-        "lobo_cinzento": {
-            mapImage: "askiy_ridge_lobo_cinzento_hotspot",
-            maxScore: 39,
-            maxWeightEstimate: "67-80 KG",
-            needZonesPotential: "17:00-20:00",
-            animalClass: "5",
-            maxLevel: "9 (Lendário)"
-        },
-        "cervo_canadense": {
-            mapImage: "askiy_ridge_cervo_canadense_hotspot",
-            maxScore: 457.56,
-            maxWeightEstimate: "395-450 kg",
-            needZonesPotential: "04:00-08:00",
-            animalClass: "7",
-            maxLevel: "5 (Médio)"
-        },
-        "veado_de_cauda_branca": {
-            mapImage: "askiy_ridge_veado_de_cauda_branca_hotspot",
-            maxScore: 255.09,
-            maxWeightEstimate: "75-100 KG",
-            needZonesPotential: "08:00 - 12:00",
-            animalClass: "4",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "faisão_de_pescoço_anelado": {
-            mapImage: "askiy_ridge_faisao_de_pescoco_anelado_hotspot",
-            maxScore: 20.29,
-            maxWeightEstimate: null, // Campo vazio
-            needZonesPotential: "O DIA TODO",
-            animalClass: "1",
-            maxLevel: "3 (Muito Fácil)"
-        },
-        "carneiro_selvagem": {
-            mapImage: "askiy_ridge_carneiro_selvagem_hotspot",
-            maxScore: 196.93,
-            maxWeightEstimate: "132-160 KG",
-            needZonesPotential: "12:00-16:00",
-            animalClass: "5",
-            maxLevel: "5 (Médio)"
-        },
-        "castor_norte_americano": {
-            mapImage: "askiy_ridge_castor_norte_americano_hotspot",
-            maxScore: 30.40,
-            maxWeightEstimate: "28-32 kg",
-            needZonesPotential: "04:00-08:00, 08:00-12:00, 16:00-20:00", // Zonas de Coleta
-            animalClass: "2",
-            maxLevel: "5 (Médio)"
-        }
-    }
-};
-
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
 function slugify(texto) { return texto.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, ''); }
@@ -2027,7 +373,7 @@ function renderNavigationHub() {
 
     const title = document.createElement('h1');
     title.className = 'hub-title';
-    title.textContent = 'Registro do Caçador'; // Alterado aqui
+    title.textContent = 'Álbum de Caça';
     hub.appendChild(title);
 
     Object.keys(categorias).forEach(key => {
@@ -2178,8 +524,6 @@ function renderAnimalDossier(animalName, originReserveKey) {
         pelagens: { title: 'Pelagens Raras', renderFunc: renderRareFursDetailView },
         diamantes: { title: 'Diamantes', renderFunc: renderDiamondsDetailView },
         super_raros: { title: 'Super Raros', renderFunc: renderSuperRareDetailView },
-        // Nova aba para Hotspots
-        hotspots: { title: '<i class="fas fa-map-marked-alt"></i> Informações de Caça', renderFunc: renderHotspotDetailsView }
     };
     // Adiciona a aba Great Ones se o animal puder ser um Great One
     if (greatsFursData[slug]) {
@@ -2188,7 +532,7 @@ function renderAnimalDossier(animalName, originReserveKey) {
 
     Object.entries(tabs).forEach(([key, value]) => {
         const tab = document.createElement('div');
-        tab.className = `dossier-tab ${key}-tab`; // Adiciona classe específica para estilização
+        tab.className = 'dossier-tab';
         tab.innerHTML = value.title;
         tab.dataset.key = key;
         dossierTabs.appendChild(tab);
@@ -2661,58 +1005,6 @@ async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey
 }
 
 /**
- * Renderiza a visualização de detalhes de Hotspot para um animal específico em uma reserva.
- * @param {HTMLElement} container O container onde o conteúdo será renderizado.
- * @param {string} animalName O nome de exibição do animal.
- * @param {string} animalSlug O slug do animal.
- * @param {string} reserveKey A chave da reserva.
- */
-function renderHotspotDetailsView(container, animalName, animalSlug, reserveKey) {
-    container.innerHTML = ''; // Limpa o conteúdo anterior
-
-    const hotspotInfo = hotspotData[reserveKey]?.[animalSlug];
-
-    if (!hotspotInfo) {
-        container.innerHTML = `<p>Nenhuma informação de hotspot disponível para ${animalName} nesta reserva.</p>`;
-        return;
-    }
-
-    const hotspotContainer = document.createElement('div');
-    hotspotContainer.className = 'hotspot-details-container';
-
-    // Seção do Mapa
-    const mapWrapper = document.createElement('div');
-    mapWrapper.className = 'hotspot-map-wrapper';
-    mapWrapper.innerHTML = `
-        <h4>Mapa de Hotspot</h4>
-        <img class="hotspot-map-image" 
-             src="hotspots/${hotspotInfo.mapImage}.jpg" 
-             alt="Mapa de Hotspot para ${animalName} em ${reservesData[reserveKey].name}"
-             onerror="this.onerror=null;this.src='animais/placeholder.png';"
-             onclick="openImageViewer(this.src);">
-    `;
-    hotspotContainer.appendChild(mapWrapper);
-
-    // Seção de Informações Detalhadas
-    const infoPanel = document.createElement('div');
-    infoPanel.className = 'hotspot-info-panel';
-    infoPanel.innerHTML = `
-        <h4>Detalhes de Caça</h4>
-        <ul class="info-list">
-            <li class="info-item"><i class="fas fa-trophy"></i> <strong>Pontuação Máxima:</strong> ${hotspotInfo.maxScore || 'Não disponível'}</li>
-            <li class="info-item"><i class="fas fa-balance-scale-right"></i> <strong>Estimativa de Peso Máximo:</strong> ${hotspotInfo.maxWeightEstimate || 'Não disponível'}</li>
-            <li class="info-item"><i class="fas fa-clock"></i> <strong>Potencial de Zonas:</strong> ${hotspotInfo.needZonesPotential || 'Não disponível'}</li>
-            <li class="info-item"><i class="fas fa-layer-group"></i> <strong>Classe:</strong> ${hotspotInfo.animalClass || 'Não disponível'}</li>
-            <li class="info-item"><i class="fas fa-arrow-alt-circle-up"></i> <strong>Nível Máximo:</strong> ${hotspotInfo.maxLevel || 'Não disponível'}</li>
-        </ul>
-    `;
-    hotspotContainer.appendChild(infoPanel);
-
-    container.appendChild(hotspotContainer);
-}
-
-
-/**
  * Atualiza a aparência de um cartão de animal (completed, inprogress, incomplete)
  * com base no progresso na categoria específica.
  * @param {HTMLElement} card O elemento do cartão do animal.
@@ -2989,4 +1281,1075 @@ function updateProgressPanel(panel) {
             });
             Object.values(sectionInfo.saved).forEach(s => {
                 collected += Object.values(s).filter(c => c === true).length;
-            
+            });
+        } else if (sectionInfo.type === 'boolean_super') { // Para super raros
+            // Calcula o total de pelagens raras que podem ser diamante para o gênero
+            Object.keys(rareFursData).forEach(slug => {
+                const speciesRareFurs = rareFursData[slug];
+                const speciesDiamondFurs = diamondFursData[slug];
+                if (speciesRareFurs) {
+                    // Contagem de pelagens raras MACHO se o animal tiver diamante MACHO
+                    if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
+                        total += speciesRareFurs.macho.length;
+                    }
+                    // Contagem de pelagens raras FEMEA se o animal tiver diamante FEMEA
+                    if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
+                        total += speciesRareFurs.femea.length;
+                    }
+                }
+            });
+
+            // Conta as pelagens Super Raras que foram coletadas
+            Object.values(sectionInfo.saved).forEach(animalSuperRares => {
+                collected += Object.values(animalSuperRares).filter(v => v === true).length;
+            });
+
+        } else if(sectionInfo.type === 'array') { // Para diamantes
+            Object.values(sectionInfo.data).forEach(s => {
+                total += (s.macho?.length || 0) + (s.femea?.length || 0);
+            });
+            Object.values(sectionInfo.saved).forEach(s => {
+                collected += new Set(s.map(t => t.type)).size;
+            });
+        } else if (sectionInfo.type === 'object') { // Para os Grandes
+            Object.values(sectionInfo.data).forEach(f => total += f.length);
+            Object.values(sectionInfo.saved).forEach(s => {
+                if(s.furs) collected += Object.values(s.furs).filter(f => f.trophies?.length > 0).length;
+            });
+        }
+
+        const percentage = total > 0 ? (collected / total) * 100 : 0;
+        let medalClass = '';
+        if (percentage >= 75) medalClass = 'gold';
+        else if (percentage >= 50) medalClass = 'silver';
+        else if (percentage > 0) medalClass = 'bronze';
+
+        const sectionEl = document.createElement('div');
+        sectionEl.className = 'progress-section';
+        sectionEl.innerHTML = `
+            <div class="progress-header">
+                <div class="progress-title-container">
+                    <i class="fas fa-medal progress-medal ${medalClass}"></i>
+                    <h3>${sectionInfo.title}</h3>
+                </div>
+                <div class="progress-label">${collected} / ${total}</div>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: ${percentage}%;"></div>
+            </div>
+        `;
+        sectionEl.addEventListener('click', () => toggleProgressDetail(sectionEl, key));
+        panel.appendChild(sectionEl);
+    });
+}
+
+// Alterna a visualização de detalhes do progresso
+function toggleProgressDetail(sectionEl, categoryKey) {
+    const existingDetail = sectionEl.querySelector('.progress-detail-view');
+    if (existingDetail) {
+        existingDetail.remove();
+        return;
+    }
+
+    const detailView = document.createElement('div');
+    detailView.className = 'progress-detail-view';
+    renderProgressDetail(detailView, categoryKey);
+    sectionEl.appendChild(detailView);
+}
+
+// Renderiza os detalhes do progresso por animal
+function renderProgressDetail(detailContainer, categoryKey) {
+    const sourceData = categorias[categoryKey].items.map(slugify);
+    const savedDataForCategory = savedData[categoryKey] || {};
+    const progressByAnimal = {};
+
+    sourceData.forEach(slug => {
+        const animalName = items.find(i => slugify(i) === slug) || slug;
+        let total = 0, collected = 0;
+
+        switch(categoryKey) {
+            case 'pelagens':
+                if(!rareFursData[slug]) return;
+                total = (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
+                collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length;
+                break;
+            case 'diamantes':
+                if(!diamondFursData[slug]) return;
+                total = (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
+                collected = new Set((savedDataForCategory[slug] || []).map(t => t.type)).size;
+                break;
+            case 'greats':
+                if(!greatsFursData[slug]) return;
+                total = greatsFursData[slug].length;
+                collected = Object.values(savedDataForCategory[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
+                break;
+            case 'super_raros':
+                // Para Super Raros no detalhe do progresso, mostramos o total de pelagens raras que podem ser diamante para o gênero
+                let possibleSuperRares = 0;
+                const speciesRareFurs = rareFursData[slug];
+                const speciesDiamondFurs = diamondFursData[slug];
+                
+                if (speciesRareFurs) {
+                    if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
+                        possibleSuperRares += speciesRareFurs.macho.length;
+                    }
+                    if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
+                        possibleSuperRares += speciesRareFurs.femea.length;
+                    }
+                }
+                total = possibleSuperRares;
+                collected = Object.values(savedDataForCategory[slug] || {}).filter(v => v === true).length;
+                break;
+        }
+        if (total > 0 || collected > 0) { // Mostra mesmo se não houver progresso, mas houver itens possíveis
+            progressByAnimal[animalName] = { collected, total };
+        }
+    });
+
+    if (Object.keys(progressByAnimal).length === 0) {
+        detailContainer.innerHTML = `<div class="progress-detail-item"><span class="label">Nenhum progresso nesta categoria ainda.</span></div>`;
+        return;
+    }
+
+    Object.entries(progressByAnimal).sort((a,b) => a[0].localeCompare(b[0])).forEach(([animalName, progress]) => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'progress-detail-item';
+        itemEl.innerHTML = `<span class="label">${animalName}</span> <span class="value">${progress.collected} / ${progress.total}</span>`;
+        detailContainer.appendChild(itemEl);
+    });
+}
+
+// Abre o visualizador de imagens em tela cheia
+function openImageViewer(imageUrl) {
+    const modal = document.getElementById('image-viewer-modal');
+    const modalImg = document.getElementById('modal-image');
+    if (modal && modalImg) {
+        modalImg.src = imageUrl;
+        modal.style.display = "flex";
+    }
+}
+
+// Fecha um modal
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+// Função para exibir um modal customizado de alerta/confirmação
+function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
+    const modal = document.getElementById('custom-alert-modal');
+    const modalTitle = document.getElementById('custom-alert-title');
+    const modalMessage = document.getElementById('custom-alert-message');
+    const okBtn = document.getElementById('custom-alert-ok-btn');
+    const cancelBtn = document.getElementById('custom-alert-cancel-btn');
+
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+
+    return new Promise((resolve) => {
+        okBtn.onclick = () => {
+            modal.style.display = 'none';
+            resolve(true);
+        };
+
+        if (isConfirm) {
+            cancelBtn.style.display = 'inline-block';
+            cancelBtn.onclick = () => {
+                modal.style.display = 'none';
+                resolve(false);
+            };
+        } else {
+            cancelBtn.style.display = 'none';
+        }
+
+        modal.style.display = 'flex';
+    });
+}
+
+
+// Obtém o inventário completo de troféus para montagens múltiplas
+function getCompleteTrophyInventory() {
+    const inventory = [];
+
+    // Pelagens Raras
+    if (savedData.pelagens) {
+        for (const slug in savedData.pelagens) {
+            for (const furName in savedData.pelagens[slug]) {
+                if (savedData.pelagens[slug][furName] === true) {
+                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim();
+                    inventory.push({ slug, gender, type: 'Pelagem Rara', detail: pureFur });
+                }
+            }
+        }
+    }
+
+    // Diamantes
+    if (savedData.diamantes) {
+        for (const slug in savedData.diamantes) {
+            savedData.diamantes[slug].forEach(trophy => {
+                const gender = trophy.type.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+                inventory.push({ slug, gender, type: 'Diamante', detail: `Pontuação ${trophy.score}` });
+            });
+        }
+    }
+
+    // Super Raros (assumindo que Super Raros são marcados como concluídos)
+    if (savedData.super_raros) {
+        for (const slug in savedData.super_raros) {
+            for (const furName in savedData.super_raros[slug]) {
+                if (savedData.super_raros[slug][furName] === true) {
+                    const gender = furName.toLowerCase().startsWith('macho') ? 'macho' : 'femea';
+                    // Para Super Raro, o furName já é o que vem do display, como "Macho Albino", "Fêmea Malhado"
+                    // Não precisamos remover "Diamante" daqui, pois ele não é adicionado ao salvar na nova lógica
+                    const pureFur = furName.replace(/^(macho|fêmea)\s/i, '').trim();    
+                    inventory.push({ slug, gender, type: 'Super Raro', detail: pureFur });
+                }
+            }
+        }
+    }
+
+    // Grandes
+    if (savedData.greats) {
+        for (const slug in savedData.greats) {
+            if (savedData.greats[slug].furs) {
+                for (const furName in savedData.greats[slug].furs) {
+                    if (savedData.greats[slug].furs[furName].trophies?.length > 0) {
+                        savedData.greats[slug].furs[furName].trophies.forEach(trophy => {
+                            // Para grandes, o gênero sempre será 'macho'
+                            inventory.push({ slug, gender: 'macho', type: 'Grande', detail: furName });
+                        });
+                    }
+                }
+            }
+        }
+    }
+    return inventory;
+}
+
+// Verifica os requisitos de uma montagem múltipla
+function checkMountRequirements(requiredAnimals) {
+    const inventory = getCompleteTrophyInventory();
+    const fulfillmentRequirements = [];
+    let isComplete = true;
+
+    // Cria uma cópia do inventário para poder "consumir" os troféus
+    const availableInventory = [...inventory];
+
+    for (const requirement of requiredAnimals) {
+        let fulfilled = false;
+        let fulfillmentTrophy = null;
+
+        // Tenta encontrar um troféu no inventário que satisfaça o requisito
+        const foundIndex = availableInventory.findIndex(trophy =>
+            trophy.slug === requirement.slug &&
+            trophy.gender === requirement.gender
+        );
+
+        if (foundIndex !== -1) {
+            fulfilled = true;
+            fulfillmentTrophy = availableInventory[foundIndex];
+            // Remove o troféu do inventário disponível para que não seja reutilizado
+            availableInventory.splice(foundIndex, 1);
+        } else {
+            isComplete = false;
+        }
+        fulfillmentRequirements.push({ met: fulfilled, requirement: requirement, trophy: fulfillmentTrophy });
+    }
+    return { isComplete, fulfillmentRequirements };
+}
+
+// Renderiza a visualização de montagens múltiplas
+function renderMultiMountsView(container) {
+    container.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'mounts-grid';
+    container.appendChild(grid);
+
+    const sortedMounts = Object.entries(multiMountsData).sort((a, b) => a[1].name.localeCompare(b[1].name));
+
+    sortedMounts.forEach(([mountKey, mount]) => {
+        const status = checkMountRequirements(mount.animals);
+        const progressCount = status.fulfillmentRequirements.filter(r => r.met).length;
+
+        const card = document.createElement('div');
+        card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
+        card.dataset.mountKey = mountKey;
+
+        let animalsHTML = '<div class="mount-card-animals">';
+        mount.animals.forEach(animal => {
+            animalsHTML += `<img src="animais/${animal.slug}.png" title="${animal.slug}" onerror="this.style.display='none'">`;
+        });
+        animalsHTML += '</div>';
+
+        card.innerHTML = `
+            <div class="mount-card-header">
+                <h3>${mount.name}</h3>
+                <div class="mount-progress">${progressCount} / ${mount.animals.length}</div>
+            </div>
+            ${animalsHTML}
+            ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i></div>' : ''}
+        `;
+        card.addEventListener('click', () => renderMultiMountDetailModal(mountKey));
+        grid.appendChild(card);
+    });
+}
+
+// Renderiza o modal de detalhes de montagens múltiplas
+function renderMultiMountDetailModal(mountKey) {
+    const mount = multiMountsData[mountKey];
+    if (!mount) return;
+
+    const status = checkMountRequirements(mount.animals);
+
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = '';
+    modal.className = 'modal-overlay form-modal';
+
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content-box';
+    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Detalhes: ${mount.name}</h3>`;
+
+    const detailList = document.createElement('ul');
+    detailList.className = 'mount-detail-list';
+
+    status.fulfillmentRequirements.forEach(fulfillment => {
+        const req = fulfillment.requirement;
+        const trophy = fulfillment.trophy;
+        const animalName = items.find(item => slugify(item) === req.slug) || req.slug;
+        const genderIcon = req.gender === 'macho' ? 'fa-mars' : 'fa-venus';
+
+        const li = document.createElement('li');
+        li.className = 'mount-detail-item';
+
+        let bodyHTML = '';
+        if (fulfillment.met) {
+            bodyHTML = `<div class="detail-item-body"><i class="fas fa-check-circle"></i> Obtido com: <strong>${trophy.type}</strong> (${trophy.detail})</div>`;
+        } else {
+            bodyHTML = `<div class="detail-item-body"><i class="fas fa-times-circle"></i> Pendente</div>`;
+        }
+
+        li.innerHTML = `
+            <div class="detail-item-header">
+                <i class="fas ${genderIcon}"></i><span>${animalName}</span>
+            </div>
+            ${bodyHTML}
+        `;
+        detailList.appendChild(li);
+    });
+
+    modalContent.appendChild(detailList);
+
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'modal-buttons';
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'back-button';
+    closeBtn.textContent = 'Fechar';
+    closeBtn.onclick = () => closeModal('form-modal');
+    buttonsDiv.appendChild(closeBtn);
+    modalContent.appendChild(buttonsDiv);
+    modal.appendChild(modalContent);
+
+    modal.style.display = 'flex';
+}
+
+// --- FUNÇÕES CONTADOR DE GRIND ---
+function renderGrindHubView(container) {
+    container.innerHTML = `<div class="grind-hub-container"></div>`;
+    const hubContainer = container.querySelector('.grind-hub-container');
+
+    const newGrindButton = document.createElement('div');
+    newGrindButton.className = 'new-grind-btn';
+    newGrindButton.innerHTML = `<i class="fas fa-plus-circle"></i><span>Iniciar Novo Grind</span>`;
+    newGrindButton.onclick = () => renderNewGrindAnimalSelection(container);
+    hubContainer.appendChild(newGrindButton);
+
+    const existingGrindsTitle = document.createElement('h3');
+    existingGrindsTitle.className = 'existing-grinds-title';
+    existingGrindsTitle.innerHTML = '<i class="fas fa-history"></i> Grinds em Andamento';
+    hubContainer.appendChild(existingGrindsTitle);
+
+    const grid = document.createElement('div');
+    grid.className = 'grinds-grid';
+    hubContainer.appendChild(grid);
+
+    if (savedData.grindSessions && savedData.grindSessions.length > 0) {
+        savedData.grindSessions.forEach(session => {
+            const reserve = reservesData[session.reserveKey];
+            const animalName = items.find(item => slugify(item) === session.animalSlug);
+            const counts = session.counts;
+
+            const card = document.createElement('div');
+            card.className = 'grind-card';
+            card.addEventListener('click', () => renderGrindCounterView(session.id));
+            card.innerHTML = `
+                <img src="animais/${session.animalSlug}.png" class="grind-card-bg-silhouette" onerror="this.style.display='none'">
+                <div class="grind-card-content">
+                    <div class="grind-card-header">
+                        <span class="grind-card-animal-name">${animalName}</span>
+                        <span class="grind-card-reserve-name"><i class="fas fa-map-marker-alt"></i> ${reserve.name}</span>
+                    </div>
+                    <div class="grind-card-stats-grid">
+                        <div class="grind-stat">
+                            <i class="fas fa-crosshairs"></i>
+                            <span>${counts.total || 0}</span>
+                        </div>
+                        <div class="grind-stat">
+                            <i class="fas fa-gem"></i>
+                            <span>${counts.diamonds || 0}</span>
+                        </div>
+                        <div class="grind-stat">
+                            <i class="fas fa-paw"></i>
+                            <span>${counts.rares?.length || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    } else {
+        grid.innerHTML = '<p class="no-grinds-message">Nenhum grind iniciado. Clique no botão acima para começar!</p>';
+    }
+}
+
+// Renderiza a seleção de animais para um novo grind
+function renderNewGrindAnimalSelection(container) {
+    container.innerHTML = '<h2>Selecione um Animal para o Novo Grind</h2>';
+
+    const filterInput = document.createElement('input');
+    filterInput.type = 'text';
+    filterInput.className = 'filter-input';
+    filterInput.placeholder = 'Buscar animal...';
+    container.appendChild(filterInput);
+
+    const albumGrid = document.createElement('div');
+    albumGrid.className = 'album-grid';
+    container.appendChild(albumGrid);
+
+    items.sort((a, b) => a.localeCompare(b)).forEach(name => {
+        const slug = slugify(name);
+        const card = document.createElement('div');
+        card.className = 'animal-card';
+        card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
+        card.addEventListener('click', () => renderReserveSelectionForGrind(container, slug));
+        albumGrid.appendChild(card);
+    });
+
+    filterInput.addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        albumGrid.querySelectorAll('.animal-card').forEach(card => {
+            const animalName = card.querySelector('.info').textContent.toLowerCase();
+            card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+}
+
+// Renderiza a seleção de reserva para um novo grind
+async function renderReserveSelectionForGrind(container, animalSlug) {
+    const animalName = items.find(item => slugify(item) === animalSlug);
+    container.innerHTML = `<h2>Onde você vai grindar ${animalName}?</h2>`;
+
+    const grid = document.createElement('div');
+    grid.className = 'reserves-grid';
+    container.appendChild(grid);
+
+    const availableReserves = Object.entries(reservesData).filter(([, reserveData]) => reserveData.animals.includes(animalSlug)).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+
+    if (availableReserves.length === 0) {
+        grid.innerHTML = `<p class="no-grinds-message">Nenhuma reserva encontrada para caçar ${animalName}.</p>`;
+        return;
+    }
+
+    for (const [reserveKey, reserve] of availableReserves) {
+        const card = document.createElement('div');
+        card.className = 'reserve-card';
+        card.innerHTML = `
+            <div class="reserve-image-container">
+                <img class="reserve-card-image" src="${reserve.image}" onerror="this.style.display='none'">
+            </div>
+            <div class="reserve-card-info-panel">
+                <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
+            </div>
+        `;
+        card.addEventListener('click', async () => {
+            const existingSession = savedData.grindSessions.find(s => s.animalSlug === animalSlug && s.reserveKey === reserveKey);
+            if(existingSession) {
+                await showCustomAlert('Um grind para este animal nesta reserva já existe. Abrindo o grind existente.');
+                renderGrindCounterView(existingSession.id);
+                return;
+            }
+            const newSessionId = `grind_${Date.now()}`;
+            const newSession = { id: newSessionId, animalSlug: animalSlug, reserveKey: reserveKey, counts: { total: 0, diamonds: 0, trolls: 0, rares: [], super_rares: [], great_ones: [] } };
+            savedData.grindSessions.push(newSession);
+            saveData(savedData);
+            renderGrindCounterView(newSessionId);
+        });
+        grid.appendChild(card);
+    }
+}
+
+// Renderiza a visualização do contador de grind
+async function renderGrindCounterView(sessionId) {
+    const session = savedData.grindSessions.find(s => s.id === sessionId);
+    if (!session) { console.error("Sessão de grind não encontrada!", sessionId); renderMainView('grind'); return; }
+
+    // Garante que as propriedades de contagem existam, inicializando-as se necessário
+    const counts = {
+        total: session.counts.total || 0,
+        diamonds: session.counts.diamonds || 0,
+        trolls: session.counts.trolls || 0,
+        rares: session.counts.rares || [],
+        super_rares: session.counts.super_rares || [],
+        great_ones: session.counts.great_ones || []
+    };
+    session.counts = counts; // Atualiza a sessão com os valores garantidos
+
+    const { animalSlug, reserveKey } = session;
+    const mainContent = document.querySelector('.main-content');
+    const container = mainContent.querySelector('.content-container');
+    const animalName = items.find(item => slugify(item) === animalSlug);
+    const reserveName = reservesData[reserveKey].name;
+
+    mainContent.querySelector('.page-header h2').textContent = `Contador de Grind`;
+    const backButton = mainContent.querySelector('.page-header .back-button');
+    backButton.innerHTML = `&larr; Voltar para o Hub de Grind`;
+    backButton.onclick = () => renderMainView('grind');
+
+    container.innerHTML = `
+        <div class="grind-container">
+            <div class="grind-header">
+                <div class="grind-header-info">
+                    <img src="animais/${animalSlug}.png" class="grind-animal-icon" onerror="this.style.display='none'">
+                    <div>
+                        <h2>${animalName.toUpperCase()}</h2>
+                        <span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="counters-wrapper">
+                <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><i class="fas fa-gem"></i><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item great-ones" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-crown"></i><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item super-rare" data-type="super_rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item total-kills" data-type="total"><div class="grind-counter-header"><i class="fas fa-crosshairs"></i><span>Total de Abatimentos</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value" id="total-kills-value">${counts.total}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+            </div>
+            <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
+        </div>`;
+
+    container.querySelectorAll('.grind-counter-btn').forEach(button => {
+        button.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            const isIncrease = button.classList.contains('increase');
+            const counterItem = button.closest('.grind-counter-item');
+            const type = counterItem.dataset.type;
+            const isDetailed = counterItem.dataset.detailed === 'true';
+            const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
+            if (!currentSession) return;
+
+            if (isIncrease) {
+                if (isDetailed) { openGrindDetailModal(sessionId, type); return; }    // Abre modal para tipos detalhados
+                else { currentSession.counts[type]++; } // Incrementa diretamente para tipos simples
+            } else { // Diminuir
+                if (isDetailed) {
+                    if (currentSession.counts[type].length > 0) {
+                        const lastItem = currentSession.counts[type][currentSession.counts[type].length - 1];
+                        // Simplificado para apenas mostrar o nome da variação (removendo "Macho/Fêmea" e "Diamante" para a mensagem)
+                        const cleanVariationName = lastItem.variation.replace(/^(Macho|Fêmea)\s|\sDiamante$/gmi, '').trim();
+                        if (await showCustomAlert(`Tem certeza que deseja remover o último item registrado: "${cleanVariationName}"?`, 'Confirmar Exclusão', true)) {
+                            currentSession.counts[type].pop();
+                        }
+                    }
+                } else {
+                    if (currentSession.counts[type] > 0) { currentSession.counts[type]--; }
+                }
+            }
+            saveData(savedData);
+            renderGrindCounterView(sessionId); // Re-renderiza para atualizar a UI
+        });
+    });
+
+    const totalKillsValue = container.querySelector('#total-kills-value');
+    if (totalKillsValue) {
+        totalKillsValue.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const body = totalKillsValue.parentElement;
+            if (body.querySelector('input')) return; // Evita abrir múltiplos inputs
+
+            const currentTotal = session.counts.total || 0;
+
+            body.innerHTML = `
+                <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                <input type="number" class="grind-total-input" value="${currentTotal}">
+                <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
+            `;
+            const input = body.querySelector('input');
+            input.focus();
+            input.select();
+
+            const saveNewTotal = () => {
+                const newValue = parseInt(input.value, 10);
+                if (!isNaN(newValue) && newValue >= 0) {
+                    session.counts.total = newValue;
+                    saveData(savedData);
+                }
+                renderGrindCounterView(sessionId); // Re-renderiza para atualizar a UI
+            };
+
+            input.addEventListener('blur', saveNewTotal);
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') saveNewTotal();
+                else if (e.key === 'Escape') renderGrindCounterView(sessionId);
+            });
+        });
+    }
+
+    container.querySelector('#delete-grind-btn').addEventListener('click', async () => {
+        if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) {
+            const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId);
+            if (sessionIndex > -1) {
+                savedData.grindSessions.splice(sessionIndex, 1);
+                saveData(savedData);
+                renderMainView('grind'); // Volta para o hub de grind
+            }
+        }
+    });
+}
+
+// Sincroniza um troféu do grind para o álbum principal
+function syncTrophyToAlbum(animalSlug, rarityType, details) {
+    if (!savedData) return;
+
+    switch(rarityType) {
+        case 'rares':
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[animalSlug]) savedData.pelagens[animalSlug] = {};
+            savedData.pelagens[animalSlug][details.variation] = true;
+            console.log(`Sincronizado: Pelagem Rara '${details.variation}' para ${animalSlug}`);
+            break;
+
+        case 'super_rares':
+            if (!savedData.super_raros) savedData.super_raros = {};
+            if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
+            // O nome da pelagem super rara é a variação selecionada no modal (ex: "Macho Albino", "Fêmea Malhado")
+            const superRareKey = details.variation;    
+            savedData.super_raros[animalSlug][superRareKey] = true;
+            console.log(`Sincronizado: Super Raro '${superRareKey}' para ${animalSlug}`);
+            break;
+
+        case 'great_ones':
+            if (!savedData.greats) savedData.greats = {};
+            if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = {};
+            if (!savedData.greats[animalSlug].furs) savedData.greats[animalSlug].furs = {};
+            if (!savedData.greats[animalSlug].furs[details.variation]) {
+                savedData.greats[animalSlug].furs[details.variation] = { trophies: [] };
+            }
+
+            const newGreatOneTrophy = {
+                date: new Date().toISOString(),
+                abates: details.grindCounts.total,
+                diamantes: details.grindCounts.diamonds,
+                pelesRaras: details.grindCounts.rares.length
+            };
+
+            savedData.greats[animalSlug].furs[details.variation].trophies.push(newGreatOneTrophy);
+            console.log(`Sincronizado: Great One '${details.variation}' para ${animalSlug} com detalhes do grind.`);
+            break;
+
+        case 'diamonds':
+            // Não há sincronização detalhada para diamantes a partir do grind,
+            // pois a pontuação é gerenciada diretamente na tela de Diamantes.
+            // O contador de grind apenas registra a ocorrência.
+            break;
+    }
+}
+
+// Abre o modal de detalhes do grind (para pelagens raras, super raros, great ones)
+async function openGrindDetailModal(sessionId, rarityType) {
+    const session = savedData.grindSessions.find(s => s.id === sessionId);
+    if (!session) return;
+
+    const { animalSlug } = session;
+    let options = [];
+    let title = "Registrar ";
+
+    switch (rarityType) {
+        case 'rares':
+            title += "Pelagem Rara";
+            const furData = rareFursData[animalSlug];
+            if (furData) {
+                if (furData.macho) furData.macho.forEach(fur => options.push(`Macho ${fur}`));
+                if (furData.femea) furData.femea.forEach(fur => options.push(`Fêmea ${fur}`));
+            }
+            break;
+        case 'super_rares':
+            title += "Super Raro";
+            const speciesRareFurs = rareFursData[animalSlug];
+            const speciesDiamondData = diamondFursData[animalSlug]; // Dados de diamante para o animal
+
+            // Popula opções apenas com pelagens raras elegíveis para Super Raro (que podem ser diamante no gênero)
+            if (speciesRareFurs) {
+                // Macho
+                if (speciesRareFurs.macho && (speciesDiamondData?.macho?.length || 0) > 0) {
+                    speciesRareFurs.macho.forEach(rareFur => {
+                        options.push(`Macho ${rareFur}`);
+                    });
+                }
+                // Fêmea
+                if (speciesRareFurs.femea && (speciesDiamondData?.femea?.length || 0) > 0) {
+                    speciesRareFurs.femea.forEach(rareFur => {
+                        options.push(`Fêmea ${rareFur}`);
+                    });
+                }
+            }
+            break;
+        case 'great_ones':
+            title += "Grande";
+            const greatData = greatsFursData[animalSlug];
+            if (greatData) {
+                options = greatData;
+            }
+            break;
+    }
+
+    if (options.length === 0) {
+        await showCustomAlert(`Nenhuma variação de '${rarityType.replace('_', ' ')}' encontrada para este animal que se encaixe nos critérios de diamante.`, 'Aviso');
+        return;
+    }
+
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = `
+        <div class="modal-content-box">
+            <h3>${title}</h3>
+            <select id="grind-detail-modal-select">
+                ${options.map(opt => `<option value="${opt}">${opt}</option>`).join('')}
+            </select>
+            <div class="modal-buttons">
+                <button id="grind-detail-cancel" class="back-button">Cancelar</button>
+                <button id="grind-detail-save" class="back-button" style="background-color: var(--primary-color); color: #111;">Salvar</button>
+            </div>
+        </div>
+    `;
+
+    modal.querySelector('#grind-detail-cancel').onclick = () => closeModal('form-modal');
+    modal.querySelector('#grind-detail-save').onclick = () => {
+        const select = document.getElementById('grind-detail-modal-select');
+        const selectedValue = select.value;
+
+        const logDetails = {
+            variation: selectedValue,
+            grindCounts: session.counts    // Passa as contagens atuais do grind
+        };
+        const newLog = { id: Date.now(), variation: selectedValue, date: new Date().toISOString() };
+
+        if (!session.counts[rarityType]) session.counts[rarityType] = [];
+        session.counts[rarityType].push(newLog);
+
+        syncTrophyToAlbum(animalSlug, rarityType, logDetails); // Sincroniza com o álbum principal
+
+        saveData(savedData);
+        closeModal('form-modal');
+        renderGrindCounterView(sessionId); // Re-renderiza o contador de grind
+    };
+
+    modal.style.display = 'flex';
+}
+
+// Obtém estatísticas agregadas de grind para o ranking
+function getAggregatedGrindStats() {
+    const allAnimalSlugs = items.map(name => slugify(name));
+    const stats = {};
+
+    allAnimalSlugs.forEach(slug => {
+        stats[slug] = {
+            animalSlug: slug,
+            animalName: items.find(i => slugify(i) === slug) || slug,
+            totalKills: 0,
+            diamonds: 0,
+            rares: 0,
+            superRares: 0,
+            greatOnes: 0
+        };
+    });
+
+    if (savedData.grindSessions && savedData.grindSessions.length > 0) {
+        savedData.grindSessions.forEach(session => {
+            const slug = session.animalSlug;
+            if (stats[slug]) {
+                stats[slug].totalKills += session.counts.total || 0;
+                stats[slug].diamonds += session.counts.diamonds || 0;
+                stats[slug].rares += session.counts.rares?.length || 0;
+                stats[slug].superRares += session.counts.super_rares?.length || 0;
+                stats[slug].greatOnes += session.counts.great_ones?.length || 0;
+            }
+        });
+    }
+
+    return Object.values(stats).sort((a, b) => a.animalName.localeCompare(b.animalName));
+}
+
+// Renderiza a visualização do ranking de caça
+function renderHuntingRankingView(container) {
+    const stats = getAggregatedGrindStats();
+
+    container.innerHTML = `
+        <div class="ranking-header">
+            <h3>Ranking de Caça</h3>
+            <p>Estatísticas agregadas de todas as sessões do Contador de Grind.</p>
+        </div>
+        <div class="ranking-table-container">
+            <table class="ranking-table">
+                <thead>
+                    <tr>
+                        <th>Animal</th>
+                        <th><i class="fas fa-crosshairs"></i> Abates</th>
+                        <th><i class="fas fa-gem"></i> Diamantes</th>
+                        <th><i class="fas fa-paw"></i> Raros</th>
+                        <th><i class="fas fa-star"></i> Super Raros</th>
+                        <th><i class="fas fa-crown"></i> Grandes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${stats.map(animalStat => `
+                        <tr>
+                            <td data-label="Animal">
+                                <img src="animais/${animalStat.animalSlug}.png" class="table-animal-icon" onerror="this.style.display='none'">
+                                <span>${animalStat.animalName}</span>
+                            </td>
+                            <td data-label="Abates">${animalStat.totalKills}</td>
+                            <td data-label="Diamantes">${animalStat.diamonds}</td>
+                            <td data-label="Raros">${animalStat.rares}</td>
+                            <td data-label="Super Raros">${animalStat.superRares}</td>
+                            <td data-label="Grandes">${greatsFursData[animalStat.animalSlug] ? animalStat.greatOnes : 'N/A'}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `;
+}
+
+// --- NOVAS FUNÇÕES DE AUTENTICAÇÃO ---
+
+// Renderiza o formulário de login
+function renderLoginForm() {
+    appContainer.innerHTML = `
+        <div class="auth-container">
+            <div class="auth-box">
+                <h2>Login - Álbum de Caça</h2>
+                <p>Acesse sua conta para sincronizar seu progresso.</p>
+                <input type="email" id="loginEmail" placeholder="Seu e-mail">
+                <input type="password" id="loginPassword" placeholder="Sua senha">
+                <button id="loginButton" class="auth-button">Entrar</button>
+                <button id="showRegister" class="link-button">Não tem uma conta? Cadastre-se</button>
+                <div id="authError" class="auth-error"></div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('loginButton').addEventListener('click', () => {
+        const email = document.getElementById('loginEmail').value;
+        const password = document.getElementById('loginPassword').value;
+        const errorDiv = document.getElementById('authError');
+
+        auth.signInWithEmailAndPassword(email, password)
+            .catch((error) => {
+                errorDiv.textContent = `Erro ao entrar: ${error.message}`;
+            });
+    });
+
+    document.getElementById('showRegister').addEventListener('click', renderRegisterForm);
+}
+
+// Renderiza o formulário de registro
+function renderRegisterForm() {
+    appContainer.innerHTML = `
+        <div class="auth-container">
+            <div class="auth-box">
+                <h2>Cadastro - Álbum de Caça</h2>
+                <p>Crie sua conta para salvar seu progresso na nuvem.</p>
+                <input type="email" id="registerEmail" placeholder="Seu e-mail">
+                <input type="password" id="registerPassword" placeholder="Sua senha (mínimo 6 caracteres)">
+                <button id="registerButton" class="auth-button">Cadastrar</button>
+                <button id="showLogin" class="link-button">Já tem uma conta? Faça o login</button>
+                <div id="authError" class="auth-error"></div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('registerButton').addEventListener('click', () => {
+        const email = document.getElementById('registerEmail').value;
+        const password = document.getElementById('registerPassword').value;
+        const errorDiv = document.getElementById('authError');
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .catch((error) => {
+                errorDiv.textContent = `Erro no cadastro: ${error.message}`;
+            });
+    });
+
+    document.getElementById('showLogin').addEventListener('click', renderLoginForm);
+}
+
+// Configura o botão de logout
+function setupLogoutButton(user) {
+    if (!user) return;
+
+    let pageHeader = document.querySelector('.page-header');
+    if (!pageHeader) {
+        let existingHeader = document.querySelector('.page-header-logout-only');
+        if (existingHeader) existingHeader.remove();
+
+        pageHeader = document.createElement('div');
+        pageHeader.className = 'page-header-logout-only';
+
+        const navHub = document.querySelector('.navigation-hub');
+        if (navHub) {
+            navHub.before(pageHeader);
+        } else {
+            appContainer.prepend(pageHeader);
+        }
+    }
+
+    let logoutContainer = document.getElementById('logout-container');
+    if (logoutContainer) logoutContainer.remove();
+
+    logoutContainer = document.createElement('div');
+    logoutContainer.id = 'logout-container';
+    logoutContainer.innerHTML = `
+        <span class="user-email">${user.email}</span>
+        <button id="logoutButton" class="back-button">Sair</button>
+    `;
+    pageHeader.appendChild(logoutContainer);
+
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        auth.signOut();
+    });
+}
+
+// --- FUNÇÕES DE BACKUP/RESTAURAÇÃO ---
+function exportUserData() {
+    if (!currentUser || !savedData) {
+        showCustomAlert('Nenhum dado para exportar. Faça login primeiro.', 'Erro de Exportação');
+        return;
+    }
+
+    const dataStr = JSON.stringify(savedData, null, 2); // Formata o JSON para ser legível
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `thehunter_album_backup_${currentUser.uid}_${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showCustomAlert('Seu progresso foi exportado com sucesso!', 'Backup Criado');
+}
+
+async function importUserData(event) {
+    if (!currentUser) {
+        await showCustomAlert('Faça login antes de tentar importar dados.', 'Erro de Importação');
+        return;
+    }
+
+    const file = event.target.files[0];
+    if (!file) {
+        return;
+    }
+
+    if (file.type !== 'application/json') {
+        await showCustomAlert('Por favor, selecione um arquivo JSON válido.', 'Erro de Arquivo');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        try {
+            const importedData = JSON.parse(e.target.result);
+
+            // Confirmação antes de sobrescrever
+            const confirmImport = await showCustomAlert(
+                'Tem certeza que deseja sobrescrever seu progresso atual com os dados deste arquivo? Esta ação não pode ser desfeita.',
+                'Confirmar Importação',
+                true
+            );
+
+            if (confirmImport) {
+                // Validação básica para garantir que é um arquivo de backup do app
+                if (importedData.pelagens || importedData.diamantes || importedData.greats || importedData.super_raros || importedData.grindSessions) {
+                    savedData = importedData; // Atualiza o objeto global
+                    await saveData(savedData); // Salva no Firestore
+
+                    await showCustomAlert('Progresso importado e salvo na nuvem com sucesso!', 'Importação Concluída');
+                    location.reload(); // Recarrega a página para refletir os novos dados
+                } else {
+                    await showCustomAlert('O arquivo JSON selecionado não parece ser um backup válido do álbum de caça.', 'Erro de Validação');
+                }
+            } else {
+                await showCustomAlert('Importação cancelada.', 'Cancelado');
+            }
+        } catch (error) {
+            console.error('Erro ao ler ou parsear o arquivo JSON:', error);
+            await showCustomAlert('Erro ao ler o arquivo de backup. Certifique-se de que é um JSON válido.', 'Erro de Leitura');
+        } finally {
+            // Limpa o input de arquivo para permitir que o mesmo arquivo seja selecionado novamente
+            event.target.value = '';    
+        }
+    };
+    reader.readAsText(file);
+}
+
+
+// --- INICIALIZAÇÃO DO APP ---
+document.addEventListener('DOMContentLoaded', () => {
+    appContainer = document.getElementById('app-container');
+
+    auth.onAuthStateChanged(async (user) => {
+        if (user) {
+            currentUser = user;
+            appContainer.innerHTML = `<div class="loading-spinner">Carregando seus dados...</div>`;
+
+            savedData = await loadDataFromFirestore();
+
+            renderNavigationHub();    // Renderiza o hub de navegação após carregar os dados
+        } else {
+            currentUser = null;
+            renderLoginForm(); // Mostra a tela de login se não houver usuário logado
+        }
+    });
+
+    // Configura modais de exibição de imagem e formulário
+    const imageModal = document.getElementById('image-viewer-modal');
+    const formModal = document.getElementById('form-modal');
+    [imageModal, formModal].forEach(modal => {
+        if(modal) {
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) closeBtn.onclick = () => closeModal(modal.id);
+            modal.addEventListener('click', e => {
+                if (e.target === modal) closeModal(modal.id);
+            });
+        }
+    });
+
+    // Configura o novo modal customizado de alerta/confirmação
+    const customAlertModal = document.getElementById('custom-alert-modal');
+    if (customAlertModal) {
+        customAlertModal.addEventListener('click', e => {
+            if (e.target === customAlertModal) customAlertModal.style.display = 'none';
+        });
+    }
+
+    // Fecha modais com a tecla ESC
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeModal('image-viewer-modal');
+            closeModal('form-modal');
+            closeModal('custom-alert-modal'); // Fecha o modal customizado também
+        }
+    });
+});
+
+
