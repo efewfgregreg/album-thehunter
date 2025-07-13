@@ -1,5 +1,6 @@
 // ========================================================================
 // ======== INICIALIZAÇÃO DO FIREBASE (COM SEUS DADOS) ========
+// Utilizando Firebase SDK versão 8.10.1
 // =================================================================
 const firebaseConfig = {
     apiKey: "AIzaSyD_vgZDTseipBQgo2oXJeZUyczCEzWg_8w",
@@ -94,8 +95,6 @@ function saveData(data) {
         renderMultiMountsView(container);
     }
 }
-
-
 // --- CONSTANTES DE DADOS ---
 const rareFursData = {
     "alce": { macho: ["Albino", "Melanístico", "Malhado", "Café"], femea: ["Albino", "Melanístico", "Malhado"] },
@@ -210,7 +209,9 @@ const rareFursData = {
     "bisão_da_floresta": { macho: ["Albino", "Melânico", "Leucismo", "Malhado", "Pardo Escuro"], femea: ["Albino", "Melânico", "Leucismo","Malhado","Pardo Escuro"] }
 };
 const greatsFursData = { "alce": ["Fábula Dois Tons", "Cinza lendário", "Bétula lendária", "Carvalho Fabuloso", "Fabuloso Salpicado", "Abeto lendário"], "urso_negro": ["Creme Lendário", "Espírito Lendário", "Marrom Lendário", "Pintado Lendário", "Gelo Lendário 2", "Gelo Lendário"], "veado_de_cauda_branca": ["Pardo", "Pardo Escuro", "Bronzeado", "Malhado"], "gamo": ["Café Lendário", "Pintado Lendário", "Dourado Lendário", "Misto Lendário", "Prata Lendário"], "raposa": ["A lendária Lua de Sangue", "Bengala de doce lendária", "A lendária flor de cerejeira", "Alcaçuz lendário", "A lendária papoula da meia-noite", "Floco de Neve Místico Fabuloso", "Hortelã-pimenta lendária", "Fábula Rosebud Frost", "A lendária Beladona Escarlate"], "veado_vermelho": ["Pintado Lendário"], "tahr": ["Dourado Lendário", "Cicatrizes Lendárias", "Cinza Lendário", "Café com Leite Lendário", "Crânio Lendário", "Metade Lendária", "Neve Lendário"], "veado_mula": ["Chuva de Gotículas Lendárias", "Via Láctea Lendária", "Sopro de Pétalas Lendário", "Manto Crepuscular Lendário", "Enigma Teia de Aranha Lendário", "Listras de Canela Lendário"], "faisão": ["Rubi Lendário", "Pérola Lendário", "Granada Lendário", "Safira Lendário", "Obsidiana Lendário", "Citrino Lendário", "Esmeralda Lendário", "Morganita Lendário"] };
+
 const items = ["Alce","Antilocapra","Antílope Negro","Bantengue","Bisão da Floresta","Bisão das Planícies","Bisão Europeu","Búfalo Africano","Búfalo D'Água","Cabra da Montanha","Cabra de Leque","Cabra Selvagem","Caititu","Camurça","Canguru-cinza Oriental", "Chacal Listrado", "Caribu","Caribu da Floresta Boreal","Carneiro Azul","Carneiro Selvagem","Castor Norte-Americano","Cervo Almiscarado","Cervo Canadense","Cervo do Pântano","Cervo de Timor","Cervo Sika","Cervo-porco Indiano","Chital","Codorna-de-restolho","Codorniz da Virgínia","Coelho da Flórida","Coelho Europeu","Coiote","Corça","Crocodilo de Água Salgada","Cudo Menor","Faisão de Pescoço Anelado","Frisada","Galo Lira","Gamo","Ganso Bravo","Ganso Campestre da Tundra","Ganso das Neves","Ganso do Canadá","Ganso Pega","Gnu de Cauda Preta","Guaxinim Comum","Iaque Selvagem","Ibex de Beceite","Ibex de Gredos","Ibex de Ronda","Ibex Espanhol do Sudeste","Jacaré Americano","Javali","Javali Africano", "Lebre Europeia", "Lebre-antílope","Lebre-da-cauda-branca","Lebre Da Eurásia","Lebre Nuca Dourada","Lebre Peluda","Leão","Leopardo das Neves","Lince Euroasiática","Lince Pardo do México","Lobo Cinzento","Lobo Ibérico","Marreca Arrebio","Marreca Carijó","Marrequinha Americana","Marrequinha Comum","Mouflão Ibérico","Muntjac vermelho do norte","Nilgó","Onça Parda","Órix do Cabo","Pato Carolino","Pato Harlequim","Pato Olho de Ouro","Pato Real","Peru","Peru Selvagem","Peru Selvagem do Rio Grande","Piadeira","Porco Selvagem","Raposa cinzenta","Raposa tibetana","Raposa Vermelha","Rena da Montanha","Sambar","Tahr","Tetraz Azul","Tetraz Grande","Tigre-de-Bengala","Urso Cinzento","Urso Negro","Urso Pardo","Veado das Montanhas Rochosas","Veado de Cauda Branca","Veado de Cauda Preta","Veado-Mula","Veado de Roosevelt","Veado Vermelho","Cão Guaxinim","Lagópode-Branco","Lagópode-Escocês","Galinha-Montês","Zarro-Negrinha","Zarro-castanho", "Peru Merriami"]; // Adicionado 'Peru Merriami' para consistência
+
 const diamondFursData = {
     "alce": { macho: ["Bronzeado", "Pardo", "Pardo Claro"], femea: [] },
     "antilocapra": { macho: ["Bronzeado", "Escuro", "Pardo"], femea: [] },
@@ -262,13 +263,7 @@ const diamondFursData = {
     "gnu_de_cauda_preta": { macho: ["Albino"], femea: ["Albino", "Coroado"] },
     "guaxinim_comum": { macho: ["Amarelado", "Cinzento", "Pardo"], femea: [] },
     "iaque_selvagem": { macho: ["Pardo Escuro", "Vermelho Escuro", "Preto Profundo", "Marrom Profundo", "Ouro"], femea: [] },
-    "ibex_de_beceite": { macho: ["Cinzento", "Laranja", "Marrom Híbrido", "Pardo e Cinza"], femea: [] },
-    "ibex_de_gredos": { macho: ["Cinza Claro", "Marrom Híbrido", "Cinzento", "Pardo e Cinza"], femea: [] },
-    "ibex_de_ronda": { macho: ["Cinzento", "Marrom Híbrido", "Pardo", "Pardo e Cinza"], femea: [] },
-    "ibex_espanhol_do_sudeste": { macho: ["pardo hibrido", "pardo acinzentado", "cinza claro", "laranja"], femea: [] },
-    "javali": { macho: ["Preto e Dourado", "pardo claro variação 1", "pardo claro variação 2"], femea: [] },
-    "javali_africano": { macho: ["Cinzento Escuro", "Pardo Avermelhado"], femea: [] },
-    "lebre_antílope": { macho: ["Cinzento", "Mosqueado", "Pardo Escuro", "Pardo"], femea: [] },
+    "ibex_de_beceite": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "jacaré_americano": { macho: ["Pardo_Escuro", "Oliva"], femea: [] },
     "lebre_da_cauda_branca": { macho: ["Bege", "Cinzento", "Pardo", "Pardo Claro"], femea: [] },
     "lebre_da_eurásia": { macho: ["Cinza Claro", "Cinza Escuro", "Pardo Claro", "Pardo Escuro"], femea: ["Cinza Claro", "Cinza Escuro", "Pardo Claro", "Pardo Escuro"] }, // Corrigido
@@ -328,9 +323,8 @@ const diamondFursData = {
     "cervo_canadense": { macho: ["Albino", "Melânico", "Leucismo", "Malhado"], femea: ["Albino", "Melânico", "Leucismo", "Malhado"] },
     "bisão_da_floresta": { macho: ["Albino", "Melânico", "Leucismo", "Malhado", "Pardo Escuro"], femea: ["Albino", "Melânico", "Leucismo","Malhado","Pardo Escuro"] }
 };
-const reservesData = { layton_lake: { name: "Layton Lake", image: "reservas/layton_lake.png", animals: ["alce", "veado_de_cauda_branca", "veado_de_cauda_preta", "veado_de_roosevelt", "urso_negro", "coiote", "pato_real", "lebre_da_cauda_branca", "peru_merriami"] }, hirschfelden: { name: "Hirschfelden", image: "reservas/hirschfelden.png", animals: ["gamo", "corça", "veado_vermelho", "javali", "bisão_europeu", "raposa_vermelha", "ganso_do_canadá", "coelho_europeu", "faisão_de_pescoço_anelado"] }, medved_taiga: { name: "Medved Taiga", image: "reservas/medved_taiga.png", animals: ["alce", "rena_da_montanha", "tetraz_grande", "cervo_almiscarado", "urso_pardo", "javali", "lince_euroasiática", "lobo_cinzento"] }, vurhonga_savanna: { name: "Vurhonga Savana", image: "reservas/vurhonga_savanna.png", animals: ["chacal_listrado", "lebre_nuca_dourada", "piadeira", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "órix_do_cabo"] }, parque_fernando: { name: "Parque Fernando", image: "reservas/parque_fernando.png", animals: ["veado_vermelho", "marreca_carijó", "caititu", "veado_mula", "onça_parda", "antílope_negro", "búfalo_dágua", "chital"] }, yukon_valley: { name: "Yukon Valley", image: "reservas/yukon_valley.png", animals: ["caribu", "ganso_do_canadá", "alce", "urso_cinzento", "lobo_cinzento", "bisão_das_planícies", "raposa_vermelha", "pato_harlequim"] }, cuatro_colinas: { name: "Cuatro Colinas", image: "reservas/cuatro_colinas.png", animals: ["ibex_de_gredos", "faisão_de_pescoço_anelado", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "mouflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"] }, silver_ridge_peaks: { name: "Silver Ridge Peaks", image: "reservas/silver_ridge_peaks.png", animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_merriami"] }, te_awaroa: { name: "Te Awaroa", image: "reservas/te_awaroa.png", animals: ["veado_vermelho","gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_merriami", "camurça", "coelho_europeu", "pato_real"] }, rancho_del_arroyo: { name: "Rancho del Arroyo", image: "reservas/rancho_del_arroyo.png", animals: ["veado_mula", "veado_de_cauda_branca", "carneiro_selvagem", "antilocapra", "caititu", "coiote", "lince_pardo_do_mexico", "peru_selvagem_do_rio_grande", "faisão_de_pescoço_anelado", "lebre_antílope"] }, mississippi_acres: { name: "Mississippi Acres", image: "reservas/mississippi_acres.png", animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru_selvagem", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"] }, revontuli_coast: { name: "Costa de Revontuli", image: "reservas/revontuli_coast.png", animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha"] }, new_england_mountains: { name: "New England Mountains", image: "reservas/new_england_mountains.png", animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta", "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"] }, emerald_coast: { name: "Emerald Coast", image: "reservas/emerald_coast.png", animals: ["canguru_cinza_oriental", "codorna_de_restolho", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"] }, sundarpatan: { name: "Sundarpatan", image: "reservas/sundarpatan.png", animals: ["antílope_negro", "ganso_bravo","lebre_peluda", "muntjac_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala"] }, salzwiesen: { name: "Salzwiesen Park", image: "reservas/salzwiesen.png", animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho"] }, askiy_ridge: { name: "Askiy Ridge", image: "reservas/askiy_ridge.png", animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"] } };
-const multiMountsData = { "a_fuga": { name: "A Fuga", animals: [{ slug: "veado_vermelho", gender: "macho" },{ slug: "veado_vermelho", gender: "femea" }] }, "abraco_do_urso": { name: "Abraço do Urso", animals: [{ slug: "urso_cinzento", gender: "macho" },{ slug: "urso_cinzento", gender: "macho" }] }, "adeus_filho": { name: "Adeus, Filho", animals: [{ slug: "bisão_das_planícies", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" }] }, "admiralces": { name: "Admiralces", animals: [{ slug: "alce", gender: "macho" },{ slug: "codorniz_da_virgínia", gender: "macho" }] }, "almoco_da_raposa": { name: "Almoço da Raposa", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "banquete_no_ar": { name: "Banquete no Ar", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "brincadeira_de_aves": { name: "Brincadeira de Aves", animals: [{ slug: "lagópode_escocês", gender: "macho" },{ slug: "cão_guaxinim", gender: "macho" }] }, "brincando_de_briga": { name: "Brincando de Briga", animals: [{ slug: "lince_euroasiática", gender: "macho" },{ slug: "lince_euroasiática", gender: "femea" }] }, "caudas_brancas_unidas": { name: "Caudas Brancas Unidas", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "colisao": { name: "Colisão", animals: [{ slug: "veado_de_cauda_preta", gender: "macho" },{ slug: "onça_parda", gender: "macho" }] }, "competicao_amistosa": { name: "Competição Amistosa", animals: [{ slug: "coiote", gender: "macho" },{ slug: "coiote", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "corcas_unidas": { name: "Corças Unidas", animals: [{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" }] }, "davi_e_golias": { name: "Davi e Golias", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "de_cabeca": { name: "De Cabeça", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" }] }, "decolagem_de_emergencia": { name: "Decolagem de Emergência", animals: [{ slug: "coiote", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "femea" }] }, "despedida_do_solteiros": { name: "Despedida dos Solteiros", animals: [{ slug: "veado_mula", gender: "macho" },{ slug: "veado_mula", gender: "femea" },{ slug: "veado_mula", gender: "femea" }] }, "dois_tipos_de_perus": { name: "Dois Tipos de Perus", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem_do_rio_grande", gender: "macho" }] }, "espionagem_tatica": { name: "Espionagem Tática", animals: [{ slug: "onça_parda", gender: "femea" },{ slug: "veado_de_roosevelt", gender: "macho" }] }, "faisoes_em_fuga": { name: "Faisões em Fuga", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "falso_tronco": { name: "Falso Tronco", animals: [{ slug: "jacaré_americano", gender: "macho" },{ slug: "guaxinim_comum", gender: "macho" }] }, "fantasma_da_montanha": { name: "Fantasma da Montanha", animals: [{ slug: "leopardo_das_neves", gender: "macho" },{ slug: "carneiro_azul", gender: "macho" }] }, "fartura_de_bisoes": { name: "Fartura de Bisões", animals: [{ slug: "bisão_europeu", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "gamos_unidos": { name: "Gamos Unidos", animals: [{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" }] }, "ganha_pao": { name: "Ganha-pão", animals: [{ slug: "búfalo_africano", gender: "macho" },{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" },{ slug: "leão", gender: "femea" }] }, "gansos_zangados": { name: "Gansos Zangados", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "ganso_do_canadá", gender: "macho" }] }, "gluglu": { name: "Gluglu", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem", gender: "femea" },{ slug: "peru_selvagem", gender: "femea" }] }, "lanchinho_de_tigre": { name: "Lanchinho de Tigre", animals: [{ slug: "tahr", gender: "macho" },{ slug: "tahr", gender: "femea" },{ slug: "tahr", gender: "femea" }] }, "laod_a_lado": { name: "Laod a Lado", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "lebres_rivais": { name: "Lebres Rivais", animals: [{ slug: "lebre_antílope", gender: "macho" },{ slug: "lebre_antílope", gender: "macho" }] }, "lobo_alfa": { name: "Lobo Alfa", animals: [{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "femea" },{ slug: "lobo_cinzento", gender: "femea" }] }, "marujos_de_agua_doce": { name: "Marujos de Água Doce", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "tetraz_grande", gender: "macho" },{ slug: "ganso_bravo", gender: "macho" },{ slug: "ganso_campestre_da_tundra", gender: "macho" }] }, "necessidades_basicas": { name: "Necessidades Básicas", animals: [{ slug: "urso_negro", gender: "macho" },{ slug: "urso_negro", gender: "macho" }] }, "o_grand_slam": { name: "O Grand Slam", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" },{ slug: "ibex_de_ronda", gender: "macho" },{ slug: "ibex_espanhol_do_sudeste", gender: "macho" }] }, "operador_suave": { name: "Operador Suave", animals: [{ slug: "tetraz_grande", gender: "macho" },{ slug: "tetraz_grande", gender: "femea" },{ slug: "tetraz_grande", gender: "femea" }] }, "os_tres_patinhos": { name: "Os Três Patinhos", animals: [{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "parceiros_no_crime": { name: "Parceiros no Crime", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_vermelha", gender: "macho" }] }, "presas_a_mostra": { name: "Presas à Mostra", animals: [{ slug: "mouflão_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" }] }, "procos_do_mato_em_conflito": { name: "Procos-do-Mato em Conflito", animals: [{ slug: "caititu", gender: "macho" },{ slug: "caititu", gender: "macho" }] }, "ramboru": { name: "Ramboru", animals: [{ slug: "canguru_cinzento_oriental", gender: "macho" },{ slug: "canguru_cinzento_oriental", gender: "macho" }] }, "raposas_adversarias": { name: "Raposas Adversárias", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_cinzenta", gender: "macho" }] }, "realeza": { name: "Realeza", animals: [{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" }] }, "rixa_de_aves": { name: "Rixa de Aves", animals: [{ slug: "galo_lira", gender: "macho" },{ slug: "galo_lira", gender: "macho" }] }, "saindo_de_fininho": { name: "Saindo de Fininho", animals: [{ slug: "pato_real", gender: "macho" },{ slug: "pato_olho_de_ouro", gender: "macho" },{ slug: "zarro_negrinha", gender: "macho" },{ slug: "marrequinha_comum", gender: "macho" },{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "tahr_angulo_amoroso": { name: "Tahr-ângulo Amoroso", animals: [{ slug: "tigre_de_bengala", gender: "macho" },{ slug: "cervo_do_pântano", gender: "macho" }] }, "treno_vendido_separadamente": { name: "Trenó Vendido Separadamente", animals: [{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" }] }, "turma_dos_coelhos": { name: "Turma dos Coelhos", animals: [{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "femea" },{ slug: "lebre_da_cauda_branca", gender: "femea" }] }, "um_crocodilo_sortudo": { name: "Um Crocodilo Sortudo", animals: [{ slug: "ganso_pega", gender: "macho" },{ slug: "crocodilo_de_água_salgada", gender: "macho" }] }, "um_par_de_predadores": { name: "Um Par de Predadores", animals: [{ slug: "coiote", gender: "macho" },{ slug: "lince_pardo_do_mexico", gender: "macho" }] }, "vigilancia": { name: "Vigilância", animals: [{ slug: "cudo_menor", gender: "macho" },{ slug: "cudo_menor", gender: "femea" }] }, "viver_amar_lenhar": { name: "Viver, Amar, Lenhar", animals: [{ slug: "castor_norte_americano", gender: "macho" },{ slug: "castor_norte_americano", gender: "femea" }] } };
 
+const reservesData = { layton_lake: { name: "Layton Lake", image: "reservas/layton_lake.png", animals: ["alce", "veado_de_cauda_branca", "veado_de_cauda_preta", "veado_de_roosevelt", "urso_negro", "coiote", "pato_real", "lebre_da_cauda_branca", "peru_merriami"] }, hirschfelden: { name: "Hirschfelden", image: "reservas/hirschfelden.png", animals: ["gamo", "corça", "veado_vermelho", "javali", "bisão_europeu", "raposa_vermelha", "ganso_do_canadá", "coelho_europeu", "faisão_de_pescoço_anelado"] }, medved_taiga: { name: "Medved Taiga", image: "reservas/medved_taiga.png", animals: ["alce", "rena_da_montanha", "tetraz_grande", "cervo_almiscarado", "urso_pardo", "javali", "lince_euroasiática", "lobo_cinzento"] }, vurhonga_savanna: { name: "Vurhonga Savana", image: "reservas/vurhonga_savanna.png", animals: ["chacal_listrado", "lebre_nuca_dourada", "piadeira", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "órix_do_cabo"] }, parque_fernando: { name: "Parque Fernando", image: "reservas/parque_fernando.png", animals: ["veado_vermelho", "marreca_carijó", "caititu", "veado_mula", "onça_parda", "antílope_negro", "búfalo_dágua", "chital"] }, yukon_valley: { name: "Yukon Valley", image: "reservas/yukon_valley.png", animals: ["caribu", "ganso_do_canadá", "alce", "urso_cinzento", "lobo_cinzento", "bisão_das_planícies", "raposa_vermelha", "pato_harlequim"] }, cuatro_colinas: { name: "Cuatro Colinas", image: "reservas/cuatro_colinas.png", animals: ["ibex_de_gredos", "faisão_de_pescoço_anelado", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "mouflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"] }, silver_ridge_peaks: { name: "Silver Ridge Peaks", image: "reservas/silver_ridge_peaks.png", animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_merriami"] }, te_awaroa: { name: "Te Awaroa", image: "reservas/te_awaroa.png", animals: ["veado_vermelho","gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_merriami", "camurça", "coelho_europeu", "pato_real"] }, rancho_del_arroyo: { name: "Rancho del Arroyo", image: "reservas/rancho_del_arroyo.png", animals: ["veado_mula", "veado_de_cauda_branca", "carneiro_selvagem", "antilocapra", "caititu", "coiote", "lince_pardo_do_mexico", "peru_selvagem_do_rio_grande", "faisão_de_pescoço_anelado", "lebre_antílope"] }, mississippi_acres: { name: "Mississippi Acres", image: "reservas/mississippi_acres.png", animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru_selvagem", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"] }, revontuli_coast: { name: "Costa de Revontuli", image: "reservas/revontuli_coast.png", animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha"] }, new_england_mountains: { name: "New England Mountains", image: "reservas/new_england_mountains.png", animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta", "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"] }, emerald_coast: { name: "Emerald Coast", image: "reservas/emerald_coast.png", animals: ["canguru_cinza_oriental", "codorna_de_restolho", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"] }, sundarpatan: { name: "Sundarpatan", image: "reservas/sundarpatan.png", animals: ["antílope_negro", "ganso_bravo","lebre_peluda", "muntjac_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala"] }, salzwiesen: { name: "Salzwiesen Park", image: "reservas/salzwiesen.png", animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho"] }, askiy_ridge: { name: "Askiy Ridge", image: "reservas/askiy_ridge.png", animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"] } };
 // NOVO: Dados dos Hotspots por Reserva e Animal
 const animalHotspotData = {
     "layton_lake": {
@@ -390,7 +384,7 @@ const animalHotspotData = {
             animalClass: "1",
             maxLevel: "3 (Muito Fácil)"
         },
-        "peru_merriami": { 
+        "peru_merriami": {
             maxScore: "4.62",
             maxWeightEstimate: "9-11 KG",
             drinkZonesPotential: "O DIA TODO",
@@ -503,7 +497,7 @@ const animalHotspotData = {
             maxScore: "144.25",
             maxWeightEstimate: "186-240 KG",
             drinkZonesPotential: "00:00-03:00",
-            animalClass: "4",
+            animalClass: "5",
             maxLevel: "5 (Médio)"
         },
         "lince_euroasiática": {
@@ -852,7 +846,7 @@ const animalHotspotData = {
             animalClass: "7",
             maxLevel: "5 (Médio)"
         },
-        "peru_merriami": { 
+        "peru_merriami": {
             maxScore: "4.62",
             maxWeightEstimate: "9-11 KG",
             drinkZonesPotential: "O DIA TODO",
@@ -903,7 +897,7 @@ const animalHotspotData = {
             animalClass: "4",
             maxLevel: "5 (Médio)"
         },
-        "peru_merriami": { 
+        "peru_merriami": {
             maxScore: "4.62",
             maxWeightEstimate: "9-11 KG",
             drinkZonesPotential: "O DIA TODO",
@@ -1638,7 +1632,7 @@ const animalHotspotData = {
             animalClass: "1",
             maxLevel: "3 (Muito Fácil)"
         },
-         "veado_de_cauda_preta": { 
+        "veado_de_cauda_preta": {
             maxScore: "177.58",
             maxWeightEstimate: "81-95 KG",
             drinkZonesPotential: "16:00 - 20:00",
@@ -1782,7 +1776,7 @@ const animalHotspotData = {
         }
     }
 };
-
+const multiMountsData = { "a_fuga": { name: "A Fuga", animals: [{ slug: "veado_vermelho", gender: "macho" },{ slug: "veado_vermelho", gender: "femea" }] }, "abraco_do_urso": { name: "Abraço do Urso", animals: [{ slug: "urso_cinzento", gender: "macho" },{ slug: "urso_cinzento", gender: "macho" }] }, "adeus_filho": { name: "Adeus, Filho", animals: [{ slug: "bisão_das_planícies", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" }] }, "admiralces": { name: "Admiralces", animals: [{ slug: "alce", gender: "macho" },{ slug: "codorniz_da_virgínia", gender: "macho" }] }, "almoco_da_raposa": { name: "Almoço da Raposa", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "banquete_no_ar": { name: "Banquete no Ar", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "brincadeira_de_aves": { name: "Brincadeira de Aves", animals: [{ slug: "lagópode_escocês", gender: "macho" },{ slug: "cão_guaxinim", gender: "macho" }] }, "brincando_de_briga": { name: "Brincando de Briga", animals: [{ slug: "lince_euroasiática", gender: "macho" },{ slug: "lince_euroasiática", gender: "femea" }] }, "caudas_brancas_unidas": { name: "Caudas Brancas Unidas", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "colisao": { name: "Colisão", animals: [{ slug: "veado_de_cauda_preta", gender: "macho" },{ slug: "onça_parda", gender: "macho" }] }, "competicao_amistosa": { name: "Competição Amistosa", animals: [{ slug: "coiote", gender: "macho" },{ slug: "coiote", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "corcas_unidas": { name: "Corças Unidas", animals: [{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" }] }, "davi_e_golias": { name: "Davi e Golias", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "de_cabeca": { name: "De Cabeça", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" }] }, "decolagem_de_emergencia": { name: "Decolagem de Emergência", animals: [{ slug: "coiote", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "femea" }] }, "despedida_do_solteiros": { name: "Despedida dos Solteiros", animals: [{ slug: "veado_mula", gender: "macho" },{ slug: "veado_mula", gender: "femea" },{ slug: "veado_mula", gender: "femea" }] }, "dois_tipos_de_perus": { name: "Dois Tipos de Perus", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem_do_rio_grande", gender: "macho" }] }, "espionagem_tatica": { name: "Espionagem Tática", animals: [{ slug: "onça_parda", gender: "femea" },{ slug: "veado_de_roosevelt", gender: "macho" }] }, "faisoes_em_fuga": { name: "Faisões em Fuga", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "falso_tronco": { name: "Falso Tronco", animals: [{ slug: "jacaré_americano", gender: "macho" },{ slug: "guaxinim_comum", gender: "macho" }] }, "fantasma_da_montanha": { name: "Fantasma da Montanha", animals: [{ slug: "leopardo_das_neves", gender: "macho" },{ slug: "carneiro_azul", gender: "macho" }] }, "fartura_de_bisoes": { name: "Fartura de Bisões", animals: [{ slug: "bisão_europeu", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "gamos_unidos": { name: "Gamos Unidos", animals: [{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" }] }, "ganha_pao": { name: "Ganha-pão", animals: [{ slug: "búfalo_africano", gender: "macho" },{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" },{ slug: "leão", gender: "femea" }] }, "gansos_zangados": { name: "Gansos Zangados", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "ganso_do_canadá", gender: "macho" }] }, "gluglu": { name: "Gluglu", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem", gender: "femea" },{ slug: "peru_selvagem", gender: "femea" }] }, "lanchinho_de_tigre": { name: "Lanchinho de Tigre", animals: [{ slug: "tahr", gender: "macho" },{ slug: "tahr", gender: "femea" },{ slug: "tahr", gender: "femea" }] }, "laod_a_lado": { name: "Laod a Lado", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "lebres_rivais": { name: "Lebres Rivais", animals: [{ slug: "lebre_antílope", gender: "macho" },{ slug: "lebre_antílope", gender: "macho" }] }, "lobo_alfa": { name: "Lobo Alfa", animals: [{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "femea" },{ slug: "lobo_cinzento", gender: "femea" }] }, "marujos_de_agua_doce": { name: "Marujos de Água Doce", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "tetraz_grande", gender: "macho" },{ slug: "ganso_bravo", gender: "macho" },{ slug: "ganso_campestre_da_tundra", gender: "macho" }] }, "necessidades_basicas": { name: "Necessidades Básicas", animals: [{ slug: "urso_negro", gender: "macho" },{ slug: "urso_negro", gender: "macho" }] }, "o_grand_slam": { name: "O Grand Slam", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" },{ slug: "ibex_de_ronda", gender: "macho" },{ slug: "ibex_espanhol_do_sudeste", gender: "macho" }] }, "operador_suave": { name: "Operador Suave", animals: [{ slug: "tetraz_grande", gender: "macho" },{ slug: "tetraz_grande", gender: "femea" },{ slug: "tetraz_grande", gender: "femea" }] }, "os_tres_patinhos": { name: "Os Três Patinhos", animals: [{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "parceiros_no_crime": { name: "Parceiros no Crime", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_vermelha", gender: "macho" }] }, "presas_a_mostra": { name: "Presas à Mostra", animals: [{ slug: "mouflão_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" }] }, "procos_do_mato_em_conflito": { name: "Procos-do-Mato em Conflito", animals: [{ slug: "caititu", gender: "macho" },{ slug: "caititu", gender: "macho" }] }, "ramboru": { name: "Ramboru", animals: [{ slug: "canguru_cinzento_oriental", gender: "macho" },{ slug: "canguru_cinzento_oriental", gender: "macho" }] }, "raposas_adversarias": { name: "Raposas Adversárias", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_cinzenta", gender: "macho" }] }, "realeza": { name: "Realeza", animals: [{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" }] }, "rixa_de_aves": { name: "Rixa de Aves", animals: [{ slug: "galo_lira", gender: "macho" },{ slug: "galo_lira", gender: "macho" }] }, "saindo_de_fininho": { name: "Saindo de Fininho", animals: [{ slug: "pato_real", gender: "macho" },{ slug: "pato_olho_de_ouro", gender: "macho" },{ slug: "zarro_negrinha", gender: "macho" },{ slug: "marrequinha_comum", gender: "macho" },{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "tahr_angulo_amoroso": { name: "Tahr-ângulo Amoroso", animals: [{ slug: "tigre_de_bengala", gender: "macho" },{ slug: "cervo_do_pântano", gender: "macho" }] }, "treno_vendido_separadamente": { name: "Trenó Vendido Separadamente", animals: [{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" }] }, "turma_dos_coelhos": { name: "Turma dos Coelhos", animals: [{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "femea" },{ slug: "lebre_da_cauda_branca", gender: "femea" }] }, "um_crocodilo_sortudo": { name: "Um Crocodilo Sortudo", animals: [{ slug: "ganso_pega", gender: "macho" },{ slug: "crocodilo_de_água_salgada", gender: "macho" }] }, "um_par_de_predadores": { name: "Um Par de Predadores", animals: [{ slug: "coiote", gender: "macho" },{ slug: "lince_pardo_do_mexico", gender: "macho" }] }, "vigilancia": { name: "Vigilância", animals: [{ slug: "cudo_menor", gender: "macho" },{ slug: "cudo_menor", gender: "femea" }] }, "viver_amar_lenhar": { name: "Viver, Amar, Lenhar", animals: [{ slug: "castor_norte_americano", gender: "macho" },{ slug: "castor_norte_americano", gender: "femea" }] } };
 
 // --- FUNÇÕES E LÓGICA PRINCIPAL ---
 function slugify(texto) { return texto.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, ''); }
@@ -1889,10 +1883,10 @@ function renderMainView(tabKey) {
         albumGrid.className = 'album-grid';
         contentContainer.appendChild(albumGrid);
 
-        // A lista de itens a ser renderizada é a definida na categoria
-        const itemsToRender = currentTab.items;
+        // CORREÇÃO CRÍTICA AQUI: Garante que os itens sejam strings e não vazios antes de ordenar e iterar
+        const itemsToRender = (currentTab.items || []).filter(item => typeof item === 'string' && item !== null && item.trim() !== '');
 
-        (itemsToRender || []).sort((a, b) => a.localeCompare(b)).forEach(name => {
+        itemsToRender.sort((a, b) => a.localeCompare(b)).forEach(name => {
             const card = createAnimalCard(name, tabKey);
             albumGrid.appendChild(card);
         });
@@ -1906,7 +1900,6 @@ function renderMainView(tabKey) {
         });
     }
 }
-
 // Cria um cartão de animal para as visualizações de categoria
 function createAnimalCard(name, tabKey) {
     const card = document.createElement('div');
@@ -2003,7 +1996,6 @@ function renderAnimalDossier(animalName, originReserveKey) {
     // Ativa a primeira aba por padrão
     dossierTabs.querySelector('.dossier-tab').click();
 }
-
 // Renderizar para lista de reservas
 function renderReservesList(container) {
     container.innerHTML = '';
@@ -2092,7 +2084,10 @@ function renderAnimalChecklist(container, reserveKey) {
 
     const reserve = reservesData[reserveKey];
     // Filtra e mapeia os slugs de animais para seus nomes de exibição
-    const animalNames = reserve.animals.map(slug => items.find(item => slugify(item) === slug)).filter(name => name);
+    // CORREÇÃO AQUI: Garante que os nomes dos animais sejam strings válidas
+    const animalNames = reserve.animals
+        .map(slug => items.find(item => slugify(item) === slug))
+        .filter(name => typeof name === 'string' && name !== null && name.trim() !== '');
 
     animalNames.sort((a,b) => a.localeCompare(b)).forEach(animalName => {
         const slug = slugify(animalName);
@@ -2135,7 +2130,6 @@ function renderAnimalChecklist(container, reserveKey) {
         checklistContainer.appendChild(row);
     });
 }
-
 // NOVO: Renderiza a galeria de mapas de hotspot para uma reserva
 function renderHotspotGalleryView(container, reserveKey) {
     container.innerHTML = '';
@@ -2156,8 +2150,8 @@ function renderHotspotGalleryView(container, reserveKey) {
     availableHotspots.sort((a, b) => a.name.localeCompare(b.name)).forEach(animal => {
         const slugReserve = slugify(reservesData[reserveKey].name);
         const slugAnimal = slugify(animal.name);
-        // ATENÇÃO: Alterado de .png para .jpg aqui
         const imagePath = `hotspots/${slugReserve}_${slugAnimal}_hotspot.jpg`;
+        console.log("DEBUG: Hotspot Gallery - Reserve:", slugReserve, "Animal:", slugAnimal, "Path:", imagePath); // LINHA DE DEBUG ADICIONADA
 
         const card = document.createElement('div');
         card.className = 'hotspot-card';
@@ -2186,8 +2180,8 @@ function renderHotspotDetailModal(reserveKey, animalSlug) {
 
     const slugReserve = slugify(reserveName);
     const slugAnimal = slugify(animalName);
-    // ATENÇÃO: Alterado de .png para .jpg aqui
-    const imagePath = `hotspots/${slugReserve}_${slugAnimal}_hotspot.jpg`; 
+    const imagePath = `hotspots/${slugReserve}_${slugAnimal}_hotspot.jpg`;
+    console.log("DEBUG: Hotspot Modal - Reserve:", slugReserve, "Animal:", slugAnimal, "Path:", imagePath); // LINHA DE DEBUG ADICIONADA
 
     const modal = document.getElementById('image-viewer-modal'); // Reutilizando o modal de imagem
     modal.innerHTML = `
@@ -2220,8 +2214,8 @@ function renderHotspotDetailView(container, animalName, slug, originReserveKey) 
     }
 
     const slugReserve = slugify(reservesData[originReserveKey].name);
-    // ATENÇÃO: Alterado de .png para .jpg aqui
-    const imagePath = `hotspots/${slugReserve}_${slug}_hotspot.jpg`; 
+    const imagePath = `hotspots/${slugReserve}_${slug}_hotspot.jpg`;
+    console.log("DEBUG: Hotspot Dossier - Reserve:", slugReserve, "Animal:", slug, "Path:", imagePath); // LINHA DE DEBUG ADICIONADA
 
     container.innerHTML = `
         <div class="hotspot-dossier-card">
@@ -2237,9 +2231,6 @@ function renderHotspotDetailView(container, animalName, slug, originReserveKey) 
         <button class="fullscreen-btn hotspot-fullscreen" onclick="openImageViewer('${imagePath}')" title="Ver mapa em tela cheia">Ver mapa em tela cheia</button>
     `;
 }
-
-
-
 // Calcula o progresso de uma reserva
 function calcularReserveProgress(reserveKey) {
     const reserveAnimals = reservesData[reserveKey]?.animals || [];
@@ -2360,7 +2351,7 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
         const isCompleted = savedData.super_raros?.[slug]?.[keyInSavedData] === true;
 
         furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'} potential-super-rare`; // Adiciona classe para destaque
-        
+
         const furSlug = slugify(furInfo.originalName);
         const genderSlug = furInfo.gender.toLowerCase();
 
@@ -2369,11 +2360,11 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
         furCard.addEventListener('click', () => {
             if (!savedData.super_raros) savedData.super_raros = {};
             if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
-            
+
             // Toggle do status
             const currentState = savedData.super_raros[slug][keyInSavedData] || false;
             savedData.super_raros[slug][keyInSavedData] = !currentState;
-            
+
             saveData(savedData);
             // Re-renderiza a visualização para que a aparência do card seja atualizada
             if (originReserveKey) {
@@ -2493,7 +2484,6 @@ function renderGreatsDetailView(container, animalName, slug, originReserveKey = 
         furGrid.appendChild(furCard);
     });
 }
-
 // Abre o modal de troféus de Great Ones
 async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey = null) { // Adicionado 'originReserveKey'
     const modal = document.getElementById('form-modal');
@@ -2852,88 +2842,103 @@ function createLatestAchievementsPanel() {
     panel.appendChild(grid);
     return panel;
 }
-
 // Atualiza o painel de progresso geral
 function updateProgressPanel(panel) {
-    const sections = {
-        pelagens: { title: "Progresso de Pelagens Raras", data: rareFursData, saved: savedData.pelagens || {}, type: 'boolean' },
-        super_raros: { title: "Progresso de Super Raros", data: rareFursData, saved: savedData.super_raros || {}, type: 'boolean_super' },
-        diamantes: { title: "Progresso de Diamantes", data: diamondFursData, saved: savedData.diamantes || {}, type: 'array' },
-        greats: { title: "Progresso dos Grandes", data: greatsFursData, saved: savedData.greats || {}, type: 'object' }
-    };
+    panel.innerHTML = ''; // Limpa o conteúdo existente
 
-    Object.keys(sections).forEach(key => {
-        const sectionInfo = sections[key];
-        let total = 0, collected = 0;
+    const overallProgress = calcularOverallProgress();
 
-        if(sectionInfo.type === 'boolean') { // Para pelagens raras
-            Object.values(sectionInfo.data).forEach(s => {
-                total += (s.macho?.length || 0) + (s.femea?.length || 0);
-            });
-            Object.values(sectionInfo.saved).forEach(s => {
-                collected += Object.values(s).filter(c => c === true).length;
-            });
-        } else if (sectionInfo.type === 'boolean_super') { // Para super raros
-            // Calcula o total de pelagens raras que podem ser diamante para o gênero
-            Object.keys(rareFursData).forEach(slug => {
-                const speciesRareFurs = rareFursData[slug];
-                const speciesDiamondFurs = diamondFursData[slug];
-                if (speciesRareFurs) {
-                    // Contagem de pelagens raras MACHO se o animal tiver diamante MACHO
-                    if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
-                        total += speciesRareFurs.macho.length;
-                    }
-                    // Contagem de pelagens raras FEMEA se o animal tiver diamante FEMEA
-                    if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
-                        total += speciesRareFurs.femea.length;
-                    }
-                }
-            });
+    panel.innerHTML = `
+        <h3><i class="fas fa-chart-bar"></i> Progresso Geral</h3>
+        <div class="overall-stats">
+            <div class="stat-item">
+                <i class="fas fa-paw"></i>
+                <span>Pelagens Raras: ${overallProgress.collectedRares}/${overallProgress.totalRares}</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-gem"></i>
+                <span>Diamantes: ${overallProgress.collectedDiamonds}/${overallProgress.totalDiamonds}</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-crown"></i>
+                <span>Great Ones: ${overallProgress.collectedGreatOnes}/${overallProgress.totalGreatOnes}</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-star"></i>
+                <span>Super Raros: ${overallProgress.collectedSuperRares}/${overallProgress.totalSuperRares}</span>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Hotspots: ${overallProgress.collectedHotspots}/${overallProgress.totalHotspots}</span>
+            </div>
+        </div>
+        <div class="progress-section">
+            <h4>Progresso por Categoria</h4>
+            <div class="progress-bars-container" id="category-progress-bars"></div>
+        </div>
+        <div class="progress-section">
+            <h4>Progresso por Reserva</h4>
+            <div class="progress-bars-container" id="reserve-progress-bars"></div>
+        </div>
+    `;
 
-            // Conta as pelagens Super Raras que foram coletadas
-            Object.values(sectionInfo.saved).forEach(animalSuperRares => {
-                collected += Object.values(animalSuperRares).filter(v => v === true).length;
-            });
+    const categoryProgressContainer = panel.querySelector('#category-progress-bars');
+    const reserveProgressContainer = panel.querySelector('#reserve-progress-bars');
 
-        } else if(sectionInfo.type === 'array') { // Para diamantes
-            Object.values(sectionInfo.data).forEach(s => {
-                total += (s.macho?.length || 0) + (s.femea?.length || 0);
-            });
-            Object.values(sectionInfo.saved).forEach(s => {
-                collected += new Set(s.map(t => t.type)).size;
-            });
-        } else if (sectionInfo.type === 'object') { // Para os Grandes
-            Object.values(sectionInfo.data).forEach(f => total += f.length);
-            Object.values(sectionInfo.saved).forEach(s => {
-                if(s.furs) collected += Object.values(s.furs).filter(f => f.trophies?.length > 0).length;
-            });
+    // Progresso por Categoria
+    const categories = ['pelagens', 'diamantes', 'super_raros', 'greats', 'hotspots'];
+    categories.forEach(categoryKey => {
+        let collected = 0;
+        let total = 0;
+        let title = categorias[categoryKey]?.title || categoryKey.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
+
+        if (categoryKey === 'pelagens') {
+            collected = overallProgress.collectedRares;
+            total = overallProgress.totalRares;
+        } else if (categoryKey === 'diamantes') {
+            collected = overallProgress.collectedDiamonds;
+            total = overallProgress.totalDiamonds;
+        } else if (categoryKey === 'super_raros') {
+            collected = overallProgress.collectedSuperRares;
+            total = overallProgress.totalSuperRares;
+        } else if (categoryKey === 'greats') {
+            collected = overallProgress.collectedGreatOnes;
+            total = overallProgress.totalGreatOnes;
+        } else if (categoryKey === 'hotspots') {
+            collected = overallProgress.collectedHotspots;
+            total = overallProgress.totalHotspots;
         }
 
-        const percentage = total > 0 ? (collected / total) * 100 : 0;
-        let medalClass = '';
-        if (percentage >= 75) medalClass = 'gold';
-        else if (percentage >= 50) medalClass = 'silver';
-        else if (percentage > 0) medalClass = 'bronze';
+        if (total > 0) {
+            categoryProgressContainer.appendChild(createProgressBar(title, collected, total));
+        }
+    });
 
-        const sectionEl = document.createElement('div');
-        sectionEl.className = 'progress-section';
-        sectionEl.innerHTML = `
-            <div class="progress-header">
-                <div class="progress-title-container">
-                    <i class="fas fa-medal progress-medal ${medalClass}"></i>
-                    <h3>${sectionInfo.title}</h3>
-                </div>
-                <div class="progress-label">${collected} / ${total}</div>
-            </div>
-            <div class="progress-bar-container">
-                <div class="progress-bar-fill" style="width: ${percentage}%;"></div>
-            </div>
-        `;
-        sectionEl.addEventListener('click', () => toggleProgressDetail(sectionEl, key));
-        panel.appendChild(sectionEl);
+    // Progresso por Reserva
+    Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
+        const reserveProgress = calcularReserveProgress(reserveKey);
+        const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes + (Object.keys(animalHotspotData[reserveKey] || {}).length);
+        const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes + (Object.keys(savedData.hotspots?.[reserveKey] || {}).length);
+
+        if (totalItems > 0) { // Só mostra a barra se houver algo para rastrear
+            reserveProgressContainer.appendChild(createProgressBar(reserve.name, collectedItems, totalItems));
+        }
     });
 }
 
+// Cria uma barra de progresso individual
+function createProgressBar(title, collected, total) {
+    const percentage = total > 0 ? (collected / total) * 100 : 0;
+    const barContainer = document.createElement('div');
+    barContainer.className = 'progress-bar-item';
+    barContainer.innerHTML = `
+        <div class="progress-title">${title} (${collected}/${total})</div>
+        <div class="progress-bar-bg">
+            <div class="progress-bar-fill" style="width: ${percentage}%"></div>
+        </div>
+    `;
+    return barContainer;
+}
 // Alterna a visualização de detalhes do progresso
 function toggleProgressDetail(sectionEl, categoryKey) {
     const existingDetail = sectionEl.querySelector('.progress-detail-view');
@@ -2979,7 +2984,7 @@ function renderProgressDetail(detailContainer, categoryKey) {
                 let possibleSuperRares = 0;
                 const speciesRareFurs = rareFursData[slug];
                 const speciesDiamondFurs = diamondFursData[slug];
-                
+
                 if (speciesRareFurs) {
                     if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
                         possibleSuperRares += speciesRareFurs.macho.length;
@@ -3019,7 +3024,7 @@ function openImageViewer(imageUrl) {
         <img class="modal-content-viewer" src="${imageUrl}" alt="Imagem em tela cheia">
     `;
     // Garante que o img existe antes de tentar acessar suas propriedades
-    const modalImg = modal.querySelector('.modal-content-viewer'); 
+    const modalImg = modal.querySelector('.modal-content-viewer');
     if (modalImg) {
         modalImg.style.maxWidth = '90%';
         modalImg.style.maxHeight = '90%';
@@ -3066,8 +3071,6 @@ function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
         modal.style.display = 'flex';
     });
 }
-
-
 // Obtém o inventário completo de troféus para montagens múltiplas
 function getCompleteTrophyInventory() {
     const inventory = [];
@@ -3252,7 +3255,6 @@ function renderMultiMountDetailModal(mountKey) {
 
     modal.style.display = 'flex';
 }
-
 // --- FUNÇÕES CONTADOR DE GRIND ---
 function renderGrindHubView(container) {
     container.innerHTML = `<div class="grind-hub-container"></div>`;
@@ -3326,7 +3328,8 @@ function renderNewGrindAnimalSelection(container) {
     albumGrid.className = 'album-grid';
     container.appendChild(albumGrid);
 
-    items.sort((a, b) => a.localeCompare(b)).forEach(name => {
+    // Ajuste aqui para garantir que items seja um array válido antes de usar sort
+    (items || []).sort((a, b) => a.localeCompare(b)).forEach(name => {
         const slug = slugify(name);
         const card = document.createElement('div');
         card.className = 'animal-card';
