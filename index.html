@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#181a1b">
-    <title>Álbum de Caça - theHunter: Call of the Wild</title>
+    <title>Registro do Caçador - theHunter: Call of the Wild</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
@@ -178,6 +178,8 @@
         .dossier-tab:hover { color: var(--text-color); }
         .dossier-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .dossier-tab .fa-crown { color: var(--gold-color); }
+        /* Estilos para a nova aba Hotspot */
+        .dossier-tab.hotspot-tab .fas { color: var(--gold-color); } /* Ícone de mapa dourado */
         
         /* --- ESTILOS PAINEL DE PROGESSO --- */
         .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
@@ -531,6 +533,90 @@
             font-size: 1.5rem;
             font-family: var(--font-headings);
         }
+
+        /* Novas Regras CSS para Hotspots */
+        .hotspot-details-container {
+            display: flex;
+            flex-direction: column; /* Coluna em mobile */
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .hotspot-details-container {
+                flex-direction: row; /* Linha em desktop */
+                align-items: flex-start;
+            }
+        }
+
+        .hotspot-map-wrapper {
+            flex: 2; /* Ocupa mais espaço */
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .hotspot-map-wrapper h4 {
+            font-family: var(--font-headings);
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .hotspot-map-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            cursor: pointer; /* Para indicar que é clicável para tela cheia */
+        }
+
+        .hotspot-info-panel {
+            flex: 1; /* Ocupa menos espaço */
+            background-color: var(--surface-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .hotspot-info-panel h4 {
+            font-family: var(--font-headings);
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 5px;
+        }
+
+        .info-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .info-item i {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            width: 20px; /* Garante alinhamento dos ícones */
+            text-align: center;
+        }
+        .info-item .fa-balance-scale-right { color: #8BC34A; } /* Verde para peso */
+        .info-item .fa-trophy { color: var(--gold-color); } /* Dourado para pontuação */
+        .info-item .fa-clock { color: #FF9800; } /* Laranja para horários */
+        .info-item .fa-layer-group { color: #2196F3; } /* Azul para classe */
+        .info-item .fa-arrow-alt-circle-up { color: #9C27B0; } /* Roxo para nível */
+        .info-item .fa-question-circle { color: var(--text-color-muted); } /* Cinza para não disponível */
+
 
     </style>
 </head>
