@@ -2139,8 +2139,10 @@ function renderHotspotGalleryView(container, reserveKey) {
 
     const reserveAnimals = reservesData[reserveKey]?.animals || [];
     const availableHotspots = reserveAnimals
+        // Mapeia o slug para um objeto com slug e nome (name)
         .map(slug => ({ slug, name: items.find(item => slugify(item) === slug) }))
-        .filter(animal => animalHotspotData[reserveKey]?.[animal.slug]); // Filtra apenas animais com dados de hotspot para esta reserva
+        // NOVO FILTRO AQUI: Garante que 'name' não é undefined e que há dados de hotspot
+        .filter(animal => typeof animal.name === 'string' && animal.name !== null && animalHotspotData[reserveKey]?.[animal.slug]);
 
     if (availableHotspots.length === 0) {
         hotspotGrid.innerHTML = '<p class="no-data-message">Nenhum mapa de hotspot disponível para esta reserva ainda.</p>';
