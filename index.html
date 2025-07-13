@@ -533,7 +533,7 @@
             font-family: var(--font-headings);
         }
 
-        /* --- ESTILOS ADICIONAIS PARA HOTSPOTS E NOVA ORGANIZAÇÃO --- */
+        /* --- ESTILOS ADICIONAIS para Hotspots e nova organização --- */
 
         .reserve-view-toggle {
             display: flex;
@@ -571,9 +571,8 @@
         }
 
         .reserve-view-area {
-            /* Garante que esta área ocupe o espaço e os elementos internos fiquem alinhados */
             width: 100%;
-            min-height: 200px; /* Ou o que for adequado para o conteúdo */
+            min-height: 200px;
         }
 
         /* Grid de Hotspots */
@@ -594,8 +593,8 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
-            justify-content: flex-end; /* Alinha o conteúdo ao fundo */
-            min-height: 180px; /* Altura mínima para o card */
+            justify-content: flex-end;
+            min-height: 180px;
         }
 
         .hotspot-card:hover {
@@ -611,7 +610,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            filter: brightness(0.7); /* Escurece um pouco a imagem para o texto ser legível */
+            filter: brightness(0.7);
             transition: filter 0.3s ease;
             z-index: 1;
         }
@@ -621,9 +620,9 @@
         }
 
         .hotspot-card .info-overlay {
-            position: relative; /* Para ficar acima da imagem */
+            position: relative;
             z-index: 2;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0)); /* Gradiente escuro na base */
+            background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0));
             padding: 20px 15px 10px 15px;
             color: var(--text-color);
             font-family: var(--font-headings);
@@ -655,7 +654,7 @@
             padding: 30px;
             background-color: rgba(0,0,0,0.2);
             border-radius: 8px;
-            grid-column: 1 / -1; /* Ocupa toda a largura do grid */
+            grid-column: 1 / -1;
         }
 
 
@@ -665,37 +664,39 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            /* Aumentar o max-width para dar mais espaço, mas manter responsivo */
-            max-width: 90vw; /* Usa 90% da largura da viewport para telas grandes */
+            max-width: 95vw; /* Aumentado para mais espaço */
             width: 100%;
             padding: 20px;
             background-color: var(--surface-color);
             border-radius: 8px;
             border: 1px solid var(--border-color);
-            position: relative; /* Para o botão de fechar */
-            /* Adicionado para garantir scroll se o conteúdo for muito grande */
-            max-height: 90vh; /* Altura máxima para o conteúdo do modal (90% da altura da viewport) */
-            overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder */
+            position: relative;
+            max-height: 95vh; /* Aumentado para ocupar mais altura da tela */
+            overflow-y: auto; /* Garante rolagem se o conteúdo for muito grande */
+            box-sizing: border-box; /* Garante que padding e border não aumentem o tamanho total */
         }
 
         .hotspot-detail-content .hotspot-image-container {
             width: 100%;
-            /* Aumentado o max-width para a imagem dentro do modal */
-            max-width: 800px; /* Era 600px, aumentamos para permitir mais largura */
+            /* Definir uma altura explícita ou min-height para o container da imagem */
+            /* Isso dará à imagem espaço para se expandir mais com object-fit: contain */
+            min-height: 40vh; /* Pelo menos 40% da altura da viewport */
+            max-height: 60vh; /* Máximo de 60% da altura da viewport para deixar espaço para o texto */
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: var(--bg-color); /* Fundo escuro para a imagem */
+            background-color: var(--bg-color);
             border-radius: 6px;
             overflow: hidden;
+            box-sizing: border-box;
         }
         .hotspot-detail-content .modal-content-viewer {
             width: 100%;
-            height: auto;
-            display: block; /* Remove espaço extra abaixo da imagem */
-            max-width: none; /* Override para preencher o container */
-            max-height: none; /* Override para preencher o container */
-            object-fit: contain; /* Garante que a imagem se ajuste completamente dentro do seu container */
+            height: 100%; /* A imagem preenche o container da imagem */
+            display: block;
+            max-width: none;
+            max-height: none;
+            object-fit: contain; /* Redimensiona a imagem para caber inteira no contêiner */
         }
 
         .hotspot-detail-content .hotspot-info-panel {
@@ -704,6 +705,7 @@
             background-color: var(--bg-color);
             border-radius: 6px;
             border: 1px solid var(--border-color);
+            flex-shrink: 0; /* Impede que o painel de informações encolha */
         }
 
         .hotspot-detail-content .hotspot-info-panel h3 {
@@ -720,22 +722,21 @@
             padding: 8px 0;
             border-bottom: 1px dashed rgba(255,255,255,0.1);
             font-size: 1rem;
-            /* Adicionado para permitir que as informações quebrem linha se necessário */
-            flex-wrap: wrap; /* Permite que os itens quebrem linha */
-            align-items: baseline; /* Alinha os itens na linha de base */
+            flex-wrap: wrap;
+            align-items: baseline;
         }
         .hotspot-detail-content .info-row:last-child {
             border-bottom: none;
         }
         .hotspot-detail-content .info-row strong {
             color: var(--text-color);
-            flex-shrink: 0; /* Impede que o label "Pontuação Máxima:" encolha */
-            margin-right: 10px; /* Adiciona um pequeno espaço após o label */
+            flex-shrink: 0;
+            margin-right: 10px;
         }
         .hotspot-detail-content .info-row span {
             color: var(--text-color-muted);
-            text-align: right; /* Alinha o valor à direita */
-            flex-grow: 1; /* Permite que o valor ocupe o espaço restante */
+            text-align: right;
+            flex-grow: 1;
         }
 
         /* Estilos para o hotspot dentro do Dossiê do Animal (seção Hotspots na página da Reserva) */
@@ -755,7 +756,7 @@
             border-radius: 4px;
             border: 1px solid var(--primary-color);
             box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
-            object-fit: contain; /* Garante que a imagem se ajuste completamente */
+            object-fit: contain;
         }
         .hotspot-dossier-info {
             width: 100%;
@@ -768,7 +769,7 @@
             padding: 5px 0;
             border-bottom: 1px dashed rgba(255,255,255,0.05);
             font-size: 0.95rem;
-            flex-wrap: wrap; /* Também permite quebra de linha aqui */
+            flex-wrap: wrap;
             align-items: baseline;
         }
         .hotspot-dossier-info .info-row:last-child {
@@ -785,7 +786,7 @@
         .hotspot-fullscreen {
             margin-top: 20px;
             width: fit-content;
-            align-self: center; /* Para centralizar o botão no dossiê */
+            align-self: center;
         }
 
 
@@ -810,42 +811,42 @@
             .reserve-card-info-panel { padding: 10px; }
             .reserve-card-logo { max-height: 30px; margin-bottom: 10px; }
             .reserve-card-stats { font-size: 0.8rem; }
-            .animal-checklist-row { grid-template-columns: 40px 1fr; gap: 10px; } /* Ajuste para mobile */
-            .animal-checklist-row .mini-progress-bars { display: none; } /* Oculta em mobile para não poluir */
+            .animal-checklist-row { grid-template-columns: 40px 1fr; gap: 10px; }
+            .animal-checklist-row .mini-progress-bars { display: none; }
             .animal-checklist-row .great-one-indicator { font-size: 1.2rem; }
             .dossier-tabs { flex-wrap: wrap; justify-content: center; }
             .dossier-tab { padding: 8px 15px; font-size: 0.9rem; }
             .auth-box { padding: 20px; }
             .grind-header-info { flex-direction: column; text-align: center; }
             .grind-animal-icon { margin-bottom: 10px; }
-            .counters-wrapper { grid-template-columns: 1fr; } /* Pilha em telas pequenas */
+            .counters-wrapper { grid-template-columns: 1fr; }
             .ranking-table th, .ranking-table td { padding: 8px; font-size: 0.85rem; }
             .ranking-table td[data-label="Animal"] { flex-direction: column; align-items: flex-start; gap: 5px; }
             .table-animal-icon { width: 25px; height: 25px; }
 
             .hotspot-detail-content {
-                padding: 10px; /* Reduzir o padding geral do modal em telas pequenas */
-                gap: 15px; /* Reduzir o espaçamento entre elementos */
-                max-width: 95vw; /* Aumentar para 95% da largura da viewport */
-                max-height: 95vh; /* Aumentar para 95% da altura da viewport */
+                padding: 10px;
+                gap: 15px;
+                max-width: 98vw; /* Aumentado para quase 100% em mobile */
+                max-height: 98vh; /* Aumentado para quase 100% em mobile */
             }
             .hotspot-detail-content .hotspot-image-container {
-                width: 100%;
-                max-width: 100%;
+                min-height: 30vh; /* Reduzir um pouco a altura mínima em mobile se precisar de mais espaço para o texto */
+                max-height: 50vh; /* Ajustar conforme necessário em mobile */
             }
             .hotspot-detail-content .hotspot-info-panel h3 {
                 font-size: 1.4rem;
             }
             .hotspot-detail-content .info-row {
-                flex-direction: column; /* Coloca label e valor em linhas separadas */
-                align-items: flex-start; /* Alinha tudo à esquerda */
+                flex-direction: column;
+                align-items: flex-start;
                 gap: 2px;
                 font-size: 0.9rem;
             }
             .hotspot-detail-content .info-row strong,
             .hotspot-detail-content .info-row span {
-                text-align: left; /* Garante alinhamento à esquerda para ambos */
-                width: 100%; /* Ocupa toda a largura disponível */
+                text-align: left;
+                width: 100%;
             }
         }
     </style>
