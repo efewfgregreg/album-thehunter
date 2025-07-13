@@ -129,7 +129,7 @@ Coelho Europeu:
 
 Faisão de Pescoço Anelado:
   - Pontuação Máxima:20.29
-  - Estimativa de Peso Máximo:
+  - Estimativa de Peso Máximo:2-3 kg
   - Potencial de Zonas de Necessidade: O DIA TODO
   - Classe:1
   - Nível Máximo:3 (Muito Fácil)
@@ -686,7 +686,7 @@ Peru Selvagem do Rio Grande:
 
 Faisão de Pescoço Anelado:
   - Pontuação Máxima:20.29
-  - Estimativa de Peso Máximo:
+  - Estimativa de Peso Máximo:2-3 kg
   - Potencial de Zonas de Necessidade: O DIA TODO
   - Classe:1
   - Nível Máximo:3 (Muito Fácil)
@@ -817,11 +817,11 @@ Ganso Bravo:
   - Nível Máximo:5 (Médio)
 
 Ganso Campestre da Tundra:
-  - Pontuação Máxima:
-  - Estimativa de Peso Máximo:
-  - Potencial de Zonas de Bebida:
-  - Classe:
-  - Nível Máximo:
+  - Pontuação Máxima:3.16
+  - Estimativa de Peso Máximo:2-3 kg 
+  - Potencial de Zonas de Necessidade:O DIA TODO
+  - Classe:1
+  - Nível Máximo:5 (Médio)
 
 Ganso do Canadá:
   - Pontuação Máxima:8.59
@@ -831,18 +831,18 @@ Ganso do Canadá:
   - Nível Máximo:5 (Médio)
 
 Lagópode-Branco:
-  - Pontuação Máxima:
-  - Estimativa de Peso Máximo:
-  - Potencial de Zonas de Bebida:
-  - Classe:
-  - Nível Máximo:
+  - Pontuação Máxima:709
+  - Estimativa de Peso Máximo:0.66-0.74 kg
+  - Potencial de Zonas de Necessidade: O DIA TODO
+  - Classe:1
+  - Nível Máximo:3 ( Muito Fácil)
 
 Lagópode-Escocês:
-  - Pontuação Máxima:
-  - Estimativa de Peso Máximo:
-  - Potencial de Zonas de Bebida:
-  - Classe:
-  - Nível Máximo:
+  - Pontuação Máxima:772
+  - Estimativa de Peso Máximo:0.72-0.81 kg 
+  - Potencial de Zonas de Necessidade: O DIA TODO
+  - Classe:1
+  - Nível Máximo:3 ( Muito Fácil)
 
 Pato Real:
   - Pontuação Máxima:19.61
@@ -866,11 +866,11 @@ Tetraz Grande:
   - Nível Máximo:3 (Muito Fácil)
 
 Cão Guaxinim:
-  - Pontuação Máxima:
-  - Estimativa de Peso Máximo:
-  - Potencial de Zonas de Bebida:
-  - Classe:
-  - Nível Máximo:
+  - Pontuação Máxima:9.29
+  - Estimativa de Peso Máximo: 8-10 kg 
+  - Potencial de Zonas de Bebida: 10:00-13:00  
+  - Classe:2
+  - Nível Máximo:9 (Lendário)
 
 Lince Euroasiática:
   - Pontuação Máxima:27.68
@@ -880,18 +880,19 @@ Lince Euroasiática:
   - Nível Máximo:9 (Lendário)
 
 Galo Lira:
-  - Pontuação Máxima:
-  - Estimativa de Peso Máximo:
-  - Potencial de Zonas de Bebida:
-  - Classe:
-  - Nível Máximo:
+  - Pontuação Máxima:120
+  - Estimativa de Peso Máximo:0-1 kg 
+  - Potencial de Zonas de Necessidade:O DIA TODO
+  - Classe:1
+  - Nível Máximo:3 (Muito Fácil)
 
 Lebre da Eurásia:
-  - Pontuação Máxima:
-  - Estimativa de Peso Máximo:
-  - Potencial de Zonas de Bebida:
-  - Classe:
-  - Nível Máximo:
+  - Pontuação Máxima:5.6 
+  - Estimativa de Peso Máximo:5-6 kg 
+  - Potencial de Zonas de Necessidade:O DIA TODO
+  - Classe:1
+  - Nível Máximo:3 (Muito Fácil)
+
 
 Marrequinha Comum:
   - Pontuação Máxima:354
@@ -940,7 +941,7 @@ Coelho da Flórida:
 
 Faisão de Pescoço Anelado:
   - Pontuação Máxima:20.29
-  - Estimativa de Peso Máximo:
+  - Estimativa de Peso Máximo:2-3 kg
   - Potencial de Zonas de Necessidade: O DIA TODO
   - Classe:1
   - Nível Máximo:3 (Muito Fácil)
@@ -1274,7 +1275,7 @@ Ganso Campestre da Tundra:
 
 Faisão de Pescoço Anelado:
   - Pontuação Máxima:20.29
-  - Estimativa de Peso Máximo:
+  - Estimativa de Peso Máximo:2-3 kg
   - Potencial de Zonas de Necessidade: O DIA TODO
   - Classe:1
   - Nível Máximo:3 (Muito Fácil)
@@ -1455,7 +1456,7 @@ Veado-de-cauda-branca:
 
 Faisão de Pescoço Anelado:
   - Pontuação Máxima:20.29
-  - Estimativa de Peso Máximo:
+  - Estimativa de Peso Máximo:2-3 kg
   - Potencial de Zonas de Necessidade: O DIA TODO
   - Classe:1
   - Nível Máximo:3 (Muito Fácil)
