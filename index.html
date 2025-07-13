@@ -665,18 +665,23 @@
             flex-direction: column;
             align-items: center;
             gap: 20px;
-            max-width: 900px; /* Limita a largura do conteúdo do modal */
+            /* Aumentar o max-width para dar mais espaço, mas manter responsivo */
+            max-width: 90vw; /* Usa 90% da largura da viewport para telas grandes */
             width: 100%;
             padding: 20px;
             background-color: var(--surface-color);
             border-radius: 8px;
             border: 1px solid var(--border-color);
             position: relative; /* Para o botão de fechar */
+            /* Adicionado para garantir scroll se o conteúdo for muito grande */
+            max-height: 90vh; /* Altura máxima para o conteúdo do modal (90% da altura da viewport) */
+            overflow-y: auto; /* Adiciona scroll vertical se o conteúdo exceder */
         }
 
         .hotspot-detail-content .hotspot-image-container {
             width: 100%;
-            max-width: 600px; /* Limite para a imagem dentro do modal */
+            /* Aumentado o max-width para a imagem dentro do modal */
+            max-width: 800px; /* Era 600px, aumentamos para permitir mais largura */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -690,7 +695,7 @@
             display: block; /* Remove espaço extra abaixo da imagem */
             max-width: none; /* Override para preencher o container */
             max-height: none; /* Override para preencher o container */
-            object-fit: contain;
+            object-fit: contain; /* Garante que a imagem se ajuste completamente dentro do seu container */
         }
 
         .hotspot-detail-content .hotspot-info-panel {
@@ -715,18 +720,25 @@
             padding: 8px 0;
             border-bottom: 1px dashed rgba(255,255,255,0.1);
             font-size: 1rem;
+            /* Adicionado para permitir que as informações quebrem linha se necessário */
+            flex-wrap: wrap; /* Permite que os itens quebrem linha */
+            align-items: baseline; /* Alinha os itens na linha de base */
         }
         .hotspot-detail-content .info-row:last-child {
             border-bottom: none;
         }
         .hotspot-detail-content .info-row strong {
             color: var(--text-color);
+            flex-shrink: 0; /* Impede que o label "Pontuação Máxima:" encolha */
+            margin-right: 10px; /* Adiciona um pequeno espaço após o label */
         }
         .hotspot-detail-content .info-row span {
             color: var(--text-color-muted);
+            text-align: right; /* Alinha o valor à direita */
+            flex-grow: 1; /* Permite que o valor ocupe o espaço restante */
         }
 
-        /* Estilos para o hotspot dentro do Dossiê do Animal */
+        /* Estilos para o hotspot dentro do Dossiê do Animal (seção Hotspots na página da Reserva) */
         .hotspot-dossier-card {
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
@@ -743,6 +755,7 @@
             border-radius: 4px;
             border: 1px solid var(--primary-color);
             box-shadow: 0 0 10px rgba(0, 188, 212, 0.3);
+            object-fit: contain; /* Garante que a imagem se ajuste completamente */
         }
         .hotspot-dossier-info {
             width: 100%;
@@ -755,9 +768,19 @@
             padding: 5px 0;
             border-bottom: 1px dashed rgba(255,255,255,0.05);
             font-size: 0.95rem;
+            flex-wrap: wrap; /* Também permite quebra de linha aqui */
+            align-items: baseline;
         }
         .hotspot-dossier-info .info-row:last-child {
             border-bottom: none;
+        }
+        .hotspot-dossier-info .info-row strong {
+            flex-shrink: 0;
+            margin-right: 8px;
+        }
+        .hotspot-dossier-info .info-row span {
+            flex-grow: 1;
+            text-align: right;
         }
         .hotspot-fullscreen {
             margin-top: 20px;
@@ -801,8 +824,10 @@
             .table-animal-icon { width: 25px; height: 25px; }
 
             .hotspot-detail-content {
-                flex-direction: column;
-                padding: 15px;
+                padding: 10px; /* Reduzir o padding geral do modal em telas pequenas */
+                gap: 15px; /* Reduzir o espaçamento entre elementos */
+                max-width: 95vw; /* Aumentar para 95% da largura da viewport */
+                max-height: 95vh; /* Aumentar para 95% da altura da viewport */
             }
             .hotspot-detail-content .hotspot-image-container {
                 width: 100%;
@@ -812,10 +837,15 @@
                 font-size: 1.4rem;
             }
             .hotspot-detail-content .info-row {
-                flex-direction: column;
-                align-items: flex-start;
+                flex-direction: column; /* Coloca label e valor em linhas separadas */
+                align-items: flex-start; /* Alinha tudo à esquerda */
                 gap: 2px;
                 font-size: 0.9rem;
+            }
+            .hotspot-detail-content .info-row strong,
+            .hotspot-detail-content .info-row span {
+                text-align: left; /* Garante alinhamento à esquerda para ambos */
+                width: 100%; /* Ocupa toda a largura disponível */
             }
         }
     </style>
