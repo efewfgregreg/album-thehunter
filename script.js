@@ -1383,12 +1383,11 @@ function renderProgressView(container) {
     resetButton.className = 'back-button';
     resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;';
     resetButton.onclick = async () => {
-        if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
-            savedData = getDefaultDataStructure();
-            saveData(savedData);
-            location.reload();    
-        }
-    };
+    if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
+        savedData = getDefaultDataStructure(); // Zera os dados na memória
+        saveData(savedData); // Salva os dados zerados e ATUALIZA A TELA AUTOMATICAMENTE
+    }
+};
     
     container.appendChild(wrapper);
     container.appendChild(resetButton);
