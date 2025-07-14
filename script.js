@@ -307,7 +307,7 @@ const diamondFursData = {
     "raposa_vermelha": { macho: ["Vermelho", "Vermelho Escuro", "Laranja"], femea: [] },
     "rena_da_montanha": { macho: ["Pardo Escuro", "Pardo Claro"], femea: [] },
     "sambar": { macho: ["Pardo", "Pardo Escuro", "Pardo Claro", "Gradiente Escuro"], femea: [] },
-    "tahr": { macho: ["Pardo Claro", "Pardo" "Palha", "Pardo Avermelhado"], femea: [] },
+    "tahr": { macho: ["Pardo Claro", "Pardo", "Palha", "Pardo Avermelhado"], femea: [] },
     "tetraz_grande": { macho: ["Escuro"], femea: [] },
     "tigre_de_bengala": { macho: ["Laranja"], femea: [] },
     "urso_cinzento": { macho: ["Pardo e Cinza"], femea: [] },
