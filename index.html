@@ -815,7 +815,175 @@
             align-self: center;
         }
 
-        /* Media Query para telas menores */
+        /* --- NOVOS ESTILOS PAINEL DE PROGRESSO (DESIGN 2.0) --- */
+        .progress-view-container {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        #progress-panel-v2 {
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .progress-v2-header {
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .progress-v2-header h3 {
+            font-family: var(--font-headings);
+            font-size: 2.2rem;
+            color: var(--text-color);
+            letter-spacing: 1px;
+        }
+
+        .progress-v2-header p {
+            color: var(--text-color-muted);
+            font-size: 1rem;
+        }
+
+        .overall-progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 25px;
+        }
+
+        .progress-dial-card {
+            background: var(--surface-color);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .progress-dial-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+
+        .progress-dial {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 15px auto;
+        }
+
+        .progress-dial svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+
+        .progress-dial-bg, .progress-dial-value {
+            fill: none;
+            stroke-width: 10;
+        }
+
+        .progress-dial-bg {
+            stroke: var(--bg-color);
+        }
+
+        .progress-dial-value {
+            stroke: var(--primary-color);
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease-out;
+        }
+
+        .progress-dial-percentage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: var(--font-headings);
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .progress-dial-label {
+            font-family: var(--font-headings);
+            font-size: 1.1rem;
+            color: var(--text-color);
+        }
+
+        .progress-dial-counts {
+            font-size: 0.9rem;
+            color: var(--text-color-muted);
+        }
+
+        /* Cores específicas para cada dial */
+        .progress-dial-card.rares .progress-dial-value { stroke: #d69e3a; }
+        .progress-dial-card.rares .progress-dial-percentage { color: #d69e3a; }
+        .progress-dial-card.diamonds .progress-dial-value { stroke: #00bcd4; }
+        .progress-dial-card.diamonds .progress-dial-percentage { color: #00bcd4; }
+        .progress-dial-card.greats .progress-dial-value { stroke: #ffd700; }
+        .progress-dial-card.greats .progress-dial-percentage { color: #ffd700; }
+        .progress-dial-card.super_raros .progress-dial-value { stroke: #e8bd4a; }
+        .progress-dial-card.super_raros .progress-dial-percentage { color: #e8bd4a; }
+
+        .reserve-progress-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .reserve-progress-card {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        .reserve-progress-card:hover {
+            border-color: var(--primary-color);
+        }
+
+        .reserve-progress-header {
+            padding: 15px;
+            font-family: var(--font-headings);
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .reserve-progress-header img {
+            height: 25px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .reserve-progress-bar-area {
+            padding: 0 15px 15px 15px;
+        }
+
+        .reserve-progress-bar-bg {
+            background-color: var(--bg-color);
+            border-radius: 10px;
+            height: 10px;
+            width: 100%;
+            overflow: hidden;
+        }
+        .reserve-progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #008c9e, #00d4c3);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        .reserve-progress-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: var(--text-color-muted);
+            padding-top: 5px;
+        }
+
+        /* --- Media Query para telas menores --- */
         @media (max-width: 768px) {
             .main-content { padding: 15px; }
             .page-header { flex-direction: column; align-items: flex-start; gap: 15px; }
@@ -876,6 +1044,20 @@
             }
             .hotspot-dossier-image-wrapper {
                 padding-bottom: 75%; /* Ajuste para talvez mais quadrado em mobile se a proporção geral for melhor assim */
+            }
+
+            /* -- Ajustes Responsivos para o novo painel -- */
+            .overall-progress-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+            .progress-dial-card { padding: 15px; }
+            .progress-dial { width: 100px; height: 100px; }
+            .progress-dial-percentage { font-size: 1.5rem; }
+            .progress-dial-label { font-size: 1rem; }
+
+            .reserve-progress-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
