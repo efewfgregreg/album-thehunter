@@ -328,7 +328,7 @@ const diamondFursData = {
     "tetraz_azul": { macho: ["Pardo", "Muda", "Cinza Ardósia"], femea: [] },
     "marreca_arrebio": { macho: ["Eclipse", "Cinza"], femea: [] },
     "pato_carolino": { macho: ["Escuro", "Padrão"], femea: [] },
-    "castor_norte_americano": { macho: [], femea: ["Pardo Escuro", "Pardo Claro", "Marrom Avermelado"] },
+    "castor_norte_americano": { macho: [], femea: ["Pardo Escuro", "Pardo Claro", "Marrom Avermelhado"] },
     "caribu_da_floresta_boreal": { macho: ["Pardo Escuro", "Pardo Claro"], femea: [] },
     "cervo_canadense": { macho: ["Escuro", "Juba Marrom"], femea: [] },
     "bisão_da_floresta": { macho: ["Ruivo", "Pardo Claro", "Metade Ruivo"], femea: [] }
