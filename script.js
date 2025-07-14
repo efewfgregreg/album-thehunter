@@ -1048,7 +1048,7 @@ function renderGreatsDetailView(container, animalName, slug, originReserveKey = 
         furCard.className = `fur-card trophy-frame ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furName);
         
-        const imagePath = `animais/pelagens/${encodeURIComponent(`great_${slug}_${furSlug}.png`)}`;
+        const imagePath = `animais/pelagens/great_${slug}_${furSlug}.png`;
         const fallbackImagePath = `animais/${slug}.png`;
 
         furCard.innerHTML = `
