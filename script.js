@@ -2481,7 +2481,20 @@ function renderGreatsDetailView(container, animalName, slug, originReserveKey = 
         const furCard = document.createElement('div');
         furCard.className = `fur-card trophy-frame ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furName);
-        furCard.innerHTML = `<img src="animais/pelagens/great_${slug}_${furSlug}.png" alt="${furName}" onerror="this.onerror=null; this.src='animais/${slug}.png';"><div class="info-plaque"><div class="info">${furName}</div><div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div></div>`;
+        
+        // Caminho da imagem para o Great One
+        const imagePath = `animais/pelagens/great_${slug}_${furSlug}.png`;
+        // Fallback para imagem base do animal se a pelagem específica não existir
+        const fallbackImagePath = `animais/${slug}.png`;
+
+        furCard.innerHTML = `
+            <img src="${imagePath}" alt="${furName}" onerror="this.onerror=null; this.src='${fallbackImagePath}';">
+            <div class="info-plaque">
+                <div class="info">${furName}</div>
+                <div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div>
+            </div>
+            <button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">⛶</button>
+        `;
         furCard.addEventListener('click', () => openGreatsTrophyModal(animalName, slug, furName, originReserveKey)); // Passa originReserveKey
         furGrid.appendChild(furCard);
     });
