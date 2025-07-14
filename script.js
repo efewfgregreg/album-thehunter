@@ -106,7 +106,7 @@ function saveData(data) {
 
 // --- CONSTANTES DE DADOS ---
 const rareFursData = {
-    "alce": { macho: ["Albino", Melânico", "Malhado", "Café"], femea: ["Albino", Melânico", "Malhado"] },
+    "alce": { macho: ["Albino", "Melânico", "Malhado", "Café"], femea: ["Albino", "Melânico", "Malhado"] },
     "antilocapra": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] },
     "antílope_negro": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] },
     "bantengue": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
@@ -310,7 +310,7 @@ const diamondFursData = {
     "tahr": { macho: ["Pardo Claro", "Pardo" "Palha", "Pardo Avermelhado"], femea: [] },
     "tetraz_grande": { macho: ["Escuro"], femea: [] },
     "tigre_de_bengala": { macho: ["Laranja"], femea: [] },
-    "urso_cinzento": { macho: ["Pardo e Cinza"], femea: ["] },
+    "urso_cinzento": { macho: ["Pardo e Cinza"], femea: [] },
     "urso_negro": { macho: ["Preto", "Escuro"], femea: [] },
     "urso_pardo": { macho: ["Espírito", "Pardo", "Pardo Avermelhado", "Ouro", "Pardo Claro", "Pardo Escuro", "Amarelo", "Canela"], femea: [] },
     "veado_das_montanhas_rochosas": { macho: ["Pardo", "Pardo Claro"], femea: [] },
@@ -322,7 +322,7 @@ const diamondFursData = {
     "zarro_negrinha": { macho: ["Preto"], femea: [] },
     "zarro_castanho": { macho: ["Escuro", "Pardo Avermelhado"], femea: [] },
     "ibex_espanhol_do_sudeste": { macho: ["Pardo", "Marrom Hibrido", "Pardo Hibrido",  "Castanho Acinzentado", "Cinza Claro", "Laranja"], femea: [] },
-    "ibex_de_gredos": { macho: ["Pardo e Cinza", "Marrom Hibrido", Cinza Claro", "Cinzento"], femea: [] },
+    "ibex_de_gredos": { macho: ["Pardo e Cinza", "Marrom Hibrido", "Cinza Claro", "Cinzento"], femea: [] },
     "ibex_de_ronda": { macho: ["Pardo", "Pardo e Cinza", "Marrom Hibrido", "Cinzento"], femea: [] },
     "tetraz_azul": { macho: ["Pardo", "Muda", "Cinza Ardósia"], femea: [] },
     "marreca_arrebio": { macho: ["Eclipse", "Cinza"], femea: [] },
