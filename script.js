@@ -34,19 +34,9 @@ async function saveDataAndUpdateUI(newData) {
         console.log("Progresso salvo na nuvem com sucesso!");
     } catch (error) {
         console.error("Erro ao salvar dados na nuvem: ", error);
-        // Opcional: Mostrar um alerta de erro para o usuário
+        // A UI já é atualizada pelas próprias funções que chamam esta.
+        // Opcional: Mostrar um alerta de erro para o usuário.
         showCustomAlert('Houve um erro ao salvar seu progresso na nuvem.', 'Erro de Sincronização');
-    }
-    
-    // ATUALIZA A UI DE FORMA INTELIGENTE
-    // Pega a "view" atual pelo data attribute que adicionamos ao container
-    const currentViewKey = document.querySelector('.content-container')?.dataset.viewKey;
-    if (currentViewKey) {
-        // Simplesmente renderiza a view principal novamente com os dados atualizados
-        renderMainView(currentViewKey);
-    } else {
-        // Se não estiver em nenhuma view específica (ex: hub principal), recarrega o hub
-        renderNavigationHub();
     }
 }
 
@@ -126,7 +116,6 @@ function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
     });
 }
 
-
 // --- 6. FUNÇÕES DE ROTEAMENTO PRINCIPAL ---
 
 function renderNavigationHub() {
@@ -147,7 +136,7 @@ function renderNavigationHub() {
         hub.appendChild(card);
     });
     appContainer.appendChild(hub);
-    AuthUI.setupLogoutButton(currentUser, auth, appContainer);
+    AuthUI.setupLogoutButton(currentUser);
 }
 
 function renderMainView(tabKey) {
@@ -169,12 +158,11 @@ function renderMainView(tabKey) {
     mainContent.appendChild(header);
     const contentContainer = document.createElement('div');
     contentContainer.className = `content-container ${tabKey}-view`;
-    contentContainer.dataset.viewKey = tabKey; // Importante para o refresh da UI
+    contentContainer.dataset.viewKey = tabKey;
     mainContent.appendChild(contentContainer);
     appContainer.appendChild(mainContent);
-    AuthUI.setupLogoutButton(currentUser, auth, appContainer);
+    AuthUI.setupLogoutButton(currentUser);
     
-    // Delega a renderização para o módulo correto
     if (tabKey === 'progresso') {
         ProgressUI.renderProgressView(contentContainer);
     } else if (tabKey === 'grind') {
@@ -197,19 +185,19 @@ document.addEventListener('DOMContentLoaded', () => {
             appContainer.innerHTML = `<div class="loading-spinner">Carregando seus dados...</div>`;
             savedData = await FirebaseService.loadDataFromFirestore(user);
 
-            // Coleta TODAS as funções e variáveis que os módulos precisam em um só lugar.
             const dependencies = {
-                // Estado
+                // Estado Global
                 savedData, currentUser, auth, appContainer, lastClickedAnimalName,
-                // Dados estáticos e utilitários
+                // Dados Estáticos e Utilitários
                 ...Data, 
                 ...Utils,
                 // Funções de outros módulos que precisam ser compartilhadas
                 getAggregatedGrindStats: GrindUI.getAggregatedGrindStats,
-                // Funções do próprio orquestrador
+                // Funções de Controle do Orquestrador
                 renderMainView, 
                 saveDataAndUpdateUI, 
                 syncTrophyToAlbum,
+                // Funções de UI Globais (Modais)
                 openImageViewer,
                 closeModal,
                 showCustomAlert
