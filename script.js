@@ -23,9 +23,9 @@ FirebaseService.initializeFirebaseService(db);
 let currentUser = null;
 let savedData = {};
 let appContainer;
-let lastClickedAnimalName = { value: '' }; 
+let lastClickedAnimalName = { value: '' }; // Usado para re-renderizar o card ativo
 
-// --- 4. FUNÇÕES DE CONTROLE PRINCIPAL ---
+// --- 4. FUNÇÕES DE CONTROLE DE ALTO NÍVEL ---
 
 async function saveDataAndUpdateUI(newData) {
     savedData = newData; 
@@ -34,24 +34,19 @@ async function saveDataAndUpdateUI(newData) {
         console.log("Progresso salvo na nuvem com sucesso!");
     } catch (error) {
         console.error("Erro ao salvar dados na nuvem: ", error);
+        // Opcional: Mostrar um alerta de erro para o usuário
+        showCustomAlert('Houve um erro ao salvar seu progresso na nuvem.', 'Erro de Sincronização');
     }
     
     // ATUALIZA A UI DE FORMA INTELIGENTE
-    if (document.getElementById('progress-panel-main-container')) {
-        const progressContainer = document.querySelector('.progress-view-container');
-        if (progressContainer) ProgressUI.renderProgressView(progressContainer);
-    }
-    const mountsGrid = document.querySelector('.mounts-grid');
-    if (mountsGrid) {
-        AlbumViews.renderMultiMountsView(mountsGrid.parentNode);
-    }
-    const activeCard = document.querySelector(`.animal-card[data-slug="${Utils.slugify(lastClickedAnimalName.value)}"]`);
-    if(activeCard) {
-        const container = document.querySelector('.content-container');
-        const tabKey = container.className.split(' ').find(cls => cls.endsWith('-view'))?.replace('-view', '');
-        if(tabKey) {
-           AlbumViews.updateCardAppearance(activeCard, Utils.slugify(lastClickedAnimalName.value), tabKey);
-        }
+    // Pega a "view" atual pelo data attribute que adicionamos ao container
+    const currentViewKey = document.querySelector('.content-container')?.dataset.viewKey;
+    if (currentViewKey) {
+        // Simplesmente renderiza a view principal novamente com os dados atualizados
+        renderMainView(currentViewKey);
+    } else {
+        // Se não estiver em nenhuma view específica (ex: hub principal), recarrega o hub
+        renderNavigationHub();
     }
 }
 
@@ -87,7 +82,52 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
     console.log(`Sincronizado: ${rarityType} '${details.variation}' para ${animalSlug}`);
 }
 
-// --- 5. FUNÇÕES DE ROTEAMENTO PRINCIPAL ---
+// --- 5. FUNÇÕES GLOBAIS DE UI (MODAIS) ---
+
+function openImageViewer(imageUrl) {
+    const modal = document.getElementById('image-viewer-modal');
+    modal.innerHTML = `
+        <span class="modal-close">&times;</span>
+        <img class="modal-content-viewer" src="${imageUrl}" alt="Imagem em tela cheia">
+    `;
+    modal.style.display = "flex";
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
+    const modal = document.getElementById('custom-alert-modal');
+    const modalTitle = document.getElementById('custom-alert-title');
+    const modalMessage = document.getElementById('custom-alert-message');
+    const okBtn = document.getElementById('custom-alert-ok-btn');
+    const cancelBtn = document.getElementById('custom-alert-cancel-btn');
+    modalTitle.textContent = title;
+    modalMessage.textContent = message;
+    return new Promise((resolve) => {
+        okBtn.onclick = () => {
+            modal.style.display = 'none';
+            resolve(true);
+        };
+        if (isConfirm) {
+            cancelBtn.style.display = 'inline-block';
+            cancelBtn.onclick = () => {
+                modal.style.display = 'none';
+                resolve(false);
+            };
+        } else {
+            cancelBtn.style.display = 'none';
+        }
+        modal.style.display = 'flex';
+    });
+}
+
+
+// --- 6. FUNÇÕES DE ROTEAMENTO PRINCIPAL ---
 
 function renderNavigationHub() {
     appContainer.innerHTML = '';
@@ -110,7 +150,6 @@ function renderNavigationHub() {
     AuthUI.setupLogoutButton(currentUser, auth, appContainer);
 }
 
-// Esta função age como o "roteador" principal da aplicação
 function renderMainView(tabKey) {
     appContainer.innerHTML = '';
     const currentTab = Data.categorias[tabKey];
@@ -130,6 +169,7 @@ function renderMainView(tabKey) {
     mainContent.appendChild(header);
     const contentContainer = document.createElement('div');
     contentContainer.className = `content-container ${tabKey}-view`;
+    contentContainer.dataset.viewKey = tabKey; // Importante para o refresh da UI
     mainContent.appendChild(contentContainer);
     appContainer.appendChild(mainContent);
     AuthUI.setupLogoutButton(currentUser, auth, appContainer);
@@ -148,7 +188,7 @@ function renderMainView(tabKey) {
     }
 }
 
-// --- 6. INICIALIZAÇÃO DO APP ---
+// --- 7. INICIALIZAÇÃO DO APP ---
 document.addEventListener('DOMContentLoaded', () => {
     appContainer = document.getElementById('app-container');
     auth.onAuthStateChanged(async (user) => {
@@ -157,22 +197,25 @@ document.addEventListener('DOMContentLoaded', () => {
             appContainer.innerHTML = `<div class="loading-spinner">Carregando seus dados...</div>`;
             savedData = await FirebaseService.loadDataFromFirestore(user);
 
-            // Coleta todas as funções e variáveis que os módulos precisam
+            // Coleta TODAS as funções e variáveis que os módulos precisam em um só lugar.
             const dependencies = {
+                // Estado
                 savedData, currentUser, auth, appContainer, lastClickedAnimalName,
+                // Dados estáticos e utilitários
                 ...Data, 
                 ...Utils,
-                // ====================================================================
-                // CORREÇÃO: Adicionando a função do módulo Grind às dependências.
-                // Agora, o "garçom" sabe entregar a função para quem pedir.
-                // ====================================================================
+                // Funções de outros módulos que precisam ser compartilhadas
                 getAggregatedGrindStats: GrindUI.getAggregatedGrindStats,
+                // Funções do próprio orquestrador
                 renderMainView, 
                 saveDataAndUpdateUI, 
-                syncTrophyToAlbum
+                syncTrophyToAlbum,
+                openImageViewer,
+                closeModal,
+                showCustomAlert
             };
             
-            // Inicializa todos os módulos de UI, passando o pacote completo de dependências
+            // Inicializa todos os módulos de UI, passando o mesmo pacote de dependências para todos.
             AuthUI.init(dependencies);
             ProgressUI.init(dependencies);
             GrindUI.init(dependencies);
@@ -185,23 +228,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const modals = ['image-viewer-modal', 'form-modal', 'custom-alert-modal'];
-    modals.forEach(modalId => {
+    // Adiciona event listeners globais para os modais
+    ['image-viewer-modal', 'form-modal', 'custom-alert-modal'].forEach(modalId => {
         const modal = document.getElementById(modalId);
         if (modal) {
             modal.addEventListener('click', e => {
-                if (e.target === modal) modal.style.display = "none";
+                if (e.target === modal || e.target.classList.contains('modal-close')) {
+                    closeModal(modalId);
+                }
             });
             const closeBtn = modal.querySelector('.modal-close');
-            if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+            if (closeBtn) closeBtn.onclick = () => closeModal(modalId);
         }
     });
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
-            modals.forEach(modalId => {
-                const modal = document.getElementById(modalId);
-                if(modal) modal.style.display = 'none';
-            });
+            ['image-viewer-modal', 'form-modal', 'custom-alert-modal'].forEach(closeModal);
         }
     });
 });
