@@ -23,7 +23,7 @@ FirebaseService.initializeFirebaseService(db);
 let currentUser = null;
 let savedData = {};
 let appContainer;
-let lastClickedAnimalName = { value: '' }; // Usado para re-renderizar o card ativo
+let lastClickedAnimalName = { value: '' };
 
 // --- 4. FUNÇÕES DE CONTROLE DE ALTO NÍVEL ---
 
@@ -34,10 +34,10 @@ async function saveDataAndUpdateUI(newData) {
         console.log("Progresso salvo na nuvem com sucesso!");
     } catch (error) {
         console.error("Erro ao salvar dados na nuvem: ", error);
-        // A UI já é atualizada pelas próprias funções que chamam esta.
-        // Opcional: Mostrar um alerta de erro para o usuário.
         showCustomAlert('Houve um erro ao salvar seu progresso na nuvem.', 'Erro de Sincronização');
     }
+    // A responsabilidade de re-renderizar a view agora está dentro do próprio módulo de UI que iniciou a ação.
+    // Isso conserta o bug de "voltar para a tela anterior".
 }
 
 function syncTrophyToAlbum(animalSlug, rarityType, details) {
@@ -50,7 +50,7 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
             break;
         case 'super_raros':
             if (!savedData.super_raros) savedData.super_raros = {};
-            if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
+            if (!savedData.super_raros[animalSlug]) savedData.super_raros[slug] = {};
             savedData.super_raros[animalSlug][details.variation] = true;
             break;
         case 'great_ones':
@@ -115,6 +115,7 @@ function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
         modal.style.display = 'flex';
     });
 }
+
 
 // --- 6. FUNÇÕES DE ROTEAMENTO PRINCIPAL ---
 
@@ -186,24 +187,18 @@ document.addEventListener('DOMContentLoaded', () => {
             savedData = await FirebaseService.loadDataFromFirestore(user);
 
             const dependencies = {
-                // Estado Global
                 savedData, currentUser, auth, appContainer, lastClickedAnimalName,
-                // Dados Estáticos e Utilitários
                 ...Data, 
                 ...Utils,
-                // Funções de outros módulos que precisam ser compartilhadas
                 getAggregatedGrindStats: GrindUI.getAggregatedGrindStats,
-                // Funções de Controle do Orquestrador
                 renderMainView, 
                 saveDataAndUpdateUI, 
                 syncTrophyToAlbum,
-                // Funções de UI Globais (Modais)
                 openImageViewer,
                 closeModal,
                 showCustomAlert
             };
             
-            // Inicializa todos os módulos de UI, passando o mesmo pacote de dependências para todos.
             AuthUI.init(dependencies);
             ProgressUI.init(dependencies);
             GrindUI.init(dependencies);
@@ -212,11 +207,10 @@ document.addEventListener('DOMContentLoaded', () => {
             renderNavigationHub();
         } else {
             currentUser = null;
-            AuthUI.renderLoginForm(appContainer, auth);
+            AuthUI.renderLoginForm(appContainer);
         }
     });
 
-    // Adiciona event listeners globais para os modais
     ['image-viewer-modal', 'form-modal', 'custom-alert-modal'].forEach(modalId => {
         const modal = document.getElementById(modalId);
         if (modal) {
