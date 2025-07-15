@@ -1,9 +1,17 @@
-// js/auth.js
+// js/auth.js (VERSÃO CORRIGIDA COM INIT)
 
-// Nota: Agora as funções recebem 'appContainer' e 'auth' como parâmetros
-// para não dependerem de variáveis globais.
+// --- Dependências do Módulo ---
+let appContainer, auth;
 
-export function renderLoginForm(appContainer, auth) {
+// A função init recebe tudo que este módulo precisa para funcionar
+export function init(dependencies) {
+    appContainer = dependencies.appContainer;
+    auth = dependencies.auth;
+}
+
+// --- Funções Exportadas ---
+
+export function renderLoginForm() {
     appContainer.innerHTML = `
         <div class="auth-container">
             <div class="auth-box">
@@ -28,10 +36,10 @@ export function renderLoginForm(appContainer, auth) {
             });
     });
 
-    document.getElementById('showRegister').addEventListener('click', () => renderRegisterForm(appContainer, auth));
+    document.getElementById('showRegister').addEventListener('click', () => renderRegisterForm());
 }
 
-export function renderRegisterForm(appContainer, auth) {
+export function renderRegisterForm() {
     appContainer.innerHTML = `
         <div class="auth-container">
             <div class="auth-box">
@@ -56,7 +64,7 @@ export function renderRegisterForm(appContainer, auth) {
             });
     });
 
-    document.getElementById('showLogin').addEventListener('click', () => renderLoginForm(appContainer, auth));
+    document.getElementById('showLogin').addEventListener('click', () => renderLoginForm());
 }
 
 export function setupLogoutButton(user, auth, appContainer) {
