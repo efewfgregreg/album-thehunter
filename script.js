@@ -160,11 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Coleta todas as funções e variáveis que os módulos precisam
             const dependencies = {
                 savedData, currentUser, auth, appContainer, lastClickedAnimalName,
-                ...Data, ...Utils,
-                renderMainView, saveDataAndUpdateUI, syncTrophyToAlbum
+                ...Data, 
+                ...Utils,
+                // ====================================================================
+                // CORREÇÃO: Adicionando a função do módulo Grind às dependências.
+                // Agora, o "garçom" sabe entregar a função para quem pedir.
+                // ====================================================================
+                getAggregatedGrindStats: GrindUI.getAggregatedGrindStats,
+                renderMainView, 
+                saveDataAndUpdateUI, 
+                syncTrophyToAlbum
             };
             
-            // Inicializa todos os módulos de UI
+            // Inicializa todos os módulos de UI, passando o pacote completo de dependências
             AuthUI.init(dependencies);
             ProgressUI.init(dependencies);
             GrindUI.init(dependencies);
