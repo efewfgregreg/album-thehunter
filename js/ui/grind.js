@@ -20,7 +20,7 @@ export function init(dependencies) {
 }
 
 
-// --- Função Principal Exportada ---
+// --- Funções Principais Exportadas ---
 export function renderGrindHubView(container) {
     container.innerHTML = `<div class="grind-hub-container"></div>`;
     const hubContainer = container.querySelector('.grind-hub-container');
@@ -76,6 +76,48 @@ export function renderGrindHubView(container) {
     } else {
         grid.innerHTML = '<p class="no-grinds-message">Nenhum grind iniciado. Clique no botão acima para começar!</p>';
     }
+}
+
+// ====================================================================
+// NOVA FUNÇÃO EXPORTADA
+// ====================================================================
+/**
+ * Agrega estatísticas de todas as sessões de grind.
+ * @returns {Array} Uma lista de objetos, cada um representando as estatísticas totais para um animal.
+ */
+export function getAggregatedGrindStats() {
+    const stats = {};
+
+    if (!savedData || !savedData.grindSessions) {
+        return [];
+    }
+
+    savedData.grindSessions.forEach(session => {
+        const { animalSlug, counts } = session;
+
+        // Se o animal ainda não está no nosso objeto de estatísticas, inicialize-o.
+        if (!stats[animalSlug]) {
+            stats[animalSlug] = {
+                animalSlug: animalSlug,
+                animalName: items.find(item => slugify(item) === animalSlug) || animalSlug,
+                totalKills: 0,
+                diamonds: 0,
+                rares: 0,
+                superRares: 0,
+                greatOnes: 0
+            };
+        }
+
+        // Soma as contagens da sessão atual às estatísticas agregadas.
+        stats[animalSlug].totalKills += counts.total || 0;
+        stats[animalSlug].diamonds += counts.diamonds || 0;
+        stats[animalSlug].rares += (counts.rares || []).length;
+        stats[animalSlug].superRares += (counts.super_raros || []).length;
+        stats[animalSlug].greatOnes += (counts.great_ones || []).length;
+    });
+
+    // Converte o objeto de estatísticas em um array e o ordena pelo nome do animal.
+    return Object.values(stats).sort((a, b) => a.animalName.localeCompare(b.animalName));
 }
 
 
