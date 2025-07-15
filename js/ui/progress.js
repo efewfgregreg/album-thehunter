@@ -2,7 +2,7 @@
 
 // --- Dependências do Módulo ---
 let savedData, currentUser, items, slugify, reservesData, rareFursData, diamondFursData, greatsFursData, animalHotspotData;
-let calcularReserveProgress, getAggregatedGrindStats, showCustomAlert, getDefaultDataStructure, saveDataAndUpdateUI;
+let getAggregatedGrindStats, showCustomAlert, getDefaultDataStructure, saveDataAndUpdateUI;
 
 // A função init recebe tudo que este módulo precisa para funcionar
 export function init(dependencies) {
@@ -15,15 +15,13 @@ export function init(dependencies) {
     diamondFursData = dependencies.diamondFursData;
     greatsFursData = dependencies.greatsFursData;
     animalHotspotData = dependencies.animalHotspotData;
-    calcularReserveProgress = dependencies.calcularReserveProgress;
     getAggregatedGrindStats = dependencies.getAggregatedGrindStats;
     showCustomAlert = dependencies.showCustomAlert;
     getDefaultDataStructure = dependencies.getDefaultDataStructure;
     saveDataAndUpdateUI = dependencies.saveDataAndUpdateUI;
 }
 
-// --- Funções de Renderização ---
-
+// --- Função Principal Exportada ---
 export function renderProgressView(container) {
     container.innerHTML = ''; 
     const wrapper = document.createElement('div');
@@ -99,6 +97,8 @@ export function renderProgressView(container) {
     container.appendChild(resetButton);
     showNewProgressPanel(); 
 }
+
+// --- Funções Auxiliares (internas deste módulo) ---
 
 function updateNewProgressPanel(container) {
     container.innerHTML = '';
@@ -346,4 +346,48 @@ async function importUserData(event) {
         }
     };
     reader.readAsText(file);
+}
+
+// === FUNÇÃO QUE ESTAVA FALTANDO ===
+function calcularOverallProgress() {
+    const progress = {
+        collectedRares: 0,
+        totalRares: 0,
+        collectedDiamonds: 0,
+        totalDiamonds: 0,
+        collectedGreatOnes: 0,
+        totalGreatOnes: 0,
+        collectedSuperRares: 0,
+        totalSuperRares: 0,
+        collectedHotspots: 0,
+        totalHotspots: 0
+    };
+    const allAnimalSlugs = [...new Set(Object.keys(rareFursData).concat(Object.keys(diamondFursData)))];
+    allAnimalSlugs.forEach(slug => {
+        if (rareFursData[slug]) {
+            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
+        }
+        progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
+        if (diamondFursData[slug]) {
+            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
+        }
+        progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
+        if (greatsFursData[slug]) {
+            progress.totalGreatOnes += greatsFursData[slug].length;
+            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
+        }
+        const speciesRareFurs = rareFursData[slug];
+        const speciesDiamondFurs = diamondFursData[slug];
+        if (speciesRareFurs) {
+            if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
+                progress.totalSuperRares += speciesRareFurs.macho.length;
+            }
+            if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
+                progress.totalSuperRares += speciesRareFurs.femea.length;
+            }
+        }
+        progress.collectedSuperRares += Object.values(savedData.super_raros?.[slug] || {}).filter(v => v === true).length;
+    });
+    progress.totalHotspots = Object.values(animalHotspotData).reduce((acc, reserve) => acc + Object.keys(reserve).length, 0);
+    return progress;
 }

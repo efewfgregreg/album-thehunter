@@ -23,9 +23,10 @@ FirebaseService.initializeFirebaseService(db);
 let currentUser = null;
 let savedData = {};
 let appContainer;
-let lastClickedAnimalName = { value: '' }; // Usando objeto para que a referência possa ser compartilhada
+let lastClickedAnimalName = { value: '' }; 
 
-// --- 4. FUNÇÃO CENTRAL DE CONTROLE DE DADOS ---
+// --- 4. FUNÇÕES DE CONTROLE PRINCIPAL ---
+
 async function saveDataAndUpdateUI(newData) {
     savedData = newData; 
     try {
@@ -83,7 +84,7 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
             savedData.greats[animalSlug].furs[details.variation].trophies.push(newGreatOneTrophy);
             break;
     }
-     console.log(`Sincronizado: ${rarityType} '${details.variation}' para ${animalSlug}`);
+    console.log(`Sincronizado: ${rarityType} '${details.variation}' para ${animalSlug}`);
 }
 
 // --- 5. FUNÇÕES DE ROTEAMENTO PRINCIPAL ---
@@ -109,6 +110,7 @@ function renderNavigationHub() {
     AuthUI.setupLogoutButton(currentUser, auth, appContainer);
 }
 
+// Esta função age como o "roteador" principal da aplicação
 function renderMainView(tabKey) {
     appContainer.innerHTML = '';
     const currentTab = Data.categorias[tabKey];
@@ -155,6 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
             appContainer.innerHTML = `<div class="loading-spinner">Carregando seus dados...</div>`;
             savedData = await FirebaseService.loadDataFromFirestore(user);
 
+            // Coleta todas as funções e variáveis que os módulos precisam
             const dependencies = {
                 savedData, currentUser, auth, appContainer, lastClickedAnimalName,
                 ...Data, ...Utils,
