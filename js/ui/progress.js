@@ -166,7 +166,7 @@ function updateNewProgressPanel(container) {
             card.className = 'reserve-progress-card';
             card.innerHTML = `
                 <div class="reserve-progress-header">
-                    <img src="${reserve.image.replace('.png', '_logo.png')}" onerror="this.style.display='none'">
+                    <img src="${reserve.image}" onerror="this.style.display='none'">
                     <span>${reserve.name}</span>
                 </div>
                 <div class="reserve-progress-bar-area">
