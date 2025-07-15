@@ -1,0 +1,434 @@
+// js/ui/album-views.js
+
+// --- Dependências do Módulo ---
+let savedData, lastClickedAnimalName;
+let items, slugify, reservesData, rareFursData, diamondFursData, greatsFursData, multiMountsData, categorias, animalHotspotData;
+let renderMainView, saveDataAndUpdateUI, showCustomAlert, checkAndSetGreatOneCompletion, updateCardAppearance;
+let openImageViewer, closeModal;
+
+// A função init recebe tudo que este módulo precisa para funcionar
+export function init(dependencies) {
+    savedData = dependencies.savedData;
+    lastClickedAnimalName = dependencies.lastClickedAnimalName;
+    items = dependencies.items;
+    slugify = dependencies.slugify;
+    reservesData = dependencies.reservesData;
+    rareFursData = dependencies.rareFursData;
+    diamondFursData = dependencies.diamondFursData;
+    greatsFursData = dependencies.greatsFursData;
+    multiMountsData = dependencies.multiMountsData;
+    categorias = dependencies.categorias;
+    animalHotspotData = dependencies.animalHotspotData;
+    renderMainView = dependencies.renderMainView;
+    saveDataAndUpdateUI = dependencies.saveDataAndUpdateUI;
+    showCustomAlert = dependencies.showCustomAlert;
+    checkAndSetGreatOneCompletion = dependencies.checkAndSetGreatOneCompletion;
+    updateCardAppearance = dependencies.updateCardAppearance;
+    openImageViewer = dependencies.openImageViewer;
+    closeModal = dependencies.closeModal;
+}
+
+// --- Funções Principais Exportadas ---
+
+export function renderGenericAlbumView(contentContainer, tabKey) {
+    const currentTab = categorias[tabKey];
+    const filterInput = document.createElement('input');
+    filterInput.type = 'text';
+    filterInput.className = 'filter-input';
+    filterInput.placeholder = 'Buscar animal...';
+    contentContainer.appendChild(filterInput);
+    const albumGrid = document.createElement('div');
+    albumGrid.className = 'album-grid';
+    contentContainer.appendChild(albumGrid);
+    const itemsToRender = (currentTab.items || []).filter(item => typeof item === 'string' && item !== null && item.trim() !== '');
+    itemsToRender.sort((a, b) => a.localeCompare(b)).forEach(name => {
+        const card = createAnimalCard(name, tabKey);
+        albumGrid.appendChild(card);
+    });
+    filterInput.addEventListener('input', (event) => {
+        const searchTerm = event.target.value.toLowerCase();
+        albumGrid.querySelectorAll('.animal-card').forEach(card => {
+            const animalName = card.querySelector('.info').textContent.toLowerCase();
+            card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
+        });
+    });
+}
+
+export function renderReservesList(container) {
+    container.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'reserves-grid';
+    container.appendChild(grid);
+    const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+    for (const [reserveKey, reserve] of sortedReserves) {
+        const progress = calcularReserveProgress(reserveKey);
+        const card = document.createElement('div');
+        card.className = 'reserve-card';
+        card.innerHTML = `
+            <div class="reserve-image-container">
+                <img class="reserve-card-image" src="${reserve.image}" onerror="this.style.display='none'">
+            </div>
+            <div class="reserve-card-info-panel">
+                <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
+                <div class="reserve-card-stats">
+                    <span><i class="fas fa-paw"></i> ${progress.collectedRares}</span>
+                    <span><i class="fas fa-gem"></i> ${progress.collectedDiamonds}</span>
+                    <span><i class="fas fa-crown"></i> ${progress.collectedGreatOnes}</span>
+                </div>
+            </div>
+        `;
+        card.addEventListener('click', () => showReserveDetailView(reserveKey));
+        grid.appendChild(card);
+    }
+}
+
+export function renderMultiMountsView(container) {
+    container.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'mounts-grid';
+    container.appendChild(grid);
+    const sortedMounts = Object.entries(multiMountsData).sort((a, b) => a[1].name.localeCompare(b[1].name));
+    sortedMounts.forEach(([mountKey, mount]) => {
+        const status = checkMountRequirements(mount.animals);
+        const progressCount = status.fulfillmentRequirements.filter(r => r.met).length;
+        const card = document.createElement('div');
+        card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
+        card.dataset.mountKey = mountKey;
+        let animalsHTML = '<div class="mount-card-animals">';
+        mount.animals.forEach(animal => {
+            animalsHTML += `<img src="animais/${animal.slug}.png" title="${animal.slug}" onerror="this.style.display='none'">`;
+        });
+        animalsHTML += '</div>';
+        card.innerHTML = `
+            <div class="mount-card-header">
+                <h3>${mount.name}</h3>
+                <div class="mount-progress">${progressCount} / ${mount.animals.length}</div>
+            </div>
+            ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i></div>' : ''}
+            ${animalsHTML}
+        `;
+        card.addEventListener('click', () => renderMultiMountDetailModal(mountKey));
+        grid.appendChild(card);
+    });
+}
+
+
+// --- Funções Auxiliares (internas deste módulo) ---
+
+function createAnimalCard(name, tabKey) {
+    const card = document.createElement('div');
+    card.className = 'animal-card';
+    const slug = slugify(name);
+    card.dataset.slug = slug;
+    card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
+    card.addEventListener('click', () => {
+        lastClickedAnimalName.value = name;
+        showDetailView(name, tabKey);
+    });
+    updateCardAppearance(card, slug, tabKey);
+    return card;
+}
+
+function showDetailView(name, tabKey, originReserveKey = null) {
+    if (originReserveKey) {
+        renderAnimalDossier(name, originReserveKey);
+    } else {
+        renderSimpleDetailView(name, tabKey);
+    }
+}
+
+function renderSimpleDetailView(name, tabKey) {
+    const mainContent = document.querySelector('.main-content');
+    const slug = slugify(name);
+    const contentContainer = mainContent.querySelector('.content-container');
+    contentContainer.className = `content-container detail-view ${tabKey}-detail-view`;
+    contentContainer.innerHTML = '';
+    mainContent.querySelector('.page-header h2').textContent = name;
+    const backButton = mainContent.querySelector('.page-header .back-button');
+    backButton.innerHTML = `&larr; Voltar para ${categorias[tabKey].title}`;
+    backButton.onclick = () => renderMainView(tabKey);
+    const detailContent = contentContainer;
+    if (tabKey === 'greats') {
+        renderGreatsDetailView(detailContent, name, slug);
+    } else if (tabKey === 'pelagens') {
+        renderRareFursDetailView(detailContent, name, slug);
+    } else if (tabKey === 'super_raros') {
+        renderSuperRareDetailView(detailContent, name, slug);
+    } else if (tabKey === 'diamantes') {
+        renderDiamondsDetailView(detailContent, name, slug);
+    }
+}
+
+function renderAnimalDossier(animalName, originReserveKey) {
+    const mainContent = document.querySelector('.main-content');
+    const slug = slugify(animalName);
+    const contentContainer = mainContent.querySelector('.content-container');
+    contentContainer.className = 'content-container dossier-view';
+    contentContainer.innerHTML = '';
+    mainContent.querySelector('.page-header h2').textContent = `Dossiê: ${animalName}`;
+    const backButton = mainContent.querySelector('.page-header .back-button');
+    backButton.innerHTML = `&larr; Voltar para ${reservesData[originReserveKey].name}`;
+    backButton.onclick = () => showReserveDetailView(originReserveKey);
+    const dossierTabs = document.createElement('div');
+    dossierTabs.className = 'dossier-tabs';
+    const dossierContent = document.createElement('div');
+    dossierContent.className = 'dossier-content';
+    const tabs = {
+        pelagens: { title: 'Pelagens Raras', renderFunc: renderRareFursDetailView },
+        diamantes: { title: 'Diamantes', renderFunc: renderDiamondsDetailView },
+        super_raros: { title: 'Super Raros', renderFunc: renderSuperRareDetailView },
+        hotspot: { title: 'Hotspots', renderFunc: renderHotspotDetailView },
+    };
+    if (greatsFursData[slug]) {
+        tabs.greats = { title: '<i class="fas fa-crown"></i> Great Ones', renderFunc: renderGreatsDetailView };
+    }
+    Object.entries(tabs).forEach(([key, value]) => {
+        const tab = document.createElement('div');
+        tab.className = 'dossier-tab';
+        tab.innerHTML = value.title;
+        tab.dataset.key = key;
+        dossierTabs.appendChild(tab);
+    });
+    contentContainer.appendChild(dossierTabs);
+    contentContainer.appendChild(dossierContent);
+    dossierTabs.addEventListener('click', e => {
+        const tab = e.target.closest('.dossier-tab');
+        if (!tab) return;
+        dossierTabs.querySelectorAll('.dossier-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        const tabKey = tab.dataset.key;
+        tabs[tabKey].renderFunc(dossierContent, animalName, slug, originReserveKey);
+    });
+    dossierTabs.querySelector('.dossier-tab').click();
+}
+
+function showReserveDetailView(reserveKey) {
+    const mainContent = document.querySelector('.main-content');
+    const contentContainer = mainContent.querySelector('.content-container');
+    contentContainer.className = 'content-container reserve-detail-view';
+    contentContainer.innerHTML = '';
+    const reserve = reservesData[reserveKey];
+    if (!reserve) return;
+    mainContent.querySelector('.page-header h2').textContent = reserve.name;
+    const backButton = mainContent.querySelector('.page-header .back-button');
+    backButton.innerHTML = `&larr; Voltar para Reservas`;
+    backButton.onclick = () => renderMainView('reservas');
+    const viewArea = document.createElement('div');
+    viewArea.className = 'reserve-view-area';
+    contentContainer.appendChild(viewArea);
+    const toggleButtons = document.createElement('div');
+    toggleButtons.className = 'reserve-view-toggle';
+    contentContainer.prepend(toggleButtons);
+    const btnAnimals = document.createElement('button');
+    btnAnimals.textContent = 'Animais da Reserva';
+    btnAnimals.className = 'toggle-button active';
+    btnAnimals.onclick = () => {
+        toggleButtons.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
+        btnAnimals.classList.add('active');
+        renderAnimalChecklist(viewArea, reserveKey);
+    };
+    toggleButtons.appendChild(btnAnimals);
+    const btnHotspots = document.createElement('button');
+    btnHotspots.textContent = 'Mapas de Hotspot';
+    btnHotspots.className = 'toggle-button';
+    btnHotspots.onclick = () => {
+        toggleButtons.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
+        btnHotspots.classList.add('active');
+        renderHotspotGalleryView(viewArea, reserveKey);
+    };
+    toggleButtons.appendChild(btnHotspots);
+    renderAnimalChecklist(viewArea, reserveKey);
+}
+
+function renderAnimalChecklist(container, reserveKey) {
+    container.innerHTML = '';
+    const checklistContainer = document.createElement('div');
+    checklistContainer.className = 'animal-checklist';
+    container.appendChild(checklistContainer);
+    const reserve = reservesData[reserveKey];
+    const animalNames = reserve.animals
+        .map(slug => items.find(item => slugify(item) === slug))
+        .filter(name => typeof name === 'string' && name !== null && name.trim() !== '');
+    animalNames.sort((a, b) => a.localeCompare(b)).forEach(animalName => {
+        const slug = slugify(animalName);
+        const totalRares = (rareFursData[slug]?.macho?.length || 0) + (rareFursData[slug]?.femea?.length || 0);
+        const collectedRares = Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
+        const raresPercentage = totalRares > 0 ? (collectedRares / totalRares) * 100 : 0;
+        const totalDiamonds = (diamondFursData[slug]?.macho?.length || 0) + (diamondFursData[slug]?.femea?.length || 0);
+        const collectedDiamonds = new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
+        const diamondsPercentage = totalDiamonds > 0 ? (collectedDiamonds / totalDiamonds) * 100 : 0;
+        const isGreatOne = greatsFursData.hasOwnProperty(slug);
+        const row = document.createElement('div');
+        row.className = 'animal-checklist-row';
+        row.innerHTML = `
+            <img class="animal-icon" src="animais/${slug}.png" onerror="this.src='animais/placeholder.png'">
+            <div class="animal-name">${animalName}</div>
+            <div class="mini-progress-bars">
+                <div class="mini-progress" title="Pelagens Raras: ${collectedRares}/${totalRares}">
+                    <i class="fas fa-paw"></i>
+                    <div class="mini-progress-bar-container">
+                        <div class="mini-progress-bar" style="width: ${raresPercentage}%"></div>
+                    </div>
+                </div>
+                <div class="mini-progress" title="Diamantes: ${collectedDiamonds}/${totalDiamonds}">
+                    <i class="fas fa-gem"></i>
+                    <div class="mini-progress-bar-container">
+                        <div class="mini-progress-bar" style="width: ${diamondsPercentage}%"></div>
+                    </div>
+                </div>
+            </div>
+            <i class="fas fa-crown great-one-indicator ${isGreatOne ? 'possible' : ''}" title="Pode ser Great One"></i>
+        `;
+        row.addEventListener('click', () => showDetailView(animalName, 'reservas', reserveKey));
+        checklistContainer.appendChild(row);
+    });
+}
+
+function renderHotspotGalleryView(container, reserveKey) {
+    container.innerHTML = '';
+    const hotspotGrid = document.createElement('div');
+    hotspotGrid.className = 'hotspot-grid';
+    container.appendChild(hotspotGrid);
+    const reserveAnimals = reservesData[reserveKey]?.animals || [];
+    const availableHotspots = reserveAnimals
+        .map(slug => ({ slug, name: items.find(item => slugify(item) === slug) }))
+        .filter(animal => typeof animal.name === 'string' && animal.name !== null && animalHotspotData[reserveKey]?.[animal.slug]);
+    if (availableHotspots.length === 0) {
+        hotspotGrid.innerHTML = '<p class="no-data-message">Nenhum mapa de hotspot disponível para esta reserva ainda.</p>';
+        return;
+    }
+    availableHotspots.sort((a, b) => a.name.localeCompare(b.name)).forEach(animal => {
+        const slugReserve = slugify(reservesData[reserveKey].name);
+        const imagePath = `hotspots/${slugReserve}_${animal.slug}_hotspot.jpg`;
+        const card = document.createElement('div');
+        card.className = 'hotspot-card';
+        card.innerHTML = `
+            <img src="${imagePath}" alt="Mapa de Hotspot ${animal.name}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';">
+            <div class="info-overlay">
+                <span class="animal-name">${animal.name}</span>
+                <span class="hotspot-label"><i class="fas fa-map-marker-alt"></i> Hotspot</span>
+            </div>
+        `;
+        card.addEventListener('click', () => renderHotspotDetailModal(reserveKey, animal.slug));
+        hotspotGrid.appendChild(card);
+    });
+}
+
+function renderHotspotDetailModal(reserveKey, animalSlug) {
+    const hotspotInfo = animalHotspotData[reserveKey]?.[animalSlug];
+    const animalName = items.find(item => slugify(item) === animalSlug);
+    const reserveName = reservesData[reserveKey].name;
+    if (!hotspotInfo) {
+        showCustomAlert('Dados de hotspot não encontrados para este animal nesta reserva.', 'Erro');
+        return;
+    }
+    const slugReserve = slugify(reserveName);
+    const imagePath = `hotspots/${slugReserve}_${animalSlug}_hotspot.jpg`;
+    const modal = document.getElementById('image-viewer-modal');
+    modal.innerHTML = `
+        <span class="modal-close" onclick="closeModal('image-viewer-modal')">&times;</span>
+        <div class="hotspot-detail-content">
+            <div class="hotspot-image-container">
+                <img class="modal-content-viewer" src="${imagePath}" alt="Mapa de Hotspot ${animalName} em ${reserveName}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';">
+            </div>
+            <div class="hotspot-info-panel">
+                <h3>${animalName} - ${reserveName}</h3>
+                <div class="info-row"><strong>Pontuação Máxima:</strong> <span>${hotspotInfo.maxScore || 'N/A'}</span></div>
+                <div class="info-row"><strong>Estimativa de Peso Máximo:</strong> <span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
+                <div class="info-row"><strong>Potencial Zonas:</strong> <span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
+                <div class="info-row"><strong>Classe:</strong> <span>${hotspotInfo.animalClass || 'N/A'}</span></div>
+                <div class="info-row"><strong>Nível Máximo:</strong> <span>${hotspotInfo.maxLevel || 'N/A'}</span></div>
+            </div>
+        </div>
+    `;
+    modal.style.display = 'flex';
+}
+
+function renderHotspotDetailView(container, animalName, slug, originReserveKey) {
+    container.innerHTML = '';
+    const hotspotInfo = animalHotspotData[originReserveKey]?.[slug];
+    if (!hotspotInfo) {
+        container.innerHTML = '<p class="no-data-message">Nenhum dado de hotspot disponível para este animal nesta reserva.</p>';
+        return;
+    }
+    const slugReserve = slugify(reservesData[originReserveKey].name);
+    const imagePath = `hotspots/${slugReserve}_${slug}_hotspot.jpg`;
+    container.innerHTML = `
+        <div class="hotspot-dossier-card">
+            <div class="hotspot-dossier-image-wrapper">
+                 <img src="${imagePath}" alt="Mapa de Hotspot ${animalName}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';" class="hotspot-dossier-image">
+            </div>
+            <div class="hotspot-dossier-info">
+                <div class="info-row"><strong>Pontuação Máxima:</strong> <span>${hotspotInfo.maxScore || 'N/A'}</span></div>
+                <div class="info-row"><strong>Estimativa de Peso Máximo:</strong> <span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
+                <div class="info-row"><strong>Potencial Zonas:</strong> <span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
+                <div class="info-row"><strong>Classe:</strong> <span>${hotspotInfo.animalClass || 'N/A'}</span></div>
+                <div class="info-row"><strong>Nível Máximo:</strong> <span>${hotspotInfo.maxLevel || 'N/A'}</span></div>
+            </div>
+        </div>
+        <button class="fullscreen-btn hotspot-fullscreen back-button" onclick="openImageViewer('${imagePath}')" title="Ver mapa em tela cheia">Ver mapa em tela cheia</button>
+    `;
+}
+
+function renderRareFursDetailView(container, name, slug, originReserveKey = null) {
+    container.innerHTML = '';
+    const furGrid = document.createElement('div');
+    furGrid.className = 'fur-grid';
+    container.appendChild(furGrid);
+    const speciesFurs = rareFursData[slug];
+    if (!speciesFurs || (speciesFurs.macho.length === 0 && speciesFurs.femea.length === 0)) {
+        furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
+        return;
+    }
+    const genderedFurs = [];
+    if (speciesFurs.macho) speciesFurs.macho.forEach(fur => genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur, gender: 'macho' }));
+    if (speciesFurs.femea) speciesFurs.femea.forEach(fur => genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur, gender: 'femea' }));
+    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
+        const furCard = document.createElement('div');
+        const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
+        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender;
+        furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info">${furInfo.displayName}</div><button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">⛶</button>`;
+        furCard.addEventListener('click', () => {
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
+            const currentState = savedData.pelagens[slug][furInfo.displayName] || false;
+            savedData.pelagens[slug][furInfo.displayName] = !currentState;
+            saveDataAndUpdateUI(savedData);
+            if (originReserveKey) {
+                renderAnimalDossier(name, originReserveKey);
+            } else {
+                renderSimpleDetailView(name, 'pelagens');
+            }
+        });
+        furGrid.appendChild(furCard);
+    });
+}
+
+function renderSuperRareDetailView(container, name, slug, originReserveKey = null) {
+    // ...
+}
+
+function renderDiamondsDetailView(container, name, slug, originReserveKey = null) {
+    // ...
+}
+
+function renderGreatsDetailView(container, animalName, slug, originReserveKey = null) {
+    // ...
+}
+
+async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey = null) {
+    // ...
+}
+
+function getCompleteTrophyInventory() {
+    // ...
+}
+
+function checkMountRequirements(requiredAnimals) {
+    // ...
+}
+
+function renderMultiMountDetailModal(mountKey) {
+    // ...
+}

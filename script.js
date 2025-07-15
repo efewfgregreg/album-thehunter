@@ -5,12 +5,13 @@
 
 // --- 1. IMPORTAÇÃO DE TODOS OS MÓDULOS ---
 import { firebaseConfig } from './js/config.js';
-import { rareFursData, greatsFursData, items, diamondFursData, reservesData, animalHotspotData, multiMountsData, categorias } from './js/data.js';
-import { slugify, getDefaultDataStructure } from './js/utils.js';
+import * as Data from './js/data.js';
+import * as Utils from './js/utils.js';
 import * as FirebaseService from './js/firebase-service.js';
 import * as AuthUI from './js/auth.js';
 import * as ProgressUI from './js/ui/progress.js';
 import * as GrindUI from './js/ui/grind.js';
+import * as AlbumViews from './js/ui/album-views.js';
 
 // --- 2. INICIALIZAÇÃO DO FIREBASE ---
 const app = firebase.initializeApp(firebaseConfig);
@@ -22,7 +23,7 @@ FirebaseService.initializeFirebaseService(db);
 let currentUser = null;
 let savedData = {};
 let appContainer;
-let lastClickedAnimalName = '';
+let lastClickedAnimalName = { value: '' }; // Usando objeto para que a referência possa ser compartilhada
 
 // --- 4. FUNÇÃO CENTRAL DE CONTROLE DE DADOS ---
 async function saveDataAndUpdateUI(newData) {
@@ -33,22 +34,22 @@ async function saveDataAndUpdateUI(newData) {
     } catch (error) {
         console.error("Erro ao salvar dados na nuvem: ", error);
     }
-
-    // Lógica para atualizar a UI que estiver ativa
+    
+    // ATUALIZA A UI DE FORMA INTELIGENTE
     if (document.getElementById('progress-panel-main-container')) {
         const progressContainer = document.querySelector('.progress-view-container');
         if (progressContainer) ProgressUI.renderProgressView(progressContainer);
     }
     const mountsGrid = document.querySelector('.mounts-grid');
     if (mountsGrid) {
-        renderMultiMountsView(mountsGrid.parentNode); 
+        AlbumViews.renderMultiMountsView(mountsGrid.parentNode);
     }
-    const activeCard = document.querySelector(`.animal-card[data-slug="${slugify(lastClickedAnimalName)}"]`);
+    const activeCard = document.querySelector(`.animal-card[data-slug="${Utils.slugify(lastClickedAnimalName.value)}"]`);
     if(activeCard) {
         const container = document.querySelector('.content-container');
         const tabKey = container.className.split(' ').find(cls => cls.endsWith('-view'))?.replace('-view', '');
         if(tabKey) {
-           updateCardAppearance(activeCard, slugify(lastClickedAnimalName), tabKey);
+           AlbumViews.updateCardAppearance(activeCard, Utils.slugify(lastClickedAnimalName.value), tabKey);
         }
     }
 }
@@ -85,10 +86,7 @@ function syncTrophyToAlbum(animalSlug, rarityType, details) {
      console.log(`Sincronizado: ${rarityType} '${details.variation}' para ${animalSlug}`);
 }
 
-
-// =================================================================
-// ===== FUNÇÕES GLOBAIS E DE ROTEAMENTO =====
-// =================================================================
+// --- 5. FUNÇÕES DE ROTEAMENTO PRINCIPAL ---
 
 function renderNavigationHub() {
     appContainer.innerHTML = '';
@@ -98,8 +96,8 @@ function renderNavigationHub() {
     title.className = 'hub-title';
     title.textContent = 'Álbum de Caça';
     hub.appendChild(title);
-    Object.keys(categorias).forEach(key => {
-        const cat = categorias[key];
+    Object.keys(Data.categorias).forEach(key => {
+        const cat = Data.categorias[key];
         const card = document.createElement('div');
         card.className = 'nav-card';
         card.innerHTML = `<i class="${cat.icon || 'fas fa-question-circle'}"></i><span>${cat.title}</span>`;
@@ -111,10 +109,9 @@ function renderNavigationHub() {
     AuthUI.setupLogoutButton(currentUser, auth, appContainer);
 }
 
-// Esta função age como o "roteador" principal da aplicação
 function renderMainView(tabKey) {
     appContainer.innerHTML = '';
-    const currentTab = categorias[tabKey];
+    const currentTab = Data.categorias[tabKey];
     if (!currentTab) return;
     const mainContent = document.createElement('div');
     mainContent.className = 'main-content';
@@ -140,46 +137,16 @@ function renderMainView(tabKey) {
         ProgressUI.renderProgressView(contentContainer);
     } else if (tabKey === 'grind') {
         GrindUI.renderGrindHubView(contentContainer);
+    } else if (tabKey === 'reservas') {
+        AlbumViews.renderReservesList(contentContainer);
+    } else if (tabKey === 'montagens') {
+        AlbumViews.renderMultiMountsView(contentContainer);
     } else {
-        // As funções abaixo serão as próximas a serem movidas
-        renderGenericAlbumView(contentContainer, tabKey);
+        AlbumViews.renderGenericAlbumView(contentContainer, tabKey);
     }
 }
 
-// Futuramente, esta função e as que ela chama irão para um módulo 'album-views.js'
-function renderGenericAlbumView(contentContainer, tabKey) {
-    const currentTab = categorias[tabKey];
-    const filterInput = document.createElement('input');
-    filterInput.type = 'text';
-    filterInput.className = 'filter-input';
-    filterInput.placeholder = 'Buscar animal...';
-    contentContainer.appendChild(filterInput);
-    const albumGrid = document.createElement('div');
-    albumGrid.className = 'album-grid';
-    contentContainer.appendChild(albumGrid);
-    const itemsToRender = (currentTab.items || []).filter(item => typeof item === 'string' && item !== null && item.trim() !== '');
-    itemsToRender.sort((a, b) => a.localeCompare(b)).forEach(name => {
-        const card = createAnimalCard(name, tabKey);
-        albumGrid.appendChild(card);
-    });
-    filterInput.addEventListener('input', (event) => {
-        const searchTerm = event.target.value.toLowerCase();
-        albumGrid.querySelectorAll('.animal-card').forEach(card => {
-            const animalName = card.querySelector('.info').textContent.toLowerCase();
-            card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
-        });
-    });
-}
-
-function createAnimalCard(name, tabKey) {
-    // ... Esta função ainda está aqui
-}
-
-// ... Todas as outras funções de renderização (montagens, detalhes, reservas, etc.)
-//     ainda estão aqui por enquanto...
-
-
-// --- 5. INICIALIZAÇÃO DO APP ---
+// --- 6. INICIALIZAÇÃO DO APP ---
 document.addEventListener('DOMContentLoaded', () => {
     appContainer = document.getElementById('app-container');
     auth.onAuthStateChanged(async (user) => {
@@ -188,20 +155,17 @@ document.addEventListener('DOMContentLoaded', () => {
             appContainer.innerHTML = `<div class="loading-spinner">Carregando seus dados...</div>`;
             savedData = await FirebaseService.loadDataFromFirestore(user);
 
-            // Coleta todas as funções e variáveis que os módulos precisam
             const dependencies = {
-                savedData, currentUser, auth, appContainer, items, slugify, 
-                reservesData, rareFursData, diamondFursData, greatsFursData, animalHotspotData, multiMountsData, categorias,
-                renderMainView, showCustomAlert, saveDataAndUpdateUI, syncTrophyToAlbum,
-                calcularReserveProgress, getAggregatedGrindStats, getDefaultDataStructure,
-                // Funções que ainda estão no script.js mas são necessárias em outros módulos
-                updateCardAppearance, openImageViewer, closeModal, openGreatsTrophyModal 
+                savedData, currentUser, auth, appContainer, lastClickedAnimalName,
+                ...Data, ...Utils,
+                renderMainView, saveDataAndUpdateUI, syncTrophyToAlbum
             };
             
-            // Inicializa todos os módulos de UI que criamos
+            // Inicializa todos os módulos de UI
+            AuthUI.init(dependencies);
             ProgressUI.init(dependencies);
             GrindUI.init(dependencies);
-            // AlbumViews.init(dependencies); // <-- Adicionaremos quando criarmos o último módulo
+            AlbumViews.init(dependencies);
             
             renderNavigationHub();
         } else {
@@ -210,6 +174,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Código para fechar modais e event listener de 'keydown'
-    // (O restante do seu DOMContentLoaded vai aqui)
+    const modals = ['image-viewer-modal', 'form-modal', 'custom-alert-modal'];
+    modals.forEach(modalId => {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.addEventListener('click', e => {
+                if (e.target === modal) modal.style.display = "none";
+            });
+            const closeBtn = modal.querySelector('.modal-close');
+            if (closeBtn) closeBtn.onclick = () => modal.style.display = 'none';
+        }
+    });
+    window.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            modals.forEach(modalId => {
+                const modal = document.getElementById(modalId);
+                if(modal) modal.style.display = 'none';
+            });
+        }
+    });
 });
