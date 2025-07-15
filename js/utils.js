@@ -17,40 +17,39 @@ export function getDefaultDataStructure() {
 }
 
 // ====================================================================
-// NOVA FUNÇÃO ADICIONADA
+// VERSÃO CORRIGIDA DA FUNÇÃO
 // ====================================================================
 
 /**
  * Calcula o progresso de uma reserva específica.
- * @param {string} reserveName - O nome da reserva a ser calculada.
- * @param {object} animalData - O objeto principal com os dados de todos os animais, vindo de data.js.
+ * @param {string} reserveKey - A chave da reserva (ex: "layton_lake").
+ * @param {object} reservesData - O objeto com os dados de todas as reservas.
  * @param {object} savedData - Os dados de progresso salvos do usuário.
- * @returns {{completed: number, total: number, percentage: number}} - Um objeto com o total de animais, quantos foram completados e a porcentagem.
+ * @returns {{completed: number, total: number, percentage: number}}
  */
-export function calculateReserveProgress(reserveName, animalData, savedData) {
-  // Retorna zero se a reserva não for encontrada nos nossos dados estáticos
-  if (!animalData[reserveName]) {
+export function calculateReserveProgress(reserveKey, reservesData, savedData) {
+  // CORREÇÃO: Usando reservesData e checando se a lista de animais existe
+  if (!reservesData[reserveKey] || !reservesData[reserveKey].animals) {
     return { completed: 0, total: 0, percentage: 0 };
   }
 
-  const animalsInReserve = animalData[reserveName];
+  // CORREÇÃO: Pegando a lista de animais (que já são slugs) direto de reservesData
+  const animalsInReserve = reservesData[reserveKey].animals;
   const totalAnimals = animalsInReserve.length;
 
-  // Retorna zero se a reserva não tiver animais cadastrados
   if (totalAnimals === 0) {
     return { completed: 0, total: 0, percentage: 0 };
   }
 
   let completedAnimals = 0;
-  animalsInReserve.forEach(animal => {
-    const animalSlug = slugify(animal.name);
+  // CORREÇÃO: Iterando sobre os slugs dos animais
+  animalsInReserve.forEach(animalSlug => {
     // Verificamos se o animal existe nos dados salvos do usuário e se está marcado como "owned"
     if (savedData[animalSlug] && savedData[animalSlug].owned) {
       completedAnimals++;
     }
   });
 
-  // Calcula a porcentagem, evitando divisão por zero
   const percentage = totalAnimals > 0 ? (completedAnimals / totalAnimals) * 100 : 0;
 
   return {

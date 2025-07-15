@@ -1,8 +1,8 @@
 // js/ui/progress.js
 
 // --- Dependências do Módulo ---
-// Adicionei animalData e calculateReserveProgress que vêm de outros módulos
-let savedData, currentUser, items, slugify, reservesData, rareFursData, diamondFursData, greatsFursData, animalHotspotData, animalData, calculateReserveProgress;
+// CORREÇÃO: Não precisamos mais de 'animalData'
+let savedData, currentUser, items, slugify, reservesData, rareFursData, diamondFursData, greatsFursData, animalHotspotData, calculateReserveProgress;
 let getAggregatedGrindStats, showCustomAlert, getDefaultDataStructure, saveDataAndUpdateUI;
 
 // A função init recebe tudo que este módulo precisa para funcionar
@@ -20,8 +20,6 @@ export function init(dependencies) {
     showCustomAlert = dependencies.showCustomAlert;
     getDefaultDataStructure = dependencies.getDefaultDataStructure;
     saveDataAndUpdateUI = dependencies.saveDataAndUpdateUI;
-    // CORREÇÃO: Recebendo as novas dependências
-    animalData = dependencies.animalData;
     calculateReserveProgress = dependencies.calculateReserveProgress;
 }
 
@@ -158,13 +156,11 @@ function updateNewProgressPanel(container) {
     const reservesGrid = document.createElement('div');
     reservesGrid.className = 'reserve-progress-container';
     
-    // CORREÇÃO: Iterando sobre os dados das reservas e usando a nova função
     Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
         
-        // Chamando a função corretamente com os parâmetros necessários
-        const progress = calculateReserveProgress(reserveKey, animalData, savedData);
+        // CORREÇÃO: Passando 'reservesData' em vez de 'animalData'
+        const progress = calculateReserveProgress(reserveKey, reservesData, savedData);
 
-        // Renderiza o card apenas se a reserva tiver animais cadastrados
         if (progress.total > 0) {
             const card = document.createElement('div');
             card.className = 'reserve-progress-card';
@@ -191,10 +187,6 @@ function updateNewProgressPanel(container) {
     panel.appendChild(reservesSection);
     container.appendChild(panel);
 }
-
-// O restante do arquivo continua igual...
-// ... (createLatestAchievementsPanel, renderHuntingRankingView, etc.)
-// As funções abaixo estão corretas e não precisam de alteração.
 
 function createLatestAchievementsPanel() {
     const panel = document.createElement('div');
@@ -360,7 +352,6 @@ async function importUserData(event) {
     reader.readAsText(file);
 }
 
-// === FUNÇÃO QUE ESTAVA FALTANDO ===
 function calcularOverallProgress() {
     const progress = {
         collectedRares: 0,
