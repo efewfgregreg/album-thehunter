@@ -202,7 +202,7 @@ const rareFursData = {
     "veado_de_cauda_branca": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "veado_de_cauda_preta": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "veado_de_roosevelt": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
-    "veado_mula": { macho: ["Albino", "Melânico", "diluído", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Albino", "Melânico", "diluído", "Malhado Variação 1", "Malhado Variação 2"] },
+    "veado_mula": { macho: ["Albino", "Melânico", "diluído", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"], femea: ["Albino", "Melânico", "diluído", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"] },
     "veado_vermelho": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "zarro_negrinha": { macho: ["Albino", "eclipse", "Leucismo Variação 1", "Leucismo Variação 2"], femea: ["Leucismo Variação 1", "Leucismo Variação 2"] },
     "zarro_castanho": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
