@@ -1,7 +1,8 @@
 // js/ui/progress.js
 
 // --- Dependências do Módulo ---
-let savedData, currentUser, items, slugify, reservesData, rareFursData, diamondFursData, greatsFursData, animalHotspotData;
+// Adicionei animalData e calculateReserveProgress que vêm de outros módulos
+let savedData, currentUser, items, slugify, reservesData, rareFursData, diamondFursData, greatsFursData, animalHotspotData, animalData, calculateReserveProgress;
 let getAggregatedGrindStats, showCustomAlert, getDefaultDataStructure, saveDataAndUpdateUI;
 
 // A função init recebe tudo que este módulo precisa para funcionar
@@ -19,11 +20,14 @@ export function init(dependencies) {
     showCustomAlert = dependencies.showCustomAlert;
     getDefaultDataStructure = dependencies.getDefaultDataStructure;
     saveDataAndUpdateUI = dependencies.saveDataAndUpdateUI;
+    // CORREÇÃO: Recebendo as novas dependências
+    animalData = dependencies.animalData;
+    calculateReserveProgress = dependencies.calculateReserveProgress;
 }
 
 // --- Função Principal Exportada ---
 export function renderProgressView(container) {
-    container.innerHTML = ''; 
+    container.innerHTML = '';
     const wrapper = document.createElement('div');
     wrapper.className = 'progress-view-container';
     wrapper.id = 'progress-panel-main-container';
@@ -45,7 +49,7 @@ export function renderProgressView(container) {
     const contentArea = document.createElement('div');
     contentArea.id = "progress-content-area";
     wrapper.appendChild(contentArea);
-    
+
     const showNewProgressPanel = () => {
         showProgressBtn.classList.add('active');
         showRankingBtn.classList.remove('active');
@@ -69,7 +73,7 @@ export function renderProgressView(container) {
     const importLabel = document.createElement('label');
     importLabel.htmlFor = 'import-file-input';
     importLabel.className = 'back-button';
-    importLabel.style.cssText = 'display: block; width: fit-content; cursor: pointer; background-color: var(--inprogress-color); color: #111;';    
+    importLabel.style.cssText = 'display: block; width: fit-content; cursor: pointer; background-color: var(--inprogress-color); color: #111;';
     importLabel.innerHTML = '<i class="fas fa-upload"></i> Restaurar Backup (JSON)';
     backupRestoreContainer.appendChild(importLabel);
     const importInput = document.createElement('input');
@@ -89,13 +93,13 @@ export function renderProgressView(container) {
     resetButton.onclick = async () => {
         if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
             const defaultData = getDefaultDataStructure();
-            saveDataAndUpdateUI(defaultData); 
+            saveDataAndUpdateUI(defaultData);
         }
     };
-    
+
     container.appendChild(wrapper);
     container.appendChild(resetButton);
-    showNewProgressPanel(); 
+    showNewProgressPanel();
 }
 
 // --- Funções Auxiliares (internas deste módulo) ---
@@ -148,17 +152,20 @@ function updateNewProgressPanel(container) {
     reservesSection.innerHTML = `
         <div class="progress-v2-header">
             <h3>Domínio das Reservas</h3>
-            <p>Seu progresso em cada território de caça.</p>
+            <p>Seu progresso de conquistas em cada território.</p>
         </div>
     `;
     const reservesGrid = document.createElement('div');
     reservesGrid.className = 'reserve-progress-container';
+    
+    // CORREÇÃO: Iterando sobre os dados das reservas e usando a nova função
     Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
-        const reserveProgress = calcularReserveProgress(reserveKey);
-        const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes;
-        const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes;
-        const percentage = totalItems > 0 ? Math.round((collectedItems / totalItems) * 100) : 0;
-        if (totalItems > 0) {
+        
+        // Chamando a função corretamente com os parâmetros necessários
+        const progress = calculateReserveProgress(reserveKey, animalData, savedData);
+
+        // Renderiza o card apenas se a reserva tiver animais cadastrados
+        if (progress.total > 0) {
             const card = document.createElement('div');
             card.className = 'reserve-progress-card';
             card.innerHTML = `
@@ -168,21 +175,26 @@ function updateNewProgressPanel(container) {
                 </div>
                 <div class="reserve-progress-bar-area">
                     <div class="reserve-progress-bar-bg">
-                        <div class="reserve-progress-bar-fill" style="width: ${percentage}%"></div>
+                        <div class="reserve-progress-bar-fill" style="width: ${progress.percentage}%"></div>
                     </div>
                     <div class="reserve-progress-details">
-                        <span>${collectedItems} / ${totalItems} Coletados</span>
-                        <span>${percentage}% Completo</span>
+                        <span>${progress.completed} / ${progress.total} Conquistados</span>
+                        <span>${progress.percentage}% Completo</span>
                     </div>
                 </div>
             `;
             reservesGrid.appendChild(card);
         }
     });
+
     reservesSection.appendChild(reservesGrid);
     panel.appendChild(reservesSection);
     container.appendChild(panel);
 }
+
+// O restante do arquivo continua igual...
+// ... (createLatestAchievementsPanel, renderHuntingRankingView, etc.)
+// As funções abaixo estão corretas e não precisam de alteração.
 
 function createLatestAchievementsPanel() {
     const panel = document.createElement('div');
