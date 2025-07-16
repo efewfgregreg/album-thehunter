@@ -1,29 +1,41 @@
 // js/ui/progress.js
 
-// --- Dependências do Módulo ---
-// CORREÇÃO: Não precisamos mais de 'animalData'
-let savedData, currentUser, items, slugify, reservesData, rareFursData, diamondFursData, greatsFursData, animalHotspotData, calculateReserveProgress;
-let getAggregatedGrindStats, showCustomAlert, getDefaultDataStructure, saveDataAndUpdateUI;
+// ========================================================================
+// ========================== DEPENDÊNCIAS ================================
+// ========================================================================
 
-// A função init recebe tudo que este módulo precisa para funcionar
-export function init(dependencies) {
+// Dependências que serão injetadas pela função init()
+let savedData, currentUser;
+let reservesData, rareFursData, diamondFursData, greatsFursData, items, slugify;
+let onSaveCallback, showCustomAlert, getDefaultDataStructure, getAggregatedGrindStats;
+
+// ========================================================================
+// ========================== FUNÇÃO DE INICIALIZAÇÃO =====================
+// ========================================================================
+
+export function initProgress(dependencies) {
     savedData = dependencies.savedData;
     currentUser = dependencies.currentUser;
-    items = dependencies.items;
-    slugify = dependencies.slugify;
     reservesData = dependencies.reservesData;
     rareFursData = dependencies.rareFursData;
     diamondFursData = dependencies.diamondFursData;
     greatsFursData = dependencies.greatsFursData;
-    animalHotspotData = dependencies.animalHotspotData;
-    getAggregatedGrindStats = dependencies.getAggregatedGrindStats;
+    items = dependencies.items;
+    slugify = dependencies.slugify;
+    onSaveCallback = dependencies.onSave;
     showCustomAlert = dependencies.showCustomAlert;
     getDefaultDataStructure = dependencies.getDefaultDataStructure;
-    saveDataAndUpdateUI = dependencies.saveDataAndUpdateUI;
-    calculateReserveProgress = dependencies.calculateReserveProgress;
+    getAggregatedGrindStats = dependencies.getAggregatedGrindStats;
 }
 
-// --- Função Principal Exportada ---
+// ========================================================================
+// ========================== FUNÇÃO PRINCIPAL EXPORTADA ==================
+// ========================================================================
+
+/**
+ * Renderiza a view completa do Painel de Progresso.
+ * @param {HTMLElement} container - O elemento onde a view será renderizada.
+ */
 export function renderProgressView(container) {
     container.innerHTML = '';
     const wrapper = document.createElement('div');
@@ -60,52 +72,87 @@ export function renderProgressView(container) {
         renderHuntingRankingView(contentArea);
     };
 
-    const backupRestoreContainer = document.createElement('div');
-    backupRestoreContainer.style.cssText = 'display: flex; flex-direction: column; gap: 10px; margin-top: 20px; align-items: center;';
-    const exportButton = document.createElement('button');
-    exportButton.id = 'export-progress-btn';
-    exportButton.className = 'back-button';
-    exportButton.innerHTML = '<i class="fas fa-download"></i> Fazer Backup (JSON)';
-    exportButton.onclick = exportUserData;
-    backupRestoreContainer.appendChild(exportButton);
-    const importLabel = document.createElement('label');
-    importLabel.htmlFor = 'import-file-input';
-    importLabel.className = 'back-button';
-    importLabel.style.cssText = 'display: block; width: fit-content; cursor: pointer; background-color: var(--inprogress-color); color: #111;';
-    importLabel.innerHTML = '<i class="fas fa-upload"></i> Restaurar Backup (JSON)';
-    backupRestoreContainer.appendChild(importLabel);
-    const importInput = document.createElement('input');
-    importInput.type = 'file';
-    importInput.id = 'import-file-input';
-    importInput.accept = '.json';
-    importInput.style.display = 'none';
-    importInput.addEventListener('change', importUserData);
-    backupRestoreContainer.appendChild(importInput);
-    wrapper.appendChild(backupRestoreContainer);
-
-    const resetButton = document.createElement('button');
-    resetButton.id = 'progress-reset-button';
-    resetButton.textContent = 'Resetar Todo o Progresso';
-    resetButton.className = 'back-button';
-    resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 20px;';
-    resetButton.onclick = async () => {
-        if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
-            const defaultData = getDefaultDataStructure();
-            saveDataAndUpdateUI(defaultData);
-        }
-    };
-
+    wrapper.appendChild(createBackupRestoreButtons());
+    wrapper.appendChild(createResetButton());
+    
     container.appendChild(wrapper);
-    container.appendChild(resetButton);
+    
     showNewProgressPanel();
 }
 
-// --- Funções Auxiliares (internas deste módulo) ---
+// ========================================================================
+// ========= FUNÇÕES INTERNAS (NÃO EXPORTADAS) ============================
+// ========================================================================
+
+// --- Funções de Cálculo ---
+
+function calcularOverallProgress() {
+    const progress = {
+        collectedRares: 0, totalRares: 0,
+        collectedDiamonds: 0, totalDiamonds: 0,
+        collectedGreatOnes: 0, totalGreatOnes: 0,
+        collectedSuperRares: 0, totalSuperRares: 0,
+    };
+    const allAnimalSlugs = [...new Set(Object.keys(rareFursData).concat(Object.keys(diamondFursData)))];
+    allAnimalSlugs.forEach(slug => {
+        if (rareFursData[slug]) {
+            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
+        }
+        progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
+        if (diamondFursData[slug]) {
+            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
+        }
+        progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
+        if (greatsFursData[slug]) {
+            progress.totalGreatOnes += greatsFursData[slug].length;
+            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
+        }
+        const speciesRareFurs = rareFursData[slug];
+        const speciesDiamondFurs = diamondFursData[slug];
+        if (speciesRareFurs) {
+            if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
+                progress.totalSuperRares += speciesRareFurs.macho.length;
+            }
+            if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
+                progress.totalSuperRares += speciesRareFurs.femea.length;
+            }
+        }
+        progress.collectedSuperRares += Object.values(savedData.super_raros?.[slug] || {}).filter(v => v === true).length;
+    });
+    return progress;
+}
+
+function calcularReserveProgress(reserveKey) {
+    const reserveAnimals = reservesData[reserveKey]?.animals || [];
+    let progress = {
+        collectedRares: 0, totalRares: 0,
+        collectedDiamonds: 0, totalDiamonds: 0,
+        collectedGreatOnes: 0, totalGreatOnes: 0
+    };
+    reserveAnimals.forEach(slug => {
+        if (rareFursData[slug]) {
+            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
+            progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
+        }
+        if (diamondFursData[slug]) {
+            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
+            progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
+        }
+        if (greatsFursData[slug]) {
+            progress.totalGreatOnes += greatsFursData[slug].length;
+            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
+        }
+    });
+    return progress;
+}
+
+// --- Funções de Renderização de Componentes ---
 
 function updateNewProgressPanel(container) {
     container.innerHTML = '';
     const panel = document.createElement('div');
     panel.id = 'progress-panel-v2';
+    
     const overallProgress = calcularOverallProgress();
     const overallSection = document.createElement('div');
     overallSection.innerHTML = `
@@ -144,45 +191,46 @@ function updateNewProgressPanel(container) {
         `;
         overallGrid.appendChild(card);
     });
+    
     overallSection.appendChild(overallGrid);
     panel.appendChild(overallSection);
+
     const reservesSection = document.createElement('div');
     reservesSection.innerHTML = `
         <div class="progress-v2-header">
             <h3>Domínio das Reservas</h3>
-            <p>Seu progresso de conquistas em cada território.</p>
+            <p>Seu progresso em cada território de caça.</p>
         </div>
     `;
     const reservesGrid = document.createElement('div');
     reservesGrid.className = 'reserve-progress-container';
-    
     Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
-        
-        // CORREÇÃO: Passando 'reservesData' em vez de 'animalData'
-        const progress = calculateReserveProgress(reserveKey, reservesData, savedData);
-
-        if (progress.total > 0) {
+        const reserveProgress = calcularReserveProgress(reserveKey);
+        const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes;
+        const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes;
+        const percentage = totalItems > 0 ? Math.round((collectedItems / totalItems) * 100) : 0;
+        if (totalItems > 0) {
             const card = document.createElement('div');
             card.className = 'reserve-progress-card';
             card.innerHTML = `
                 <div class="reserve-progress-header">
-                    <img src="${reserve.image}" onerror="this.style.display='none'">
+                    <img src="${reserve.image.replace('.png', '_logo.png')}" onerror="this.style.display='none'">
                     <span>${reserve.name}</span>
                 </div>
                 <div class="reserve-progress-bar-area">
                     <div class="reserve-progress-bar-bg">
-                        <div class="reserve-progress-bar-fill" style="width: ${progress.percentage}%"></div>
+                        <div class="reserve-progress-bar-fill" style="width: ${percentage}%"></div>
                     </div>
                     <div class="reserve-progress-details">
-                        <span>${progress.completed} / ${progress.total} Conquistados</span>
-                        <span>${progress.percentage}% Completo</span>
+                        <span>${collectedItems} / ${totalItems} Coletados</span>
+                        <span>${percentage}% Completo</span>
                     </div>
                 </div>
             `;
             reservesGrid.appendChild(card);
         }
     });
-
+    
     reservesSection.appendChild(reservesGrid);
     panel.appendChild(reservesSection);
     container.appendChild(panel);
@@ -219,8 +267,6 @@ function createLatestAchievementsPanel() {
             card.className = 'achievement-card';
             const rotation = Math.random() * 6 - 3;
             card.style.transform = `rotate(${rotation}deg)`;
-            card.addEventListener('mouseenter', () => card.style.zIndex = 10);
-            card.addEventListener('mouseleave', () => card.style.zIndex = 1);
             const animalSlug = trophy.slug;
             let imagePathString;
             if (trophy.type === 'diamante') {
@@ -292,6 +338,49 @@ function renderHuntingRankingView(container) {
     `;
 }
 
+// --- Funções de Backup/Restore/Reset ---
+
+function createBackupRestoreButtons() {
+    const backupRestoreContainer = document.createElement('div');
+    backupRestoreContainer.style.cssText = 'display: flex; flex-direction: column; gap: 10px; margin-top: 20px; align-items: center;';
+    const exportButton = document.createElement('button');
+    exportButton.id = 'export-progress-btn';
+    exportButton.className = 'back-button';
+    exportButton.innerHTML = '<i class="fas fa-download"></i> Fazer Backup (JSON)';
+    exportButton.onclick = exportUserData;
+    backupRestoreContainer.appendChild(exportButton);
+    const importLabel = document.createElement('label');
+    importLabel.htmlFor = 'import-file-input';
+    importLabel.className = 'back-button';
+    importLabel.style.cssText = 'display: block; width: fit-content; cursor: pointer; background-color: var(--inprogress-color); color: #111;';
+    importLabel.innerHTML = '<i class="fas fa-upload"></i> Restaurar Backup (JSON)';
+    backupRestoreContainer.appendChild(importLabel);
+    const importInput = document.createElement('input');
+    importInput.type = 'file';
+    importInput.id = 'import-file-input';
+    importInput.accept = '.json';
+    importInput.style.display = 'none';
+    importInput.addEventListener('change', importUserData);
+    backupRestoreContainer.appendChild(importInput);
+    return backupRestoreContainer;
+}
+
+function createResetButton() {
+    const resetButton = document.createElement('button');
+    resetButton.id = 'progress-reset-button';
+    resetButton.textContent = 'Resetar Todo o Progresso';
+    resetButton.className = 'back-button';
+    resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a; margin-top: 10px;';
+    resetButton.onclick = async () => {
+        if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
+            const defaultData = getDefaultDataStructure();
+            onSaveCallback(defaultData); // Usa o callback para salvar e atualizar a UI
+            updateNewProgressPanel(document.getElementById('progress-content-area')); // Re-renderiza o painel
+        }
+    };
+    return resetButton;
+}
+
 function exportUserData() {
     if (!currentUser || !savedData) {
         showCustomAlert('Nenhum dado para exportar. Faça login primeiro.', 'Erro de Exportação');
@@ -325,22 +414,14 @@ async function importUserData(event) {
     reader.onload = async (e) => {
         try {
             const importedData = JSON.parse(e.target.result);
-            const confirmImport = await showCustomAlert(
-                'Tem certeza que deseja sobrescrever seu progresso atual com os dados deste arquivo? Esta ação não pode ser desfeita.',
-                'Confirmar Importação',
-                true
-            );
-            if (confirmImport) {
+            if (await showCustomAlert('Tem certeza que deseja sobrescrever seu progresso atual com os dados deste arquivo? Esta ação não pode ser desfeita.', 'Confirmar Importação', true)) {
                 if (importedData.pelagens || importedData.diamantes || importedData.greats || importedData.super_raros || importedData.grindSessions) {
-                    savedData = importedData;
-                    await saveDataAndUpdateUI(savedData);
-                    await showCustomAlert('Progresso importado e salvo na nuvem com sucesso!', 'Importação Concluída');
+                    onSaveCallback(importedData); // Usa o callback para salvar e atualizar a UI
+                    await showCustomAlert('Progresso importado e salvo na nuvem com sucesso! A página será recarregada.', 'Importação Concluída');
                     location.reload();
                 } else {
                     await showCustomAlert('O arquivo JSON selecionado não parece ser um backup válido do álbum de caça.', 'Erro de Validação');
                 }
-            } else {
-                await showCustomAlert('Importação cancelada.', 'Cancelado');
             }
         } catch (error) {
             console.error('Erro ao ler ou parsear o arquivo JSON:', error);
@@ -350,47 +431,4 @@ async function importUserData(event) {
         }
     };
     reader.readAsText(file);
-}
-
-function calcularOverallProgress() {
-    const progress = {
-        collectedRares: 0,
-        totalRares: 0,
-        collectedDiamonds: 0,
-        totalDiamonds: 0,
-        collectedGreatOnes: 0,
-        totalGreatOnes: 0,
-        collectedSuperRares: 0,
-        totalSuperRares: 0,
-        collectedHotspots: 0,
-        totalHotspots: 0
-    };
-    const allAnimalSlugs = [...new Set(Object.keys(rareFursData).concat(Object.keys(diamondFursData)))];
-    allAnimalSlugs.forEach(slug => {
-        if (rareFursData[slug]) {
-            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
-        }
-        progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
-        if (diamondFursData[slug]) {
-            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
-        }
-        progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
-        if (greatsFursData[slug]) {
-            progress.totalGreatOnes += greatsFursData[slug].length;
-            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
-        }
-        const speciesRareFurs = rareFursData[slug];
-        const speciesDiamondFurs = diamondFursData[slug];
-        if (speciesRareFurs) {
-            if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
-                progress.totalSuperRares += speciesRareFurs.macho.length;
-            }
-            if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
-                progress.totalSuperRares += speciesRareFurs.femea.length;
-            }
-        }
-        progress.collectedSuperRares += Object.values(savedData.super_raros?.[slug] || {}).filter(v => v === true).length;
-    });
-    progress.totalHotspots = Object.values(animalHotspotData).reduce((acc, reserve) => acc + Object.keys(reserve).length, 0);
-    return progress;
 }

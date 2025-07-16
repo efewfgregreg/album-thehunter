@@ -1,4 +1,5 @@
-// --- CONSTANTES DE DADOS ---
+// Contém todas as constantes de dados estáticos do jogo.
+
 export const rareFursData = {
     "alce": { macho: ["Albino", "Melânico", "Malhado", "Café"], femea: ["Albino", "Melânico", "Malhado"] },
     "antilocapra": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] },
@@ -111,9 +112,10 @@ export const rareFursData = {
     "cervo_canadense": { macho: ["Albino", "Melânico", "Leucismo", "Malhado"], femea: ["Albino", "Melânico", "Leucismo", "Malhado"] },
     "bisão_da_floresta": { macho: ["Albino", "Melânico", "Leucismo", "Malhado", "Pardo Escuro"], femea: ["Albino", "Melânico", "Leucismo","Malhado","Pardo Escuro"] }
 };
+
 export const greatsFursData = { "alce": ["Dois Tons Lendário", "Cinza Lendário", "Bétula lendária", "Carvalho Lendário", "Salpicado Lendário", "Abeto lendário"], "urso_negro": ["Creme Lendário", "Espírito Lendário", "Castanho Lendário", "Pintado Lendário", "Gelo Lendário 2", "Gelo Lendário"], "veado_de_cauda_branca": ["Pardo", "Pardo Escuro", "Bronzeado", "Malhado"], "gamo": ["Café Lendário", "Pintado Lendário", "Dourado Lendário", "Misto Lendário", "Prata Lendário"], "raposa_vermelha": ["Lua de Sangue Lendária", "Bengala Doce Lendária", "Flor de Cerejeira Lendária", "Alcaçuz lendário", "Papoula da Meia Noite Lendária", "Floco de Neve Mística Lendária", "Hortelã-Pimenta Lendária", "Gelo Botão de Rosa Lendária", "Beladona Escarlate Lendária"], "veado_vermelho": ["Pintado Lendário"], "tahr": ["Dourado Lendário", "Cicatrizes Lendárias", "Cinza Lendário", "Café com Leite Lendário", "Crânio Lendário", "Metade Lendária", "Neve Lendário"], "veado_mula": ["Chuva de Gotículas Lendárias", "Via Láctea Lendária", "Sopro de Pétalas Lendário", "Manto Crepuscular Lendário", "Enigma Teia de Aranha Lendário", "Faixas de Canela Lendário"], "faisão": ["Rubi Lendário", "Pérola Lendário", "Granada Lendário", "Safira Lendário", "Obsidiana Lendário", "Citrino Lendário", "Esmeralda Lendário", "Morganita Lendário"] };
 
-export const items = ["Alce","Antilocapra","Antílope Negro","Bantengue","Bisão da Floresta","Bisão das Planícies","Bisão Europeu","Búfalo Africano","Búfalo D'Água","Cabra da Montanha","Cabra de Leque","Cabra Selvagem","Caititu","Camurça","Canguru-cinza Oriental", "Chacal Listrado", "Caribu","Caribu da Floresta Boreal","Carneiro Azul","Carneiro Selvagem","Castor Norte-Americano","Cervo Almiscarado","Cervo Canadense","Cervo do Pântano","Cervo de Timor","Cervo Sika","Cervo-porco Indiano","Chital","Codorna-de-restolho","Codorniz da Virgínia","Coelho da Flórida","Coelho Europeu","Coiote","Corça","Crocodilo de Água Salgada","Cudo Menor","Faisão de Pescoço Anelado","Frisada","Galo Lira","Gamo","Ganso Bravo","Ganso Campestre da Tundra","Ganso das Neves","Ganso do Canadá","Ganso Pega","Gnu de Cauda Preta","Guaxinim Comum","Iaque Selvagem","Ibex de Beceite","Ibex de Gredos","Ibex de Ronda","Ibex Espanhol do Sudeste","Jacaré Americano","Javali","Javali Africano", "Lebre Europeia", "Lebre-antílope","Lebre-da-cauda-branca","Lebre Da Eurásia","Lebre Nuca Dourada","Lebre Peluda","Leão","Leopardo das Neves","Lince Euroasiática","Lince Pardo do México","Lobo Cinzento","Lobo Ibérico","Marreca Arrebio","Marreca Carijó","Marrequinha Americana","Marrequinha Comum","Mouflão Ibérico","Muntíaco vermelho do norte","Nilgó","Onça Parda","Órix do Cabo","Pato Carolino","Pato Arlequim","Pato Olho de Ouro","Pato Real","Peru Merriami","Peru Selvagem","Peru Selvagem do Rio Grande","Piadeira","Porco Selvagem","Raposa cinzenta","Raposa tibetana","Raposa Vermelha","Rena da Montanha","Sambar","Tahr","Tetraz Azul","Tetraz Grande","Tigre-de-Bengala","Urso Cinzento","Urso Negro","Urso Pardo","Veado das Montanhas Rochosas","Veado de Cauda Branca","Veado de Cauda Preta","Veado-Mula","Veado de Roosevelt","Veado Vermelho","Cão Guaxinim","Lagópode-Branco","Lagópode-Escocês","Galinha-Montês","Zarro-Negrinha","Zarro-castanho", "Peru Merriami"];
+export const items = ["Alce","Antilocapra","Antílope Negro","Bantengue","Bisão da Floresta","Bisão das Planícies","Bisão Europeu","Búfalo Africano","Búfalo D'Água","Cabra da Montanha","Cabra de Leque","Cabra Selvagem","Caititu","Camurça","Canguru-cinza Oriental", "Chacal Listrado", "Caribu","Caribu da Floresta Boreal","Carneiro Azul","Carneiro Selvagem","Castor Norte-Americano","Cervo Almiscarado","Cervo Canadense","Cervo do Pântano","Cervo de Timor","Cervo Sika","Cervo-porco Indiano","Chital","Codorna-de-restolho","Codorniz da Virgínia","Coelho da Flórida","Coelho Europeu","Coiote","Corça","Crocodilo de Água Salgada","Cudo Menor","Faisão de Pescoço Anelado","Frisada","Galo Lira","Gamo","Ganso Bravo","Ganso Campestre da Tundra","Ganso das Neves","Ganso do Canadá","Ganso Pega","Gnu de Cauda Preta","Guaxinim Comum","Iaque Selvagem","Ibex de Beceite","Ibex de Gredos","Ibex de Ronda","Ibex Espanhol do Sudeste","Jacaré Americano","Javali","Javali Africano", "Lebre Europeia", "Lebre-antílope","Lebre-da-cauda-branca","Lebre Da Eurásia","Lebre Nuca Dourada","Lebre Peluda","Leão","Leopardo das Neves","Lince Euroasiática","Lince Pardo do México","Lobo Cinzento","Lobo Ibérico","Marreca Arrebio","Marreca Carijó","Marrequinha Americana","Marrequinha Comum","Mouflão Ibérico","Muntíaco vermelho do norte","Nilgó","Onça Parda","Órix do Cabo","Pato Carolino","Pato Arlequim","Pato Olho de Ouro","Pato Real","Peru Merriami","Peru Selvagem","Peru Selvagem do Rio Grande","Piadeira","Porco Selvagem","Raposa cinzenta","Raposa tibetana","Raposa Vermelha","Rena da Montanha","Sambar","Tahr","Tetraz Azul","Tetraz Grande","Tigre-de-Bengala","Urso Cinzento","Urso Negro","Urso Pardo","Veado das Montanhas Rochosas","Veado de Cauda Branca","Veado de Cauda Preta","Veado-Mula","Veado de Roosevelt","Veado Vermelho","Cão Guaxinim","Lagópode-Branco","Lagópode-Escocês","Galinha-Montês","Zarro-Negrinha","Zarro-castanho"];
 
 export const diamondFursData = {
     "alce": { macho: ["Bronzeado", "Pardo", "Pardo Claro"], femea: [] },
@@ -216,7 +218,7 @@ export const diamondFursData = {
     "veado_vermelho": { macho: ["Pardo Escuro", "Pardo Claro", "Pardo"], femea: [] },
     "zarro_negrinha": { macho: ["Preto"], femea: [] },
     "zarro_castanho": { macho: ["Escuro", "Pardo Avermelhado"], femea: [] },
-    "ibex_espanhol_do_sudeste": { macho: ["Pardo", "Marrom Hibrido", "Pardo Hibrido",  "Castanho Acinzentado", "Cinza Claro", "Laranja"], femea: [] },
+    "ibex_espanhol_do_sudeste": { macho: ["Pardo", "Marrom Hibrido", "Pardo Hibrido", "Castanho Acinzentado", "Cinza Claro", "Laranja"], femea: [] },
     "ibex_de_gredos": { macho: ["Pardo e Cinza", "Marrom Hibrido", "Cinza Claro", "Cinzento"], femea: [] },
     "ibex_de_ronda": { macho: ["Pardo", "Pardo e Cinza", "Marrom Hibrido", "Cinzento"], femea: [] },
     "tetraz_azul": { macho: ["Pardo", "Muda", "Cinza Ardósia"], femea: [] },
@@ -228,244 +230,313 @@ export const diamondFursData = {
     "bisão_da_floresta": { macho: ["Ruivo", "Pardo Claro", "Metade Ruivo"], femea: [] }
 };
 
-export const reservesData = { layton_lake: { name: "Layton Lake", image: "reservas/layton_lake.png", animals: ["alce", "veado_de_cauda_branca", "veado_de_cauda_preta", "veado_de_roosevelt", "urso_negro", "coiote", "pato_real", "lebre_da_cauda_branca", "peru_merriami"] }, hirschfelden: { name: "Hirschfelden", image: "reservas/hirschfelden.png", animals: ["gamo", "corça", "veado_vermelho", "javali", "bisão_europeu", "raposa_vermelha", "ganso_do_canadá", "coelho_europeu", "faisão_de_pescoço_anelado"] }, medved_taiga: { name: "Medved Taiga", image: "reservas/medved_taiga.png", animals: ["alce", "rena_da_montanha", "tetraz_grande", "cervo_almiscarado", "urso_pardo", "javali", "lince_euroasiática", "lobo_cinzento"] }, vurhonga_savanna: { name: "Vurhonga Savana", image: "reservas/vurhonga_savanna.png", animals: ["chacal_listrado", "lebre_nuca_dourada", "piadeira", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "órix_do_cabo"] }, parque_fernando: { name: "Parque Fernando", image: "reservas/parque_fernando.png", animals: ["veado_vermelho", "marreca_carijó", "caititu", "veado_mula", "onça_parda", "antílope_negro", "búfalo_dágua", "chital"] }, yukon_valley: { name: "Yukon Valley", image: "reservas/yukon_valley.png", animals: ["caribu", "ganso_do_canadá", "alce", "urso_cinzento", "lobo_cinzento", "bisão_das_planícies", "raposa_vermelha", "pato_arlequim"] }, cuatro_colinas: { name: "Cuatro Colinas", image: "reservas/cuatro_colinas.png", animals: ["ibex_de_gredos", "faisão_de_pescoço_anelado", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "mouflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"] }, silver_ridge_peaks: { name: "Silver Ridge Peaks", image: "reservas/silver_ridge_peaks.png", animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_merriami"] }, te_awaroa: { name: "Te Awaroa", image: "reservas/te_awaroa.png", animals: ["veado_vermelho","gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_merriami", "camurça", "coelho_europeu", "pato_real"] }, rancho_del_arroyo: { name: "Rancho del Arroyo", image: "reservas/rancho_del_arroyo.png", animals: ["veado_mula", "veado_de_cauda_branca", "carneiro_selvagem", "antilocapra", "caititu", "coiote", "lince_pardo_do_mexico", "peru_selvagem_do_rio_grande", "faisão_de_pescoço_anelado", "lebre_antílope"] }, mississippi_acres: { name: "Mississippi Acres", image: "reservas/mississippi_acres.png", animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru_selvagem", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"] }, revontuli_coast: { name: "Costa de Revontuli", image: "reservas/revontuli_coast.png", animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha"] }, new_england_mountains: { name: "New England Mountains", image: "reservas/new_england_mountains.png", animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta", "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"] }, emerald_coast: { name: "Emerald Coast", image: "reservas/emerald_coast.png", animals: ["canguru_cinza_oriental", "codorna_de_restolho", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"] }, sundarpatan: { name: "Sundarpatan", image: "reservas/sundarpatan.png", animals: ["antílope_negro", "ganso_bravo","lebre_peluda", "muntíaco_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala"] }, salzwiesen: { name: "Salzwiesen Park", image: "reservas/salzwiesen.png", animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho"] }, askiy_ridge: { name: "Askiy Ridge", image: "reservas/askiy_ridge.png", animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"] } };
-// NOVO: Dados dos Hotspots por Reserva e Animal
+export const reservesData = {
+    layton_lake: { name: "Layton Lake", image: "reservas/layton_lake.png", animals: ["alce", "veado_de_cauda_branca", "veado_de_cauda_preta", "veado_de_roosevelt", "urso_negro", "coiote", "pato_real", "lebre_da_cauda_branca", "peru_merriami"] },
+    hirschfelden: { name: "Hirschfelden", image: "reservas/hirschfelden.png", animals: ["gamo", "corça", "veado_vermelho", "javali", "bisão_europeu", "raposa_vermelha", "ganso_do_canadá", "coelho_europeu", "faisão_de_pescoço_anelado"] },
+    medved_taiga: { name: "Medved Taiga", image: "reservas/medved_taiga.png", animals: ["alce", "rena_da_montanha", "tetraz_grande", "cervo_almiscarado", "urso_pardo", "javali", "lince_euroasiática", "lobo_cinzento"] },
+    vurhonga_savanna: { name: "Vurhonga Savana", image: "reservas/vurhonga_savanna.png", animals: ["chacal_listrado", "lebre_nuca_dourada", "piadeira", "cudo_menor", "cabra_de_leque", "javali_africano", "gnu_de_cauda_preta", "búfalo_africano", "leão", "órix_do_cabo"] },
+    parque_fernando: { name: "Parque Fernando", image: "reservas/parque_fernando.png", animals: ["veado_vermelho", "marreca_carijó", "caititu", "veado_mula", "onça_parda", "antílope_negro", "búfalo_dágua", "chital"] },
+    yukon_valley: { name: "Yukon Valley", image: "reservas/yukon_valley.png", animals: ["caribu", "ganso_do_canadá", "alce", "urso_cinzento", "lobo_cinzento", "bisão_das_planícies", "raposa_vermelha", "pato_arlequim"] },
+    cuatro_colinas: { name: "Cuatro Colinas", image: "reservas/cuatro_colinas.png", animals: ["ibex_de_gredos", "faisão_de_pescoço_anelado", "ibex_de_beceite", "ibex_espanhol_do_sudeste", "ibex_de_ronda", "mouflão_ibérico", "lobo_ibérico", "javali", "corça", "lebre_europeia", "veado_vermelho"] },
+    silver_ridge_peaks: { name: "Silver Ridge Peaks", image: "reservas/silver_ridge_peaks.png", animals: ["antilocapra", "carneiro_selvagem", "bisão_das_planícies", "cabra_da_montanha", "veado_mula", "onça_parda", "urso_negro", "veado_das_montanhas_rochosas", "peru_merriami"] },
+    te_awaroa: { name: "Te Awaroa", image: "reservas/te_awaroa.png", animals: ["veado_vermelho","gamo", "cabra_selvagem", "porco_selvagem", "cervo_sika", "tahr", "peru_merriami", "camurça", "coelho_europeu", "pato_real"] },
+    rancho_del_arroyo: { name: "Rancho del Arroyo", image: "reservas/rancho_del_arroyo.png", animals: ["veado_mula", "veado_de_cauda_branca", "carneiro_selvagem", "antilocapra", "caititu", "coiote", "lince_pardo_do_mexico", "peru_selvagem_do_rio_grande", "faisão_de_pescoço_anelado", "lebre_antílope"] },
+    mississippi_acres: { name: "Mississippi Acres", image: "reservas/mississippi_acres.png", animals: ["veado_de_cauda_branca", "codorniz_da_virgínia", "marrequinha_americana", "peru_selvagem", "porco_selvagem", "urso_negro", "raposa_cinzenta", "guaxinim_comum", "coelho_da_flórida", "jacaré_americano"] },
+    revontuli_coast: { name: "Costa de Revontuli", image: "reservas/revontuli_coast.png", animals: ["galinha_montês", "veado_de_cauda_branca", "urso_pardo", "alce", "ganso_bravo", "ganso_campestre_da_tundra", "ganso_do_canadá", "lagópode_branco", "lagópode_escocês", "pato_real", "piadeira", "tetraz_grande", "cão_guaxinim", "lince_euroasiática", "galo_lira", "lebre_da_eurásia", "marrequinha_comum", "pato_olho_de_ouro", "zarro_negrinha"] },
+    new_england_mountains: { name: "New England Mountains", image: "reservas/new_england_mountains.png", animals: ["alce", "codorniz_da_virgínia", "coelho_da_flórida", "faisão_de_pescoço_anelado", "marrequinha_americana", "pato_olho_de_ouro", "pato_real", "peru_selvagem", "guaxinim_comum", "lince_pardo_do_mexico", "raposa_cinzenta", "veado_de_cauda_branca", "urso_negro", "coiote", "raposa_vermelha", "gamo"] },
+    emerald_coast: { name: "Emerald Coast", image: "reservas/emerald_coast.png", animals: ["canguru_cinza_oriental", "codorna_de_restolho", "raposa_vermelha", "cabra_selvagem", "cervo_porco_indiano", "porco_selvagem", "veado_vermelho", "sambar", "cervo_de_timor", "gamo", "bantengue", "crocodilo_de_água_salgada", "ganso_pega", "chital"] },
+    sundarpatan: { name: "Sundarpatan", image: "reservas/sundarpatan.png", animals: ["antílope_negro", "ganso_bravo","lebre_peluda", "muntíaco_vermelho_do_norte", "raposa_tibetana", "tahr", "carneiro_azul", "cervo_do_pântano", "nilgó", "búfalo_dágua", "leopardo_das_neves", "iaque_selvagem", "tigre_de_bengala"] },
+    salzwiesen: { name: "Salzwiesen Park", image: "reservas/salzwiesen.png", animals: ["coelho_europeu", "frisada", "galo_lira", "guaxinim_comum", "raposa_vermelha", "ganso_campestre_da_tundra", "faisão_de_pescoço_anelado", "cão_guaxinim", "ganso_bravo", "marrequinha_comum", "pato_olho_de_ouro", "pato_real", "piadeira", "zarro_negrinha", "zarro_castanho"] },
+    askiy_ridge: { name: "Askiy Ridge", image: "reservas/askiy_ridge.png", animals: ["alce", "caribu_da_floresta_boreal", "urso_negro", "veado_mula", "bisão_da_floresta", "cabra_da_montanha", "antilocapra", "tetraz_azul", "pato_real", "pato_carolino", "marreca_arrebio", "ganso_do_canadá", "ganso_das_neves", "lobo_cinzento", "cervo_canadense", "veado_de_cauda_branca", "faisão_de_pescoço_anelado", "carneiro_selvagem", "castor_norte_americano"] }
+};
+
 export const animalHotspotData = {
     "layton_lake": {
-        "alce": { maxScore: "274.99", maxWeightEstimate: "545-620 KG", drinkZonesPotential: "12:00 - 16:00", animalClass: "8", maxLevel: "5 (Médio)" },
-        "veado_de_cauda_branca": { maxScore: "255.09", maxWeightEstimate: "75-100 KG", drinkZonesPotential: "08:00 - 12:00", animalClass: "4", maxLevel: "3 (Muito Fácil)" },
-        "veado_de_cauda_preta": { maxScore: "177.58", maxWeightEstimate: "81-95 KG", drinkZonesPotential: "16:00 - 20:00", animalClass: "4", maxLevel: "5 (Médio)" },
-        "veado_de_roosevelt": { maxScore: "380.84", maxWeightEstimate: "450-500 KG", drinkZonesPotential: "04:00 - 08:00", animalClass: "7", maxLevel: "5 (Médio)" },
-        "urso_negro": { maxScore: "22.8", maxWeightEstimate: "227-290 KG", drinkZonesPotential: "04:00 - 08:00", animalClass: "7", maxLevel: "9 (Lendário)" },
-        "coiote": { maxScore: "56.87", maxWeightEstimate: "24-27 KG", drinkZonesPotential: "00:00 - 04:00", animalClass: "2", maxLevel: "9 (Lendário)" },
-        "pato_real": { maxScore: "19.61", maxWeightEstimate: "1-2 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "lebre_da_cauda_branca": { maxScore: "6.33", maxWeightEstimate: "5-6 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "peru_merriami": { maxScore: "4.62", maxWeightEstimate: "9-11 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" }
+        "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
+        "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
+        "veado_de_cauda_preta": { "maxScore": "177.58", "maxWeightEstimate": "81-95 KG", "drinkZonesPotential": "16:00 - 20:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "veado_de_roosevelt": { "maxScore": "380.84", "maxWeightEstimate": "450-500 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "5 (Médio)" },
+        "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "coiote": { "maxScore": "56.87", "maxWeightEstimate": "24-27 KG", "drinkZonesPotential": "00:00 - 04:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "lebre_da_cauda_branca": { "maxScore": "6.33", "maxWeightEstimate": "5-6 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "peru_merriami": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
     },
     "hirschfelden": {
-        "gamo": { maxScore: "249.99", maxWeightEstimate: "82-100 KG", drinkZonesPotential: "10:00-13:00", animalClass: "4", maxLevel: "5 (Médio)" },
-        "corça": { maxScore: "81.86", maxWeightEstimate: "29-35 KG", drinkZonesPotential: "14:00-17:00", animalClass: "3", maxLevel: "3 (Muito Fácil)" },
-        "veado_vermelho": { maxScore: "251.07", maxWeightEstimate: "210-240 KG", drinkZonesPotential: "06:00-10:00", animalClass: "6", maxLevel: "9 (Lendário)" },
-        "javali": { maxScore: "144.25", maxWeightEstimate: "186-240 KG", drinkZonesPotential: "00:00-03:00", animalClass: "5", maxLevel: "5 (Médio)" },
-        "bisão_europeu": { maxScore: "127.62", maxWeightEstimate: "765-920 KG", drinkZonesPotential: "10:00-14:00", animalClass: "9", maxLevel: "5 (Médio)" },
-        "raposa_vermelha": { maxScore: "14.05", maxWeightEstimate: "12-15 KG", drinkZonesPotential: "17:00-20:00", animalClass: "2", maxLevel: "9 (Lendário)" },
-        "ganso_do_canadá": { maxScore: "8.59", maxWeightEstimate: "8-9 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "5 (Médio)" },
-        "coelho_europeu": { maxScore: "2.42", maxWeightEstimate: "2 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "faisão_de_pescoço_anelado": { maxScore: "20.29", maxWeightEstimate: "2-3 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" }
+        "gamo": { "maxScore": "249.99", "maxWeightEstimate": "82-100 KG", "drinkZonesPotential": "10:00-13:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "corça": { "maxScore": "81.86", "maxWeightEstimate": "29-35 KG", "drinkZonesPotential": "14:00-17:00", "animalClass": "3", "maxLevel": "3 (Muito Fácil)" },
+        "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" },
+        "javali": { "maxScore": "144.25", "maxWeightEstimate": "186-240 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "bisão_europeu": { "maxScore": "127.62", "maxWeightEstimate": "765-920 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
+        "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "ganso_do_canadá": { "maxScore": "8.59", "maxWeightEstimate": "8-9 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "coelho_europeu": { "maxScore": "2.42", "maxWeightEstimate": "2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
+    },
+    "medved_taiga": {
+        "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
+        "rena_da_montanha": { "maxScore": "430.23", "maxWeightEstimate": "156-182 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "tetraz_grande": { "maxScore": "4.64", "maxWeightEstimate": "4-5 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "cervo_almiscarado": { "maxScore": "249", "maxWeightEstimate": "14-17 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "2", "maxLevel": "3 (Muito Fácil)" },
+        "urso_pardo": { "maxScore": "27.7", "maxWeightEstimate": "389-452 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "javali": { "maxScore": "144.25", "maxWeightEstimate": "186-240 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "lince_euroasiática": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "9 (Lendário)" },
+        "lobo_cinzento": { "maxScore": "39", "maxWeightEstimate": "67-80 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "5", "maxLevel": "9 (Lendário)" }
+    },
+    "vurhonga_savanna": {
+        "chacal_listrado": { "maxScore": "29.10", "maxWeightEstimate": "12-14 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "lebre_nuca_dourada": { "maxScore": "5.37", "maxWeightEstimate": "4-5 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "piadeira": { "maxScore": "905", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "cudo_menor": { "maxScore": "151.64", "maxWeightEstimate": "91-105 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "cabra_de_leque": { "maxScore": "78.55", "maxWeightEstimate": "38-42 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "javali_africano": { "maxScore": "58.19", "maxWeightEstimate": "123-150 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "gnu_de_cauda_preta": { "maxScore": "37.69", "maxWeightEstimate": "265-290 KG", "drinkZonesPotential": "06:00-09:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "búfalo_africano": { "maxScore": "151.35", "maxWeightEstimate": "802-950 KG", "drinkZonesPotential": "09:00-12:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
+        "leão": { "maxScore": "48.50", "maxWeightEstimate": "236-270 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
+        "órix_do_cabo": { "maxScore": "337.59", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "6", "maxLevel": "5 (Médio)" }
+    },
+    "parque_fernando": {
+        "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" },
+        "marreca_carijó": { "maxScore": "4.62", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "caititu": { "maxScore": "144.25", "maxWeightEstimate": "26-31 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "21:00-00:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+        "antílope_negro": { "maxScore": "132.26", "maxWeightEstimate": "44-51 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "búfalo_dágua": { "maxScore": "167.54", "maxWeightEstimate": "1067-1250 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
+        "chital": { "maxScore": "217.29", "maxWeightEstimate": "67-75 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "5 (Médio)" }
+    },
+    "yukon_valley": {
+        "caribu": { "maxScore": "430.23", "maxWeightEstimate": "161-190KG", "drinkZonesPotential": "04:00-08:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "ganso_do_canadá": { "maxScore": "8.59", "maxWeightEstimate": "8-9 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
+        "urso_cinzento": { "maxScore": "66.94", "maxWeightEstimate": "551-680 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "8", "maxLevel": "9 (Lendário)" },
+        "lobo_cinzento": { "maxScore": "39", "maxWeightEstimate": "67-80 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+        "bisão_das_planícies": { "maxScore": "183.5", "maxWeightEstimate": "987-1200 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
+        "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "pato_arlequim": { "maxScore": "7.23", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
+    },
+    "cuatro_colinas": {
+        "ibex_de_gredos": { "maxScore": "100.17", "maxWeightEstimate": "85-102 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "ibex_de_beceite": { "maxScore": "191.63", "maxWeightEstimate": "91-110 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "ibex_espanhol_do_sudeste": { "maxScore": "89.68", "maxWeightEstimate": "74-87 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "ibex_de_ronda": { "maxScore": "107.98", "maxWeightEstimate": "61-70 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "mouflão_ibérico": { "maxScore": "179.56", "maxWeightEstimate": "52-60 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "lobo_ibérico": { "maxScore": "39", "maxWeightEstimate": "45-50 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+        "javali": { "maxScore": "144.25", "maxWeightEstimate": "186-240 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "corça": { "maxScore": "81.86", "maxWeightEstimate": "29-35 KG", "drinkZonesPotential": "14:00-17:00", "animalClass": "3", "maxLevel": "3 (Muito Fácil)" },
+        "lebre_europeia": { "maxScore": "6.5", "maxWeightEstimate": "5-7 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" }
+    },
+    "silver_ridge_peaks": {
+        "antilocapra": { "maxScore": "108", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "carneiro_selvagem": { "maxScore": "196.93", "maxWeightEstimate": "132-160 KG", "drinkZonesPotential": "12:00-16:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "bisão_das_planícies": { "maxScore": "183.5", "maxWeightEstimate": "987-1200 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
+        "cabra_da_montanha": { "maxScore": "107.67", "maxWeightEstimate": "120-145 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "21:00-00:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+        "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "veado_das_montanhas_rochosas": { "maxScore": "481.41", "maxWeightEstimate": "410-480 KG", "drinkZonesPotential": "04:00-08:00", "animalClass": "7", "maxLevel": "5 (Médio)" },
+        "peru_merriami": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
+    },
+    "te_awaroa": {
+        "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" },
+        "gamo": { "maxScore": "249.99", "maxWeightEstimate": "82-100 KG", "drinkZonesPotential": "10:00-13:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "cabra_selvagem": { "maxScore": "208.71", "maxWeightEstimate": "43-50 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "porco_selvagem": { "maxScore": "144.25", "maxWeightEstimate": "161-205 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "cervo_sika": { "maxScore": "198.74", "maxWeightEstimate": "62-75 KG", "drinkZonesPotential": "10:00-13:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "tahr": { "maxScore": "101.87", "maxWeightEstimate": "117-140 KG", "drinkZonesPotential": "04:00-07:00, 07:00-11:00, 14:00-17:00, 17:00-20:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "peru_merriami": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "camurça": { "maxScore": "58", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "coelho_europeu": { "maxScore": "2.42", "maxWeightEstimate": "2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
+    },
+    "rancho_del_arroyo": {
+        "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
+        "carneiro_selvagem": { "maxScore": "196.93", "maxWeightEstimate": "132-160 KG", "drinkZonesPotential": "12:00-16:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "antilocapra": { "maxScore": "108", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "caititu": { "maxScore": "144.25", "maxWeightEstimate": "26-31 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "coiote": { "maxScore": "56.87", "maxWeightEstimate": "24-27 KG", "drinkZonesPotential": "09:00 - 00:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "lince_pardo_do_mexico": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00 - 06:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "peru_selvagem_do_rio_grande": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 ( Muito Fácil)" },
+        "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "lebre_antílope": { "maxScore": "6.33", "maxWeightEstimate": "3-4 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
+    },
+    "mississippi_acres": {
+        "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
+        "codorniz_da_virgínia": { "maxScore": "238", "maxWeightEstimate": "0 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "marrequinha_americana": { "maxScore": "480", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "peru_selvagem": { "maxScore": "4.6", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "porco_selvagem": { "maxScore": "144.25", "maxWeightEstimate": "161-205 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "raposa_cinzenta": { "maxScore": "6.43", "maxWeightEstimate": "5-6 KG", "drinkZonesPotential": "17:00 - 20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "guaxinim_comum": { "maxScore": "12", "maxWeightEstimate": "10-13 KG", "drinkZonesPotential": "00:00 - 03:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
+        "coelho_da_flórida": { "maxScore": "1.97", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "jacaré_americano": { "maxScore": "492", "maxWeightEstimate": "416-530 KG", "drinkZonesPotential": "08:00 - 12:00, 12:00 - 16:00, 16:00 - 20:00", "animalClass": "7", "maxLevel": "9 (Lendário)" }
     },
     "revontuli_coast": {
-    "galinha_montês": { "maxScore": "435", "maxWeightEstimate": "0.41-0.45 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
-    "urso_pardo": { "maxScore": "27.7", "maxWeightEstimate": "389-452 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
-    "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
-    "ganso_bravo": { "maxScore": "3.85", "maxWeightEstimate": "3-4 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "ganso_campestre_da_tundra": { "maxScore": "3.16", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "ganso_do_canadá": { "maxScore": "8.59", "maxWeightEstimate": "8-9 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "lagópode_branco": { "maxScore": "709", "maxWeightEstimate": "0.66-0.74 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "lagópode_escocês": { "maxScore": "772", "maxWeightEstimate": "0.72-0.81 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "piadeira": { "maxScore": "905", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "tetraz_grande": { "maxScore": "4.64", "maxWeightEstimate": "4-5 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "cão_guaxinim": { "maxScore": "9.29", "maxWeightEstimate": "8-10 kg", "drinkZonesPotential": "10:00-13:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "lince_euroasiática": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "9 (Lendário)" },
-    "galo_lira": { "maxScore": "120", "maxWeightEstimate": "0-1 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "lebre_da_eurásia": { "maxScore": "5.6", "maxWeightEstimate": "5-6 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "marrequinha_comum": { "maxScore": "354", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "pato_olho_de_ouro": { "maxScore": "1230", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "zarro_negrinha": { "maxScore": "963", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
-},
-"cuatro_colinas": {
-    "ibex_de_gredos": { "maxScore": "100.17", "maxWeightEstimate": "85-102 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "ibex_de_beceite": { "maxScore": "191.63", "maxWeightEstimate": "91-110 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "ibex_espanhol_do_sudeste": { "maxScore": "89.68", "maxWeightEstimate": "74-87 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "ibex_de_ronda": { "maxScore": "107.98", "maxWeightEstimate": "61-70 KG", "drinkZonesPotential": "10:00-14:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "mouflão_ibérico": { "maxScore": "179.56", "maxWeightEstimate": "52-60 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "lobo_ibérico": { "maxScore": "39", "maxWeightEstimate": "45-50 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
-    "javali": { "maxScore": "144.25", "maxWeightEstimate": "186-240 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "corça": { "maxScore": "81.86", "maxWeightEstimate": "29-35 KG", "drinkZonesPotential": "14:00-17:00", "animalClass": "3", "maxLevel": "3 (Muito Fácil)" },
-    "lebre_europeia": { "maxScore": "6.5", "maxWeightEstimate": "5-7 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" }
-},
-"emerald_coast": {
-    "canguru_cinza_oriental": { "maxScore": "492", "maxWeightEstimate": "53-66 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "4", "maxLevel": "9 (Lendário)" },
-    "codorna_de_restolho": { "maxScore": "238", "maxWeightEstimate": "0.12-0.13 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "cabra_selvagem": { "maxScore": "208.71", "maxWeightEstimate": "43-50 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "cervo_porco_indiano": { "maxScore": "108.68", "maxWeightEstimate": "43-50 KG", "drinkZonesPotential": "13:00-17:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "porco_selvagem": { "maxScore": "144.25", "maxWeightEstimate": "161-205 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" },
-    "sambar": { "maxScore": "166.43", "maxWeightEstimate": "270-300 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
-    "cervo_de_timor": { "maxScore": "148.78", "maxWeightEstimate": "145-172 KG", "drinkZonesPotential": "20:00-00:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
-    "gamo": { "maxScore": "249.99", "maxWeightEstimate": "82-100 KG", "drinkZonesPotential": "10:00-13:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "bantengue": { "maxScore": "137", "maxWeightEstimate": "747-800 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
-    "crocodilo_de_água_salgada": { "maxScore": "1015", "maxWeightEstimate": "856-1100 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "7", "maxLevel": "9 (Lendário)" },
-    "ganso_pega": { "maxScore": "3.85", "maxWeightEstimate": "2-3 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "chital": { "maxScore": "217.29", "maxWeightEstimate": "67-75 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "5 (Médio)" }
-},
-"medved_taiga": {
-    "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
-    "rena_da_montanha": { "maxScore": "430.23", "maxWeightEstimate": "156-182 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
-    "tetraz_grande": { "maxScore": "4.64", "maxWeightEstimate": "4-5 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "cervo_almiscarado": { "maxScore": "249", "maxWeightEstimate": "14-17 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "2", "maxLevel": "3 (Muito Fácil)" },
-    "urso_pardo": { "maxScore": "27.7", "maxWeightEstimate": "389-452 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
-    "javali": { "maxScore": "144.25", "maxWeightEstimate": "186-240 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "lince_euroasiática": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "9 (Lendário)" },
-    "lobo_cinzento": { "maxScore": "39", "maxWeightEstimate": "67-80 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "5", "maxLevel": "9 (Lendário)" }
-},
-"mississippi_acres": {
-    "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
-    "codorniz_da_virgínia": { "maxScore": "238", "maxWeightEstimate": "0 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "marrequinha_americana": { "maxScore": "480", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "peru_selvagem": { "maxScore": "4.6", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "porco_selvagem": { "maxScore": "144.25", "maxWeightEstimate": "161-205 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
-    "raposa_cinzenta": { "maxScore": "6.43", "maxWeightEstimate": "5-6 KG", "drinkZonesPotential": "17:00 - 20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "guaxinim_comum": { "maxScore": "12", "maxWeightEstimate": "10-13 KG", "drinkZonesPotential": "00:00 - 03:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
-    "coelho_da_flórida": { "maxScore": "1.97", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "jacaré_americano": { "maxScore": "492", "maxWeightEstimate": "416-530 KG", "drinkZonesPotential": "08:00 - 12:00, 12:00 - 16:00, 16:00 - 20:00", "animalClass": "7", "maxLevel": "9 (Lendário)" }
-},
-"new_england_mountains": {
-    "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
-    "codorniz_da_virgínia": { "maxScore": "238", "maxWeightEstimate": "0 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "coelho_da_flórida": { "maxScore": "1.97", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "marrequinha_americana": { "maxScore": "480", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "pato_olho_de_ouro": { "maxScore": "1230", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "peru_selvagem": { "maxScore": "4.6", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "guaxinim_comum": { "maxScore": "12", "maxWeightEstimate": "10-13 KG", "drinkZonesPotential": "03:00 - 06:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
-    "lince_pardo_do_mexico": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00 - 06:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "raposa_cinzenta": { "maxScore": "6.43", "maxWeightEstimate": "5-6 KG", "drinkZonesPotential": "17:00 - 20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
-    "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
-    "coiote": { "maxScore": "56.87", "maxWeightEstimate": "24-27 KG", "drinkZonesPotential": "00:00 - 04:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" }
-},
-"parque_fernando": {
-    "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" },
-    "marreca_carijó": { "maxScore": "4.62", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "caititu": { "maxScore": "144.25", "maxWeightEstimate": "26-31 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "21:00-00:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
-    "antílope_negro": { "maxScore": "132.26", "maxWeightEstimate": "44-51 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "búfalo_dágua": { "maxScore": "167.54", "maxWeightEstimate": "1067-1250 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
-    "chital": { "maxScore": "217.29", "maxWeightEstimate": "67-75 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "5 (Médio)" }
-},
-"rancho_del_arroyo": {
-    "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
-    "carneiro_selvagem": { "maxScore": "196.93", "maxWeightEstimate": "132-160 KG", "drinkZonesPotential": "12:00-16:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "antilocapra": { "maxScore": "108", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "caititu": { "maxScore": "144.25", "maxWeightEstimate": "26-31 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "coiote": { "maxScore": "56.87", "maxWeightEstimate": "24-27 KG", "drinkZonesPotential": "09:00 - 00:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "lince_pardo_do_mexico": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00 - 06:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "peru_selvagem_do_rio_grande": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "lebre_antílope": { "maxScore": "6.33", "maxWeightEstimate": "3-4 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
-},
-"salzwiesen": {
-    "coelho_europeu": { "maxScore": "2.42", "maxWeightEstimate": "2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "frisada": { "maxScore": "1050", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "galo_lira": { "maxScore": "120", "maxWeightEstimate": "0-1 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "guaxinim_comum": { "maxScore": "12", "maxWeightEstimate": "10-13 KG", "drinkZonesPotential": "00:00 - 03:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
-    "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "ganso_campestre_da_tundra": { "maxScore": "3.16", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "cão_guaxinim": { "maxScore": "9.29", "maxWeightEstimate": "8-10 kg", "drinkZonesPotential": "10:00-13:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "ganso_bravo": { "maxScore": "3.85", "maxWeightEstimate": "3-4 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "marrequinha_comum": { "maxScore": "354", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "pato_olho_de_ouro": { "maxScore": "1230", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "piadeira": { "maxScore": "905", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "zarro_negrinha": { "maxScore": "963", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "zarro_castanho": { "maxScore": "1050", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
-},
-"silver_ridge_peaks": {
-    "antilocapra": { "maxScore": "108", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "carneiro_selvagem": { "maxScore": "196.93", "maxWeightEstimate": "132-160 KG", "drinkZonesPotential": "12:00-16:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "bisão_das_planícies": { "maxScore": "183.5", "maxWeightEstimate": "987-1200 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
-    "cabra_da_montanha": { "maxScore": "107.67", "maxWeightEstimate": "120-145 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "21:00-00:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
-    "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
-    "veado_das_montanhas_rochosas": { "maxScore": "481.41", "maxWeightEstimate": "410-480 KG", "drinkZonesPotential": "04:00-08:00", "animalClass": "7", "maxLevel": "5 (Médio)" },
-    "peru_merriami": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
-},
-"sundarpatan": {
-    "antílope_negro": { "maxScore": "132.26", "maxWeightEstimate": "44-51 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "ganso_bravo": { "maxScore": "3.85", "maxWeightEstimate": "3-4 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "lebre_peluda": { "maxScore": "3.28", "maxWeightEstimate": "2-3 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "muntíaco_vermelho_do_norte": { "maxScore": "35.24", "maxWeightEstimate": "23-28 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
-    "raposa_tibetana": { "maxScore": "6.37", "maxWeightEstimate": "5-6 kg", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "tahr": { "maxScore": "101.87", "maxWeightEstimate": "117-140 KG", "drinkZonesPotential": "04:00-07:00, 07:00-11:00, 14:00-17:00, 17:00-20:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "carneiro_azul": { "maxScore": "154.08", "maxWeightEstimate": "65-75 KG", "drinkZonesPotential": "14:00-17:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "cervo_do_pântano": { "maxScore": "226.05", "maxWeightEstimate": "242-280 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
-    "nilgó": { "maxScore": "94.89", "maxWeightEstimate": "256-308 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
-    "búfalo_dágua": { "maxScore": "167.54", "maxWeightEstimate": "1067-1250 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
-    "leopardo_das_neves": { "maxScore": "29", "maxWeightEstimate": "63-75 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "4", "maxLevel": "9 (Lendário)" },
-    "iaque_selvagem": { "maxScore": "273.23", "maxWeightEstimate": "1025-1200 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
-    "tigre_de_bengala": { "maxScore": "57", "maxWeightEstimate": "272-324", "drinkZonesPotential": "04:00-07:00", "animalClass": "9", "maxLevel": "9 (Lendário)" }
-},
-"te_awaroa": {
-    "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" },
-    "gamo": { "maxScore": "249.99", "maxWeightEstimate": "82-100 KG", "drinkZonesPotential": "10:00-13:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "cabra_selvagem": { "maxScore": "208.71", "maxWeightEstimate": "43-50 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "porco_selvagem": { "maxScore": "144.25", "maxWeightEstimate": "161-205 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "cervo_sika": { "maxScore": "198.74", "maxWeightEstimate": "62-75 KG", "drinkZonesPotential": "10:00-13:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "tahr": { "maxScore": "101.87", "maxWeightEstimate": "117-140 KG", "drinkZonesPotential": "04:00-07:00, 07:00-11:00, 14:00-17:00, 17:00-20:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "peru_merriami": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "camurça": { "maxScore": "58", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "coelho_europeu": { "maxScore": "2.42", "maxWeightEstimate": "2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
-},
-"vurhonga_savanna": {
-    "chacal_listrado": { "maxScore": "29.10", "maxWeightEstimate": "12-14 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "lebre_nuca_dourada": { "maxScore": "5.37", "maxWeightEstimate": "4-5 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "piadeira": { "maxScore": "905", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
-    "cudo_menor": { "maxScore": "151.64", "maxWeightEstimate": "91-105 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "cabra_de_leque": { "maxScore": "78.55", "maxWeightEstimate": "38-42 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "3", "maxLevel": "5 (Médio)" },
-    "javali_africano": { "maxScore": "58.19", "maxWeightEstimate": "123-150 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
-    "gnu_de_cauda_preta": { "maxScore": "37.69", "maxWeightEstimate": "265-290 KG", "drinkZonesPotential": "06:00-09:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
-    "búfalo_africano": { "maxScore": "151.35", "maxWeightEstimate": "802-950 KG", "drinkZonesPotential": "09:00-12:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
-    "leão": { "maxScore": "48.50", "maxWeightEstimate": "236-270 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
-    "órix_do_cabo": { "maxScore": "337.59", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "6", "maxLevel": "5 (Médio)" }
-},
-"yukon_valley": {
-    "caribu": { "maxScore": "430.23", "maxWeightEstimate": "161-190KG", "drinkZonesPotential": "04:00-08:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
-    "ganso_do_canadá": { "maxScore": "8.59", "maxWeightEstimate": "8-9 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
-    "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
-    "urso_cinzento": { "maxScore": "66.94", "maxWeightEstimate": "551-680 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "8", "maxLevel": "9 (Lendário)" },
-    "lobo_cinzento": { "maxScore": "39", "maxWeightEstimate": "67-80 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
-    "bisão_das_planícies": { "maxScore": "183.5", "maxWeightEstimate": "987-1200 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
-    "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
-    "pato_arlequim": { "maxScore": "7.23", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
-},
+        "galinha_montês": { "maxScore": "435", "maxWeightEstimate": "0.41-0.45 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
+        "urso_pardo": { "maxScore": "27.7", "maxWeightEstimate": "389-452 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
+        "ganso_bravo": { "maxScore": "3.85", "maxWeightEstimate": "3-4 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "ganso_campestre_da_tundra": { "maxScore": "3.16", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "ganso_do_canadá": { "maxScore": "8.59", "maxWeightEstimate": "8-9 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "lagópode_branco": { "maxScore": "709", "maxWeightEstimate": "0.66-0.74 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 ( Muito Fácil)" },
+        "lagópode_escocês": { "maxScore": "772", "maxWeightEstimate": "0.72-0.81 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 ( Muito Fácil)" },
+        "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "piadeira": { "maxScore": "905", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "tetraz_grande": { "maxScore": "4.64", "maxWeightEstimate": "4-5 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "cão_guaxinim": { "maxScore": "9.29", "maxWeightEstimate": "8-10 kg", "drinkZonesPotential": "10:00-13:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "lince_euroasiática": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "9 (Lendário)" },
+        "galo_lira": { "maxScore": "120", "maxWeightEstimate": "0-1 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "lebre_da_eurásia": { "maxScore": "5.6", "maxWeightEstimate": "5-6 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "marrequinha_comum": { "maxScore": "354", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_olho_de_ouro": { "maxScore": "1230", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "zarro_negrinha": { "maxScore": "963", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
+    },
+    "new_england_mountains": {
+        "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
+        "codorniz_da_virgínia": { "maxScore": "238", "maxWeightEstimate": "0 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "coelho_da_flórida": { "maxScore": "1.97", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "marrequinha_americana": { "maxScore": "480", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_olho_de_ouro": { "maxScore": "1230", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "peru_selvagem": { "maxScore": "4.6", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "guaxinim_comum": { "maxScore": "12", "maxWeightEstimate": "10-13 KG", "drinkZonesPotential": "03:00 - 06:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
+        "lince_pardo_do_mexico": { "maxScore": "27.68", "maxWeightEstimate": "35-45 KG", "drinkZonesPotential": "03:00 - 06:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "raposa_cinzenta": { "maxScore": "6.43", "maxWeightEstimate": "5-6 KG", "drinkZonesPotential": "17:00 - 20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
+        "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "coiote": { "maxScore": "56.87", "maxWeightEstimate": "24-27 KG", "drinkZonesPotential": "00:00 - 04:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" }
+    },
+    "emerald_coast": {
+        "canguru_cinza_oriental": { "maxScore": "492", "maxWeightEstimate": "53-66 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "4", "maxLevel": "9 (Lendário)" },
+        "codorna_de_restolho": { "maxScore": "238", "maxWeightEstimate": "0.12-0.13 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "cabra_selvagem": { "maxScore": "208.71", "maxWeightEstimate": "43-50 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "cervo_porco_indiano": { "maxScore": "108.68", "maxWeightEstimate": "43-50 KG", "drinkZonesPotential": "13:00-17:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "porco_selvagem": { "maxScore": "144.25", "maxWeightEstimate": "161-205 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "veado_vermelho": { "maxScore": "251.07", "maxWeightEstimate": "210-240 KG", "drinkZonesPotential": "06:00-10:00", "animalClass": "6", "maxLevel": "9 (Lendário)" },
+        "sambar": { "maxScore": "166.43", "maxWeightEstimate": "270-300 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "cervo_de_timor": { "maxScore": "148.78", "maxWeightEstimate": "145-172 KG", "drinkZonesPotential": "20:00-00:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "gamo": { "maxScore": "249.99", "maxWeightEstimate": "82-100 KG", "drinkZonesPotential": "10:00-13:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "bantengue": { "maxScore": "137", "maxWeightEstimate": "747-800 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
+        "crocodilo_de_água_salgada": { "maxScore": "1015", "maxWeightEstimate": "856-1100 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "ganso_pega": { "maxScore": "3.85", "maxWeightEstimate": "2-3 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "chital": { "maxScore": "217.29", "maxWeightEstimate": "67-75 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "5 (Médio)" }
+    },
+    "sundarpatan": {
+        "antílope_negro": { "maxScore": "132.26", "maxWeightEstimate": "44-51 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "ganso_bravo": { "maxScore": "3.85", "maxWeightEstimate": "3-4 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "lebre_peluda": { "maxScore": "3.28", "maxWeightEstimate": "2-3 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 ( Muito Fácil)" },
+        "muntíaco_vermelho_do_norte": { "maxScore": "35.24", "maxWeightEstimate": "23-28 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
+        "raposa_tibetana": { "maxScore": "6.37", "maxWeightEstimate": "5-6 kg", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "tahr": { "maxScore": "101.87", "maxWeightEstimate": "117-140 KG", "drinkZonesPotential": "04:00-07:00, 07:00-11:00, 14:00-17:00, 17:00-20:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "carneiro_azul": { "maxScore": "154.08", "maxWeightEstimate": "65-75 KG", "drinkZonesPotential": "14:00-17:00", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "cervo_do_pântano": { "maxScore": "226.05", "maxWeightEstimate": "242-280 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "nilgó": { "maxScore": "94.89", "maxWeightEstimate": "256-308 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "búfalo_dágua": { "maxScore": "167.54", "maxWeightEstimate": "1067-1250 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
+        "leopardo_das_neves": { "maxScore": "29", "maxWeightEstimate": "63-75 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "4", "maxLevel": "9 (Lendário)" },
+        "iaque_selvagem": { "maxScore": "273.23", "maxWeightEstimate": "1025-1200 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
+        "tigre_de_bengala": { "maxScore": "57", "maxWeightEstimate": "272-324", "drinkZonesPotential": "04:00-07:00", "animalClass": "9", "maxLevel": "9 (Lendário)" }
+    },
+    "salzwiesen": {
+        "coelho_europeu": { "maxScore": "2.42", "maxWeightEstimate": "2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "frisada": { "maxScore": "1050", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "galo_lira": { "maxScore": "120", "maxWeightEstimate": "0-1 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "guaxinim_comum": { "maxScore": "12", "maxWeightEstimate": "10-13 KG", "drinkZonesPotential": "00:00 - 03:00", "animalClass": "2", "maxLevel": "5 (Médio)" },
+        "raposa_vermelha": { "maxScore": "14.05", "maxWeightEstimate": "12-15 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "ganso_campestre_da_tundra": { "maxScore": "3.16", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "cão_guaxinim": { "maxScore": "9.29", "maxWeightEstimate": "8-10 kg", "drinkZonesPotential": "10:00-13:00", "animalClass": "2", "maxLevel": "9 (Lendário)" },
+        "ganso_bravo": { "maxScore": "3.85", "maxWeightEstimate": "3-4 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "marrequinha_comum": { "maxScore": "354", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_olho_de_ouro": { "maxScore": "1230", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "piadeira": { "maxScore": "905", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "zarro_negrinha": { "maxScore": "963", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "zarro_castanho": { "maxScore": "1050", "maxWeightEstimate": "0-1 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
+    },
     "askiy_ridge": {
-        "alce": { maxScore: "274.99", maxWeightEstimate: "545-620 KG", drinkZonesPotential: "12:00 - 16:00", animalClass: "8", maxLevel: "5 (Médio)" },
-        "caribu_da_floresta_boreal": { maxScore: "430.23", maxWeightEstimate: "161-190 KG", drinkZonesPotential: "20:00 - 00:00", animalClass: "6", maxLevel: "5 (Médio)" },
-        "urso_negro": { maxScore: "22.8", maxWeightEstimate: "227-290 KG", drinkZonesPotential: "04:00 - 08:00", animalClass: "7", maxLevel: "9 (Lendário)" },
-        "veado_mula": { maxScore: "312.17", maxWeightEstimate: "175-210 KG", drinkZonesPotential: "15:00-18:00", animalClass: "5", maxLevel: "5 (Médio)" },
-        "bisão_da_floresta": { maxScore: "158", maxWeightEstimate: "1112-1350 KG", drinkZonesPotential: "08:00-12:00", animalClass: "9", maxLevel: "5 (Médio)" },
-        "cabra_da_montanha": { maxScore: "107.67", maxWeightEstimate: "120-145 KG", drinkZonesPotential: "O DIA TODO", animalClass: "4", maxLevel: "5 (Médio)" },
-        "antilocapra": { maxScore: "108", maxWeightEstimate: "57-65 KG", drinkZonesPotential: "18:00-21:00", animalClass: "3", maxLevel: "5 (Médio)" },
-        "tetraz_azul": { maxScore: "151", maxWeightEstimate: "1.38-1.60 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "pato_real": { maxScore: "19.61", maxWeightEstimate: "1-2 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "pato_carolino": { maxScore: "670", maxWeightEstimate: "0 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "marreca_arrebio": { maxScore: "1040", maxWeightEstimate: "0-1 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "ganso_do_canadá": { maxScore: "8.59", maxWeightEstimate: "8-9 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "5 (Médio)" },
-        "ganso_das_neves": { maxScore: "3.85", maxWeightEstimate: "3-4 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "5 (Médio)" },
-        "lobo_cinzento": { maxScore: "39", maxWeightEstimate: "67-80 KG", drinkZonesPotential: "17:00-20:00", animalClass: "5", maxLevel: "9 (Lendário)" },
-        "cervo_canadense": { maxScore: "457.56", maxWeightEstimate: "395-450 kg", drinkZonesPotential: "04:00-08:00", animalClass: "7", maxLevel: "5 (Médio)" },
-        "veado_de_cauda_branca": { maxScore: "255.09", maxWeightEstimate: "75-100 KG", drinkZonesPotential: "08:00 - 12:00", animalClass: "4", maxLevel: "3 (Muito Fácil)" },
-        "faisão_de_pescoço_anelado": { maxScore: "20.29", maxWeightEstimate: "2-3 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "carneiro_selvagem": { maxScore: "196.93", maxWeightEstimate: "132-160 KG", drinkZonesPotential: "12:00-16:00", animalClass: "5", maxLevel: "5 (Médio)" },
-        "castor_norte_americano": { maxScore: "30.40", maxWeightEstimate: "28-32 kg", drinkZonesPotential: "04:00-08:00, 08:00-12:00, 16:00-20:00", animalClass: "2", maxLevel: "5 (Médio)" }
+        "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
+        "caribu_da_floresta_boreal": { "maxScore": "430.23", "maxWeightEstimate": "161-190 KG", "drinkZonesPotential": "20:00 - 00:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+        "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+        "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "bisão_da_floresta": { "maxScore": "158", "maxWeightEstimate": "1112-1350 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
+        "cabra_da_montanha": { "maxScore": "107.67", "maxWeightEstimate": "120-145 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "4", "maxLevel": "5 (Médio)" },
+        "antilocapra": { "maxScore": "108", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+        "tetraz_azul": { "maxScore": "151", "maxWeightEstimate": "1.38-1.60 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "pato_carolino": { "maxScore": "670", "maxWeightEstimate": "0 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "marreca_arrebio": { "maxScore": "1040", "maxWeightEstimate": "0-1 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "ganso_do_canadá": { "maxScore": "8.59", "maxWeightEstimate": "8-9 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "ganso_das_neves": { "maxScore": "3.85", "maxWeightEstimate": "3-4 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+        "lobo_cinzento": { "maxScore": "39", "maxWeightEstimate": "67-80 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+        "cervo_canadense": { "maxScore": "457.56", "maxWeightEstimate": "395-450 kg", "drinkZonesPotential": "04:00-08:00", "animalClass": "7", "maxLevel": "5 (Médio)" },
+        "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
+        "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+        "carneiro_selvagem": { "maxScore": "196.93", "maxWeightEstimate": "132-160 KG", "drinkZonesPotential": "12:00-16:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+        "castor_norte_americano": { "maxScore": "30.40", "maxWeightEstimate": "28-32 kg", "drinkZonesPotential": "04:00-08:00, 08:00-12:00, 16:00-20:00", "animalClass": "2", "maxLevel": "5 (Médio)" }
     }
 };
 
-export const multiMountsData = { "a_fuga": { name: "A Fuga", animals: [{ slug: "veado_vermelho", gender: "macho" },{ slug: "veado_vermelho", gender: "femea" }] }, "abraco_do_urso": { name: "Abraço do Urso", animals: [{ slug: "urso_cinzento", gender: "macho" },{ slug: "urso_cinzento", gender: "macho" }] }, "adeus_filho": { name: "Adeus, Filho", animals: [{ slug: "bisão_das_planícies", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" }] }, "admiralces": { name: "Admiralces", animals: [{ slug: "alce", gender: "macho" },{ slug: "codorniz_da_virgínia", gender: "macho" }] }, "almoco_da_raposa": { name: "Almoço da Raposa", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "banquete_no_ar": { name: "Banquete no Ar", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "brincadeira_de_aves": { name: "Brincadeira de Aves", animals: [{ slug: "lagópode_escocês", gender: "macho" },{ slug: "cão_guaxinim", gender: "macho" }] }, "brincando_de_briga": { name: "Brincando de Briga", animals: [{ slug: "lince_euroasiática", gender: "macho" },{ slug: "lince_euroasiática", gender: "femea" }] }, "caudas_brancas_unidas": { name: "Caudas Brancas Unidas", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "colisao": { name: "Colisão", animals: [{ slug: "veado_de_cauda_preta", gender: "macho" },{ slug: "onça_parda", gender: "macho" }] }, "competicao_amistosa": { name: "Competição Amistosa", animals: [{ slug: "coiote", gender: "macho" },{ slug: "coiote", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "corcas_unidas": { name: "Corças Unidas", animals: [{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" }] }, "davi_e_golias": { name: "Davi e Golias", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "de_cabeca": { name: "De Cabeça", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" }] }, "decolagem_de_emergencia": { name: "Decolagem de Emergência", animals: [{ slug: "coiote", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "femea" }] }, "despedida_do_solteiros": { name: "Despedida dos Solteiros", animals: [{ slug: "veado_mula", gender: "macho" },{ slug: "veado_mula", gender: "femea" },{ slug: "veado_mula", gender: "femea" }] }, "dois_tipos_de_perus": { name: "Dois Tipos de Perus", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem_do_rio_grande", gender: "macho" }] }, "espionagem_tatica": { name: "Espionagem Tática", animals: [{ slug: "onça_parda", gender: "femea" },{ slug: "veado_de_roosevelt", gender: "macho" }] }, "faisoes_em_fuga": { name: "Faisões em Fuga", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "falso_tronco": { name: "Falso Tronco", animals: [{ slug: "jacaré_americano", gender: "macho" },{ slug: "guaxinim_comum", gender: "macho" }] }, "fantasma_da_montanha": { name: "Fantasma da Montanha", animals: [{ slug: "leopardo_das_neves", gender: "macho" },{ slug: "carneiro_azul", gender: "macho" }] }, "fartura_de_bisoes": { name: "Fartura de Bisões", animals: [{ slug: "bisão_europeu", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "gamos_unidos": { name: "Gamos Unidos", animals: [{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" }] }, "ganha_pao": { name: "Ganha-pão", animals: [{ slug: "búfalo_africano", gender: "macho" },{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" },{ slug: "leão", gender: "femea" }] }, "gansos_zangados": { name: "Gansos Zangados", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "ganso_do_canadá", gender: "macho" }] }, "gluglu": { name: "Gluglu", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem", gender: "femea" },{ slug: "peru_selvagem", gender: "femea" }] }, "lanchinho_de_tigre": { name: "Lanchinho de Tigre", animals: [{ slug: "tahr", gender: "macho" },{ slug: "tahr", gender: "femea" },{ slug: "tahr", gender: "femea" }] }, "laod_a_lado": { name: "Laod a Lado", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "lebres_rivais": { name: "Lebres Rivais", animals: [{ slug: "lebre_antílope", gender: "macho" },{ slug: "lebre_antílope", gender: "macho" }] }, "lobo_alfa": { name: "Lobo Alfa", animals: [{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "femea" },{ slug: "lobo_cinzento", gender: "femea" }] }, "marujos_de_agua_doce": { name: "Marujos de Água Doce", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "tetraz_grande", gender: "macho" },{ slug: "ganso_bravo", gender: "macho" },{ slug: "ganso_campestre_da_tundra", gender: "macho" }] }, "necessidades_basicas": { name: "Necessidades Básicas", animals: [{ slug: "urso_negro", gender: "macho" },{ slug: "urso_negro", gender: "macho" }] }, "o_grand_slam": { name: "O Grand Slam", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" },{ slug: "ibex_de_ronda", gender: "macho" },{ slug: "ibex_espanhol_do_sudeste", gender: "macho" }] }, "operador_suave": { name: "Operador Suave", animals: [{ slug: "tetraz_grande", gender: "macho" },{ slug: "tetraz_grande", gender: "femea" },{ slug: "tetraz_grande", gender: "femea" }] }, "os_tres_patinhos": { name: "Os Três Patinhos", animals: [{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "parceiros_no_crime": { name: "Parceiros no Crime", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_vermelha", gender: "macho" }] }, "presas_a_mostra": { name: "Presas à Mostra", animals: [{ slug: "mouflão_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" }] }, "procos_do_mato_em_conflito": { name: "Procos-do-Mato em Conflito", animals: [{ slug: "caititu", gender: "macho" },{ slug: "caititu", gender: "macho" }] }, "ramboru": { name: "Ramboru", animals: [{ slug: "canguru_cinzento_oriental", gender: "macho" },{ slug: "canguru_cinzento_oriental", gender: "macho" }] }, "raposas_adversarias": { name: "Raposas Adversárias", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_cinzenta", gender: "macho" }] }, "realeza": { name: "Realeza", animals: [{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" }] }, "rixa_de_aves": { name: "Rixa de Aves", animals: [{ slug: "galo_lira", gender: "macho" },{ slug: "galo_lira", gender: "macho" }] }, "saindo_de_fininho": { name: "Saindo de Fininho", animals: [{ slug: "pato_real", gender: "macho" },{ slug: "pato_olho_de_ouro", gender: "macho" },{ slug: "zarro_negrinha", gender: "macho" },{ slug: "marrequinha_comum", gender: "macho" },{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "tahr_angulo_amoroso": { name: "Tahr-ângulo Amoroso", animals: [{ slug: "tigre_de_bengala", gender: "macho" },{ slug: "cervo_do_pântano", gender: "macho" }] }, "treno_vendido_separadamente": { name: "Trenó Vendido Separadamente", animals: [{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" }] }, "turma_dos_coelhos": { name: "Turma dos Coelhos", animals: [{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "femea" },{ slug: "lebre_da_cauda_branca", gender: "femea" }] }, "um_crocodilo_sortudo": { name: "Um Crocodilo Sortudo", animals: [{ slug: "ganso_pega", gender: "macho" },{ slug: "crocodilo_de_água_salgada", gender: "macho" }] }, "um_par_de_predadores": { name: "Um Par de Predadores", animals: [{ slug: "coiote", gender: "macho" },{ slug: "lince_pardo_do_mexico", gender: "macho" }] }, "vigilancia": { name: "Vigilância", animals: [{ slug: "cudo_menor", gender: "macho" },{ slug: "cudo_menor", gender: "femea" }] }, "viver_amar_lenhar": { name: "Viver, Amar, Lenhar", animals: [{ slug: "castor_norte_americano", gender: "macho" },{ slug: "castor_norte_americano", gender: "femea" }] } };
-// Define as categorias e seus ícones
+export const multiMountsData = {
+    "a_fuga": { name: "A Fuga", animals: [{ slug: "veado_vermelho", gender: "macho" },{ slug: "veado_vermelho", gender: "femea" }] },
+    "abraco_do_urso": { name: "Abraço do Urso", animals: [{ slug: "urso_cinzento", gender: "macho" },{ slug: "urso_cinzento", gender: "macho" }] },
+    "adeus_filho": { name: "Adeus, Filho", animals: [{ slug: "bisão_das_planícies", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" }] },
+    "admiralces": { name: "Admiralces", animals: [{ slug: "alce", gender: "macho" },{ slug: "codorniz_da_virgínia", gender: "macho" }] },
+    "almoco_da_raposa": { name: "Almoço da Raposa", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] },
+    "banquete_no_ar": { name: "Banquete no Ar", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] },
+    "brincadeira_de_aves": { name: "Brincadeira de Aves", animals: [{ slug: "lagópode_escocês", gender: "macho" },{ slug: "cão_guaxinim", gender: "macho" }] },
+    "brincando_de_briga": { name: "Brincando de Briga", animals: [{ slug: "lince_euroasiática", gender: "macho" },{ slug: "lince_euroasiática", gender: "femea" }] },
+    "caudas_brancas_unidas": { name: "Caudas Brancas Unidas", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] },
+    "colisao": { name: "Colisão", animals: [{ slug: "veado_de_cauda_preta", gender: "macho" },{ slug: "onça_parda", gender: "macho" }] },
+    "competicao_amistosa": { name: "Competição Amistosa", animals: [{ slug: "coiote", gender: "macho" },{ slug: "coiote", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] },
+    "corcas_unidas": { name: "Corças Unidas", animals: [{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" }] },
+    "davi_e_golias": { name: "Davi e Golias", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] },
+    "de_cabeca": { name: "De Cabeça", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" }] },
+    "decolagem_de_emergencia": { name: "Decolagem de Emergência", animals: [{ slug: "coiote", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "femea" }] },
+    "despedida_do_solteiros": { name: "Despedida dos Solteiros", animals: [{ slug: "veado_mula", gender: "macho" },{ slug: "veado_mula", gender: "femea" },{ slug: "veado_mula", gender: "femea" }] },
+    "dois_tipos_de_perus": { name: "Dois Tipos de Perus", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem_do_rio_grande", gender: "macho" }] },
+    "espionagem_tatica": { name: "Espionagem Tática", animals: [{ slug: "onça_parda", gender: "femea" },{ slug: "veado_de_roosevelt", gender: "macho" }] },
+    "faisoes_em_fuga": { name: "Faisões em Fuga", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] },
+    "falso_tronco": { name: "Falso Tronco", animals: [{ slug: "jacaré_americano", gender: "macho" },{ slug: "guaxinim_comum", gender: "macho" }] },
+    "fantasma_da_montanha": { name: "Fantasma da Montanha", animals: [{ slug: "leopardo_das_neves", gender: "macho" },{ slug: "carneiro_azul", gender: "macho" }] },
+    "fartura_de_bisoes": { name: "Fartura de Bisões", animals: [{ slug: "bisão_europeu", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] },
+    "gamos_unidos": { name: "Gamos Unidos", animals: [{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" }] },
+    "ganha_pao": { name: "Ganha-pão", animals: [{ slug: "búfalo_africano", gender: "macho" },{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" },{ slug: "leão", gender: "femea" }] },
+    "gansos_zangados": { name: "Gansos Zangados", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "ganso_do_canadá", gender: "macho" }] },
+    "gluglu": { name: "Gluglu", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem", gender: "femea" },{ slug: "peru_selvagem", gender: "femea" }] },
+    "lanchinho_de_tigre": { name: "Lanchinho de Tigre", animals: [{ slug: "tahr", gender: "macho" },{ slug: "tahr", gender: "femea" },{ slug: "tahr", gender: "femea" }] },
+    "laod_a_lado": { name: "Laod a Lado", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] },
+    "lebres_rivais": { name: "Lebres Rivais", animals: [{ slug: "lebre_antílope", gender: "macho" },{ slug: "lebre_antílope", gender: "macho" }] },
+    "lobo_alfa": { name: "Lobo Alfa", animals: [{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "femea" },{ slug: "lobo_cinzento", gender: "femea" }] },
+    "marujos_de_agua_doce": { name: "Marujos de Água Doce", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "tetraz_grande", gender: "macho" },{ slug: "ganso_bravo", gender: "macho" },{ slug: "ganso_campestre_da_tundra", gender: "macho" }] },
+    "necessidades_basicas": { name: "Necessidades Básicas", animals: [{ slug: "urso_negro", gender: "macho" },{ slug: "urso_negro", gender: "macho" }] },
+    "o_grand_slam": { name: "O Grand Slam", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" },{ slug: "ibex_de_ronda", gender: "macho" },{ slug: "ibex_espanhol_do_sudeste", gender: "macho" }] },
+    "operador_suave": { name: "Operador Suave", animals: [{ slug: "tetraz_grande", gender: "macho" },{ slug: "tetraz_grande", gender: "femea" },{ slug: "tetraz_grande", gender: "femea" }] },
+    "os_tres_patinhos": { name: "Os Três Patinhos", animals: [{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] },
+    "parceiros_no_crime": { name: "Parceiros no Crime", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_vermelha", gender: "macho" }] },
+    "presas_a_mostra": { name: "Presas à Mostra", animals: [{ slug: "mouflão_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" }] },
+    "procos_do_mato_em_conflito": { name: "Procos-do-Mato em Conflito", animals: [{ slug: "caititu", gender: "macho" },{ slug: "caititu", gender: "macho" }] },
+    "ramboru": { name: "Ramboru", animals: [{ slug: "canguru_cinzento_oriental", gender: "macho" },{ slug: "canguru_cinzento_oriental", gender: "macho" }] },
+    "raposas_adversarias": { name: "Raposas Adversárias", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_cinzenta", gender: "macho" }] },
+    "realeza": { name: "Realeza", animals: [{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" }] },
+    "rixa_de_aves": { name: "Rixa de Aves", animals: [{ slug: "galo_lira", gender: "macho" },{ slug: "galo_lira", gender: "macho" }] },
+    "saindo_de_fininho": { name: "Saindo de Fininho", animals: [{ slug: "pato_real", gender: "macho" },{ slug: "pato_olho_de_ouro", gender: "macho" },{ slug: "zarro_negrinha", gender: "macho" },{ slug: "marrequinha_comum", gender: "macho" },{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] },
+    "tahr_angulo_amoroso": { name: "Tahr-ângulo Amoroso", animals: [{ slug: "tigre_de_bengala", gender: "macho" },{ slug: "cervo_do_pântano", gender: "macho" }] },
+    "treno_vendido_separadamente": { name: "Trenó Vendido Separadamente", animals: [{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" }] },
+    "turma_dos_coelhos": { name: "Turma dos Coelhos", animals: [{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "femea" },{ slug: "lebre_da_cauda_branca", gender: "femea" }] },
+    "um_crocodilo_sortudo": { name: "Um Crocodilo Sortudo", animals: [{ slug: "ganso_pega", gender: "macho" },{ slug: "crocodilo_de_água_salgada", gender: "macho" }] },
+    "um_par_de_predadores": { name: "Um Par de Predadores", animals: [{ slug: "coiote", gender: "macho" },{ slug: "lince_pardo_do_mexico", gender: "macho" }] },
+    "vigilancia": { name: "Vigilância", animals: [{ slug: "cudo_menor", gender: "macho" },{ slug: "cudo_menor", gender: "femea" }] },
+    "viver_amar_lenhar": { name: "Viver, Amar, Lenhar", animals: [{ slug: "castor_norte_americano", gender: "macho" },{ slug: "castor_norte_americano", gender: "femea" }] }
+};
+
 export const categorias = {
     pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
     diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
@@ -480,117 +551,3 @@ export const categorias = {
     reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
     progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
 };
-
-let appContainer;
-
-// Função para verificar e definir a conclusão de um Great One
-function checkAndSetGreatOneCompletion(slug, currentData) {
-    const requiredFurs = greatsFursData[slug];
-    if (!requiredFurs || !currentData) return;
-    // Um Great One é considerado completo se todas as suas pelagens de Great One foram coletadas
-    currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
-}
-
-// Renderiza o hub de navegação principal
-function renderNavigationHub() {
-    appContainer.innerHTML = '';
-    const hub = document.createElement('div');
-    hub.className = 'navigation-hub';
-
-    const title = document.createElement('h1');
-    title.className = 'hub-title';
-    title.textContent = 'Álbum de Caça';
-    hub.appendChild(title);
-
-    Object.keys(categorias).forEach(key => {
-        const cat = categorias[key];
-        const card = document.createElement('div');
-        card.className = 'nav-card';
-        card.innerHTML = `<i class="${cat.icon || 'fas fa-question-circle'}"></i><span>${cat.title}</span>`;
-        card.dataset.target = key;
-        card.addEventListener('click', () => renderMainView(key));
-        hub.appendChild(card);
-    });
-
-    appContainer.appendChild(hub);
-    setupLogoutButton(currentUser);
-}
-
-// Renderiza a visualização principal de uma categoria
-function renderMainView(tabKey) {
-    appContainer.innerHTML = '';
-    const currentTab = categorias[tabKey];
-    if (!currentTab) return;
-
-    const mainContent = document.createElement('div');
-    mainContent.className = 'main-content';
-
-    const header = document.createElement('div');
-    header.className = 'page-header';
-
-    const title = document.createElement('h2');
-    title.textContent = currentTab.title;
-
-    const backButton = document.createElement('button');
-    backButton.className = 'back-button';
-    backButton.innerHTML = '&larr; Voltar ao Menu';
-    backButton.onclick = renderNavigationHub;
-
-    header.appendChild(title);
-    header.appendChild(backButton);
-    mainContent.appendChild(header);
-
-    const contentContainer = document.createElement('div');
-    contentContainer.className = `content-container ${tabKey}-view`;
-    mainContent.appendChild(contentContainer);
-    appContainer.appendChild(mainContent);
-
-    setupLogoutButton(currentUser);
-
-    if (tabKey === 'progresso') {
-        renderProgressView(contentContainer);
-    } else if (tabKey === 'reservas') {
-        renderReservesList(contentContainer);
-    } else if (tabKey === 'montagens') {
-        renderMultiMountsView(contentContainer);
-    } else if (tabKey === 'grind') {
-        renderGrindHubView(contentContainer);
-    } else {
-        const filterInput = document.createElement('input');
-        filterInput.type = 'text';
-        filterInput.className = 'filter-input';
-        filterInput.placeholder = 'Buscar animal...';
-        contentContainer.appendChild(filterInput);
-
-        const albumGrid = document.createElement('div');
-        albumGrid.className = 'album-grid';
-        contentContainer.appendChild(albumGrid);
-
-        const itemsToRender = (currentTab.items || []).filter(item => typeof item === 'string' && item !== null && item.trim() !== '');
-
-        itemsToRender.sort((a, b) => a.localeCompare(b)).forEach(name => {
-            const card = createAnimalCard(name, tabKey);
-            albumGrid.appendChild(card);
-        });
-
-        filterInput.addEventListener('input', (event) => {
-            const searchTerm = event.target.value.toLowerCase();
-            albumGrid.querySelectorAll('.animal-card').forEach(card => {
-                const animalName = card.querySelector('.info').textContent.toLowerCase();
-                card.style.display = animalName.includes(searchTerm) ? 'block' : 'none';
-            });
-        });
-    }
-}
-// Cria um cartão de animal para as visualizações de categoria
-function createAnimalCard(name, tabKey) {
-    const card = document.createElement('div');
-    card.className = 'animal-card';
-    const slug = slugify(name);
-    card.dataset.slug = slug;
-    card.innerHTML = `<img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';"><div class="info">${name}</div>`;
-    card.addEventListener('click', () => showDetailView(name, tabKey));
-    updateCardAppearance(card, slug, tabKey); // Atualiza a aparência do cartão com base no progresso
-    return card;
-}
-

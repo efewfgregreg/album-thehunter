@@ -1,18 +1,9 @@
-// js/auth.js (VERSÃO CORRIGIDA COM INIT)
+// Importa o serviço de autenticação do nosso módulo centralizado
+import { auth } from './firebase-service.js';
 
-// --- Dependências do Módulo ---
-let appContainer, auth;
-
-// A função init recebe tudo que este módulo precisa para funcionar
-export function init(dependencies) {
-    appContainer = dependencies.appContainer;
-    auth = dependencies.auth;
-}
-
-// --- Funções Exportadas ---
-
-export function renderLoginForm() {
-    appContainer.innerHTML = `
+// As funções agora são exportadas e recebem o 'container' como parâmetro.
+export function renderLoginForm(container) {
+    container.innerHTML = `
         <div class="auth-container">
             <div class="auth-box">
                 <h2>Login - Álbum de Caça</h2>
@@ -30,17 +21,20 @@ export function renderLoginForm() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
         const errorDiv = document.getElementById('authError');
+        
+        // Usamos a instância 'auth' importada
         auth.signInWithEmailAndPassword(email, password)
             .catch((error) => {
                 errorDiv.textContent = `Erro ao entrar: ${error.message}`;
             });
     });
 
-    document.getElementById('showRegister').addEventListener('click', () => renderRegisterForm());
+    // Ao clicar para registrar, chamamos a outra função deste mesmo módulo
+    document.getElementById('showRegister').addEventListener('click', () => renderRegisterForm(container));
 }
 
-export function renderRegisterForm() {
-    appContainer.innerHTML = `
+export function renderRegisterForm(container) {
+    container.innerHTML = `
         <div class="auth-container">
             <div class="auth-box">
                 <h2>Cadastro - Álbum de Caça</h2>
@@ -58,40 +52,35 @@ export function renderRegisterForm() {
         const email = document.getElementById('registerEmail').value;
         const password = document.getElementById('registerPassword').value;
         const errorDiv = document.getElementById('authError');
+
+        // Usamos a instância 'auth' importada
         auth.createUserWithEmailAndPassword(email, password)
             .catch((error) => {
                 errorDiv.textContent = `Erro no cadastro: ${error.message}`;
             });
     });
-
-    document.getElementById('showLogin').addEventListener('click', () => renderLoginForm());
+    
+    // Ao clicar para logar, chamamos a outra função deste mesmo módulo
+    document.getElementById('showLogin').addEventListener('click', () => renderLoginForm(container));
 }
 
-export function setupLogoutButton(user, auth, appContainer) {
-    if (!user) return;
-    let pageHeader = document.querySelector('.page-header');
-    if (!pageHeader) {
-        let existingHeader = document.querySelector('.page-header-logout-only');
-        if (existingHeader) existingHeader.remove();
-        pageHeader = document.createElement('div');
-        pageHeader.className = 'page-header-logout-only';
-        const navHub = document.querySelector('.navigation-hub');
-        if (navHub) {
-            navHub.before(pageHeader);
-        } else {
-            appContainer.prepend(pageHeader);
-        }
-    }
+export function setupLogoutButton(headerContainer, user) {
+    if (!user || !headerContainer) return;
+
     let logoutContainer = document.getElementById('logout-container');
-    if (logoutContainer) logoutContainer.remove();
+    if (logoutContainer) logoutContainer.remove(); // Remove o antigo se existir
+
     logoutContainer = document.createElement('div');
     logoutContainer.id = 'logout-container';
     logoutContainer.innerHTML = `
         <span class="user-email">${user.email}</span>
         <button id="logoutButton" class="back-button">Sair</button>
     `;
-    pageHeader.appendChild(logoutContainer);
+
+    headerContainer.appendChild(logoutContainer);
+
     document.getElementById('logoutButton').addEventListener('click', () => {
+        // Usamos a instância 'auth' importada
         auth.signOut();
     });
 }
