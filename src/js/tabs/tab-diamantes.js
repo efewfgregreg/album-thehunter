@@ -1,7 +1,6 @@
 // src/js/tabs/tab-diamantes.js
 import { diamondFursData } from '../data.js';
-import { slugify, updateCardAppearance } from '../ui.js';
-import { renderDiamondDetailView } from '../views/viewDiamondDetail.js';
+import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
 
 export function setupDiamantesTab(container, currentData, saveData) {
   container.innerHTML = `
@@ -26,7 +25,7 @@ export function setupDiamantesTab(container, currentData, saveData) {
       card.appendChild(title);
 
       updateCardAppearance(card, slug, 'diamantes');
-      card.onclick = () => renderDiamondDetailView(container, slug, currentData, saveData, () => setupDiamantesTab(container, currentData, saveData));
+      card.onclick = () => showCustomAlert(`Detalhes de diamante: ${name}`);
       grid.appendChild(card);
     });
   }

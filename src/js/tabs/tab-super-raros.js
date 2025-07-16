@@ -1,7 +1,6 @@
 // src/js/tabs/tab-super-raros.js
 import { rareFursData, diamondFursData } from '../data.js';
-import { slugify, updateCardAppearance } from '../ui.js';
-import { renderSuperRaresDetailView } from '../views/viewSuperRaresDetail.js';
+import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
 
 export function setupSuperRarosTab(container, currentData, saveData) {
   container.innerHTML = `
@@ -30,7 +29,7 @@ export function setupSuperRarosTab(container, currentData, saveData) {
       card.appendChild(title);
 
       updateCardAppearance(card, slug, 'super_raros');
-      card.onclick = () => renderSuperRaresDetailView(container, slug, currentData, saveData, () => setupSuperRarosTab(container, currentData, saveData));
+      card.onclick = () => showCustomAlert(`Detalhes de super raro: ${name}`);
       grid.appendChild(card);
     });
   }
