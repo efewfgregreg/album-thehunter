@@ -5,11 +5,24 @@ import { setupSuperRarosTab } from './tabs/tab-super-raros.js';
 import { setupGreatsTab } from './tabs/tab-greats.js';
 import { closeModal } from './ui.js';
 import { renderReserveSelection } from './views/viewReserveSelection.js';
-import { loadInitialScreen } from './views/viewReserveSelection.js';
 
 function initApp() {
   document.querySelector('.tabs').style.display = 'none';  // Oculta tabs inicialmente
   loadInitialScreen();
+}
+
+function loadInitialScreen() {
+  const reserves = [
+    { id: 'reserve1', name: 'Reserva do Norte' },
+    { id: 'reserve2', name: 'Reserva do Sul' },
+    { id: 'reserve3', name: 'Reserva Oeste' }
+  ];
+
+  renderReserveSelection(reserves, (selectedReserveId) => {
+    console.log('Reserva selecionada:', selectedReserveId);
+    document.querySelector('.tabs').style.display = 'flex';
+    initializeApp();
+  });
 }
 
 initApp();
@@ -20,7 +33,6 @@ window.addEventListener('DOMContentLoaded', () => {
   auth.onAuthStateChanged(async user => {
     if (user) {
       currentData = await loadDataFromFirestore();
-      initializeApp();
     } else {
       auth.signInAnonymously().catch(console.error);
     }
@@ -82,16 +94,4 @@ function initializeApp() {
   showTab('pelagens');
 
   window.closeModal = closeModal;
-}
-function loadInitialScreen() {
-  const reserves = [
-    { id: 'reserve1', name: 'Reserva do Norte' },
-    { id: 'reserve2', name: 'Reserva do Sul' },
-    { id: 'reserve3', name: 'Reserva Oeste' }
-  ];
-
-  renderReserveSelection(reserves, (selectedReserveId) => {
-    console.log('Reserva selecionada:', selectedReserveId);
-    // Aqui você pode chamar seu roteador ou trocar para a tab correspondente
-  });
 }
