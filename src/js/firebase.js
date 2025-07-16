@@ -1,8 +1,6 @@
-// src/js/firebase.js
-
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, collection } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyD_vgZDTseipBQgo2oXJeZUyczCEzWg_8w",
@@ -14,10 +12,15 @@ const firebaseConfig = {
     measurementId: "G-3G5VBWBEDL"
 };
 
-const app = firebase.initializeApp(firebaseConfig);
-export const auth = firebase.auth();
-export const db = firebase.firestore();
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
 export let currentUser = null;
+
+onAuthStateChanged(auth, (user) => {
+    currentUser = user;
+});
 
 export function getDefaultDataStructure() {
     return {
@@ -31,15 +34,15 @@ export function getDefaultDataStructure() {
 
 export async function loadDataFromFirestore() {
     if (!currentUser) return getDefaultDataStructure();
-    const userRef = db.collection('usuários').doc(currentUser.uid);
+    const userRef = doc(db, 'usuários', currentUser.uid);
     try {
-        const doc = await userRef.get();
-        if (doc.exists) {
-            const cloud = doc.data();
+        const docSnap = await getDoc(userRef);
+        if (docSnap.exists()) {
+            const cloud = docSnap.data();
             return { ...getDefaultDataStructure(), ...cloud };
         } else {
             const def = getDefaultDataStructure();
-            await userRef.set(def);
+            await setDoc(userRef, def);
             return def;
         }
     } catch {
@@ -49,6 +52,6 @@ export async function loadDataFromFirestore() {
 
 export function saveData(data) {
     if (!currentUser) return;
-    db.collection('usuários').doc(currentUser.uid).set(data)
-      .catch(console.error);
+    const userRef = doc(db, 'usuários', currentUser.uid);
+    setDoc(userRef, data).catch(console.error);
 }
