@@ -15,17 +15,25 @@ export function setupGreatsTab(container, currentData, saveData) {
     Object.keys(greatsFursData).forEach(slug => {
       const name = slug.replace(/_/g, ' ');
       if (!name.includes(filter.toLowerCase())) return;
+
       const card = document.createElement('div');
-      card.className = 'progress-dial-card';
+      card.className = 'animal-card';
       card.dataset.slug = slug;
       card.dataset.key = 'greats';
 
+      const img = document.createElement('img');
+      img.src = `img/species/${slug}.jpg`; // Assumindo padrão de imagens
+      img.alt = name;
+
       const title = document.createElement('span');
       title.innerHTML = `<i class="fas fa-crown"></i> ${name}`;
+
+      card.appendChild(img);
       card.appendChild(title);
 
       updateCardAppearance(card, slug, 'greats');
       card.onclick = () => showCustomAlert(`Detalhes de Great One: ${name}`);
+
       grid.appendChild(card);
     });
   }

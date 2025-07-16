@@ -7,6 +7,7 @@ export function setupDiamantesTab(container, currentData, saveData) {
     <input type="text" class="filter-input" placeholder="Filtrar diamantes...">
     <div class="overall-progress-grid"></div>
   `;
+
   const filterInput = container.querySelector('.filter-input');
   const grid = container.querySelector('.overall-progress-grid');
 
@@ -15,17 +16,26 @@ export function setupDiamantesTab(container, currentData, saveData) {
     Object.keys(diamondFursData).forEach(slug => {
       const name = slug.replace(/_/g, ' ');
       if (!name.includes(filter.toLowerCase())) return;
+
       const card = document.createElement('div');
-      card.className = 'progress-dial-card';
+      card.className = 'animal-card';
       card.dataset.slug = slug;
       card.dataset.key = 'diamantes';
 
+      const img = document.createElement('img');
+      img.src = `assets/animals/${slug}.jpg`;
+      img.alt = name;
+
       const title = document.createElement('span');
       title.textContent = name;
+
+      card.appendChild(img);
       card.appendChild(title);
 
       updateCardAppearance(card, slug, 'diamantes');
+
       card.onclick = () => showCustomAlert(`Detalhes de diamante: ${name}`);
+
       grid.appendChild(card);
     });
   }
