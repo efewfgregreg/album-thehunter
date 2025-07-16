@@ -9,28 +9,22 @@ import { items, categorias, rareFursData, diamondFursData, greatsFursData, reser
 // Callbacks que serão fornecidos pelo script.js
 let onSaveCallback;
 let onNavigateCallback;
+let getSavedDataCallback;
 
 // ========================================================================
 // ========================== FUNÇÃO DE INICIALIZAÇÃO =====================
 // ========================================================================
 
-/**
- * Inicializa o módulo de visualizações do álbum com as dependências necessárias.
- * @param {object} dependencies - Objeto contendo as funções e callbacks necessários.
- */
 export function initAlbumViews(dependencies) {
     onSaveCallback = dependencies.onSave;
     onNavigateCallback = dependencies.onNavigate;
+    getSavedDataCallback = dependencies.getSavedData;
 }
 
 // ========================================================================
 // ========================== FUNÇÕES EXPORTADAS ==========================
 // ========================================================================
 
-/**
- * Renderiza o hub de navegação principal com todas as categorias.
- * @param {HTMLElement} container - O elemento onde o hub será renderizado.
- */
 export function renderNavigationHub(container) {
     container.innerHTML = '';
     const hub = document.createElement('div');
@@ -50,12 +44,6 @@ export function renderNavigationHub(container) {
     container.appendChild(hub);
 }
 
-/**
- * Renderiza a lista de itens (geralmente animais) para uma categoria específica.
- * @param {HTMLElement} container - O elemento onde a lista será renderizada.
- * @param {string} tabKey - A chave da categoria (ex: 'pelagens').
- * @param {object} savedData - Os dados salvos do usuário.
- */
 export function renderAnimalListView(container, tabKey, savedData) {
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
@@ -82,10 +70,6 @@ export function renderAnimalListView(container, tabKey, savedData) {
     });
 }
 
-/**
- * Renderiza a lista de todas as reservas de caça.
- * @param {HTMLElement} container - O elemento onde a lista será renderizada.
- */
 export function renderReservesList(container) {
     container.innerHTML = '';
     const grid = document.createElement('div');
@@ -108,11 +92,6 @@ export function renderReservesList(container) {
     }
 }
 
-/**
- * Renderiza a visualização de montagens múltiplas.
- * @param {HTMLElement} container - O elemento onde a grade será renderizada.
- * @param {object} savedData - Os dados salvos do usuário.
- */
 export function renderMultiMountsView(container, savedData) {
     container.innerHTML = '';
     const grid = document.createElement('div');
@@ -141,8 +120,6 @@ export function renderMultiMountsView(container, savedData) {
 // ========================================================================
 // ========= FUNÇÕES INTERNAS (NÃO EXPORTADAS) ============================
 // ========================================================================
-
-// --- Funções de Navegação e Estrutura de Views ---
 
 function showDetailView(name, tabKey, savedData, originReserveKey = null) {
     const mainContent = document.querySelector('.main-content');
@@ -203,7 +180,7 @@ function showReserveDetailView(reserveKey) {
     contentContainer.appendChild(viewArea);
 
     const onShowAnimalDossier = (animalName, rKey) => {
-        const currentSavedData = JSON.parse(localStorage.getItem('theHunterSavedData')) || {};
+        const currentSavedData = getSavedDataCallback();
         renderAnimalDossier(contentContainer, animalName, rKey, currentSavedData);
     };
 
@@ -274,8 +251,6 @@ function renderAnimalDossier(container, name, originReserveKey, savedData) {
     dossierTabs.querySelector('.dossier-tab').click();
 }
 
-// --- Funções de Criação de Cards e Aparência ---
-
 function createAnimalCard(name, tabKey, savedData, onClick) {
     const card = document.createElement('div');
     card.className = 'animal-card';
@@ -325,9 +300,7 @@ function updateCardAppearance(card, slug, tabKey, savedData) {
     card.classList.add(status);
 }
 
-// --- Funções de Renderização de Detalhes Específicos ---
-
-function renderRareFursDetailView(container, name, slug, savedData) {
+function renderRareFursDetailView(container, name, slug, savedData, onSave) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -355,14 +328,13 @@ function renderRareFursDetailView(container, name, slug, savedData) {
             if (!savedData.pelagens) savedData.pelagens = {};
             if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
             savedData.pelagens[slug][furInfo.displayName] = !isCompleted;
-            onSaveCallback(savedData);
-            renderRareFursDetailView(container, name, slug, savedData);
+            onSave(savedData);
         });
         furGrid.appendChild(furCard);
     });
 }
 
-function renderDiamondsDetailView(container, name, slug, savedData) {
+function renderDiamondsDetailView(container, name, slug, savedData, onSave) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -407,8 +379,7 @@ function renderDiamondsDetailView(container, name, slug, savedData) {
                     otherTrophies.push({ id: Date.now(), type: fullTrophyName, score: scoreValue });
                 }
                 savedData.diamantes[slug] = otherTrophies;
-                onSaveCallback(savedData);
-                renderDiamondsDetailView(container, name, slug, savedData);
+                onSave(savedData);
             };
             input.addEventListener('blur', saveScore);
             input.addEventListener('keydown', e => { if (e.key === 'Enter') saveScore(); });
@@ -417,7 +388,7 @@ function renderDiamondsDetailView(container, name, slug, savedData) {
     });
 }
 
-function renderGreatsDetailView(container, animalName, slug, savedData) {
+function renderGreatsDetailView(container, animalName, slug, savedData, onSave) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid trophy-room';
@@ -443,13 +414,13 @@ function renderGreatsDetailView(container, animalName, slug, savedData) {
             <button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>`;
         furCard.querySelector('.fullscreen-btn').onclick = (e) => { e.stopPropagation(); openImageViewer(furCard.querySelector('img').src); };
         furCard.addEventListener('click', () => {
-            openGreatsTrophyModal(animalName, slug, furName, savedData, onSaveCallback);
+            openGreatsTrophyModal(animalName, slug, furName, savedData, onSave);
         });
         furGrid.appendChild(furCard);
     });
 }
 
-function renderSuperRareDetailView(container, name, slug, savedData) {
+function renderSuperRareDetailView(container, name, slug, savedData, onSave) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -483,8 +454,7 @@ function renderSuperRareDetailView(container, name, slug, savedData) {
             if (!savedData.super_raros) savedData.super_raros = {};
             if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
             savedData.super_raros[slug][furInfo.displayName] = !isCompleted;
-            onSaveCallback(savedData);
-            renderSuperRareDetailView(container, name, slug, savedData);
+            onSave(savedData);
         });
         furGrid.appendChild(furCard);
     });
@@ -717,3 +687,106 @@ function renderMultiMountDetailModal(mountKey, savedData) {
     modal.style.display = 'flex';
 }
 
+function openImageViewer(imageUrl) {
+    const modal = document.getElementById('image-viewer-modal');
+    if (!modal) return;
+    modal.innerHTML = `
+        <span class="modal-close">&times;</span>
+        <img class="modal-content-viewer" src="${imageUrl}" alt="Imagem em tela cheia">
+    `;
+    modal.style.display = 'flex';
+    modal.querySelector('.modal-close').onclick = () => closeModal('image-viewer-modal');
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (modal) {
+        modal.style.display = "none";
+    }
+}
+
+function openGreatsTrophyModal(animalName, slug, furName, savedData, onSave) {
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = '';
+    modal.className = 'modal-overlay form-modal';
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content-box';
+    modal.appendChild(modalContent);
+    modalContent.innerHTML = `<h3><i class="fas fa-trophy"></i> Troféus de: ${furName}</h3>`;
+
+    const logList = document.createElement('ul');
+    logList.className = 'trophy-log-list';
+    const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
+
+    if (trophies.length === 0) {
+        logList.innerHTML = '<li>Nenhum abate registrado.</li>';
+    } else {
+        trophies.forEach((trophy, index) => {
+            const li = document.createElement('li');
+            const grindDetails = `Grind: ${trophy.abates || 0} | <i class="fas fa-gem"></i> ${trophy.diamantes || 0} | <i class="fas fa-paw"></i> ${trophy.pelesRaras || 0}`;
+            li.innerHTML = `<span>Abate ${new Date(trophy.date).toLocaleDateString()} (${grindDetails})</span>`;
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-trophy-btn';
+            deleteBtn.innerHTML = '×';
+            deleteBtn.onclick = () => {
+                trophies.splice(index, 1);
+                onSave(savedData);
+                closeModal('form-modal');
+                const container = document.querySelector('.detail-view .fur-grid, .dossier-content');
+                if (container) {
+                    renderGreatsDetailView(container, animalName, slug, savedData, onSave);
+                }
+            };
+            li.appendChild(deleteBtn);
+            logList.appendChild(li);
+        });
+    }
+    modalContent.appendChild(logList);
+
+    const form = document.createElement('div');
+    form.className = 'add-trophy-form';
+    form.innerHTML = `
+        <h4>Registrar Novo Abate</h4>
+        <table><tbody>
+            <tr><td>Qtd. Abates na Grind:</td><td><input type="number" name="abates" placeholder="0"></td></tr>
+            <tr><td>Qtd. Diamantes na Grind:</td><td><input type="number" name="diamantes" placeholder="0"></td></tr>
+            <tr><td>Qtd. Peles Raras na Grind:</td><td><input type="number" name="pelesRaras" placeholder="0"></td></tr>
+            <tr><td>Data de Abatimento:</td><td><input type="date" name="date" value="${new Date().toISOString().split('T')[0]}"></td></tr>
+        </tbody></table>`;
+    modalContent.appendChild(form);
+
+    const buttonsDiv = document.createElement('div');
+    buttonsDiv.className = 'modal-buttons';
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'back-button';
+    cancelBtn.textContent = 'Cancelar';
+    cancelBtn.onclick = () => closeModal('form-modal');
+    const saveBtn = document.createElement('button');
+    saveBtn.className = 'back-button';
+    saveBtn.style.cssText = 'background-color: var(--primary-color); color: #111;';
+    saveBtn.textContent = 'Salvar Troféu';
+    saveBtn.onclick = () => {
+        const newTrophy = {
+            date: form.querySelector('[name="date"]').value || new Date().toISOString().split('T')[0],
+            abates: parseInt(form.querySelector('[name="abates"]').value) || 0,
+            diamantes: parseInt(form.querySelector('[name="diamantes"]').value) || 0,
+            pelesRaras: parseInt(form.querySelector('[name="pelesRaras"]').value) || 0,
+        };
+        if (!savedData.greats) savedData.greats = {};
+        if (!savedData.greats[slug]) savedData.greats[slug] = {};
+        if (!savedData.greats[slug].furs) savedData.greats[slug].furs = {};
+        if (!savedData.greats[slug].furs[furName]) {
+            savedData.greats[slug].furs[furName] = { trophies: [] };
+        }
+        savedData.greats[slug].furs[furName].trophies.push(newTrophy);
+        onSave(savedData);
+        closeModal('form-modal');
+        const container = document.querySelector('.detail-view .fur-grid, .dossier-content');
+        if (container) {
+            renderGreatsDetailView(container, animalName, slug, savedData, onSave);
+        }
+    };
+    buttonsDiv.appendChild(cancelBtn);
+    buttonsDiv.appendChild(saveBtn);
+    modalContent.appendChild(buttonsDiv);
+    modal.style.display = 'flex'
