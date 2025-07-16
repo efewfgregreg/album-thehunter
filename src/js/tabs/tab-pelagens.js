@@ -1,6 +1,7 @@
 // src/js/tabs/tab-pelagens.js
 import { rareFursData } from '../data.js';
-import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
+import { slugify, updateCardAppearance } from '../ui.js';
+import { renderRareFursDetailView } from '../views/viewRareFursDetail.js';
 
 export function setupPelagensTab(container, currentData, saveData) {
   container.innerHTML = `
@@ -25,7 +26,7 @@ export function setupPelagensTab(container, currentData, saveData) {
       card.appendChild(title);
 
       updateCardAppearance(card, slug, 'pelagens');
-      card.onclick = () => showCustomAlert(`Detalhes de pelagem: ${name}`);
+      card.onclick = () => renderRareFursDetailView(container, slug, currentData, saveData, () => setupPelagensTab(container, currentData, saveData));
       grid.appendChild(card);
     });
   }
