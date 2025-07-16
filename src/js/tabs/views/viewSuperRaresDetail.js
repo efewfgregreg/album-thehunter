@@ -1,154 +1,66 @@
-// src/js/tabs/tab-pelagens.js
-import { rareFursData } from '../data.js';
-import { slugify, updateCardAppearance } from '../ui.js';
-import { renderRareFursDetailView } from '../views/viewRareFursDetail.js';
-
-export function setupPelagensTab(container, currentData, saveData) {
-  container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar pelagens raras...">
-    <div class="overall-progress-grid"></div>
-  `;
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
-
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(rareFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
-      const card = document.createElement('div');
-      card.className = 'progress-dial-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'pelagens';
-
-      const title = document.createElement('span');
-      title.textContent = name;
-      card.appendChild(title);
-
-      updateCardAppearance(card, slug, 'pelagens');
-      card.onclick = () => renderRareFursDetailView(container, slug, currentData, saveData, () => setupPelagensTab(container, currentData, saveData));
-      grid.appendChild(card);
-    });
-  }
-
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
-}
-
-
-// src/js/tabs/tab-diamantes.js
-import { diamondFursData } from '../data.js';
-import { slugify, updateCardAppearance } from '../ui.js';
-import { renderDiamondDetailView } from '../views/viewDiamondDetail.js';
-
-export function setupDiamantesTab(container, currentData, saveData) {
-  container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar diamantes...">
-    <div class="overall-progress-grid"></div>
-  `;
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
-
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(diamondFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
-      const card = document.createElement('div');
-      card.className = 'progress-dial-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'diamantes';
-
-      const title = document.createElement('span');
-      title.textContent = name;
-      card.appendChild(title);
-
-      updateCardAppearance(card, slug, 'diamantes');
-      card.onclick = () => renderDiamondDetailView(container, slug, currentData, saveData, () => setupDiamantesTab(container, currentData, saveData));
-      grid.appendChild(card);
-    });
-  }
-
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
-}
-
-
-// src/js/tabs/tab-super-raros.js
 import { rareFursData, diamondFursData } from '../data.js';
-import { slugify, updateCardAppearance } from '../ui.js';
-import { renderSuperRaresDetailView } from '../views/viewSuperRaresDetail.js';
+import { updateCardAppearance } from '../ui.js';
 
-export function setupSuperRarosTab(container, currentData, saveData) {
+/**
+ * Renderiza detalhes dos Super Raros (pelagem rara + diamante) para um slug específico
+ * @param {HTMLElement} container
+ * @param {string} slug
+ * @param {Object} currentData
+ * @param {Function} saveData
+ * @param {Function} onBack
+ */
+export function renderSuperRaresDetailView(container, slug, currentData, saveData, onBack) {
+  const rare = rareFursData[slug] || {};
+  const diamond = diamondFursData[slug] || {};
+
   container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar super raros...">
-    <div class="overall-progress-grid"></div>
+    <div class="page-header">
+      <button class="back-button">← Voltar</button>
+      <h2>${slug.replace(/_/g, ' ')}</h2>
+    </div>
+    <div class="super-rares-details"></div>
   `;
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
 
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(rareFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
-      const speciesRare = rareFursData[slug];
-      const speciesDiamond = diamondFursData[slug];
-      if (!speciesRare || !speciesDiamond) return;
+  container.querySelector('.back-button').onclick = () => onBack();
+  const details = container.querySelector('.super-rares-details');
 
-      const card = document.createElement('div');
-      card.className = 'progress-dial-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'super_raros';
+  ['macho', 'femea'].forEach(gender => {
+    const rareTypes = rare[gender] || [];
+    const diamondTypes = diamond[gender] || [];
+    const combined = rareTypes.filter(type => diamondTypes.length > 0);
 
-      const title = document.createElement('span');
-      title.textContent = name;
-      card.appendChild(title);
+    if (!combined.length) return;
 
-      updateCardAppearance(card, slug, 'super_raros');
-      card.onclick = () => renderSuperRaresDetailView(container, slug, currentData, saveData, () => setupSuperRarosTab(container, currentData, saveData));
-      grid.appendChild(card);
+    const section = document.createElement('div');
+    section.className = 'fur-section';
+    section.innerHTML = `<h3>${gender.charAt(0).toUpperCase() + gender.slice(1)}</h3><ul class="fur-list"></ul>`;
+    const ul = section.querySelector('.fur-list');
+
+    combined.forEach(type => {
+      const li = document.createElement('li');
+      const saved = currentData.super_raros?.[slug]?.[`${gender}_${type}`] === true;
+
+      li.innerHTML = `
+        <label>
+          <input type="checkbox" ${saved ? 'checked' : ''}>
+          ${type}
+        </label>
+      `;
+
+      const checkbox = li.querySelector('input');
+      checkbox.onchange = e => {
+        if (!currentData.super_raros) currentData.super_raros = {};
+        if (!currentData.super_raros[slug]) currentData.super_raros[slug] = {};
+        currentData.super_raros[slug][`${gender}_${type}`] = e.target.checked;
+        saveData(currentData);
+
+        const card = document.querySelector(`.progress-dial-card[data-slug="${slug}"]`);
+        updateCardAppearance(card, slug, 'super_raros');
+      };
+
+      ul.appendChild(li);
     });
-  }
 
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
-}
-
-
-// src/js/tabs/tab-greats.js
-import { greatsFursData } from '../data.js';
-import { slugify, updateCardAppearance } from '../ui.js';
-import { renderGreatsDetailView } from '../views/viewGreatsDetail.js';
-
-export function setupGreatsTab(container, currentData, saveData) {
-  container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar Great Ones...">
-    <div class="overall-progress-grid"></div>
-  `;
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
-
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(greatsFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
-      const card = document.createElement('div');
-      card.className = 'progress-dial-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'greats';
-
-      const title = document.createElement('span');
-      title.innerHTML = `<i class="fas fa-crown"></i> ${name}`;
-      card.appendChild(title);
-
-      updateCardAppearance(card, slug, 'greats');
-      card.onclick = () => renderGreatsDetailView(container, slug, currentData, saveData, () => setupGreatsTab(container, currentData, saveData));
-      grid.appendChild(card);
-    });
-  }
-
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
+    details.appendChild(section);
+  });
 }
