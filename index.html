@@ -20,3 +20,24 @@
   <script type="module" src="src/js/main.js" defer></script>
 </body>
 </html>
+<body>
+  <div id="app-container"></div>
+
+  <div id="image-viewer-modal" class="modal-overlay">
+    <span class="modal-close">&times;</span>
+    <img class="modal-content-viewer">
+  </div>
+
+  <div id="form-modal" class="modal-overlay"></div>
+
+  <div id="custom-alert-modal" class="modal-overlay">
+    <div class="modal-content-box">
+      <h3 id="custom-alert-title"></h3>
+      <p id="custom-alert-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-alert-cancel-btn" class="back-button">Cancelar</button>
+        <button id="custom-alert-ok-btn" class="back-button" style="background-color: var(--primary-color); color: #111;">OK</button>
+      </div>
+    </div>
+  </div>
+</body>
