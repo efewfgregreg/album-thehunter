@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <!-- Ajusta todos os paths relativos à raiz do repositório GH Pages -->
+  <!-- Garante que todos os paths relativos partam da raiz do repo GH-Pages -->
   <base href="/album-thehunter/">
 
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Evita 404 por falta de favicon -->
+  <link rel="icon" href="data:,">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#181a1b">
   <title>Registro do Caçador – theHunter: Call of the Wild</title>
@@ -15,7 +17,7 @@
     rel="stylesheet"
     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
   >
-  <!-- Estilos customizados -->
+  <!-- Seus estilos customizados -->
   <link rel="stylesheet" href="src/css/styles.css">
 </head>
 <body>
@@ -37,13 +39,11 @@
     </div>
   </div>
 
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <!-- Panzoom para modais de imagem -->
-  <script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js"></script>
-  <!-- Script principal do app (módulos ES) -->
+  <!-- Firebase v9+ (módulos ESM) -->
+  <script type="module" src="src/js/firebase.js" defer></script>
+  <!-- Panzoom para visualização de imagens -->
+  <script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js" defer></script>
+  <!-- Script principal do app -->
   <script type="module" src="src/js/main.js" defer></script>
 </body>
 </html>
