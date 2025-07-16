@@ -4,6 +4,7 @@ import { setupDiamantesTab } from './tabs/tab-diamantes.js';
 import { setupSuperRarosTab } from './tabs/tab-super-raros.js';
 import { setupGreatsTab } from './tabs/tab-greats.js';
 import { closeModal } from './ui.js';
+import { renderReserveSelection } from './views/viewReserveSelection.js';
 
 let currentData = {};
 
@@ -73,4 +74,16 @@ function initializeApp() {
   showTab('pelagens');
 
   window.closeModal = closeModal;
+}
+function loadInitialScreen() {
+  const reserves = [
+    { id: 'reserve1', name: 'Reserva do Norte' },
+    { id: 'reserve2', name: 'Reserva do Sul' },
+    { id: 'reserve3', name: 'Reserva Oeste' }
+  ];
+
+  renderReserveSelection(reserves, (selectedReserveId) => {
+    console.log('Reserva selecionada:', selectedReserveId);
+    // Aqui você pode chamar seu roteador ou trocar para a tab correspondente
+  });
 }
