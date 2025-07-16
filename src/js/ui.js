@@ -62,9 +62,9 @@ export function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
 }
 
 /**
- * Atualiza a aparência de um cartão de animal (completed, inprogress, incomplete)
+ * Atualiza a aparência de um cartão (completed, inprogress, incomplete)
  */
-export function updateCardAppearance(card, slug, tabKey) {
+export function updateCardAppearance(card, slug, tabKey, savedData, diamondFursData, greatsFursData, rareFursData) {
     if (!card) return;
     card.classList.remove('completed', 'inprogress', 'incomplete');
     let status = 'incomplete';
