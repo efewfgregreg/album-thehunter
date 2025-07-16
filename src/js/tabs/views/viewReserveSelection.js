@@ -1,5 +1,3 @@
-// src/js/views/viewReserveSelection.js
-
 import { reservesData } from '../data.js';
 
 /**
@@ -9,14 +7,17 @@ import { reservesData } from '../data.js';
  */
 export function renderReserveSelectionForGrind(container, onReserveSelected) {
   container.innerHTML = `
-    <h2>Escolha uma Reserva para Grind</h2>
-    <div class="reserve-grid"></div>
+    <div class="page-header">
+      <h2>Escolha uma Reserva</h2>
+    </div>
+    <div class="overall-progress-grid"></div>
   `;
-  const grid = container.querySelector('.reserve-grid');
+  const grid = container.querySelector('.overall-progress-grid');
 
   Object.entries(reservesData).forEach(([slug, { name, image }]) => {
     const card = document.createElement('div');
     card.className = 'reserve-card';
+    card.dataset.slug = slug;
 
     const img = document.createElement('img');
     img.src = image;
@@ -28,6 +29,7 @@ export function renderReserveSelectionForGrind(container, onReserveSelected) {
     card.appendChild(title);
 
     card.onclick = () => onReserveSelected(slug);
+
     grid.appendChild(card);
   });
 }
