@@ -1,7 +1,6 @@
 // src/js/tabs/tab-greats.js
 import { greatsFursData } from '../data.js';
-import { slugify, updateCardAppearance } from '../ui.js';
-import { renderGreatsDetailView } from '../views/viewGreatsDetail.js';
+import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
 
 export function setupGreatsTab(container, currentData, saveData) {
   container.innerHTML = `
@@ -26,7 +25,7 @@ export function setupGreatsTab(container, currentData, saveData) {
       card.appendChild(title);
 
       updateCardAppearance(card, slug, 'greats');
-      card.onclick = () => renderGreatsDetailView(container, slug, currentData, saveData, () => setupGreatsTab(container, currentData, saveData));
+      card.onclick = () => showCustomAlert(`Detalhes de Great One: ${name}`);
       grid.appendChild(card);
     });
   }
