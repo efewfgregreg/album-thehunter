@@ -1,7 +1,8 @@
 // ========================================================================
 // ========================== 1. IMPORTAÇÕES ==============================
 // ========================================================================
-// O Orquestrador importa todos os módulos que ele precisa controlar.
+// Caminhos corrigidos: Como este arquivo está em /js, importamos os
+// arquivos irmãos diretamente com './' e os da subpasta 'ui' com './ui/'.
 
 import * as Data from './data.js';
 import * as Utils from './utils.js';
@@ -42,9 +43,47 @@ async function saveData(newData) {
 }
 
 /**
- * Roteador principal. Decide qual módulo de UI deve renderizar a tela.
- * @param {string} tabKey - A chave da categoria a ser renderizada.
+ * Sincroniza um troféu obtido no Grind para as seções principais do álbum.
+ * @param {string} animalSlug - O slug do animal.
+ * @param {string} rarityType - O tipo de raridade ('rares', 'super_raros', 'great_ones').
+ * @param {object} details - Detalhes do troféu.
  */
+function syncTrophyToAlbum(animalSlug, rarityType, details) {
+    if (!savedData) return;
+    switch(rarityType) {
+        case 'rares':
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[animalSlug]) savedData.pelagens[animalSlug] = {};
+            savedData.pelagens[animalSlug][details.variation] = true;
+            break;
+        case 'super_raros':
+            if (!savedData.super_raros) savedData.super_raros = {};
+            if (!savedData.super_raros[animalSlug]) savedData.super_raros[animalSlug] = {};
+            savedData.super_raros[animalSlug][details.variation] = true;
+            break;
+        case 'great_ones':
+            if (!savedData.greats) savedData.greats = {};
+            if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = {};
+            if (!savedData.greats[animalSlug].furs) savedData.greats[animalSlug].furs = {};
+            if (!savedData.greats[animalSlug].furs[details.variation]) {
+                savedData.greats[animalSlug].furs[details.variation] = { trophies: [] };
+            }
+            const newGreatOneTrophy = {
+                date: new Date().toISOString(),
+                abates: details.grindCounts.total,
+                diamantes: details.grindCounts.diamonds,
+                pelesRaras: details.grindCounts.rares.length
+            };
+            savedData.greats[animalSlug].furs[details.variation].trophies.push(newGreatOneTrophy);
+            break;
+    }
+    saveData(savedData);
+}
+
+// ========================================================================
+// ========================== 4. ROTEAMENTO DE VIEWS ======================
+// ========================================================================
+
 function renderMainView(tabKey) {
     const header = document.createElement('div');
     header.className = 'page-header';
@@ -69,7 +108,6 @@ function renderMainView(tabKey) {
     appContainer.appendChild(mainContent);
     AuthUI.setupLogoutButton(header, currentUser);
 
-    // Delega a renderização para o módulo de UI correto
     switch (tabKey) {
         case 'progresso':
             ProgressUI.renderProgressView(contentContainer);
@@ -89,13 +127,10 @@ function renderMainView(tabKey) {
     }
 }
 
-/**
- * Renderiza o hub de navegação inicial.
- */
 function renderNavigationHub() {
     appContainer.innerHTML = '';
     AlbumViews.renderNavigationHub(appContainer);
-    // Adiciona o botão de logout ao header específico do hub
+    
     const hubHeader = document.createElement('div');
     hubHeader.className = 'page-header-logout-only';
     appContainer.prepend(hubHeader);
@@ -103,7 +138,7 @@ function renderNavigationHub() {
 }
 
 // ========================================================================
-// ========================== 4. INICIALIZAÇÃO DO APP =====================
+// ========================== 5. INICIALIZAÇÃO DO APP =====================
 // ========================================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -116,20 +151,20 @@ document.addEventListener('DOMContentLoaded', () => {
             savedData = await FirebaseService.loadDataFromFirestore(user);
             localStorage.setItem('theHunterSavedData', JSON.stringify(savedData));
 
-            // Prepara o pacote de dependências que os módulos precisam
             const dependencies = {
                 savedData,
                 currentUser,
+                auth: FirebaseService.auth,
                 ...Data,
                 ...Utils,
                 onSave: saveData,
                 onNavigate: renderMainView,
                 showCustomAlert: showCustomAlert,
                 getAggregatedGrindStats: GrindUI.getAggregatedGrindStats,
+                syncTrophyToAlbum: syncTrophyToAlbum
             };
 
-            // Inicializa todos os módulos, injetando suas dependências
-            AuthUI.initAuth({ ...dependencies, auth: FirebaseService.auth });
+            AuthUI.initAuth(dependencies);
             AlbumViews.initAlbumViews(dependencies);
             ProgressUI.initProgress(dependencies);
             GrindUI.initGrind(dependencies);
@@ -144,7 +179,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Listeners globais para modais
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             ['image-viewer-modal', 'form-modal', 'custom-alert-modal'].forEach(id => {
@@ -155,10 +189,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Função de alerta global (ela pode ficar aqui ou ser movida para utils.js no futuro)
 function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
     const modal = document.getElementById('custom-alert-modal');
-    if (!modal) return Promise.resolve(false); // Retorna se o modal não existir
+    if (!modal) return Promise.resolve(false);
 
     modal.querySelector('#custom-alert-title').textContent = title;
     modal.querySelector('#custom-alert-message').textContent = message;
@@ -168,7 +201,6 @@ function showCustomAlert(message, title = 'Aviso', isConfirm = false) {
     return new Promise((resolve) => {
         const closeAndResolve = (value) => {
             modal.style.display = 'none';
-            // Remove event listeners para evitar múltiplos disparos
             okBtn.onclick = null;
             cancelBtn.onclick = null;
             resolve(value);
