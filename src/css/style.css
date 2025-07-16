@@ -1,130 +1,50 @@
-/* src/css/styles.css */
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <!-- Ajusta todos os paths relativos à raiz do repositório GH Pages -->
+  <base href="/album-thehunter/">
 
-:root {
-  --bg-color: #181a1b;
-  --surface-color: #2c2f33;
-  --primary-color: #00bcd4; /* Ciano original, mas não mais usado para progresso */
-  --border-color: #4a5568;
-  --text-color: #e6e6e6;
-  --text-color-muted: #99aab5;
-  --gold-color: #ffd700;
-  --bronze-color: #cd7f32;
-  --silver-color: #c0c0c0;
-  --font-headings: 'Oswald', sans-serif;
-  --font-body: 'Nunito Sans', sans-serif;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#181a1b">
+  <title>Registro do Caçador – theHunter: Call of the Wild</title>
 
-body {
-  margin: 0;
-  font-family: var(--font-body);
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  overflow-x: hidden;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('background.jpg');
-  background-size: cover;
-  background-position: center;
-  background-attachment: fixed;
-}
+  <!-- Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+  >
+  <!-- Estilos customizados -->
+-  <link rel="stylesheet" href="src/css/styles.css">
++  <link rel="stylesheet" href="/album-thehunter/src/css/styles.css">
+</head>
+<body>
+  <div id="app-container"></div>
 
-/* Grid de cards */
-.reserve-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-}
+  <!-- Modais de sobreposição -->
+  <div id="image-viewer-modal" class="modal-overlay">
+    <span class="modal-close">&times;</span>
+  </div>
+  <div id="form-modal" class="modal-overlay"></div>
+  <div id="custom-alert-modal" class="modal-overlay">
+    <div class="modal-content-box">
+      <h3 id="custom-alert-title"></h3>
+      <p id="custom-alert-message"></p>
+      <div class="modal-buttons">
+        <button id="custom-alert-cancel-btn" class="back-button">Cancelar</button>
+        <button id="custom-alert-ok-btn" class="back-button" style="background-color: var(--primary-color); color: #111;">OK</button>
+      </div>
+    </div>
+  </div>
 
-/* Card individual */
-.reserve-card {
-  background: var(--surface-color);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.reserve-card:hover {
-  transform: translateY(-4px);
-}
-
-/* Imagem da reserva */
-.reserve-image {
-  width: 100%;
-  height: 140px;
-  object-fit: cover;
-}
-
-/* Nome da reserva */
-.reserve-name {
-  text-align: center;
-  margin: 0.5rem 0 1rem;
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-/* --- ESTILOS GERAIS --- */
-.main-content {
-  padding: 20px 40px;
-  background-color: rgba(24, 26, 27, 0.8);
-  min-height: 100vh;
-}
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 10px;
-  margin-bottom: 25px;
-}
-.page-header h2 {
-  font-family: var(--font-headings);
-  font-size: 2.5rem;
-}
-.back-button {
-  background: var(--surface-color);
-  color: var(--text-color);
-  border: none;
-  padding: 8px 16px;
-  cursor: pointer;
-  font-family: var(--font-headings);
-  transition: all 0.2s ease;
-}
-.back-button:hover {
-  background: var(--primary-color);
-  color: #111827;
-}
-.filter-input {
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
-  border: 2px solid transparent;
-  border-radius: 4px;
-  padding: 10px;
-  color: var(--text-color);
-  transition: all 0.3s ease;
-  margin-bottom: 30px;
-}
-.filter-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-}
-/* ... restante das regras CSS extraídas ... */
-.overall-progress-grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-}
-.progress-dial-card {
-  padding: 15px;
-}
-.progress-dial {
-  width: 100px;
-  height: 100px;
-}
-.progress-dial-percentage {
-  font-size: 1.5rem;
-}
-.progress-dial-label {
-  font-size: 1rem;
-}
-.reserve-progress-container {
-  grid-template-columns: 1fr;
-}
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <!-- Panzoom para modais de imagem -->
+  <script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js"></script>
+  <!-- Script principal do app (módulos ES) -->
+  <script type="module" src="src/js/main.js" defer></script>
+</body>
+</html>
