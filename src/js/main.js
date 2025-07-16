@@ -1,12 +1,9 @@
-// src/js/main.js
-
 import { auth, loadDataFromFirestore, saveData } from './firebase.js';
-import { rareFursData, diamondFursData, greatsFursData, reservesData, items, animalHotspotData, multiMountsData } from './data.js';
-import { openImageViewer, closeModal, showCustomAlert, updateCardAppearance, slugify } from './ui.js';
 import { setupPelagensTab } from './tabs/tab-pelagens.js';
 import { setupDiamantesTab } from './tabs/tab-diamantes.js';
 import { setupSuperRarosTab } from './tabs/tab-super-raros.js';
 import { setupGreatsTab } from './tabs/tab-greats.js';
+import { closeModal } from './ui.js';
 
 let currentData = {};
 
@@ -38,13 +35,22 @@ function initializeApp() {
   content.id = 'tab-content';
   app.appendChild(content);
 
-  document.getElementById('btn-pelagens').onclick = () => showTab('pelagens');
-  document.getElementById('btn-diamantes').onclick = () => showTab('diamantes');
-  document.getElementById('btn-super-raros').onclick = () => showTab('super_raros');
-  document.getElementById('btn-greats').onclick = () => showTab('greats');
+  const buttons = {
+    pelagens: document.getElementById('btn-pelagens'),
+    diamantes: document.getElementById('btn-diamantes'),
+    super_raros: document.getElementById('btn-super-raros'),
+    greats: document.getElementById('btn-greats')
+  };
+
+  Object.entries(buttons).forEach(([key, button]) => {
+    button.onclick = () => showTab(key);
+  });
 
   function showTab(key) {
     content.innerHTML = '';
+    Object.values(buttons).forEach(btn => btn.classList.remove('active'));
+    buttons[key].classList.add('active');
+
     switch (key) {
       case 'pelagens':
         setupPelagensTab(content, currentData, saveData);
