@@ -11,21 +11,12 @@
   <link rel="stylesheet" href="src/css/styles.css">
 </head>
 <body>
-  <div id="app-container"></div>
-  <div id="image-viewer-modal" class="modal-overlay"></div>
-  <div id="form-modal" class="modal-overlay"></div>
-  <div id="custom-alert-modal" class="modal-overlay"></div>
 
-  <script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js"></script>
-  <script type="module" src="src/js/main.js" defer></script>
-</body>
-</html>
-<body>
   <div id="app-container"></div>
 
   <div id="image-viewer-modal" class="modal-overlay">
-    <span class="modal-close">&times;</span>
-    <img class="modal-content-viewer">
+    <span class="modal-close" onclick="closeModal('image-viewer-modal')">&times;</span>
+    <img class="modal-content-viewer" src="" alt="Imagem em tela cheia">
   </div>
 
   <div id="form-modal" class="modal-overlay"></div>
@@ -40,4 +31,9 @@
       </div>
     </div>
   </div>
+
+  <script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js"></script>
+  <script type="module" src="src/js/main.js" defer></script>
+
 </body>
+</html>
