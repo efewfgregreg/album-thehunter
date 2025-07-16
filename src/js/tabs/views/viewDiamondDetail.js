@@ -38,6 +38,7 @@ export function renderDiamondDetailView(container, slug, currentData, saveData, 
       const li = document.createElement('li');
       const saved = currentData.diamantes?.[slug] || [];
       const checked = saved.includes(type);
+
       li.innerHTML = `
         <label>
           <input type="checkbox" ${checked ? 'checked' : ''}>
