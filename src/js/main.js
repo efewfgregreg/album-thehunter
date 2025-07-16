@@ -48,6 +48,7 @@ function initializeApp() {
 
   function showTab(key) {
     content.innerHTML = '';
+
     Object.values(buttons).forEach(btn => btn.classList.remove('active'));
     buttons[key].classList.add('active');
 
@@ -65,6 +66,8 @@ function initializeApp() {
         setupGreatsTab(content, currentData, saveData);
         break;
     }
+
+    window.scrollTo(0, 0);
   }
 
   showTab('pelagens');
