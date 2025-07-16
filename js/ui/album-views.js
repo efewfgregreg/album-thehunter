@@ -1,29 +1,17 @@
 // js/ui/album-views.js
 
-// ========================================================================
-// ========================== DEPENDÊNCIAS ================================
-// ========================================================================
 import { slugify } from '../utils.js';
 import { items, categorias, rareFursData, diamondFursData, greatsFursData, reservesData, animalHotspotData, multiMountsData } from '../data.js';
 
-// Callbacks que serão fornecidos pelo script.js
 let onSaveCallback;
 let onNavigateCallback;
 let getSavedDataCallback;
-
-// ========================================================================
-// ========================== FUNÇÃO DE INICIALIZAÇÃO =====================
-// ========================================================================
 
 export function initAlbumViews(dependencies) {
     onSaveCallback = dependencies.onSave;
     onNavigateCallback = dependencies.onNavigate;
     getSavedDataCallback = dependencies.getSavedData;
 }
-
-// ========================================================================
-// ========================== FUNÇÕES EXPORTADAS ==========================
-// ========================================================================
 
 export function renderNavigationHub(container) {
     container.innerHTML = '';
@@ -58,7 +46,7 @@ export function renderAnimalListView(container, tabKey, savedData) {
     container.appendChild(albumGrid);
     const itemsToRender = (currentTab.items || []).filter(item => typeof item === 'string' && item.trim() !== '');
     itemsToRender.sort((a, b) => a.localeCompare(b)).forEach(name => {
-        const card = createAnimalCard(name, tabKey, savedData, () => showDetailView(name, tabKey, savedData));
+        const card = createAnimalCard(name, tabKey, savedData, () => showDetailView(name, tabKey));
         albumGrid.appendChild(card);
     });
     filterInput.addEventListener('input', (event) => {
@@ -117,13 +105,10 @@ export function renderMultiMountsView(container, savedData) {
     });
 }
 
-// ========================================================================
-// ========= FUNÇÕES INTERNAS (NÃO EXPORTADAS) ============================
-// ========================================================================
-
-function showDetailView(name, tabKey, savedData, originReserveKey = null) {
+function showDetailView(name, tabKey, originReserveKey = null) {
     const mainContent = document.querySelector('.main-content');
     const contentContainer = mainContent.querySelector('.content-container');
+    const savedData = getSavedDataCallback();
     
     if (originReserveKey) {
         renderAnimalDossier(contentContainer, name, originReserveKey, savedData);
@@ -140,7 +125,7 @@ function renderSimpleDetailView(container, name, tabKey, savedData) {
     
     const onSave = (data) => {
         onSaveCallback(data);
-        renderSimpleDetailView(container, name, tabKey, data);
+        renderSimpleDetailView(container, name, tabKey, getSavedDataCallback());
     };
 
     if (tabKey === 'greats') renderGreatsDetailView(container, name, slug, savedData, onSave);
@@ -180,8 +165,7 @@ function showReserveDetailView(reserveKey) {
     contentContainer.appendChild(viewArea);
 
     const onShowAnimalDossier = (animalName, rKey) => {
-        const currentSavedData = getSavedDataCallback();
-        renderAnimalDossier(contentContainer, animalName, rKey, currentSavedData);
+        renderAnimalDossier(contentContainer, animalName, rKey, getSavedDataCallback());
     };
 
     btnAnimals.onclick = () => {
@@ -215,7 +199,7 @@ function renderAnimalDossier(container, name, originReserveKey, savedData) {
     
     const onSaveFromDossier = (data) => {
         onSaveCallback(data);
-        renderAnimalDossier(container, name, originReserveKey, data);
+        renderAnimalDossier(container, name, originReserveKey, getSavedDataCallback());
     };
     
     const tabs = {
@@ -790,3 +774,6 @@ function openGreatsTrophyModal(animalName, slug, furName, savedData, onSave) {
     buttonsDiv.appendChild(saveBtn);
     modalContent.appendChild(buttonsDiv);
     modal.style.display = 'flex'
+}
+
+// Outras funções de modal como openGreatsTrophyModal

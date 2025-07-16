@@ -1,9 +1,18 @@
 // js/auth.js
 
+// ========================================================================
+// ========================== DEPENDÊNCIAS ================================
+// ========================================================================
+
 // Importa o serviço de autenticação do nosso módulo centralizado
 import { auth } from './firebase-service.js';
 
+// Variável para guardar o container principal da aplicação
 let appContainer;
+
+// ========================================================================
+// ========================== FUNÇÃO DE INICIALIZAÇÃO =====================
+// ========================================================================
 
 /**
  * Inicializa o módulo de autenticação com as dependências necessárias.
@@ -13,8 +22,12 @@ export function initAuth(dependencies) {
     appContainer = dependencies.appContainer;
 }
 
+// ========================================================================
+// ========================== FUNÇÕES EXPORTADAS ==========================
+// ========================================================================
+
 /**
- * Renderiza o formulário de login.
+ * Renderiza o formulário de login na tela.
  */
 export function renderLoginForm() {
     appContainer.innerHTML = `
@@ -36,6 +49,7 @@ export function renderLoginForm() {
         const password = document.getElementById('loginPassword').value;
         const errorDiv = document.getElementById('authError');
         
+        // Usa a instância 'auth' importada
         auth.signInWithEmailAndPassword(email, password)
             .catch((error) => {
                 errorDiv.textContent = `Erro ao entrar: ${error.message}`;
@@ -46,7 +60,37 @@ export function renderLoginForm() {
 }
 
 /**
- * Renderiza o formulário de registro.
+ * Adiciona o botão de logout ao cabeçalho da página.
+ * @param {HTMLElement} headerContainer - O elemento do cabeçalho onde o botão será inserido.
+ * @param {object} user - O objeto do usuário autenticado.
+ */
+export function setupLogoutButton(headerContainer, user) {
+    if (!user || !headerContainer) return;
+
+    let logoutContainer = document.getElementById('logout-container');
+    if (logoutContainer) logoutContainer.remove();
+
+    logoutContainer = document.createElement('div');
+    logoutContainer.id = 'logout-container';
+    logoutContainer.innerHTML = `
+        <span class="user-email">${user.email}</span>
+        <button id="logoutButton" class="back-button">Sair</button>
+    `;
+
+    headerContainer.appendChild(logoutContainer);
+
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        auth.signOut();
+    });
+}
+
+
+// ========================================================================
+// ========= FUNÇÕES INTERNAS (NÃO EXPORTADAS) ============================
+// ========================================================================
+
+/**
+ * Renderiza o formulário de registro. É uma função interna, chamada apenas pelo renderLoginForm.
  */
 function renderRegisterForm() {
     appContainer.innerHTML = `
@@ -75,29 +119,4 @@ function renderRegisterForm() {
     });
     
     document.getElementById('showLogin').addEventListener('click', renderLoginForm);
-}
-
-/**
- * Adiciona o botão de logout ao cabeçalho da página.
- * @param {HTMLElement} headerContainer - O elemento do cabeçalho onde o botão será inserido.
- * @param {object} user - O objeto do usuário autenticado.
- */
-export function setupLogoutButton(headerContainer, user) {
-    if (!user || !headerContainer) return;
-
-    let logoutContainer = document.getElementById('logout-container');
-    if (logoutContainer) logoutContainer.remove();
-
-    logoutContainer = document.createElement('div');
-    logoutContainer.id = 'logout-container';
-    logoutContainer.innerHTML = `
-        <span class="user-email">${user.email}</span>
-        <button id="logoutButton" class="back-button">Sair</button>
-    `;
-
-    headerContainer.appendChild(logoutContainer);
-
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        auth.signOut();
-    });
 }

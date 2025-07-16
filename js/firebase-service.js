@@ -1,10 +1,11 @@
 // js/firebase-service.js
 // Propósito: Centralizar toda a comunicação com o Firebase.
 
+// Importamos apenas o que este módulo precisa
 import { firebaseConfig } from './config.js';
 import { getDefaultDataStructure } from './utils.js';
 
-// 1. INICIALIZAÇÃO DO FIREBASE - Acontece aqui agora!
+// 1. INICIALIZAÇÃO DO FIREBASE - Acontece aqui!
 const app = firebase.initializeApp(firebaseConfig);
 
 // 2. EXPORTAÇÃO DOS SERVIÇOS - Para que outros módulos possam usar
@@ -28,16 +29,17 @@ export async function loadDataFromFirestore(currentUser) {
         if (doc.exists) {
             console.log("Dados carregados do Firestore!");
             const cloudData = doc.data();
+            // Garante que a estrutura de dados local sempre tenha todos os campos
             return { ...getDefaultDataStructure(), ...cloudData };
         } else {
-            console.log("Nenhum dado encontrado, criando novo documento.");
+            console.log("Nenhum dado encontrado, criando novo documento para o usuário.");
             const defaultData = getDefaultDataStructure();
             await userDocRef.set(defaultData);
             return defaultData;
         }
     } catch (error) {
         console.error("Erro ao carregar dados do Firestore:", error);
-        return getDefaultDataStructure();
+        return getDefaultDataStructure(); // Retorna dados padrão em caso de erro
     }
 }
 
@@ -49,7 +51,7 @@ export async function loadDataFromFirestore(currentUser) {
 export async function saveDataToFirestore(currentUser, dataToSave) {
     if (!currentUser) {
         console.error("Tentando salvar dados sem usuário logado.");
-        return;
+        return; // Não faz nada se não houver usuário
     }
     const userDocRef = db.collection('usuários').doc(currentUser.uid);
     await userDocRef.set(dataToSave);
