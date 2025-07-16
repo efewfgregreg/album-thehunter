@@ -5,6 +5,14 @@ import { setupSuperRarosTab } from './tabs/tab-super-raros.js';
 import { setupGreatsTab } from './tabs/tab-greats.js';
 import { closeModal } from './ui.js';
 import { renderReserveSelection } from './views/viewReserveSelection.js';
+import { loadInitialScreen } from './views/viewReserveSelection.js';
+
+function initApp() {
+  document.querySelector('.tabs').style.display = 'none';  // Oculta tabs inicialmente
+  loadInitialScreen();
+}
+
+initApp();
 
 let currentData = {};
 
