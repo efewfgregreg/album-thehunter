@@ -11,19 +11,18 @@ function initApp() {
   loadInitialScreen();
 }
 
-function loadInitialScreen() {
-  const reserves = [
-    { id: 'reserve1', name: 'Reserva do Norte' },
-    { id: 'reserve2', name: 'Reserva do Sul' },
-    { id: 'reserve3', name: 'Reserva Oeste' }
-  ];
+- function loadInitialScreen() {
+-   const reserves = [
+-     { id: 'reserve1', name: 'Reserva do Norte' },
+-     { id: 'reserve2', name: 'Reserva do Sul' },
+-     { id: 'reserve3', name: 'Reserva Oeste' }
+-   ];
+-
+-   renderReserveSelection(reserves, (selectedReserveId) => {
+-     console.log('Reserva selecionada:', selectedReserveId);
+-   });
+- }
 
-  renderReserveSelection(reserves, (selectedReserveId) => {
-    console.log('Reserva selecionada:', selectedReserveId);
-    document.querySelector('.tabs').style.display = 'flex';
-    initializeApp();
-  });
-}
 
 initApp();
 

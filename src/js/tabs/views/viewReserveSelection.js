@@ -22,3 +22,16 @@ export function renderReserveSelection(reserves, onSelectCallback) {
     });
   });
 }
+
+export function loadInitialScreen() {
+  const reserves = [
+    { id: 'reserve1', name: 'Reserva do Norte' },
+    { id: 'reserve2', name: 'Reserva do Sul' },
+    { id: 'reserve3', name: 'Reserva Oeste' }
+  ];
+
+  renderReserveSelection(reserves, (selectedReserveId) => {
+    console.log('Reserva selecionada:', selectedReserveId);
+    // Aqui você pode trocar para alguma aba ou estado interno
+  });
+}
