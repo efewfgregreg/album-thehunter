@@ -1,22 +1,17 @@
-// src/js/views/viewReserveSelection.js
-
-export function renderReserveSelection(reserves, onSelectCallback) {
-  const container = document.getElementById('app');
-  container.innerHTML = `
-    <h1 class="app-header">Selecione uma Reserva</h1>
-    <div class="reserve-list">
-      ${reserves.map(reserve => `
-        <button class="reserve-button" data-reserve="${reserve.id}">
-          ${reserve.name}
-        </button>
-      `).join('')}
+export function loadInitialScreen() {
+  const app = document.getElementById('app');
+  app.innerHTML = `
+    <div class="reserve-selection">
+      <h2>Escolha uma Reserva</h2>
+      <button onclick="selectReserve('Reserva A')">Reserva A</button>
+      <button onclick="selectReserve('Reserva B')">Reserva B</button>
     </div>
   `;
+}
 
-  document.querySelectorAll('.reserve-button').forEach(button => {
-    button.addEventListener('click', () => {
-      const reserveId = button.getAttribute('data-reserve');
-      onSelectCallback(reserveId);
-    });
-  });
+window.selectReserve = function(reserveName) {
+  sessionStorage.setItem('selectedReserve', reserveName);
+  document.querySelector('.tabs').style.display = 'flex';
+  document.getElementById('app').innerHTML = ''; // Limpa tela inicial
+  loadTabs(); // ou qualquer função que ativa suas tabs
 }

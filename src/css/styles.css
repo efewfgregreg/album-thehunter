@@ -236,3 +236,13 @@ body {
 .reserve-button:hover {
   background-color: #388e3c;
 }
+.reserve-selection {
+  text-align: center;
+  padding: 2rem;
+}
+
+.reserve-selection button {
+  margin: 1rem;
+  padding: 0.8rem 1.5rem;
+  font-size: 1.1rem;
+}
