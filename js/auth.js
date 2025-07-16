@@ -1,9 +1,23 @@
+// js/auth.js
+
 // Importa o serviço de autenticação do nosso módulo centralizado
 import { auth } from './firebase-service.js';
 
-// As funções agora são exportadas e recebem o 'container' como parâmetro.
-export function renderLoginForm(container) {
-    container.innerHTML = `
+let appContainer;
+
+/**
+ * Inicializa o módulo de autenticação com as dependências necessárias.
+ * @param {object} dependencies - Objeto contendo o container principal da aplicação.
+ */
+export function initAuth(dependencies) {
+    appContainer = dependencies.appContainer;
+}
+
+/**
+ * Renderiza o formulário de login.
+ */
+export function renderLoginForm() {
+    appContainer.innerHTML = `
         <div class="auth-container">
             <div class="auth-box">
                 <h2>Login - Álbum de Caça</h2>
@@ -22,19 +36,20 @@ export function renderLoginForm(container) {
         const password = document.getElementById('loginPassword').value;
         const errorDiv = document.getElementById('authError');
         
-        // Usamos a instância 'auth' importada
         auth.signInWithEmailAndPassword(email, password)
             .catch((error) => {
                 errorDiv.textContent = `Erro ao entrar: ${error.message}`;
             });
     });
 
-    // Ao clicar para registrar, chamamos a outra função deste mesmo módulo
-    document.getElementById('showRegister').addEventListener('click', () => renderRegisterForm(container));
+    document.getElementById('showRegister').addEventListener('click', renderRegisterForm);
 }
 
-export function renderRegisterForm(container) {
-    container.innerHTML = `
+/**
+ * Renderiza o formulário de registro.
+ */
+function renderRegisterForm() {
+    appContainer.innerHTML = `
         <div class="auth-container">
             <div class="auth-box">
                 <h2>Cadastro - Álbum de Caça</h2>
@@ -53,22 +68,25 @@ export function renderRegisterForm(container) {
         const password = document.getElementById('registerPassword').value;
         const errorDiv = document.getElementById('authError');
 
-        // Usamos a instância 'auth' importada
         auth.createUserWithEmailAndPassword(email, password)
             .catch((error) => {
                 errorDiv.textContent = `Erro no cadastro: ${error.message}`;
             });
     });
     
-    // Ao clicar para logar, chamamos a outra função deste mesmo módulo
-    document.getElementById('showLogin').addEventListener('click', () => renderLoginForm(container));
+    document.getElementById('showLogin').addEventListener('click', renderLoginForm);
 }
 
+/**
+ * Adiciona o botão de logout ao cabeçalho da página.
+ * @param {HTMLElement} headerContainer - O elemento do cabeçalho onde o botão será inserido.
+ * @param {object} user - O objeto do usuário autenticado.
+ */
 export function setupLogoutButton(headerContainer, user) {
     if (!user || !headerContainer) return;
 
     let logoutContainer = document.getElementById('logout-container');
-    if (logoutContainer) logoutContainer.remove(); // Remove o antigo se existir
+    if (logoutContainer) logoutContainer.remove();
 
     logoutContainer = document.createElement('div');
     logoutContainer.id = 'logout-container';
@@ -80,7 +98,6 @@ export function setupLogoutButton(headerContainer, user) {
     headerContainer.appendChild(logoutContainer);
 
     document.getElementById('logoutButton').addEventListener('click', () => {
-        // Usamos a instância 'auth' importada
         auth.signOut();
     });
 }

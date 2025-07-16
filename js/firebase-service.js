@@ -1,59 +1,56 @@
 // js/firebase-service.js
-// Propósito: Centralizar toda a comunicação com o banco de dados Firestore.
+// Propósito: Centralizar toda a comunicação com o Firebase.
 
+import { firebaseConfig } from './config.js';
 import { getDefaultDataStructure } from './utils.js';
 
-let db; // A instância do DB será recebida de fora para evitar duplicação.
+// 1. INICIALIZAÇÃO DO FIREBASE - Acontece aqui agora!
+const app = firebase.initializeApp(firebaseConfig);
 
-export function initializeFirebaseService(database) {
-    db = database;
-}
+// 2. EXPORTAÇÃO DOS SERVIÇOS - Para que outros módulos possam usar
+export const auth = firebase.auth();
+export const db = firebase.firestore();
 
 /**
  * Carrega os dados do usuário logado a partir do Firestore.
- * Se o usuário for novo, cria um documento para ele.
- * @param {object} currentUser O objeto do usuário autenticado.
- * @returns {Promise<object>} Os dados do usuário.
+ * @param {object} currentUser - O objeto do usuário atualmente logado.
+ * @returns {Promise<object>} Uma promessa que resolve com os dados do usuário.
  */
 export async function loadDataFromFirestore(currentUser) {
     if (!currentUser) {
         console.error("Tentando carregar dados sem usuário logado.");
         return getDefaultDataStructure();
     }
+
     const userDocRef = db.collection('usuários').doc(currentUser.uid);
     try {
         const doc = await userDocRef.get();
         if (doc.exists) {
             console.log("Dados carregados do Firestore!");
             const cloudData = doc.data();
-            const defaultData = getDefaultDataStructure();
-            // Garante que a estrutura de dados local sempre tenha todos os campos
-            return { ...defaultData, ...cloudData };
+            return { ...getDefaultDataStructure(), ...cloudData };
         } else {
-            console.log("Nenhum dado encontrado para o usuário, criando novo documento.");
+            console.log("Nenhum dado encontrado, criando novo documento.");
             const defaultData = getDefaultDataStructure();
             await userDocRef.set(defaultData);
             return defaultData;
         }
     } catch (error) {
         console.error("Erro ao carregar dados do Firestore:", error);
-        return getDefaultDataStructure(); // Retorna dados padrão em caso de erro
+        return getDefaultDataStructure();
     }
 }
 
 /**
  * Salva o objeto de dados completo no Firestore para o usuário logado.
- * @param {object} currentUser O objeto do usuário autenticado.
- * @param {object} data O objeto de dados completo a ser salvo.
- * @returns {Promise<void>} Uma Promise que resolve quando os dados são salvos.
+ * @param {object} currentUser - O objeto do usuário atualmente logado.
+ * @param {object} dataToSave - O objeto de dados completo a ser salvo.
  */
-export async function saveDataToFirestore(currentUser, data) {
+export async function saveDataToFirestore(currentUser, dataToSave) {
     if (!currentUser) {
         console.error("Tentando salvar dados sem usuário logado.");
-        return Promise.reject("Nenhum usuário logado.");
+        return;
     }
     const userDocRef = db.collection('usuários').doc(currentUser.uid);
-    
-    // Retorna a Promise da operação de 'set' para que quem chamou saiba quando terminou.
-    return userDocRef.set(data);
+    await userDocRef.set(dataToSave);
 }
