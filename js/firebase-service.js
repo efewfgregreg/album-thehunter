@@ -1,58 +1,61 @@
-// js/firebase-service.js
-// Propósito: Centralizar toda a comunicação com o Firebase.
+// services/firebaseService.js
+// Módulo de inicialização e operações com Firebase
 
-// Importamos apenas o que este módulo precisa
-import { firebaseConfig } from './config.js';
-import { getDefaultDataStructure } from './utils.js';
+import firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/firestore';
 
-// 1. INICIALIZAÇÃO DO FIREBASE - Acontece aqui!
-const app = firebase.initializeApp(firebaseConfig);
+// Configuração do Firebase (use as mesmas credenciais do seu script original)
+const firebaseConfig = {
+  apiKey: "AIzaSyD_vgZDTseipBQgo2oXJeZUyczCEzWg_8w",
+  authDomain: "album-thehunter.firebaseapp.com",
+  projectId: "album-thehunter",
+  storageBucket: "album-thehunter.firebasestorage.app",
+  messageSenderId: "369481100721",
+  appId: "1:369481100721:web:e5ce08c635536fb7e0a190",
+  measurementId: "G-3G5VBWBEDL"
+};
 
-// 2. EXPORTAÇÃO DOS SERVIÇOS - Para que outros módulos possam usar
+// Inicializa Firebase uma única vez
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+
+// Exporta instâncias reutilizáveis
 export const auth = firebase.auth();
 export const db = firebase.firestore();
 
-/**
- * Carrega os dados do usuário logado a partir do Firestore.
- * @param {object} currentUser - O objeto do usuário atualmente logado.
- * @returns {Promise<object>} Uma promessa que resolve com os dados do usuário.
- */
-export async function loadDataFromFirestore(currentUser) {
-    if (!currentUser) {
-        console.error("Tentando carregar dados sem usuário logado.");
-        return getDefaultDataStructure();
-    }
-
-    const userDocRef = db.collection('usuários').doc(currentUser.uid);
-    try {
-        const doc = await userDocRef.get();
-        if (doc.exists) {
-            console.log("Dados carregados do Firestore!");
-            const cloudData = doc.data();
-            // Garante que a estrutura de dados local sempre tenha todos os campos
-            return { ...getDefaultDataStructure(), ...cloudData };
-        } else {
-            console.log("Nenhum dado encontrado, criando novo documento para o usuário.");
-            const defaultData = getDefaultDataStructure();
-            await userDocRef.set(defaultData);
-            return defaultData;
-        }
-    } catch (error) {
-        console.error("Erro ao carregar dados do Firestore:", error);
-        return getDefaultDataStructure(); // Retorna dados padrão em caso de erro
-    }
+// Estrutura de dados padrão para novos usuários
+export function getDefaultData() {
+  return {
+    pelagens: {},
+    diamantes: {},
+    greats: {},
+    super_raros: {},
+    grindSessions: []
+  };
 }
 
-/**
- * Salva o objeto de dados completo no Firestore para o usuário logado.
- * @param {object} currentUser - O objeto do usuário atualmente logado.
- * @param {object} dataToSave - O objeto de dados completo a ser salvo.
- */
-export async function saveDataToFirestore(currentUser, dataToSave) {
-    if (!currentUser) {
-        console.error("Tentando salvar dados sem usuário logado.");
-        return; // Não faz nada se não houver usuário
-    }
-    const userDocRef = db.collection('usuários').doc(currentUser.uid);
-    await userDocRef.set(dataToSave);
+// Carrega dados do usuário logado ou cria novo documento
+export async function loadUserData() {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Usuário não autenticado');
+  const userRef = db.collection('usuários').doc(user.uid);
+  const doc = await userRef.get();
+  if (doc.exists) {
+    const cloudData = doc.data();
+    return { ...getDefaultData(), ...cloudData };
+  } else {
+    const defaultData = getDefaultData();
+    await userRef.set(defaultData);
+    return defaultData;
+  }
+}
+
+// Salva objeto de dados completo no Firestore
+export async function saveUserData(data) {
+  const user = auth.currentUser;
+  if (!user) throw new Error('Usuário não autenticado');
+  const userRef = db.collection('usuários').doc(user.uid);
+  await userRef.set(data);
 }
