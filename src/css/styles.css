@@ -1,10 +1,9 @@
-/* src/css/styles.css */
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;700&family=Nunito+Sans:wght@400;700&display=swap');
 
 :root {
   --bg-color: #181a1b;
   --surface-color: #2c2f33;
-  --primary-color: #00bcd4; /* Ciano original, mas não mais usado para progresso */
+  --primary-color: #00bcd4;
   --border-color: #4a5568;
   --text-color: #e6e6e6;
   --text-color-muted: #99aab5;
@@ -20,111 +19,137 @@ body {
   font-family: var(--font-body);
   background-color: var(--bg-color);
   color: var(--text-color);
-  overflow-x: hidden;
-  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('background.jpg');
+  background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('background.jpg');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  overflow-x: hidden;
 }
 
-/* --- ESTILOS GERAIS --- */
-.main-content {
-  padding: 20px 40px;
-  background-color: rgba(24, 26, 27, 0.8);
-  min-height: 100vh;
-}
-.page-header {
+/* Menu de Navegação Visual */
+.tab-nav {
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  border-bottom: 2px solid var(--primary-color);
-  padding-bottom: 10px;
-  margin-bottom: 25px;
+  justify-content: center;
+  background-color: var(--surface-color);
+  flex-wrap: wrap;
+  border-bottom: 2px solid var(--border-color);
 }
-.page-header h2 {
-  font-family: var(--font-headings);
-  font-size: 2.5rem;
-}
-.back-button {
-  background: var(--surface-color);
+
+.tab-nav button {
+  background: transparent;
   color: var(--text-color);
   border: none;
-  padding: 8px 16px;
-  cursor: pointer;
   font-family: var(--font-headings);
-  transition: all 0.2s ease;
+  font-size: 1.1rem;
+  padding: 12px 20px;
+  cursor: pointer;
+  transition: background 0.3s ease;
 }
-.back-button:hover {
-  background: var(--primary-color);
+
+.tab-nav button:hover {
+  background-color: var(--primary-color);
   color: #111827;
 }
+
+/* Grade Geral Responsiva */
+.overall-progress-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+/* Cards de Animais com Imagem e Progresso */
+.animal-card, .fur-card, .reserve-card {
+  background-color: var(--surface-color);
+  border: 3px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s ease, border-color 0.3s ease;
+}
+
+.animal-card:hover, .fur-card:hover, .reserve-card:hover {
+  transform: scale(1.05);
+  border-color: var(--primary-color);
+}
+
+.animal-card img, .fur-card img, .reserve-card img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+}
+
+.animal-card span, .fur-card span, .reserve-card span {
+  font-family: var(--font-headings);
+  font-size: 1.2rem;
+  text-transform: capitalize;
+  padding: 15px 10px;
+}
+
+/* Indicadores de Progresso */
+.completed {
+  border-color: var(--gold-color) !important;
+}
+
+.inprogress {
+  border-color: var(--primary-color) !important;
+}
+
+.locked {
+  opacity: 0.4;
+}
+
+/* Input de Filtro */
 .filter-input {
   width: 100%;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0,0,0,0.2);
   border: 2px solid transparent;
   border-radius: 4px;
   padding: 10px;
   color: var(--text-color);
-  transition: all 0.3s ease;
+  transition: border-color 0.3s ease;
   margin-bottom: 30px;
 }
+
 .filter-input:focus {
   outline: none;
   border-color: var(--primary-color);
 }
-/* ... restante das regras CSS extraídas ... */
-.overall-progress-grid {
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
+
+/* Modais e Outros */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
-.progress-dial-card {
-  padding: 15px;
+
+.modal-content-box {
+  background: var(--surface-color);
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 500px;
+  text-align: center;
 }
-.progress-dial {
-  width: 100px;
-  height: 100px;
+
+.modal-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
 }
-.progress-dial-percentage {
-  font-size: 1.5rem;
+
+.modal-close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 2rem;
+  color: var(--text-color);
+  cursor: pointer;
 }
-.progress-dial-label {
-  font-size: 1rem;
-}
-.reserve-progress-container {
-  grid-template-columns: 1fr;
-}
-```html
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#181a1b">
-  <title>Registro do Caçador – theHunter: Call of the Wild</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="src/css/styles.css">
-</head>
-<body>
-  <div id="app-container"></div>
-  <div id="image-viewer-modal" class="modal-overlay">
-    <span class="modal-close">&times;</span>
-  </div>
-  <div id="form-modal" class="modal-overlay"></div>
-  <div id="custom-alert-modal" class="modal-overlay">
-    <div class="modal-content-box">
-      <h3 id="custom-alert-title"></h3>
-      <p id="custom-alert-message"></p>
-      <div class="modal-buttons">
-        <button id="custom-alert-cancel-btn" class="back-button">Cancelar</button>
-        <button id="custom-alert-ok-btn" class="back-button" style="background-color: var(--primary-color); color: #111;">OK</button>
-      </div>
-    </div>
-  </div>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script src="https://unpkg.com/panzoom@9.4.3/dist/panzoom.min.js"></script>
-  <script type="module" src="src/js/main.js" defer></script>
-</body>
-</html>
