@@ -1,4 +1,50 @@
-/* src/css/styles.css */
+
+
+:root {
+    --bg-color: #0a0a0a;
+    --primary-color: #1e1e1e;
+    --secondary-color: #333;
+    --accent-color: #ffcc00;
+    --text-color: #fff;
+    --highlight-color: #444;
+    --completed-color: #0f0;
+    --inprogress-color: #ffa500;
+}
+
+body {
+    font-family: 'Nunito Sans', Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.nav-card {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border-radius: 10px;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: 2px solid var(--accent-color);
+}
+
+.nav-card:hover {
+    background-color: var(--highlight-color);
+    border-color: var(--text-color);
+}
+
+/* Mantém os estilos existentes abaixo conforme necessário */
 
 :root {
     --bg-color: #0a0a0a;
