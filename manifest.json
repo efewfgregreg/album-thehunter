@@ -1,23 +1,21 @@
 {
-  "name": "Álbum de Caça TheHunter",
-  "short_name": "Álbum COTW",
-  "description": "Um álbum para registrar suas conquistas no theHunter: Call of the Wild.",
+  "name": "Registro do Caçador",
+  "short_name": "Caçador",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#181a1b",
+  "theme_color": "#181a1b",
+  "description": "App de acompanhamento de pelagens raras, diamantes e super raros do theHunter: Call of the Wild.",
   "icons": [
     {
-      "src": "icons/icon-192x192.png",
-      "type": "image/png",
-      "sizes": "192x192"
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "icons/icon-512x512.png",
-      "type": "image/png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
-  ],
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#1a202c",
-  "theme_color": "#1a202c",
-  "orientation": "portrait-primary"
+  ]
 }

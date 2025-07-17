@@ -1,45 +1,68 @@
 // src/js/tabs/tab-pelagens.js
-import { rareFursData } from '../data.js';
-import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
 
-export function setupPelagensTab(container, currentData, saveData) {
-  container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar pelagens raras...">
-    <div class="overall-progress-grid"></div>
-  `;
+import { rareFursData, items } from '../data.js';
+import { saveData } from '../dataManager.js';
+import { renderMiniProgressBar } from '../progressBarManager.js';
 
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
+// ================== PELAGENS TAB ==================
 
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(rareFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
+function renderPelagensTab(container, savedData) {
+    container.innerHTML = '';
 
-      const card = document.createElement('div');
-      card.className = 'animal-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'pelagens';
+    items.forEach(animal => {
+        const animalContainer = document.createElement('div');
+        animalContainer.className = 'animal-entry';
 
-      const img = document.createElement('img');
-      img.src = `assets/animals/${slug}.jpg`;
-      img.alt = name;
+        const title = document.createElement('h3');
+        title.textContent = animal;
+        animalContainer.appendChild(title);
 
-      const title = document.createElement('span');
-      title.textContent = name;
+        const rareFurs = rareFursData[animal.toLowerCase()];
+        if (rareFurs) {
+            let total = 0;
+            let completed = 0;
 
-      card.appendChild(img);
-      card.appendChild(title);
+            const sections = ['macho', 'femea'];
+            sections.forEach(section => {
+                const furs = rareFurs[section];
+                if (furs && furs.length > 0) {
+                    const sectionTitle = document.createElement('h4');
+                    sectionTitle.textContent = section.toUpperCase();
+                    animalContainer.appendChild(sectionTitle);
 
-      updateCardAppearance(card, slug, 'pelagens');
+                    const list = document.createElement('ul');
+                    furs.forEach(fur => {
+                        const item = document.createElement('li');
 
-      card.onclick = () => showCustomAlert(`Detalhes de pelagem: ${name}`);
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        const key = `${animal}_${section}_${fur}`;
+                        checkbox.checked = savedData.pelagens[key] || false;
 
-      grid.appendChild(card);
+                        if (checkbox.checked) completed++;
+                        total++;
+
+                        checkbox.addEventListener('change', () => {
+                            savedData.pelagens[key] = checkbox.checked;
+                            saveData(savedData);
+                            renderMiniProgressBar(progressBarContainer, total, Object.values(savedData.pelagens).filter(v => v).length);
+                        });
+
+                        item.appendChild(checkbox);
+                        item.append(` ${fur}`);
+                        list.appendChild(item);
+                    });
+                    animalContainer.appendChild(list);
+                }
+            });
+
+            const progressBarContainer = document.createElement('div');
+            animalContainer.appendChild(progressBarContainer);
+            renderMiniProgressBar(progressBarContainer, total, completed);
+        }
+
+        container.appendChild(animalContainer);
     });
-  }
-
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
 }
+
+export { renderPelagensTab };

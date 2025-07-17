@@ -1,49 +1,43 @@
 // src/js/tabs/tab-super-raros.js
-import { rareFursData, diamondFursData } from '../data.js';
-import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
 
-export function setupSuperRarosTab(container, currentData, saveData) {
-  container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar super raros...">
-    <div class="overall-progress-grid"></div>
-  `;
+import { items } from '../data.js';
+import { saveData } from '../dataManager.js';
+import { renderMiniProgressBar } from '../progressBarManager.js';
 
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
+// Função para renderizar a aba Super Raros
+function renderSuperRarosTab(container, savedData) {
+    container.innerHTML = '';
 
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(rareFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
+    items.forEach(animal => {
+        const animalContainer = document.createElement('div');
+        animalContainer.className = 'animal-entry';
 
-      const speciesRare = rareFursData[slug];
-      const speciesDiamond = diamondFursData[slug];
-      if (!speciesRare || !speciesDiamond) return;
+        const title = document.createElement('h3');
+        title.textContent = animal;
+        animalContainer.appendChild(title);
 
-      const card = document.createElement('div');
-      card.className = 'animal-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'super_raros';
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.placeholder = 'Qtd. Super Raros';
+        input.min = 0;
 
-      const img = document.createElement('img');
-      img.src = `assets/animals/${slug}.jpg`;
-      img.alt = name;
+        const key = `${animal}_super_raro`;
+        input.value = savedData.super_raros[key] || 0;
 
-      const title = document.createElement('span');
-      title.textContent = name;
+        input.addEventListener('change', () => {
+            savedData.super_raros[key] = parseInt(input.value) || 0;
+            saveData(savedData);
+            renderMiniProgressBar(progressBarContainer, 1, savedData.super_raros[key]);
+        });
 
-      card.appendChild(img);
-      card.appendChild(title);
+        animalContainer.appendChild(input);
 
-      updateCardAppearance(card, slug, 'super_raros');
+        const progressBarContainer = document.createElement('div');
+        animalContainer.appendChild(progressBarContainer);
+        renderMiniProgressBar(progressBarContainer, 1, parseInt(input.value) || 0);
 
-      card.onclick = () => showCustomAlert(`Detalhes de super raro: ${name}`);
-
-      grid.appendChild(card);
+        container.appendChild(animalContainer);
     });
-  }
-
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
 }
+
+export { renderSuperRarosTab };

@@ -1,45 +1,67 @@
 // src/js/tabs/tab-diamantes.js
-import { diamondFursData } from '../data.js';
-import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
 
-export function setupDiamantesTab(container, currentData, saveData) {
-  container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar diamantes...">
-    <div class="overall-progress-grid"></div>
-  `;
+import { diamondFursData, items } from '../data.js';
+import { saveData } from '../dataManager.js';
+import { renderMiniProgressBar } from '../progressBarManager.js';
 
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
+// Função para renderizar a aba Diamantes
+function renderDiamantesTab(container, savedData) {
+    container.innerHTML = '';
 
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(diamondFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
+    items.forEach(animal => {
+        const animalContainer = document.createElement('div');
+        animalContainer.className = 'animal-entry';
 
-      const card = document.createElement('div');
-      card.className = 'animal-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'diamantes';
+        const title = document.createElement('h3');
+        title.textContent = animal;
+        animalContainer.appendChild(title);
 
-      const img = document.createElement('img');
-      img.src = `assets/animals/${slug}.jpg`;
-      img.alt = name;
+        const diamondFurs = diamondFursData[animal.toLowerCase()];
+        if (diamondFurs) {
+            let total = 0;
+            let completed = 0;
 
-      const title = document.createElement('span');
-      title.textContent = name;
+            const sections = ['macho', 'femea'];
+            sections.forEach(section => {
+                const furs = diamondFurs[section];
+                if (furs && furs.length > 0) {
+                    const sectionTitle = document.createElement('h4');
+                    sectionTitle.textContent = section.toUpperCase();
+                    animalContainer.appendChild(sectionTitle);
 
-      card.appendChild(img);
-      card.appendChild(title);
+                    const list = document.createElement('ul');
+                    furs.forEach(fur => {
+                        const item = document.createElement('li');
 
-      updateCardAppearance(card, slug, 'diamantes');
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        const key = `${animal}_diamante_${section}_${fur}`;
+                        checkbox.checked = savedData.diamantes[key] || false;
 
-      card.onclick = () => showCustomAlert(`Detalhes de diamante: ${name}`);
+                        if (checkbox.checked) completed++;
+                        total++;
 
-      grid.appendChild(card);
+                        checkbox.addEventListener('change', () => {
+                            savedData.diamantes[key] = checkbox.checked;
+                            saveData(savedData);
+                            renderMiniProgressBar(progressBarContainer, total, Object.values(savedData.diamantes).filter(v => v).length);
+                        });
+
+                        item.appendChild(checkbox);
+                        item.append(` ${fur}`);
+                        list.appendChild(item);
+                    });
+                    animalContainer.appendChild(list);
+                }
+            });
+
+            const progressBarContainer = document.createElement('div');
+            animalContainer.appendChild(progressBarContainer);
+            renderMiniProgressBar(progressBarContainer, total, completed);
+        }
+
+        container.appendChild(animalContainer);
     });
-  }
-
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
 }
+
+export { renderDiamantesTab };

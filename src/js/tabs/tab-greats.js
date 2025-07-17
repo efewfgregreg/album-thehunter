@@ -1,43 +1,56 @@
 // src/js/tabs/tab-greats.js
-import { greatsFursData } from '../data.js';
-import { slugify, showCustomAlert, updateCardAppearance } from '../ui.js';
 
-export function setupGreatsTab(container, currentData, saveData) {
-  container.innerHTML = `
-    <input type="text" class="filter-input" placeholder="Filtrar Great Ones...">
-    <div class="overall-progress-grid"></div>
-  `;
-  const filterInput = container.querySelector('.filter-input');
-  const grid = container.querySelector('.overall-progress-grid');
+import { greatsFursData, items } from '../data.js';
+import { saveData } from '../dataManager.js';
+import { renderMiniProgressBar } from '../progressBarManager.js';
 
-  function renderList(filter = '') {
-    grid.innerHTML = '';
-    Object.keys(greatsFursData).forEach(slug => {
-      const name = slug.replace(/_/g, ' ');
-      if (!name.includes(filter.toLowerCase())) return;
+// Função para renderizar a aba Greats
+function renderGreatsTab(container, savedData) {
+    container.innerHTML = '';
 
-      const card = document.createElement('div');
-      card.className = 'animal-card';
-      card.dataset.slug = slug;
-      card.dataset.key = 'greats';
+    items.forEach(animal => {
+        const animalContainer = document.createElement('div');
+        animalContainer.className = 'animal-entry';
 
-      const img = document.createElement('img');
-      img.src = `img/species/${slug}.jpg`; // Assumindo padrão de imagens
-      img.alt = name;
+        const title = document.createElement('h3');
+        title.textContent = animal;
+        animalContainer.appendChild(title);
 
-      const title = document.createElement('span');
-      title.innerHTML = `<i class="fas fa-crown"></i> ${name}`;
+        const greatsFurs = greatsFursData[animal.toLowerCase()];
+        if (greatsFurs && greatsFurs.length > 0) {
+            let total = greatsFurs.length;
+            let completed = 0;
 
-      card.appendChild(img);
-      card.appendChild(title);
+            const list = document.createElement('ul');
+            greatsFurs.forEach(fur => {
+                const item = document.createElement('li');
 
-      updateCardAppearance(card, slug, 'greats');
-      card.onclick = () => showCustomAlert(`Detalhes de Great One: ${name}`);
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                const key = `${animal}_great_${fur}`;
+                checkbox.checked = savedData.greats[key] || false;
 
-      grid.appendChild(card);
+                if (checkbox.checked) completed++;
+
+                checkbox.addEventListener('change', () => {
+                    savedData.greats[key] = checkbox.checked;
+                    saveData(savedData);
+                    renderMiniProgressBar(progressBarContainer, total, Object.values(savedData.greats).filter(v => v).length);
+                });
+
+                item.appendChild(checkbox);
+                item.append(` ${fur}`);
+                list.appendChild(item);
+            });
+            animalContainer.appendChild(list);
+
+            const progressBarContainer = document.createElement('div');
+            animalContainer.appendChild(progressBarContainer);
+            renderMiniProgressBar(progressBarContainer, total, completed);
+        }
+
+        container.appendChild(animalContainer);
     });
-  }
-
-  filterInput.addEventListener('input', e => renderList(e.target.value));
-  renderList();
 }
+
+export { renderGreatsTab };
