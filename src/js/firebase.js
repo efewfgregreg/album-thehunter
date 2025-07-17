@@ -1,8 +1,12 @@
 // src/js/firebase.js
 
 // ========================================================================
-// ======== INICIALIZAÇÃO DO FIREBASE (COM SEUS DADOS) ========
+// ======== INICIALIZAÇÃO DO FIREBASE (MODULAR SDK) ========
 // ========================================================================
+
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyD_vgZDTseipBQgo2oXJeZUyczCEzWg_8w",
@@ -15,14 +19,11 @@ const firebaseConfig = {
 };
 
 // Inicializa Firebase
-const app = firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // Autenticação e Firestore
-const auth = firebase.auth();
-const db = firebase.firestore();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Variável global opcional (pode ser removida se não usada)
-let currentUser = null;
-
-// Exporta auth para ser usado nos outros módulos
-export { auth, db, currentUser };
+// Exportações obrigatórias para integração
+export { auth, db };
