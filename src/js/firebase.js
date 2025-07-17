@@ -25,4 +25,4 @@ const db = firebase.firestore();
 let currentUser = null;
 
 // Exporta auth para ser usado nos outros módulos
-export { auth };
+export { auth, db, currentUser };
