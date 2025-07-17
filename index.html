@@ -1190,6 +1190,129 @@
                 grid-template-columns: 1fr;
             }
         }
+
+/* --- NOVOS ESTILOS - PAINEL DE GRIND 2.0 --- */
+.grind-page-layout {
+    display: grid;
+    grid-template-columns: 350px 1fr; /* Coluna fixa à esquerda, flexível à direita */
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.grind-dossier-panel {
+    background: var(--surface-color);
+    border-radius: 8px;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    position: relative; /* Para o posicionamento da silhueta */
+    overflow: hidden;
+}
+
+.grind-dossier-panel .animal-silhouette {
+    position: absolute;
+    right: -30px;
+    bottom: -20px;
+    height: 60%;
+    opacity: 0.05;
+    filter: invert(1);
+    z-index: 1;
+}
+
+.dossier-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+}
+
+.dossier-header h2 {
+    font-family: var(--font-headings);
+    font-size: 2.5rem;
+    line-height: 1.1;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.dossier-header span {
+    font-size: 1rem;
+    color: var(--text-color-muted);
+}
+.dossier-header span i {
+    margin-right: 5px;
+}
+
+.dossier-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    font-size: 0.95rem;
+    position: relative;
+    z-index: 2;
+}
+
+.dossier-info-item {
+    background-color: rgba(0,0,0,0.2);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.dossier-info-item strong {
+    display: block;
+    color: var(--text-color-muted);
+    margin-bottom: 4px;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.dossier-info-item span {
+    font-weight: bold;
+    font-family: var(--font-headings);
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.hotspot-map-btn {
+    margin-top: 20px;
+    width: 100%;
+    position: relative;
+    z-index: 2;
+}
+
+.grind-counters-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Ajustes nos contadores existentes */
+.counters-wrapper.v2 {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 15px;
+}
+
+.grind-counter-item.total-kills-v2 {
+    grid-column: 1 / -1; 
+    background-color: #1e2124;
+    padding: 20px;
+}
+.grind-counter-item.total-kills-v2 .grind-counter-value {
+    font-size: 3.5rem;
+}
+.grind-counter-item.total-kills-v2 .grind-counter-header span {
+    font-size: 1.5rem;
+}
+
+/* Media query para telas menores */
+@media (max-width: 900px) {
+    .grind-page-layout {
+        grid-template-columns: 1fr; /* Coluna única em telas menores */
+    }
+}
     </style>
 </head>
 <body>

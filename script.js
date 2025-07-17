@@ -2017,69 +2017,9 @@ function renderMultiMountDetailModal(mountKey) {
 
     modal.style.display = 'flex';
 }
-// --- FUNÇÕES CONTADOR DE GRIND ---
-function renderGrindHubView(container) {
-    container.innerHTML = `<div class="grind-hub-container"></div>`;
-    const hubContainer = container.querySelector('.grind-hub-container');
-
-    const newGrindButton = document.createElement('div');
-    newGrindButton.className = 'new-grind-btn';
-    newGrindButton.innerHTML = `<i class="fas fa-plus-circle"></i><span>Iniciar Novo Grind</span>`;
-    newGrindButton.onclick = () => renderNewGrindAnimalSelection(container);
-    hubContainer.appendChild(newGrindButton);
-
-    const existingGrindsTitle = document.createElement('h3');
-    existingGrindsTitle.className = 'existing-grinds-title';
-    existingGrindsTitle.innerHTML = '<i class="fas fa-history"></i> Grinds em Andamento';
-    hubContainer.appendChild(existingGrindsTitle);
-
-    const grid = document.createElement('div');
-    grid.className = 'grinds-grid';
-    hubContainer.appendChild(grid);
-
-    if (savedData.grindSessions && savedData.grindSessions.length > 0) {
-        savedData.grindSessions.forEach(session => {
-            const reserve = reservesData[session.reserveKey];
-            const animalName = items.find(item => slugify(item) === session.animalSlug);
-            const counts = session.counts;
-
-            const card = document.createElement('div');
-            card.className = 'grind-card';
-            card.addEventListener('click', () => renderGrindCounterView(session.id));
-            card.innerHTML = `
-                <img src="animais/${session.animalSlug}.png" class="grind-card-bg-silhouette" onerror="this.style.display='none'">
-                <div class="grind-card-content">
-                    <div class="grind-card-header">
-                        <span class="grind-card-animal-name">${animalName}</span>
-                        <span class="grind-card-reserve-name"><i class="fas fa-map-marker-alt"></i> ${reserve.name}</span>
-                    </div>
-                    <div class="grind-card-stats-grid">
-                        <div class="grind-stat">
-                            <i class="fas fa-crosshairs"></i>
-                            <span>${counts.total || 0}</span>
-                        </div>
-                        <div class="grind-stat">
-                            <i class="fas fa-gem"></i>
-                            <span>${counts.diamonds || 0}</span>
-                        </div>
-                        <div class="grind-stat">
-                            <i class="fas fa-paw"></i>
-                            <span>${counts.rares?.length || 0}</span>
-                        </div>
-                    </div>
-                </div>
-            `;
-            grid.appendChild(card);
-        });
-    } else {
-        grid.innerHTML = '<p class="no-grinds-message">Nenhum grind iniciado. Clique no botão acima para começar!</p>';
-    }
-}
-
 // Renderiza a seleção de animais para um novo grind
 function renderNewGrindAnimalSelection(container) {
     container.innerHTML = '<h2>Selecione um Animal para o Novo Grind</h2>';
-
     const filterInput = document.createElement('input');
     filterInput.type = 'text';
     filterInput.className = 'filter-input';
@@ -2127,12 +2067,10 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
     for (const [reserveKey, reserve] of availableReserves) {
         const card = document.createElement('div');
         card.className = 'reserve-card';
+        // HTML do card já corrigido para não ter a imagem pequena
         card.innerHTML = `
             <div class="reserve-image-container">
                 <img class="reserve-card-image" src="${reserve.image}" onerror="this.style.display='none'">
-            </div>
-            <div class="reserve-card-info-panel">
-                <img src="${reserve.image.replace('.png', '_logo.png')}" class="reserve-card-logo" alt="${reserve.name}" onerror="this.style.display='none'">
             </div>
         `;
         card.addEventListener('click', async () => {
@@ -2143,7 +2081,7 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
                 return;
             }
             const newSessionId = `grind_${Date.now()}`;
-            const newSession = { id: newSessionId, animalSlug: animalSlug, reserveKey: reserveKey, counts: { total: 0, diamonds: 0, trolls: 0, rares: [], super_rares: [], great_ones: [] } };
+            const newSession = { id: newSessionId, animalSlug: animalSlug, reserveKey: reserveKey, counts: { total: 0, diamonds: 0, trolls: 0, rares: [], super_raros: [], great_ones: [] } };
             savedData.grindSessions.push(newSession);
             saveData(savedData);
             renderGrindCounterView(newSessionId);
@@ -2152,54 +2090,107 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
     }
 }
 
-// Renderiza a visualização do contador de grind
+// Renderiza a visualização do contador de grind (VERSÃO 2.0)
 async function renderGrindCounterView(sessionId) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
-    if (!session) { console.error("Sessão de grind não encontrada!", sessionId); renderMainView('grind'); return; }
+    if (!session) { 
+        console.error("Sessão de grind não encontrada!", sessionId); 
+        renderMainView('grind'); 
+        return; 
+    }
 
+    // Garante que a estrutura de contagem exista
     const counts = {
         total: session.counts.total || 0,
         diamonds: session.counts.diamonds || 0,
         trolls: session.counts.trolls || 0,
         rares: session.counts.rares || [],
-        super_rares: session.counts.super_rares || [],
+        super_raros: session.counts.super_raros || [],
         great_ones: session.counts.great_ones || []
     };
     session.counts = counts;
 
     const { animalSlug, reserveKey } = session;
-    const mainContent = document.querySelector('.main-content');
-    const container = mainContent.querySelector('.content-container');
     const animalName = items.find(item => slugify(item) === animalSlug);
     const reserveName = reservesData[reserveKey].name;
+    const hotspotInfo = animalHotspotData[reserveKey]?.[animalSlug];
 
+    const mainContent = document.querySelector('.main-content');
+    const container = mainContent.querySelector('.content-container');
     mainContent.querySelector('.page-header h2').textContent = `Contador de Grind`;
     const backButton = mainContent.querySelector('.page-header .back-button');
     backButton.innerHTML = `&larr; Voltar para o Hub de Grind`;
     backButton.onclick = () => renderMainView('grind');
 
+    // Novo Layout em 2 Colunas
     container.innerHTML = `
-        <div class="grind-container">
-            <div class="grind-header">
-                <div class="grind-header-info">
-                    <img src="animais/${animalSlug}.png" class="grind-animal-icon" onerror="this.style.display='none'">
-                    <div>
-                        <h2>${animalName.toUpperCase()}</h2>
-                        <span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span>
+        <div class="grind-page-layout">
+            <div class="grind-dossier-panel">
+                <img src="animais/${animalSlug}.png" class="animal-silhouette" onerror="this.style.display='none'">
+                <div class="dossier-header">
+                    <h2>${animalName.toUpperCase()}</h2>
+                    <span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span>
+                </div>
+                <div class="dossier-info-grid">
+                    <div class="dossier-info-item">
+                        <strong>Pontuação Máx.</strong>
+                        <span>${hotspotInfo?.maxScore || 'N/A'}</span>
+                    </div>
+                    <div class="dossier-info-item">
+                        <strong>Peso Máx.</strong>
+                        <span>${hotspotInfo?.maxWeightEstimate || 'N/A'}</span>
+                    </div>
+                    <div class="dossier-info-item">
+                        <strong>Horários (Bebida)</strong>
+                        <span>${hotspotInfo?.drinkZonesPotential || 'N/A'}</span>
+                    </div>
+                     <div class="dossier-info-item">
+                        <strong>Classe</strong>
+                        <span>${hotspotInfo?.animalClass || 'N/A'}</span>
+                    </div>
+                    <div class="dossier-info-item">
+                        <strong>Nível Máx.</strong>
+                        <span>${hotspotInfo?.maxLevel || 'N/A'}</span>
                     </div>
                 </div>
+                <button id="show-hotspot-map-btn" class="back-button hotspot-map-btn">Ver Mapa de Hotspot</button>
             </div>
-            <div class="counters-wrapper">
-                <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><i class="fas fa-gem"></i><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item great-ones" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-crown"></i><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item super-rare" data-type="super_rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item total-kills" data-type="total"><div class="grind-counter-header"><i class="fas fa-crosshairs"></i><span>Total de Abatimentos</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value" id="total-kills-value">${counts.total}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-            </div>
-            <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
-        </div>`;
 
+            <div class="grind-counters-panel">
+                 <div class="grind-counter-item total-kills-v2" data-type="total">
+                    <div class="grind-counter-header">
+                        <i class="fas fa-crosshairs"></i><span>Total de Abatimentos</span>
+                    </div>
+                    <div class="grind-counter-body">
+                        <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
+                        <span class="grind-counter-value" id="total-kills-value">${counts.total}</span>
+                        <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
+                    </div>
+                </div>
+                <div class="counters-wrapper v2">
+                    <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><i class="fas fa-gem"></i><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                    <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                    <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                    <div class="grind-counter-item great-ones" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-crown"></i><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                    <div class="grind-counter-item super-rare" data-type="super_raros" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_raros.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                </div>
+                <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
+            </div>
+        </div>
+    `;
+
+    // --- LÓGICA DOS EVENTOS ---
+
+    // Botão para ver mapa de Hotspot
+    const hotspotBtn = document.getElementById('show-hotspot-map-btn');
+    if (hotspotInfo) {
+        hotspotBtn.onclick = () => renderHotspotDetailModal(reserveKey, animalSlug);
+    } else {
+        hotspotBtn.disabled = true;
+        hotspotBtn.textContent = 'Nenhum Hotspot Disponível';
+    }
+    
+    // Lógica dos contadores
     container.querySelectorAll('.grind-counter-btn').forEach(button => {
         button.addEventListener('click', async (e) => {
             e.stopPropagation();
@@ -2211,25 +2202,38 @@ async function renderGrindCounterView(sessionId) {
             if (!currentSession) return;
 
             if (isIncrease) {
-                if (type === 'total') {
+                // LÓGICA DE INCREMENTO AUTOMÁTICO DO TOTAL
+                if (type !== 'total') {
                     currentSession.counts.total++;
                 }
-                else if (isDetailed) { openGrindDetailModal(sessionId, type); return; }
-                else { currentSession.counts[type]++; }
-            } else {
-                if (type === 'total') { 
-                    if (currentSession.counts.total > 0) { currentSession.counts.total--; }
+
+                if (type === 'total') {
+                    currentSession.counts.total++;
+                } else if (isDetailed) {
+                    openGrindDetailModal(sessionId, type);
+                    return; // Retorna para não salvar/re-renderizar duas vezes
+                } else {
+                    currentSession.counts[type]++;
                 }
-                else if (isDetailed) {
+            } else { // Lógica de decremento
+                if (type === 'total') { 
+                    if (currentSession.counts.total > 0) currentSession.counts.total--; 
+                } else if (isDetailed) {
                     if (currentSession.counts[type].length > 0) {
                         const lastItem = currentSession.counts[type][currentSession.counts[type].length - 1];
                         const cleanVariationName = lastItem.variation.replace(/^(Macho|Fêmea)\s|\sDiamante$/gmi, '').trim();
                         if (await showCustomAlert(`Tem certeza que deseja remover o último item registrado: "${cleanVariationName}"?`, 'Confirmar Exclusão', true)) {
                             currentSession.counts[type].pop();
+                            // CORREÇÃO ADICIONADA AQUI
+                            if (currentSession.counts.total > 0) currentSession.counts.total--;
                         }
                     }
                 } else {
-                    if (currentSession.counts[type] > 0) { currentSession.counts[type]--; }
+                    if (currentSession.counts[type] > 0) {
+                        currentSession.counts[type]--;
+                        // CORREÇÃO ADICIONADA AQUI
+                        if (currentSession.counts.total > 0) currentSession.counts.total--;
+                    }
                 }
             }
             saveData(savedData);
@@ -2237,41 +2241,7 @@ async function renderGrindCounterView(sessionId) {
         });
     });
 
-    const totalKillsValue = container.querySelector('#total-kills-value');
-    if (totalKillsValue) {
-        totalKillsValue.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const body = totalKillsValue.parentElement;
-            if (body.querySelector('input')) return;
-
-            const currentTotal = session.counts.total || 0;
-
-            body.innerHTML = `
-                <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
-                <input type="number" class="grind-total-input" value="${currentTotal}">
-                <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
-            `;
-            const input = body.querySelector('input');
-            input.focus();
-            input.select();
-
-            const saveNewTotal = () => {
-                const newValue = parseInt(input.value, 10);
-                if (!isNaN(newValue) && newValue >= 0) {
-                    session.counts.total = newValue;
-                    saveData(savedData);
-                }
-                renderGrindCounterView(sessionId);
-            };
-
-            input.addEventListener('blur', saveNewTotal);
-            input.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter') saveNewTotal();
-                else if (e.key === 'Escape') renderGrindCounterView(sessionId);
-            });
-        });
-    }
-
+    // Lógica do botão de deletar grind
     container.querySelector('#delete-grind-btn').addEventListener('click', async () => {
         if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) {
             const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId);
@@ -2282,6 +2252,75 @@ async function renderGrindCounterView(sessionId) {
             }
         }
     });
+}
+// --- FUNÇÕES CONTADOR DE GRIND ---
+function renderGrindHubView(container) {
+    container.innerHTML = `<div class="grind-hub-container"></div>`;
+    const hubContainer = container.querySelector('.grind-hub-container');
+
+    const newGrindButton = document.createElement('div');
+    newGrindButton.className = 'new-grind-btn';
+    newGrindButton.innerHTML = `<i class="fas fa-plus-circle"></i><span>Iniciar Novo Grind</span>`;
+    newGrindButton.onclick = () => renderNewGrindAnimalSelection(container);
+    hubContainer.appendChild(newGrindButton);
+
+    const existingGrindsTitle = document.createElement('h3');
+    existingGrindsTitle.className = 'existing-grinds-title';
+    existingGrindsTitle.innerHTML = '<i class="fas fa-history"></i> Grinds em Andamento';
+    hubContainer.appendChild(existingGrindsTitle);
+
+    const grid = document.createElement('div');
+    grid.className = 'grinds-grid';
+    hubContainer.appendChild(grid);
+
+    if (savedData.grindSessions && savedData.grindSessions.length > 0) {
+        savedData.grindSessions.forEach(session => {
+            const reserve = reservesData[session.reserveKey];
+            const animalName = items.find(item => slugify(item) === session.animalSlug);
+            
+            // INÍCIO DA CORREÇÃO: Bloco de segurança para dados antigos
+            // Garante que a estrutura de contagem esteja sempre completa
+            const counts = {
+                total: session.counts.total || 0,
+                diamonds: session.counts.diamonds || 0,
+                trolls: session.counts.trolls || 0,
+                rares: session.counts.rares || [],
+                super_raros: session.counts.super_raros || [],
+                great_ones: session.counts.great_ones || []
+            };
+            // FIM DA CORREÇÃO
+
+            const card = document.createElement('div');
+            card.className = 'grind-card';
+            card.addEventListener('click', () => renderGrindCounterView(session.id));
+            card.innerHTML = `
+                <img src="animais/${session.animalSlug}.png" class="grind-card-bg-silhouette" onerror="this.style.display='none'">
+                <div class="grind-card-content">
+                    <div class="grind-card-header">
+                        <span class="grind-card-animal-name">${animalName}</span>
+                        <span class="grind-card-reserve-name"><i class="fas fa-map-marker-alt"></i> ${reserve.name}</span>
+                    </div>
+                    <div class="grind-card-stats-grid">
+                        <div class="grind-stat">
+                            <i class="fas fa-crosshairs"></i>
+                            <span>${counts.total}</span>
+                        </div>
+                        <div class="grind-stat">
+                            <i class="fas fa-gem"></i>
+                            <span>${counts.diamonds}</span>
+                        </div>
+                        <div class="grind-stat">
+                            <i class="fas fa-paw"></i>
+                            <span>${counts.rares.length}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    } else {
+        grid.innerHTML = '<p class="no-grinds-message">Nenhum grind iniciado. Clique no botão acima para começar!</p>';
+    }
 }
 
 // Sincroniza um troféu do grind para o álbum principal
