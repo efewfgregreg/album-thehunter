@@ -1,6 +1,6 @@
 // src/js/dataManager.js
 
-import { db, auth, currentUser } from './firebase.js';
+import { db, auth } from './firebase.js';
 import { renderHuntingRankingView, updateNewProgressPanel, renderMultiMountsView } from './ui.js';
 
 // ================== ESTRUTURA PADRÃO ==================
@@ -16,11 +16,12 @@ export function getDefaultDataStructure() {
 
 // ================== CARREGAR DADOS ==================
 export async function loadDataFromFirestore() {
-    if (!currentUser) {
+    const user = auth.currentUser;
+    if (!user) {
         console.error("Tentando carregar dados sem usuário logado.");
         return getDefaultDataStructure();
     }
-    const userDocRef = db.collection('usuários').doc(currentUser.uid);
+    const userDocRef = db.collection('usuários').doc(user.uid);
     try {
         const doc = await userDocRef.get();
         if (doc.exists) {
@@ -40,11 +41,12 @@ export async function loadDataFromFirestore() {
 
 // ================== SALVAR DADOS ==================
 export function saveData(data) {
-    if (!currentUser) {
+    const user = auth.currentUser;
+    if (!user) {
         console.error("Tentando salvar dados sem usuário logado.");
         return;
     }
-    const userDocRef = db.collection('usuários').doc(currentUser.uid);
+    const userDocRef = db.collection('usuários').doc(user.uid);
     userDocRef.set(data)
         .then(() => {
             console.log("Progresso salvo na nuvem com sucesso!");
@@ -64,6 +66,7 @@ export function saveData(data) {
             }
         }
     }
+
     const mountsGrid = document.querySelector('.mounts-grid');
     if (mountsGrid) {
         const container = mountsGrid.parentNode;
