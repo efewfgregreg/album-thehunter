@@ -1,6 +1,6 @@
 // src/js/main.js
 
-import './firebase.js';
+import { auth } from './firebase.js';
 import './data.js';
 import './ui.js';
 import './dataManager.js';
@@ -52,7 +52,7 @@ function initializeApp() {
     });
 
     const appContainer = document.getElementById('app-container');
-    renderNavigationHub(appContainer);  // ← Garante renderização do Hub inicial
+    renderNavigationHub(appContainer);
 
     switchTab('pelagens');
 }
