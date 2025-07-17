@@ -14,8 +14,15 @@ const firebaseConfig = {
     measurementId: "G-3G5VBWBEDL"
 };
 
+// Inicializa Firebase
 const app = firebase.initializeApp(firebaseConfig);
+
+// Autenticação e Firestore
 const auth = firebase.auth();
 const db = firebase.firestore();
+
+// Variável global opcional (pode ser removida se não usada)
 let currentUser = null;
+
+// Exporta auth para ser usado nos outros módulos
 export { auth };

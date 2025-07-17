@@ -16,6 +16,7 @@ import './views/viewSuperRaresDetail.js';
 import './views/viewGreatsDetail.js';
 import { renderTrophyRoom } from './trophyRoomManager.js';
 import { renderMultiMountsView } from './views/viewMultiMounts.js';
+import { renderNavigationHub } from './views/viewNavigationHub.js';
 
 const tabs = document.querySelectorAll('.nav-card');
 tabs.forEach(tab => {
@@ -49,6 +50,9 @@ function initializeApp() {
             console.log('Usuário deslogado');
         }
     });
+
+    const appContainer = document.getElementById('app-container');
+    renderNavigationHub(appContainer);  // ← Garante renderização do Hub inicial
 
     switchTab('pelagens');
 }
