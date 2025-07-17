@@ -400,7 +400,8 @@
             filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%);
         }
         .mount-card.completed {
-            border-color: var(--completed-color); /* Alterado de --gold-color */
+            /* AQUI a cor da borda foi trocada para a variável de concluído (verde) */
+            border-color: var(--completed-color); 
         }
         .mount-card .mount-completed-banner {
             position: absolute;
@@ -408,7 +409,8 @@
             right: -30px;
             width: 60px;
             height: 60px;
-            background-color: var(--completed-color); /* Alterado de --gold-color */
+            /* AQUI a cor de fundo da faixa também foi trocada para verde */
+            background-color: var(--completed-color); 
             transform: rotate(45deg);
             display: flex;
             align-items: flex-end;
