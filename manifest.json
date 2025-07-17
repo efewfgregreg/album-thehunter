@@ -1,21 +1,12 @@
-{
-  "name": "Registro do Caçador",
-  "short_name": "Caçador",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#181a1b",
-  "theme_color": "#181a1b",
-  "description": "App de acompanhamento de pelagens raras, diamantes e super raros do theHunter: Call of the Wild.",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
+"icons": [
+  {
+    "src": "icon-192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  },
+  {
+    "src": "icon-512.png",
+    "sizes": "512x512",
+    "type": "image/png"
+  }
+]
