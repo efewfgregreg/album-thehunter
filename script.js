@@ -818,9 +818,9 @@ function renderReservesList(container) {
     }
 }
 
+
 // Mostra a visualização de detalhes de uma reserva
-// Mostra a visualização de detalhes de uma reserva
-function showReserveDetailView(reserveKey, originPage = 'reservas') { // MUDANÇA 1: Adicionado o parâmetro 'originPage'
+function showReserveDetailView(reserveKey, originPage = 'reservas') { 
     const mainContent = document.querySelector('.main-content');
     const contentContainer = mainContent.querySelector('.content-container');
     contentContainer.className = 'content-container reserve-detail-view';
@@ -832,9 +832,9 @@ function showReserveDetailView(reserveKey, originPage = 'reservas') { // MUDANÇ
     mainContent.querySelector('.page-header h2').textContent = reserve.name;
     const backButton = mainContent.querySelector('.page-header .back-button');
     
-    // MUDANÇA 2: O texto do botão agora é dinâmico
+    // O texto do botão agora é dinâmico
     backButton.innerHTML = `&larr; Voltar para ${categorias[originPage].title}`;
-    // MUDANÇA 3: O clique do botão agora usa a página de origem
+    // O clique do botão agora usa a página de origem
     backButton.onclick = () => renderMainView(originPage);
 
     const viewArea = document.createElement('div');
@@ -867,38 +867,6 @@ function showReserveDetailView(reserveKey, originPage = 'reservas') { // MUDANÇ
 
     renderAnimalChecklist(viewArea, reserveKey);
 }
-
-    const viewArea = document.createElement('div');
-    viewArea.className = 'reserve-view-area';
-    contentContainer.appendChild(viewArea);
-
-    const toggleButtons = document.createElement('div');
-    toggleButtons.className = 'reserve-view-toggle';
-    contentContainer.prepend(toggleButtons);
-
-    const btnAnimals = document.createElement('button');
-    btnAnimals.textContent = 'Animais da Reserva';
-    btnAnimals.className = 'toggle-button active';
-    btnAnimals.onclick = () => {
-        toggleButtons.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
-        btnAnimals.classList.add('active');
-        renderAnimalChecklist(viewArea, reserveKey);
-    };
-    toggleButtons.appendChild(btnAnimals);
-
-    const btnHotspots = document.createElement('button');
-    btnHotspots.textContent = 'Mapas de Hotspot';
-    btnHotspots.className = 'toggle-button';
-    btnHotspots.onclick = () => {
-        toggleButtons.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
-        btnHotspots.classList.add('active');
-        renderHotspotGalleryView(viewArea, reserveKey);
-    };
-    toggleButtons.appendChild(btnHotspots);
-
-    renderAnimalChecklist(viewArea, reserveKey);
-}
-
 // Renderiza a lista de animais com seus progressos
 function renderAnimalChecklist(container, reserveKey) {
     container.innerHTML = '';
