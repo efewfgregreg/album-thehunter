@@ -819,7 +819,8 @@ function renderReservesList(container) {
 }
 
 // Mostra a visualização de detalhes de uma reserva
-function showReserveDetailView(reserveKey) {
+// Mostra a visualização de detalhes de uma reserva
+function showReserveDetailView(reserveKey, originPage = 'reservas') { // MUDANÇA 1: Adicionado o parâmetro 'originPage'
     const mainContent = document.querySelector('.main-content');
     const contentContainer = mainContent.querySelector('.content-container');
     contentContainer.className = 'content-container reserve-detail-view';
@@ -830,8 +831,42 @@ function showReserveDetailView(reserveKey) {
 
     mainContent.querySelector('.page-header h2').textContent = reserve.name;
     const backButton = mainContent.querySelector('.page-header .back-button');
-    backButton.innerHTML = `&larr; Voltar para Reservas`;
-    backButton.onclick = () => renderMainView('reservas');
+    
+    // MUDANÇA 2: O texto do botão agora é dinâmico
+    backButton.innerHTML = `&larr; Voltar para ${categorias[originPage].title}`;
+    // MUDANÇA 3: O clique do botão agora usa a página de origem
+    backButton.onclick = () => renderMainView(originPage);
+
+    const viewArea = document.createElement('div');
+    viewArea.className = 'reserve-view-area';
+    contentContainer.appendChild(viewArea);
+
+    const toggleButtons = document.createElement('div');
+    toggleButtons.className = 'reserve-view-toggle';
+    contentContainer.prepend(toggleButtons);
+
+    const btnAnimals = document.createElement('button');
+    btnAnimals.textContent = 'Animais da Reserva';
+    btnAnimals.className = 'toggle-button active';
+    btnAnimals.onclick = () => {
+        toggleButtons.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
+        btnAnimals.classList.add('active');
+        renderAnimalChecklist(viewArea, reserveKey);
+    };
+    toggleButtons.appendChild(btnAnimals);
+
+    const btnHotspots = document.createElement('button');
+    btnHotspots.textContent = 'Mapas de Hotspot';
+    btnHotspots.className = 'toggle-button';
+    btnHotspots.onclick = () => {
+        toggleButtons.querySelectorAll('.toggle-button').forEach(btn => btn.classList.remove('active'));
+        btnHotspots.classList.add('active');
+        renderHotspotGalleryView(viewArea, reserveKey);
+    };
+    toggleButtons.appendChild(btnHotspots);
+
+    renderAnimalChecklist(viewArea, reserveKey);
+}
 
     const viewArea = document.createElement('div');
     viewArea.className = 'reserve-view-area';
@@ -1587,6 +1622,10 @@ function renderProgressView(container) {
  * ATUALIZAÇÃO: Nova função para renderizar o painel de progresso com design 2.0
  * @param {HTMLElement} container O elemento onde o painel será renderizado.
  */
+/**
+ * ATUALIZAÇÃO: Nova função para renderizar o painel de progresso com design 2.0
+ * @param {HTMLElement} container O elemento onde o painel será renderizado.
+ */
 function updateNewProgressPanel(container) {
     container.innerHTML = ''; // Limpa a área de conteúdo
 
@@ -1641,78 +1680,76 @@ function updateNewProgressPanel(container) {
     panel.appendChild(overallSection);
 
     // -- SEÇÃO DE PROGRESSO POR RESERVA --
-const reservesSection = document.createElement('div');
-reservesSection.innerHTML = `
-    <div class="progress-v2-header">
-        <h3>Domínio das Reservas</h3>
-        <p>Seu progresso em cada território de caça.</p>
-    </div>
-`;
-// ATUALIZAÇÃO: A classe da grade foi trocada para "reserve-progress-container-v2" para usar os novos estilos.
-const reservesGrid = document.createElement('div');
-reservesGrid.className = 'reserve-progress-container-v2';
+    const reservesSection = document.createElement('div');
+    reservesSection.innerHTML = `
+        <div class="progress-v2-header">
+            <h3>Domínio das Reservas</h3>
+            <p>Seu progresso em cada território de caça.</p>
+        </div>
+    `;
 
-Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
-    const reserveProgress = calcularReserveProgress(reserveKey);
-    const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes;
-    const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes;
-    const percentage = totalItems > 0 ? Math.round((collectedItems / totalItems) * 100) : 0;
+    const reservesGrid = document.createElement('div');
+    reservesGrid.className = 'reserve-progress-container-v2';
 
-    if (totalItems > 0) {
-        // --- INÍCIO DA ALTERAÇÃO ---
-        // O código para criar o card foi completamente refeito aqui.
-        const card = document.createElement('div');
-        card.className = 'reserve-progress-card-v2';
-        card.style.backgroundImage = `url('${reserve.image}')`; // Define a imagem de fundo dinamicamente
-        card.addEventListener('click', () => showReserveDetailView(reserveKey)); // Adiciona a funcionalidade de clique
+    Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
+        const reserveProgress = calcularReserveProgress(reserveKey);
+        const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes;
+        const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes;
+        const percentage = totalItems > 0 ? Math.round((collectedItems / totalItems) * 100) : 0;
 
-        card.innerHTML = `
-            <div class="rpc-overlay">
-                <div class="rpc-header">
-                    <img src="${reserve.image.replace('.png', '_logo.png')}" class="rpc-logo" onerror="this.style.display='none'">
-                    <div class="rpc-title-area">
-                        <h4 class="rpc-title">${reserve.name}</h4>
-                        <div class="rpc-main-progress-bar-bg">
-                            <div class="rpc-main-progress-bar-fill" style="width: ${percentage}%;"></div>
+        if (totalItems > 0) {
+            const card = document.createElement('div');
+            card.className = 'reserve-progress-card-v2';
+            card.style.backgroundImage = `url('${reserve.image}')`;
+            card.addEventListener('click', () => showReserveDetailView(reserveKey, 'progresso'));
+
+            // A LINHA DA IMAGEM DO LOGO FOI REMOVIDA DAQUI
+            card.innerHTML = `
+                <div class="rpc-overlay">
+                    <div class="rpc-header">
+                        <div class="rpc-title-area">
+                            <h4 class="rpc-title">${reserve.name}</h4>
+                            <div class="rpc-main-progress-bar-bg">
+                                <div class="rpc-main-progress-bar-fill" style="width: ${percentage}%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rpc-details">
+                        <div class="rpc-detail-item" title="Peles Raras">
+                            <i class="fas fa-paw"></i>
+                            <span>${reserveProgress.collectedRares} / ${reserveProgress.totalRares}</span>
+                        </div>
+                        <div class="rpc-detail-item" title="Diamantes">
+                            <i class="fas fa-gem"></i>
+                            <span>${reserveProgress.collectedDiamonds} / ${reserveProgress.totalDiamonds}</span>
+                        </div>
+                        <div class="rpc-detail-item" title="Great Ones">
+                            <i class="fas fa-crown"></i>
+                            <span>${reserveProgress.collectedGreatOnes} / ${reserveProgress.totalGreatOnes}</span>
                         </div>
                     </div>
                 </div>
-                <div class="rpc-details">
-                    <div class="rpc-detail-item" title="Peles Raras">
-                        <i class="fas fa-paw"></i>
-                        <span>${reserveProgress.collectedRares} / ${reserveProgress.totalRares}</span>
-                    </div>
-                    <div class="rpc-detail-item" title="Diamantes">
-                        <i class="fas fa-gem"></i>
-                        <span>${reserveProgress.collectedDiamonds} / ${reserveProgress.totalDiamonds}</span>
-                    </div>
-                    <div class="rpc-detail-item" title="Great Ones">
-                        <i class="fas fa-crown"></i>
-                        <span>${reserveProgress.collectedGreatOnes} / ${reserveProgress.totalGreatOnes}</span>
-                    </div>
-                </div>
-            </div>
-        `;
-        reservesGrid.appendChild(card);
-        // --- FIM DA ALTERAÇÃO ---
-    }
-});
+            `;
+            reservesGrid.appendChild(card);
+        }
+    });
     
-reservesSection.appendChild(reservesGrid);
-panel.appendChild(reservesSection);
+    reservesSection.appendChild(reservesGrid);
+    panel.appendChild(reservesSection);
 
-container.appendChild(panel);
+    container.appendChild(panel);
 }
 
+// Cria o painel de últimas conquistas
 // Cria o painel de últimas conquistas
 function createLatestAchievementsPanel() {
     const panel = document.createElement('div');
     panel.className = 'latest-achievements-panel';
     panel.innerHTML = '<h3><i class="fas fa-star"></i> Últimas Conquistas</h3>';
 
+
     const grid = document.createElement('div');
     grid.className = 'achievements-grid';
-
     const allTrophies = [];
     if(savedData.diamantes) {
         Object.entries(savedData.diamantes).forEach(([slug, trophies]) => {
@@ -1725,11 +1762,13 @@ function createLatestAchievementsPanel() {
             const animalName = items.find(i => slugify(i) === slug) || slug;
             if(greatOneData.furs) {
                 Object.entries(greatOneData.furs).forEach(([furName, furData]) => {
-                    (furData.trophies || []).forEach(trophy => allTrophies.push({ id: new Date(trophy.date).getTime(), animalName, furName, slug, type: 'greatone' }));
+                    (furData.trophies || []).forEach(trophy => allTrophies.push({ id: new Date(trophy.date).getTime(), animalName, furName, slug, 
+                    type: 'greatone' }));
                 });
             }
         });
     }
+
 
     if (allTrophies.length === 0) {
         grid.innerHTML = '<p style="color: var(--text-color-muted); grid-column: 1 / -1;">Nenhum troféu de destaque registrado ainda.</p>';
@@ -1740,14 +1779,18 @@ function createLatestAchievementsPanel() {
             const rotation = Math.random() * 6 - 3;
             card.style.transform = `rotate(${rotation}deg)`;
             card.addEventListener('mouseenter', () => card.style.zIndex = 10);
-            card.addEventListener('mouseleave', () => card.style.zIndex = 1);
+   
+             card.addEventListener('mouseleave', () => card.style.zIndex = 1);
+
 
             const animalSlug = trophy.slug;
             let imagePathString;
 
+
             if (trophy.type === 'diamante') {
                 const gender = trophy.furName.toLowerCase().includes('macho') ? 'macho' : 'femea';
-                const pureFurName = trophy.furName.replace(/^(macho|fêmea)\s/i, '').trim();
+                const pureFurName = 
+                trophy.furName.replace(/^(macho|fêmea)\s/i, '').trim();
                 const furSlug = slugify(pureFurName);
                 const specificPath = `animais/pelagens/${animalSlug}_${furSlug}_${gender}.png`;
                 const neutralPath = `animais/pelagens/${animalSlug}_${furSlug}.png`;
@@ -1762,12 +1805,14 @@ function createLatestAchievementsPanel() {
                 imagePathString = `src="animais/${animalSlug}.jpg" onerror="this.onerror=null;this.src='animais/placeholder.jpg';"`;
             }
 
+
             card.innerHTML = `
                 <img ${imagePathString}>
                 <div class="achievement-card-info">
                     <div class="animal-name">${trophy.animalName}</div>
                     <div class="fur-name">${trophy.furName.replace(' Diamante','')}</div>
-                </div>
+         
+               </div>
             `;
             grid.appendChild(card);
         });
