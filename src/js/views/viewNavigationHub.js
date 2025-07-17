@@ -1,24 +1,24 @@
 // src/js/views/viewNavigationHub.js
 
-// Renderiza o Hub de Navegação Inicial (Cards principais)
 function renderNavigationHub(container) {
     container.innerHTML = '';
+
+    const grid = document.createElement('div');
+    grid.className = 'album-grid';
 
     const sections = [
         { title: 'Pelagens', tab: 'pelagens' },
         { title: 'Diamantes', tab: 'diamantes' },
         { title: 'Super Raros', tab: 'super-raros' },
-        { title: 'Greats', tab: 'greats' }
+        { title: 'Great Ones', tab: 'greats' },
+        { title: 'Sala de Troféus', tab: 'trophy-room' },
+        { title: 'Multi-Montarias', tab: 'multi-mounts' }
     ];
-
-    const grid = document.createElement('div');
-    grid.className = 'album-grid';
 
     sections.forEach(section => {
         const card = document.createElement('div');
         card.className = 'nav-card';
         card.textContent = section.title;
-        card.dataset.tab = section.tab;
 
         card.addEventListener('click', () => {
             document.querySelectorAll('.main-content').forEach(tabContent => {
