@@ -1641,48 +1641,67 @@ function updateNewProgressPanel(container) {
     panel.appendChild(overallSection);
 
     // -- SEÇÃO DE PROGRESSO POR RESERVA --
-    const reservesSection = document.createElement('div');
-    reservesSection.innerHTML = `
-        <div class="progress-v2-header">
-            <h3>Domínio das Reservas</h3>
-            <p>Seu progresso em cada território de caça.</p>
-        </div>
-    `;
-    const reservesGrid = document.createElement('div');
-    reservesGrid.className = 'reserve-progress-container';
+const reservesSection = document.createElement('div');
+reservesSection.innerHTML = `
+    <div class="progress-v2-header">
+        <h3>Domínio das Reservas</h3>
+        <p>Seu progresso em cada território de caça.</p>
+    </div>
+`;
+// ATUALIZAÇÃO: A classe da grade foi trocada para "reserve-progress-container-v2" para usar os novos estilos.
+const reservesGrid = document.createElement('div');
+reservesGrid.className = 'reserve-progress-container-v2';
 
-    Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
-        const reserveProgress = calcularReserveProgress(reserveKey);
-        const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes;
-        const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes;
-        const percentage = totalItems > 0 ? Math.round((collectedItems / totalItems) * 100) : 0;
+Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
+    const reserveProgress = calcularReserveProgress(reserveKey);
+    const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes;
+    const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes;
+    const percentage = totalItems > 0 ? Math.round((collectedItems / totalItems) * 100) : 0;
 
-        if (totalItems > 0) {
-            const card = document.createElement('div');
-            card.className = 'reserve-progress-card';
-            card.innerHTML = `
-                <div class="reserve-progress-header">
-                    <img src="${reserve.image.replace('.png', '_logo.png')}" onerror="this.style.display='none'">
-                    <span>${reserve.name}</span>
-                </div>
-                <div class="reserve-progress-bar-area">
-                    <div class="reserve-progress-bar-bg">
-                        <div class="reserve-progress-bar-fill" style="width: ${percentage}%"></div>
+    if (totalItems > 0) {
+        // --- INÍCIO DA ALTERAÇÃO ---
+        // O código para criar o card foi completamente refeito aqui.
+        const card = document.createElement('div');
+        card.className = 'reserve-progress-card-v2';
+        card.style.backgroundImage = `url('${reserve.image}')`; // Define a imagem de fundo dinamicamente
+        card.addEventListener('click', () => showReserveDetailView(reserveKey)); // Adiciona a funcionalidade de clique
+
+        card.innerHTML = `
+            <div class="rpc-overlay">
+                <div class="rpc-header">
+                    <img src="${reserve.image.replace('.png', '_logo.png')}" class="rpc-logo" onerror="this.style.display='none'">
+                    <div class="rpc-title-area">
+                        <h4 class="rpc-title">${reserve.name}</h4>
+                        <div class="rpc-main-progress-bar-bg">
+                            <div class="rpc-main-progress-bar-fill" style="width: ${percentage}%;"></div>
+                        </div>
                     </div>
-                    <div class="reserve-progress-details">
-                        <span>${collectedItems} / ${totalItems} Coletados</span>
-                        <span>${percentage}% Completo</span>
+                </div>
+                <div class="rpc-details">
+                    <div class="rpc-detail-item" title="Peles Raras">
+                        <i class="fas fa-paw"></i>
+                        <span>${reserveProgress.collectedRares} / ${reserveProgress.totalRares}</span>
+                    </div>
+                    <div class="rpc-detail-item" title="Diamantes">
+                        <i class="fas fa-gem"></i>
+                        <span>${reserveProgress.collectedDiamonds} / ${reserveProgress.totalDiamonds}</span>
+                    </div>
+                    <div class="rpc-detail-item" title="Great Ones">
+                        <i class="fas fa-crown"></i>
+                        <span>${reserveProgress.collectedGreatOnes} / ${reserveProgress.totalGreatOnes}</span>
                     </div>
                 </div>
-            `;
-            reservesGrid.appendChild(card);
-        }
-    });
+            </div>
+        `;
+        reservesGrid.appendChild(card);
+        // --- FIM DA ALTERAÇÃO ---
+    }
+});
     
-    reservesSection.appendChild(reservesGrid);
-    panel.appendChild(reservesSection);
+reservesSection.appendChild(reservesGrid);
+panel.appendChild(reservesSection);
 
-    container.appendChild(panel);
+container.appendChild(panel);
 }
 
 // Cria o painel de últimas conquistas

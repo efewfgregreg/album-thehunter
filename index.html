@@ -188,34 +188,109 @@
         .dossier-tab.active { color: var(--primary-color); border-bottom-color: var(--primary-color); }
         .dossier-tab .fa-crown { color: var(--gold-color); }
         
-        /* --- ESTILOS PAINEL DE PROGESSO --- */
-        .progress-view-container { display: flex; flex-direction: column; gap: 30px; }
-        .latest-achievements-panel { background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(https://www.transparenttextures.com/patterns/leather.png); background-color: #3a3834; padding: 20px; border-radius: 8px; border: 1px solid #5a554a; }
-        .latest-achievements-panel h3 { font-family: var(--font-headings); letter-spacing: 1px; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 20px; }
-        .achievement-card { background-color: #f0ead6; padding: 10px 10px 15px 10px; border-radius: 4px; box-shadow: 3px 3px 8px rgba(0,0,0,0.4); transition: transform 0.2s ease, box-shadow 0.2s ease; width: 100%; height: auto; cursor: pointer; }
-        .achievement-card:hover { transform: scale(1.05); box-shadow: 6px 6px 12px rgba(0,0,0,0.5); z-index: 10; }
-        .achievement-card img { width: 100%; height: 100px; object-fit: cover; background-color: #333; border: 1px solid #ccc; }
-        .achievement-card-info { padding-top: 8px; text-align: center; }
-        .achievement-card-info .animal-name { font-family: var(--font-body); font-style: italic; font-size: 1rem; color: #444; font-weight: 700; }
-        .achievement-card-info .fur-name { font-size: 0.8rem; color: #666; }
-        #progress-panel { display: flex; flex-direction: column; gap: 20px; }
-        .progress-section { background-color: var(--surface-color); padding: 15px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease-in-out; border: 1px solid var(--border-color); }
-        .progress-section:hover { background-color: #36393f; border-color: var(--primary-color); }
-        .progress-header { display: flex; justify-content: space-between; align-items: center; }
-        .progress-header h3 { margin: 0; font-family: var(--font-headings); }
-        .progress-title-container { display: flex; align-items: center; gap: 10px; }
-        .progress-medal { font-size: 1.5rem; }
-        .progress-medal.bronze { color: var(--bronze-color); }
-        .progress-medal.silver { color: var(--silver-color); }
-        .progress-medal.gold { color: var(--gold-color); }
-        .progress-label { text-align: right; color: var(--text-color-muted); font-size: 0.9rem; font-weight: bold; }
-        .progress-bar-container { background-color: var(--bg-color); border-radius: 5px; overflow: hidden; height: 12px; margin-top: 10px; }
-        .progress-bar-fill { background: linear-gradient(90deg, #43A047, #66BB6A); height: 100%; transition: width 0.5s ease; border-radius: 5px; }
-        .progress-detail-view { margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; }
-        .progress-detail-item { display: flex; align-items: center; justify-content: space-between; font-size: 0.9rem; }
-        .progress-detail-item .label { color: var(--text-color-muted); }
-        .progress-detail-item .value { font-weight: bold; }
+        /* --- ESTILOS PAINEL DE PROGRESSO V2 (Cartões de Expedição) --- */
+.reserve-progress-container-v2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 20px;
+}
 
+.reserve-progress-card-v2 {
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    height: 150px; /* Altura fixa para consistência */
+    display: flex;
+}
+
+.reserve-progress-card-v2:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 188, 212, 0.3);
+    border-color: var(--primary-color);
+}
+
+.rpc-overlay {
+    background: linear-gradient(to top, rgba(24, 26, 27, 0.95) 55%, rgba(24, 26, 27, 0.6));
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Alinha o conteúdo na parte de baixo */
+}
+
+.rpc-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.rpc-logo {
+    height: 50px;
+    width: 50px;
+    object-fit: contain;
+    flex-shrink: 0;
+}
+
+.rpc-title-area {
+    width: 100%;
+}
+
+.rpc-title {
+    font-family: var(--font-headings);
+    font-size: 1.3rem;
+    margin: 0 0 8px 0;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rpc-main-progress-bar-bg {
+    background-color: rgba(0,0,0,0.3);
+    border-radius: 10px;
+    height: 8px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.rpc-main-progress-bar-fill {
+    height: 100%;
+    background: var(--primary-color);
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+.rpc-details {
+    display: flex;
+    justify-content: space-around;
+    background-color: rgba(0,0,0,0.2);
+    padding: 8px;
+    border-radius: 6px;
+    border-top: 1px solid var(--border-color);
+}
+
+.rpc-detail-item {
+    text-align: center;
+    color: var(--text-color-muted);
+    font-size: 0.9rem;
+}
+
+.rpc-detail-item i {
+    font-size: 1.2rem;
+    display: block;
+    margin-bottom: 4px;
+    color: var(--primary-color);
+}
+
+.rpc-detail-item[title="Great Ones"] i { color: var(--gold-color); }
+.rpc-detail-item[title="Peles Raras"] i { color: #d69e3a; }
         /* --- ESTILOS HUB DE GRIND --- */
         .grind-hub-container { display: flex; flex-direction: column; gap: 40px; }
         .new-grind-btn { background: linear-gradient(45deg, var(--primary-color), #00d4c3); color: var(--bg-color); padding: 25px; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s ease; font-family: var(--font-headings); text-transform: uppercase; letter-spacing: 2px; border: none; }
