@@ -549,26 +549,26 @@ const animalHotspotData = {
     "pato_arlequim": { "maxScore": "7.23", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
 },
     "askiy_ridge": {
-        "alce": { maxScore: "274.99", maxWeightEstimate: "545-620 KG", drinkZonesPotential: "12:00 - 16:00", animalClass: "8", maxLevel: "5 (Médio)" },
-        "caribu_da_floresta_boreal": { maxScore: "430.23", maxWeightEstimate: "161-190 KG", drinkZonesPotential: "20:00 - 00:00", animalClass: "6", maxLevel: "5 (Médio)" },
-        "urso_negro": { maxScore: "22.8", maxWeightEstimate: "227-290 KG", drinkZonesPotential: "04:00 - 08:00", animalClass: "7", maxLevel: "9 (Lendário)" },
-        "veado_mula": { maxScore: "312.17", maxWeightEstimate: "175-210 KG", drinkZonesPotential: "15:00-18:00", animalClass: "5", maxLevel: "5 (Médio)" },
-        "bisão_da_floresta": { maxScore: "158", maxWeightEstimate: "1112-1350 KG", drinkZonesPotential: "08:00-12:00", animalClass: "9", maxLevel: "5 (Médio)" },
-        "cabra_da_montanha": { maxScore: "107.67", maxWeightEstimate: "120-145 KG", drinkZonesPotential: "O DIA TODO", animalClass: "4", maxLevel: "5 (Médio)" },
-        "antilocapra": { maxScore: "108", maxWeightEstimate: "57-65 KG", drinkZonesPotential: "18:00-21:00", animalClass: "3", maxLevel: "5 (Médio)" },
-        "tetraz_azul": { maxScore: "151", maxWeightEstimate: "1.38-1.60 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "pato_real": { maxScore: "19.61", maxWeightEstimate: "1-2 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "pato_carolino": { maxScore: "670", maxWeightEstimate: "0 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "marreca_arrebio": { maxScore: "1040", maxWeightEstimate: "0-1 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "ganso_do_canadá": { maxScore: "8.59", maxWeightEstimate: "8-9 KG", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "5 (Médio)" },
-        "ganso_das_neves": { maxScore: "3.85", maxWeightEstimate: "3-4 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "5 (Médio)" },
-        "lobo_cinzento": { maxScore: "39", maxWeightEstimate: "67-80 KG", drinkZonesPotential: "17:00-20:00", animalClass: "5", maxLevel: "9 (Lendário)" },
-        "cervo_canadense": { maxScore: "457.56", maxWeightEstimate: "395-450 kg", drinkZonesPotential: "04:00-08:00", animalClass: "7", maxLevel: "5 (Médio)" },
-        "veado_de_cauda_branca": { maxScore: "255.09", maxWeightEstimate: "75-100 KG", drinkZonesPotential: "08:00 - 12:00", animalClass: "4", maxLevel: "3 (Muito Fácil)" },
-        "faisão_de_pescoço_anelado": { maxScore: "20.29", maxWeightEstimate: "2-3 kg", drinkZonesPotential: "O DIA TODO", animalClass: "1", maxLevel: "3 (Muito Fácil)" },
-        "carneiro_selvagem": { maxScore: "196.93", maxWeightEstimate: "132-160 KG", drinkZonesPotential: "12:00-16:00", animalClass: "5", maxLevel: "5 (Médio)" },
-        "castor_norte_americano": { maxScore: "30.40", maxWeightEstimate: "28-32 kg", drinkZonesPotential: "04:00-08:00, 08:00-12:00, 16:00-20:00", animalClass: "2", maxLevel: "5 (Médio)" }
-    }
+    "alce": { "maxScore": "274.99", "maxWeightEstimate": "545-620 KG", "drinkZonesPotential": "12:00 - 16:00", "animalClass": "8", "maxLevel": "5 (Médio)" },
+    "caribu_da_floresta_boreal": { "maxScore": "430.23", "maxWeightEstimate": "161-190 KG", "drinkZonesPotential": "20:00 - 00:00", "animalClass": "6", "maxLevel": "5 (Médio)" },
+    "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
+    "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+    "bisão_da_floresta": { "maxScore": "158", "maxWeightEstimate": "1112-1350 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
+    "cabra_da_montanha": { "maxScore": "107.67", "maxWeightEstimate": "120-145 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "4", "maxLevel": "5 (Médio)" },
+    "antilocapra": { "maxScore": "108", "maxWeightEstimate": "57-65 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
+    "tetraz_azul": { "maxScore": "151", "maxWeightEstimate": "1.38-1.60 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+    "pato_real": { "maxScore": "19.61", "maxWeightEstimate": "1-2 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+    "pato_carolino": { "maxScore": "670", "maxWeightEstimate": "0 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+    "marreca_arrebio": { "maxScore": "1040", "maxWeightEstimate": "0-1 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+    "ganso_do_canadá": { "maxScore": "8.59", "maxWeightEstimate": "8-9 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+    "ganso_das_neves": { "maxScore": "3.85", "maxWeightEstimate": "3-4 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "5 (Médio)" },
+    "lobo_cinzento": { "maxScore": "39", "maxWeightEstimate": "67-80 KG", "drinkZonesPotential": "17:00-20:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+    "cervo_canadense": { "maxScore": "457.56", "maxWeightEstimate": "395-450 kg", "drinkZonesPotential": "04:00-08:00", "animalClass": "7", "maxLevel": "5 (Médio)" },
+    "veado_de_cauda_branca": { "maxScore": "255.09", "maxWeightEstimate": "75-100 KG", "drinkZonesPotential": "08:00 - 12:00", "animalClass": "4", "maxLevel": "3 (Muito Fácil)" },
+    "faisão_de_pescoço_anelado": { "maxScore": "20.29", "maxWeightEstimate": "2-3 kg", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
+    "carneiro_selvagem": { "maxScore": "196.93", "maxWeightEstimate": "132-160 KG", "drinkZonesPotential": "12:00-16:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
+    "castor_norte_americano": { "maxScore": "30.40", "maxWeightEstimate": "28-32 kg", "drinkZonesPotential": "04:00-08:00, 08:00-12:00, 16:00-20:00", "animalClass": "2", "maxLevel": "5 (Médio)" }
+}
 };
 
 const multiMountsData = { "a_fuga": { name: "A Fuga", animals: [{ slug: "veado_vermelho", gender: "macho" },{ slug: "veado_vermelho", gender: "femea" }] }, "abraco_do_urso": { name: "Abraço do Urso", animals: [{ slug: "urso_cinzento", gender: "macho" },{ slug: "urso_cinzento", gender: "macho" }] }, "adeus_filho": { name: "Adeus, Filho", animals: [{ slug: "bisão_das_planícies", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "macho" }] }, "admiralces": { name: "Admiralces", animals: [{ slug: "alce", gender: "macho" },{ slug: "codorniz_da_virgínia", gender: "macho" }] }, "almoco_da_raposa": { name: "Almoço da Raposa", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "banquete_no_ar": { name: "Banquete no Ar", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "brincadeira_de_aves": { name: "Brincadeira de Aves", animals: [{ slug: "lagópode_escocês", gender: "macho" },{ slug: "cão_guaxinim", gender: "macho" }] }, "brincando_de_briga": { name: "Brincando de Briga", animals: [{ slug: "lince_euroasiática", gender: "macho" },{ slug: "lince_euroasiática", gender: "femea" }] }, "caudas_brancas_unidas": { name: "Caudas Brancas Unidas", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "colisao": { name: "Colisão", animals: [{ slug: "veado_de_cauda_preta", gender: "macho" },{ slug: "onça_parda", gender: "macho" }] }, "competicao_amistosa": { name: "Competição Amistosa", animals: [{ slug: "coiote", gender: "macho" },{ slug: "coiote", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" }] }, "corcas_unidas": { name: "Corças Unidas", animals: [{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" },{ slug: "corça", gender: "macho" }] }, "davi_e_golias": { name: "Davi e Golias", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "de_cabeca": { name: "De Cabeça", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" }] }, "decolagem_de_emergencia": { name: "Decolagem de Emergência", animals: [{ slug: "coiote", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "macho" },{ slug: "pato_real", gender: "femea" }] }, "despedida_do_solteiros": { name: "Despedida dos Solteiros", animals: [{ slug: "veado_mula", gender: "macho" },{ slug: "veado_mula", gender: "femea" },{ slug: "veado_mula", gender: "femea" }] }, "dois_tipos_de_perus": { name: "Dois Tipos de Perus", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem_do_rio_grande", gender: "macho" }] }, "espionagem_tatica": { name: "Espionagem Tática", animals: [{ slug: "onça_parda", gender: "femea" },{ slug: "veado_de_roosevelt", gender: "macho" }] }, "faisoes_em_fuga": { name: "Faisões em Fuga", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "faisão_de_pescoço_anelado", gender: "macho" }] }, "falso_tronco": { name: "Falso Tronco", animals: [{ slug: "jacaré_americano", gender: "macho" },{ slug: "guaxinim_comum", gender: "macho" }] }, "fantasma_da_montanha": { name: "Fantasma da Montanha", animals: [{ slug: "leopardo_das_neves", gender: "macho" },{ slug: "carneiro_azul", gender: "macho" }] }, "fartura_de_bisoes": { name: "Fartura de Bisões", animals: [{ slug: "bisão_europeu", gender: "macho" },{ slug: "bisão_europeu", gender: "macho" }] }, "gamos_unidos": { name: "Gamos Unidos", animals: [{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" },{ slug: "gamo", gender: "macho" }] }, "ganha_pao": { name: "Ganha-pão", animals: [{ slug: "búfalo_africano", gender: "macho" },{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" },{ slug: "leão", gender: "femea" }] }, "gansos_zangados": { name: "Gansos Zangados", animals: [{ slug: "ganso_do_canadá", gender: "macho" },{ slug: "ganso_do_canadá", gender: "macho" }] }, "gluglu": { name: "Gluglu", animals: [{ slug: "peru_selvagem", gender: "macho" },{ slug: "peru_selvagem", gender: "femea" },{ slug: "peru_selvagem", gender: "femea" }] }, "lanchinho_de_tigre": { name: "Lanchinho de Tigre", animals: [{ slug: "tahr", gender: "macho" },{ slug: "tahr", gender: "femea" },{ slug: "tahr", gender: "femea" }] }, "laod_a_lado": { name: "Lado a Lado", animals: [{ slug: "veado_de_cauda_branca", gender: "macho" },{ slug: "veado_de_cauda_branca", gender: "macho" }] }, "lebres_rivais": { name: "Lebres Rivais", animals: [{ slug: "lebre_antílope", gender: "macho" },{ slug: "lebre_antílope", gender: "macho" }] }, "lobo_alfa": { name: "Lobo Alfa", animals: [{ slug: "lobo_cinzento", gender: "macho" },{ slug: "lobo_cinzento", gender: "femea" },{ slug: "lobo_cinzento", gender: "femea" }] }, "marujos_de_agua_doce": { name: "Marujos de Água Doce", animals: [{ slug: "faisão_de_pescoço_anelado", gender: "macho" },{ slug: "tetraz_grande", gender: "macho" },{ slug: "ganso_bravo", gender: "macho" },{ slug: "ganso_campestre_da_tundra", gender: "macho" }] }, "necessidades_basicas": { name: "Necessidades Básicas", animals: [{ slug: "urso_negro", gender: "macho" },{ slug: "urso_negro", gender: "macho" }] }, "o_grand_slam": { name: "O Grand Slam", animals: [{ slug: "ibex_de_beceite", gender: "macho" },{ slug: "ibex_de_gredos", gender: "macho" },{ slug: "ibex_de_ronda", gender: "macho" },{ slug: "ibex_espanhol_do_sudeste", gender: "macho" }] }, "operador_suave": { name: "Operador Suave", animals: [{ slug: "tetraz_grande", gender: "macho" },{ slug: "tetraz_grande", gender: "femea" },{ slug: "tetraz_grande", gender: "femea" }] }, "os_tres_patinhos": { name: "Os Três Patinhos", animals: [{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "parceiros_no_crime": { name: "Parceiros no Crime", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_vermelha", gender: "macho" }] }, "presas_a_mostra": { name: "Presas à Mostra", animals: [{ slug: "mouflão_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" },{ slug: "lobo_ibérico", gender: "macho" }] }, "procos_do_mato_em_conflito": { name: "Procos-do-Mato em Conflito", animals: [{ slug: "caititu", gender: "macho" },{ slug: "caititu", gender: "macho" }] }, "ramboru": { name: "Ramboru", animals: [{ slug: "canguru_cinzento_oriental", gender: "macho" },{ slug: "canguru_cinzento_oriental", gender: "macho" }] }, "raposas_adversarias": { name: "Raposas Adversárias", animals: [{ slug: "raposa_vermelha", gender: "macho" },{ slug: "raposa_cinzenta", gender: "macho" }] }, "realeza": { name: "Realeza", animals: [{ slug: "leão", gender: "macho" },{ slug: "leão", gender: "femea" }] }, "rixa_de_aves": { name: "Rixa de Aves", animals: [{ slug: "galo_lira", gender: "macho" },{ slug: "galo_lira", gender: "macho" }] }, "saindo_de_fininho": { name: "Saindo de Fininho", animals: [{ slug: "pato_real", gender: "macho" },{ slug: "pato_olho_de_ouro", gender: "macho" },{ slug: "zarro_negrinha", gender: "macho" },{ slug: "marrequinha_comum", gender: "macho" },{ slug: "piadeira", gender: "macho" },{ slug: "zarro_castanho", gender: "macho" },{ slug: "frisada", gender: "macho" }] }, "tahr_angulo_amoroso": { name: "Tahr-ângulo Amoroso", animals: [{ slug: "tigre_de_bengala", gender: "macho" },{ slug: "cervo_do_pântano", gender: "macho" }] }, "treno_vendido_separadamente": { name: "Trenó Vendido Separadamente", animals: [{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" },{ slug: "rena_da_montanha", gender: "macho" }] }, "turma_dos_coelhos": { name: "Turma dos Coelhos", animals: [{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "macho" },{ slug: "lebre_da_cauda_branca", gender: "femea" },{ slug: "lebre_da_cauda_branca", gender: "femea" }] }, "um_crocodilo_sortudo": { name: "Um Crocodilo Sortudo", animals: [{ slug: "ganso_pega", gender: "macho" },{ slug: "crocodilo_de_água_salgada", gender: "macho" }] }, "um_par_de_predadores": { name: "Um Par de Predadores", animals: [{ slug: "coiote", gender: "macho" },{ slug: "lince_pardo_do_mexico", gender: "macho" }] }, "vigilancia": { name: "Vigilância", animals: [{ slug: "cudo_menor", gender: "macho" },{ slug: "cudo_menor", gender: "femea" }] }, "viver_amar_lenhar": { name: "Viver, Amar, Lenhar", animals: [{ slug: "castor_norte_americano", gender: "macho" },{ slug: "castor_norte_americano", gender: "femea" }] } };
@@ -579,8 +579,8 @@ function slugify(texto) { return texto.toLowerCase().replace(/[-\s]+/g, '_').rep
 // Define as categorias e seus ícones
 const categorias = {
     pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
-    diamantes: { title: 'Diamantes', items: items, icon: 'fas fa-gem' },
-    greats: { title: 'Great Ones', items: ["Alce", "Urso Negro", "Veado-Mula", "Veado Vermelho", "Veado-de-cauda-branca", "Raposa Vermelha", "Faisão", "Gamo", "Tahr"], icon: 'fas fa-crown' },
+    diamantes: { title: 'Diamantes', items: items, icon: '<img src="icones/diamante_icon.png" class="custom-icon">', isHtml: true },
+    greats: { title: 'Great Ones', items: ["Alce", /*...*/], icon: '<img src="icones/greatone_icon.png" class="custom-icon">', isHtml: true },
     super_raros: {
         title: 'Super Raros',
         items: items, // TODOS os animais aparecem na lista principal
@@ -617,7 +617,8 @@ function renderNavigationHub() {
         const cat = categorias[key];
         const card = document.createElement('div');
         card.className = 'nav-card';
-        card.innerHTML = `<i class="${cat.icon || 'fas fa-question-circle'}"></i><span>${cat.title}</span>`;
+        const iconHtml = cat.isHtml ? cat.icon.replace('custom-icon', 'custom-icon nav-card-icon') : `<i class="${cat.icon || 'fas fa-question-circle'}"></i>`;
+card.innerHTML = `${iconHtml}<span>${cat.title}</span>`;
         card.dataset.target = key;
         card.addEventListener('click', () => renderMainView(key));
         hub.appendChild(card);
@@ -763,7 +764,7 @@ function renderAnimalDossier(animalName, originReserveKey) {
     };
     // Adiciona a aba Great Ones se o animal puder ser um Great One
     if (greatsFursData[slug]) {
-        tabs.greats = { title: '<i class="fas fa-crown"></i> Great Ones', renderFunc: renderGreatsDetailView };
+        tabs.greats = { title: '<img src="icones/greatone_icon.png" class="custom-icon"> Great Ones', renderFunc: renderGreatsDetailView };
     }
 
     Object.entries(tabs).forEach(([key, value]) => {
@@ -808,8 +809,7 @@ function renderReservesList(container) {
             <div class="reserve-card-info-panel">
                 <div class="reserve-card-stats">
                     <span><i class="fas fa-paw"></i> ${progress.collectedRares}</span>
-                    <span><i class="fas fa-gem"></i> ${progress.collectedDiamonds}</span>
-                    <span><i class="fas fa-crown"></i> ${progress.collectedGreatOnes}</span>
+                    <span><img src="icones/diamante_icon.png" class="custom-icon"> ${progress.collectedDiamonds}</span>
                 </div>
             </div>
         `;
@@ -902,13 +902,13 @@ function renderAnimalChecklist(container, reserveKey) {
                     </div>
                 </div>
                 <div class="mini-progress" title="Diamantes: ${collectedDiamonds}/${totalDiamonds}">
-                    <i class="fas fa-gem"></i>
+                    <img src="icones/diamante_icon.png" class="custom-icon">
                     <div class="mini-progress-bar-container">
                         <div class="mini-progress-bar" style="width: ${diamondsPercentage}%"></div>
                     </div>
                 </div>
             </div>
-            <i class="fas fa-crown great-one-indicator ${isGreatOne ? 'possible' : ''}" title="Pode ser Great One"></i>
+            <img src="icones/greatone_icon.png" class="custom-icon great-one-indicator ${isGreatOne ? 'possible' : ''}" title="Pode ser Great One">
         `;
         row.addEventListener('click', () => showDetailView(animalName, 'reservas', reserveKey));
         checklistContainer.appendChild(row);
@@ -1271,7 +1271,7 @@ async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey
     } else {
         trophies.forEach((trophy, index) => {
             const li = document.createElement('li');
-            const grindDetails = `Grind: ${trophy.abates || 0} | <i class="fas fa-gem"></i> ${trophy.diamantes || 0} | <i class="fas fa-paw"></i> ${trophy.pelesRaras || 0}`;
+            const grindDetails = `Grind: ${trophy.abates || 0} |<img src="icones/diamante_icon.png" class="custom-icon"> ${trophy.diamantes || 0} | <i class="fas fa-paw"></i> ${trophy.pelesRaras || 0}`;
             li.innerHTML = `<span>Abate ${new Date(trophy.date).toLocaleDateString()} (${grindDetails})</span>`;
 
             const deleteBtn = document.createElement('button');
@@ -1688,11 +1688,11 @@ function updateNewProgressPanel(container) {
                             <span>${reserveProgress.collectedRares} / ${reserveProgress.totalRares}</span>
                         </div>
                         <div class="rpc-detail-item" title="Diamantes">
-                            <i class="fas fa-gem"></i>
+                            <img src="icones/diamante_icon.png" class="custom-icon">
                             <span>${reserveProgress.collectedDiamonds} / ${reserveProgress.totalDiamonds}</span>
                         </div>
                         <div class="rpc-detail-item" title="Great Ones">
-                            <i class="fas fa-crown"></i>
+                            <img src="icones/greatone_icon.png" class="custom-icon">
                             <span>${reserveProgress.collectedGreatOnes} / ${reserveProgress.totalGreatOnes}</span>
                         </div>
                     </div>
@@ -2090,16 +2090,15 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
     }
 }
 
-// Renderiza a visualização do contador de grind (VERSÃO 2.0)
+// Renderiza a visualização do contador de grind (VERSÃO FINAL COM DETALHES E MAPA)
 async function renderGrindCounterView(sessionId) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
-    if (!session) { 
-        console.error("Sessão de grind não encontrada!", sessionId); 
-        renderMainView('grind'); 
-        return; 
+    if (!session) {
+        console.error("Sessão de grind não encontrada!", sessionId);
+        renderMainView('grind');
+        return;
     }
 
-    // Garante que a estrutura de contagem exista
     const counts = {
         total: session.counts.total || 0,
         diamonds: session.counts.diamonds || 0,
@@ -2113,7 +2112,8 @@ async function renderGrindCounterView(sessionId) {
     const { animalSlug, reserveKey } = session;
     const animalName = items.find(item => slugify(item) === animalSlug);
     const reserveName = reservesData[reserveKey].name;
-    const hotspotInfo = animalHotspotData[reserveKey]?.[animalSlug];
+    const hotspotInfo = animalHotspotData[reserveKey]?.[animalSlug] || {};
+    const hotspotImagePath = `hotspots/${slugify(reserveName)}_${animalSlug}_hotspot.jpg`; // Caminho da imagem do mapa
 
     const mainContent = document.querySelector('.main-content');
     const container = mainContent.querySelector('.content-container');
@@ -2122,76 +2122,79 @@ async function renderGrindCounterView(sessionId) {
     backButton.innerHTML = `&larr; Voltar para o Hub de Grind`;
     backButton.onclick = () => renderMainView('grind');
 
-    // Novo Layout em 2 Colunas
     container.innerHTML = `
-        <div class="grind-page-layout">
-            <div class="grind-dossier-panel">
-                <img src="animais/${animalSlug}.png" class="animal-silhouette" onerror="this.style.display='none'">
-                <div class="dossier-header">
+        <div class="grind-container">
+            <div class="grind-header">
+                <div class="grind-header-info">
                     <h2>${animalName.toUpperCase()}</h2>
                     <span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span>
                 </div>
-                <div class="dossier-info-grid">
-                    <div class="dossier-info-item">
-                        <strong>Pontuação Máx.</strong>
-                        <span>${hotspotInfo?.maxScore || 'N/A'}</span>
-                    </div>
-                    <div class="dossier-info-item">
-                        <strong>Peso Máx.</strong>
-                        <span>${hotspotInfo?.maxWeightEstimate || 'N/A'}</span>
-                    </div>
-                    <div class="dossier-info-item">
-                        <strong>Horários (Bebida)</strong>
-                        <span>${hotspotInfo?.drinkZonesPotential || 'N/A'}</span>
-                    </div>
-                     <div class="dossier-info-item">
-                        <strong>Classe</strong>
-                        <span>${hotspotInfo?.animalClass || 'N/A'}</span>
-                    </div>
-                    <div class="dossier-info-item">
-                        <strong>Nível Máx.</strong>
-                        <span>${hotspotInfo?.maxLevel || 'N/A'}</span>
+                
+                <div class="grind-header-details">
+                    <div class="detail-item"><i class="fas fa-trophy"></i><strong>Pontuação Máx:</strong><span>${hotspotInfo.maxScore || 'N/A'}</span></div>
+                    <div class="detail-item"><i class="fas fa-weight-hanging"></i><strong>Peso Máx:</strong><span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
+                    <div class="detail-item"><i class="fas fa-clock"></i><strong>Bebida:</strong><span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
+                    <div class="detail-item"><i class="fas fa-crosshairs"></i><strong>Classe:</strong><span>${hotspotInfo.animalClass || 'N/A'}</span></div>
+                    <div class="detail-item"><i class="fas fa-star"></i><strong>Nível Máx:</strong><span>${hotspotInfo.maxLevel || 'N/A'}</span></div>
+                    <div class="detail-item">
+                        <button class="hotspot-button" onclick="openImageViewer('${hotspotImagePath}')">
+                            <i class="fas fa-map-marked-alt"></i> Ver Mapa
+                        </button>
                     </div>
                 </div>
-                <button id="show-hotspot-map-btn" class="back-button hotspot-map-btn">Ver Mapa de Hotspot</button>
             </div>
 
-            <div class="grind-counters-panel">
-                 <div class="grind-counter-item total-kills-v2" data-type="total">
+            <div class="counters-wrapper">
+                <div class="grind-counter-item total-kills" data-type="total">
                     <div class="grind-counter-header">
                         <i class="fas fa-crosshairs"></i><span>Total de Abatimentos</span>
                     </div>
                     <div class="grind-counter-body">
                         <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
-                        <span class="grind-counter-value" id="total-kills-value">${counts.total}</span>
+                        <input type="number" class="grind-total-input" id="total-kills-input" value="${counts.total}">
                         <button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button>
                     </div>
                 </div>
-                <div class="counters-wrapper v2">
-                    <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><i class="fas fa-gem"></i><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                    <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                    <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                    <div class="grind-counter-item great-ones" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-crown"></i><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                    <div class="grind-counter-item super-rare" data-type="super_raros" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_raros.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                </div>
-                <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
+
+                <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><img src="icones/diamante_icon.png" alt="Diamante"><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item great-one" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><img src="icones/greatone_icon.png" alt="Great One"><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item super-rare" data-type="super_raros" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_raros.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
             </div>
+            <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
         </div>
     `;
 
     // --- LÓGICA DOS EVENTOS ---
+    const totalInput = document.getElementById('total-kills-input');
+    const saveTotalKills = () => {
+        const newValue = parseInt(totalInput.value, 10);
+        if (!isNaN(newValue) && newValue >= 0) {
+            const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
+            if (currentSession && currentSession.counts.total !== newValue) {
+                currentSession.counts.total = newValue;
+                saveData(savedData);
+            }
+        }
+    };
+    totalInput.addEventListener('change', saveTotalKills);
+    totalInput.addEventListener('blur', saveTotalKills);
 
-    // Botão para ver mapa de Hotspot
-    const hotspotBtn = document.getElementById('show-hotspot-map-btn');
-    if (hotspotInfo) {
-        hotspotBtn.onclick = () => renderHotspotDetailModal(reserveKey, animalSlug);
-    } else {
-        hotspotBtn.disabled = true;
-        hotspotBtn.textContent = 'Nenhum Hotspot Disponível';
-    }
-    
-    // Lógica dos contadores
-    container.querySelectorAll('.grind-counter-btn').forEach(button => {
+    const totalCounterItem = container.querySelector('.total-kills');
+    totalCounterItem.querySelector('.increase').addEventListener('click', () => {
+        totalInput.value = parseInt(totalInput.value, 10) + 1;
+        saveTotalKills();
+    });
+    totalCounterItem.querySelector('.decrease').addEventListener('click', () => {
+        const currentValue = parseInt(totalInput.value, 10);
+        if (currentValue > 0) {
+            totalInput.value = currentValue - 1;
+            saveTotalKills();
+        }
+    });
+
+    container.querySelectorAll('.grind-counter-item:not(.total-kills) .grind-counter-btn').forEach(button => {
         button.addEventListener('click', async (e) => {
             e.stopPropagation();
             const isIncrease = button.classList.contains('increase');
@@ -2202,36 +2205,25 @@ async function renderGrindCounterView(sessionId) {
             if (!currentSession) return;
 
             if (isIncrease) {
-                // LÓGICA DE INCREMENTO AUTOMÁTICO DO TOTAL
-                if (type !== 'total') {
-                    currentSession.counts.total++;
-                }
-
-                if (type === 'total') {
-                    currentSession.counts.total++;
-                } else if (isDetailed) {
+                currentSession.counts.total++;
+                if (isDetailed) {
                     openGrindDetailModal(sessionId, type);
-                    return; // Retorna para não salvar/re-renderizar duas vezes
+                    return;
                 } else {
                     currentSession.counts[type]++;
                 }
-            } else { // Lógica de decremento
-                if (type === 'total') { 
-                    if (currentSession.counts.total > 0) currentSession.counts.total--; 
-                } else if (isDetailed) {
+            } else {
+                if (isDetailed) {
                     if (currentSession.counts[type].length > 0) {
                         const lastItem = currentSession.counts[type][currentSession.counts[type].length - 1];
-                        const cleanVariationName = lastItem.variation.replace(/^(Macho|Fêmea)\s|\sDiamante$/gmi, '').trim();
-                        if (await showCustomAlert(`Tem certeza que deseja remover o último item registrado: "${cleanVariationName}"?`, 'Confirmar Exclusão', true)) {
+                        if (await showCustomAlert(`Tem certeza que deseja remover o último item: "${lastItem.variation}"?`, 'Confirmar Exclusão', true)) {
                             currentSession.counts[type].pop();
-                            // CORREÇÃO ADICIONADA AQUI
                             if (currentSession.counts.total > 0) currentSession.counts.total--;
                         }
                     }
                 } else {
                     if (currentSession.counts[type] > 0) {
                         currentSession.counts[type]--;
-                        // CORREÇÃO ADICIONADA AQUI
                         if (currentSession.counts.total > 0) currentSession.counts.total--;
                     }
                 }
@@ -2241,7 +2233,6 @@ async function renderGrindCounterView(sessionId) {
         });
     });
 
-    // Lógica do botão de deletar grind
     container.querySelector('#delete-grind-btn').addEventListener('click', async () => {
         if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) {
             const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId);
@@ -2306,7 +2297,7 @@ function renderGrindHubView(container) {
                             <span>${counts.total}</span>
                         </div>
                         <div class="grind-stat">
-                            <i class="fas fa-gem"></i>
+                            <img src="icones/diamante_icon.png" class="custom-icon">
                             <span>${counts.diamonds}</span>
                         </div>
                         <div class="grind-stat">
@@ -2475,7 +2466,7 @@ function getAggregatedGrindStats() {
                 stats[slug].totalKills += session.counts.total || 0;
                 stats[slug].diamonds += session.counts.diamonds || 0;
                 stats[slug].rares += session.counts.rares?.length || 0;
-                stats[slug].superRares += session.counts.super_rares?.length || 0;
+                stats[slug].superRares += session.counts.super_raros?.length || 0;
                 stats[slug].greatOnes += session.counts.great_ones?.length || 0;
             }
         });
@@ -2499,10 +2490,10 @@ function renderHuntingRankingView(container) {
                     <tr>
                         <th>Animal</th>
                         <th><i class="fas fa-crosshairs"></i> Abates</th>
-                        <th><i class="fas fa-gem"></i> Diamantes</th>
+                        <th><img src="icones/diamante_icon.png" class="custom-icon"> Diamantes</th>
                         <th><i class="fas fa-paw"></i> Raros</th>
                         <th><i class="fas fa-star"></i> Super Raros</th>
-                        <th><i class="fas fa-crown"></i> Great Ones</th>
+                        <th><img src="icones/greatone_icon.png" class="custom-icon"> Great Ones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -2524,7 +2515,6 @@ function renderHuntingRankingView(container) {
         </div>
     `;
 }
-
 // --- FUNÇÕES DE AUTENTICAÇÃO ---
 function renderLoginForm() {
     appContainer.innerHTML = `

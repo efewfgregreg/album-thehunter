@@ -1313,6 +1313,106 @@
         grid-template-columns: 1fr; /* Coluna única em telas menores */
     }
 }
+/* Estilo para os novos ícones de imagem (CORRIGIDO) */
+.custom-icon {
+    vertical-align: middle; /* Alinha o ícone com o meio do texto */
+    object-fit: contain;    /* Impede que a imagem seja distorcida */
+    margin-right: 8px;      /* Espaçamento padrão à direita */
+    /* Define um tamanho padrão, que será ajustado em contextos específicos */
+    width: 22px;
+    height: 22px;
+}
+
+/* Ajusta o tamanho dos ícones no Menu Principal para combinar com os outros */
+.nav-card .custom-icon {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0; /* O espaçamento aqui é controlado pelo 'gap' do flexbox */
+}
+
+/* Ajusta o tamanho dos ícones nos cabeçalhos do Contador de Grind */
+.grind-counter-header .custom-icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0; /* O 'gap' do flexbox também controla o espaçamento aqui */
+}
+
+/* Ajusta o tamanho para os ícones no cabeçalho da tabela de Ranking */
+.ranking-table th .custom-icon {
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+/* Mantém o ajuste para ícones em locais menores, como antes */
+.mini-progress .custom-icon,
+.reserve-card-stats .custom-icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+}
+
+
+/* Remove a cor que era aplicada no ícone de texto antigo */
+.dossier-tab .fa-crown,
+.reserve-card-stats .fa-crown {
+    color: initial; /* Reseta a cor para o padrão */
+}
+/* Cole dentro da sua tag <style> no index.html */
+
+.grind-header-details {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os itens quebrem para a linha de baixo */
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1rem;
+    color: var(--text-color-muted);
+}
+
+.detail-item strong {
+    font-family: var(--font-headings);
+    color: var(--text-color);
+    font-size: 1.1rem;
+}
+
+.detail-item i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+/* NOVO ESTILO PARA O BOTÃO DO MAPA */
+.hotspot-button {
+    background-color: var(--border-color);
+    color: var(--text-color);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: var(--font-headings);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.hotspot-button:hover {
+    background-color: var(--primary-color);
+    color: #111;
+}
+
+.hotspot-button i {
+    margin-right: 8px;
+}
     </style>
 </head>
 <body>
@@ -1341,3 +1441,5 @@
     <script src="script.js" defer></script>
 </body>
 </html>
+}
+nao mudou nada, me de a correçao novamente e ja me mande o index completo com a correçao
