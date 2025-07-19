@@ -577,19 +577,24 @@ const multiMountsData = { "a_fuga": { name: "A Fuga", animals: [{ slug: "veado_v
 function slugify(texto) { return texto.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, ''); }
 
 // Define as categorias e seus ícones
+const greatOneAnimalSlugs = Object.keys(greatsFursData);
+const greatOneAnimalNames = items.filter(item => greatOneAnimalSlugs.includes(slugify(item)));
+
+// Define as categorias e seus ícones, agora com a lista de Great Ones correta
 const categorias = {
-    pelagens: { title: 'Pelagens Raras', items: items, icon: 'fas fa-paw' },
+    pelagens: { title: 'Pelagens Raras', items: items, icon: '<img src="icones/pata_icon.png" class="custom-icon">', isHtml: true },
     diamantes: { title: 'Diamantes', items: items, icon: '<img src="icones/diamante_icon.png" class="custom-icon">', isHtml: true },
-    greats: { title: 'Great Ones', items: ["Alce", /*...*/], icon: '<img src="icones/greatone_icon.png" class="custom-icon">', isHtml: true },
+    greats: { title: 'Great Ones', items: greatOneAnimalNames, icon: '<img src="icones/greatone_icon.png" class="custom-icon">', isHtml: true },
     super_raros: {
         title: 'Super Raros',
-        items: items, // TODOS os animais aparecem na lista principal
-        icon: 'fas fa-star'
+        items: items,
+        icon: '<img src="icones/coroa_icon.png" class="custom-icon">',
+        isHtml: true
     },
-    montagens: { title: 'Montagens Múltiplas', icon: 'fas fa-trophy' },
-    grind: { title: 'Contador de grind', icon: 'fas fa-crosshairs' },
-    reservas: { title: 'Reservas de Caça', icon: 'fas fa-map-marked-alt' },
-    progresso: { title: 'Painel de Progresso', icon: 'fas fa-chart-line' }
+    montagens: { title: 'Montagens Múltiplas', icon: '<img src="icones/trofeu_icon.png" class="custom-icon">', isHtml: true },
+    grind: { title: 'Contador de grind', icon: '<img src="icones/cruz_icon.png" class="custom-icon">', isHtml: true },
+    reservas: { title: 'Reservas de Caça', icon: '<img src="icones/mapa_icon.png" class="custom-icon">', isHtml: true },
+    progresso: { title: 'Painel de Progresso', icon: '<img src="icones/progresso_icon.png" class="custom-icon">', isHtml: true }
 };
 
 let appContainer;
@@ -808,7 +813,7 @@ function renderReservesList(container) {
             </div>
             <div class="reserve-card-info-panel">
                 <div class="reserve-card-stats">
-                    <span><i class="fas fa-paw"></i> ${progress.collectedRares}</span>
+                    <span><img src="icones/pata_icon.png" class="custom-icon"> ${progress.collectedRares}</span>
                     <span><img src="icones/diamante_icon.png" class="custom-icon"> ${progress.collectedDiamonds}</span>
                 </div>
             </div>
@@ -896,7 +901,7 @@ function renderAnimalChecklist(container, reserveKey) {
             <div class="animal-name">${animalName}</div>
             <div class="mini-progress-bars">
                 <div class="mini-progress" title="Pelagens Raras: ${collectedRares}/${totalRares}">
-                    <i class="fas fa-paw"></i>
+                    <img src="icones/pata_icon.png" class="custom-icon">
                     <div class="mini-progress-bar-container">
                         <div class="mini-progress-bar" style="width: ${raresPercentage}%"></div>
                     </div>
@@ -1594,6 +1599,7 @@ function renderProgressView(container) {
  * ATUALIZAÇÃO: Nova função para renderizar o painel de progresso com design 2.0
  * @param {HTMLElement} container O elemento onde o painel será renderizado.
  */
+// SUBSTITUA A FUNÇÃO INTEIRA NO SEU script.js
 function updateNewProgressPanel(container) {
     container.innerHTML = ''; // Limpa a área de conteúdo
 
@@ -1671,7 +1677,6 @@ function updateNewProgressPanel(container) {
             card.style.backgroundImage = `url('${reserve.image}')`;
             card.addEventListener('click', () => showReserveDetailView(reserveKey, 'progresso'));
 
-            // A LINHA DA IMAGEM DO LOGO FOI REMOVIDA DAQUI
             card.innerHTML = `
                 <div class="rpc-overlay">
                     <div class="rpc-header">
@@ -1684,7 +1689,7 @@ function updateNewProgressPanel(container) {
                     </div>
                     <div class="rpc-details">
                         <div class="rpc-detail-item" title="Peles Raras">
-                            <i class="fas fa-paw"></i>
+                            <img src="icones/pata_icon.png" class="custom-icon">
                             <span>${reserveProgress.collectedRares} / ${reserveProgress.totalRares}</span>
                         </div>
                         <div class="rpc-detail-item" title="Diamantes">
@@ -2091,6 +2096,7 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
 }
 
 // Renderiza a visualização do contador de grind (VERSÃO FINAL COM DETALHES E MAPA)
+// SUBSTITUA A FUNÇÃO 'renderGrindCounterView' INTEIRA POR ESTA:
 async function renderGrindCounterView(sessionId) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) {
@@ -2113,7 +2119,7 @@ async function renderGrindCounterView(sessionId) {
     const animalName = items.find(item => slugify(item) === animalSlug);
     const reserveName = reservesData[reserveKey].name;
     const hotspotInfo = animalHotspotData[reserveKey]?.[animalSlug] || {};
-    const hotspotImagePath = `hotspots/${slugify(reserveName)}_${animalSlug}_hotspot.jpg`; // Caminho da imagem do mapa
+    const hotspotImagePath = `hotspots/${slugify(reserveName)}_${animalSlug}_hotspot.jpg`;
 
     const mainContent = document.querySelector('.main-content');
     const container = mainContent.querySelector('.content-container');
@@ -2147,7 +2153,7 @@ async function renderGrindCounterView(sessionId) {
             <div class="counters-wrapper">
                 <div class="grind-counter-item total-kills" data-type="total">
                     <div class="grind-counter-header">
-                        <i class="fas fa-crosshairs"></i><span>Total de Abatimentos</span>
+                        <img src="icones/caveira_icon.png" class="custom-icon" alt="Total de Abates"><span>Total de Abates</span>
                     </div>
                     <div class="grind-counter-body">
                         <button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button>
@@ -2156,11 +2162,11 @@ async function renderGrindCounterView(sessionId) {
                     </div>
                 </div>
 
-                <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><img src="icones/diamante_icon.png" alt="Diamante"><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-paw"></i><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><i class="fas fa-star-half-alt"></i><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item great-one" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><img src="icones/greatone_icon.png" alt="Great One"><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item super-rare" data-type="super_raros" data-detailed="true"><div class="grind-counter-header"><i class="fas fa-star"></i><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_raros.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><img src="icones/diamante_icon.png" class="custom-icon" alt="Diamante"><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.diamonds}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><img src="icones/pata_icon.png" class="custom-icon" alt="Raros"><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.rares.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><img src="icones/fantasma_icon.png" class="custom-icon" alt="Trolls"><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.trolls}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item great-one" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><img src="icones/greatone_icon.png" class="custom-icon" alt="Great One"><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.great_ones.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
+                <div class="grind-counter-item super-rare" data-type="super_raros" data-detailed="true"><div class="grind-counter-header"><img src="icones/coroa_icon.png" class="custom-icon" alt="Super Raros"><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${counts.super_raros.length}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
             </div>
             <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
         </div>
@@ -2269,8 +2275,6 @@ function renderGrindHubView(container) {
             const reserve = reservesData[session.reserveKey];
             const animalName = items.find(item => slugify(item) === session.animalSlug);
             
-            // INÍCIO DA CORREÇÃO: Bloco de segurança para dados antigos
-            // Garante que a estrutura de contagem esteja sempre completa
             const counts = {
                 total: session.counts.total || 0,
                 diamonds: session.counts.diamonds || 0,
@@ -2279,7 +2283,6 @@ function renderGrindHubView(container) {
                 super_raros: session.counts.super_raros || [],
                 great_ones: session.counts.great_ones || []
             };
-            // FIM DA CORREÇÃO
 
             const card = document.createElement('div');
             card.className = 'grind-card';
@@ -2293,15 +2296,15 @@ function renderGrindHubView(container) {
                     </div>
                     <div class="grind-card-stats-grid">
                         <div class="grind-stat">
-                            <i class="fas fa-crosshairs"></i>
+                            <img src="icones/caveira_icon.png" class="custom-icon" alt="Abates">
                             <span>${counts.total}</span>
                         </div>
                         <div class="grind-stat">
-                            <img src="icones/diamante_icon.png" class="custom-icon">
+                            <img src="icones/diamante_icon.png" class="custom-icon" alt="Diamantes">
                             <span>${counts.diamonds}</span>
                         </div>
                         <div class="grind-stat">
-                            <i class="fas fa-paw"></i>
+                            <img src="icones/pata_icon.png" class="custom-icon" alt="Raros">
                             <span>${counts.rares.length}</span>
                         </div>
                     </div>
@@ -2476,6 +2479,7 @@ function getAggregatedGrindStats() {
 }
 
 // Renderiza a visualização do ranking de caça
+// SUBSTITUA A FUNÇÃO 'renderHuntingRankingView' INTEIRA POR ESTE:
 function renderHuntingRankingView(container) {
     const stats = getAggregatedGrindStats();
 
@@ -2489,11 +2493,11 @@ function renderHuntingRankingView(container) {
                 <thead>
                     <tr>
                         <th>Animal</th>
-                        <th><i class="fas fa-crosshairs"></i> Abates</th>
-                        <th><img src="icones/diamante_icon.png" class="custom-icon"> Diamantes</th>
-                        <th><i class="fas fa-paw"></i> Raros</th>
-                        <th><i class="fas fa-star"></i> Super Raros</th>
-                        <th><img src="icones/greatone_icon.png" class="custom-icon"> Great Ones</th>
+                        <th><img src="icones/caveira_icon.png" class="custom-icon" alt="Abates"> Abates</th>
+                        <th><img src="icones/diamante_icon.png" class="custom-icon" alt="Diamantes"> Diamantes</th>
+                        <th><img src="icones/pata_icon.png" class="custom-icon" alt="Raros"> Raros</th>
+                        <th><img src="icones/coroa_icon.png" class="custom-icon" alt="Super Raros"> Super Raros</th>
+                        <th><img src="icones/greatone_icon.png" class="custom-icon" alt="Great Ones"> Great Ones</th>
                     </tr>
                 </thead>
                 <tbody>
