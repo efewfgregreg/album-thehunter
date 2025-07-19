@@ -373,34 +373,36 @@
             .page-header { flex-direction: column; align-items: flex-start; gap: 15px; }
             .page-header h2 { font-size: 2rem; }
             .page-header .back-button { width: 100%; text-align: center; }
-            .navigation-hub { padding: 20px; }
-            .hub-title { font-size: 2.5rem; margin-bottom: 20px; }
-            .nav-card { width: 100%; height: 80px; }
-            .album-grid, .fur-grid, .reserves-grid, .mounts-grid, .achievements-grid, .grinds-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-            .hotspot-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-            .animal-card { padding: 10px; }
-            .animal-card img { height: 80px; }
-            .fur-card img { height: 100px; }
-            .reserve-card-info-panel { padding: 10px; }
-            .reserve-card-stats { font-size: 0.8rem; }
-            .animal-checklist-row { grid-template-columns: 40px 1fr; gap: 10px; }
-            .animal-checklist-row .mini-progress-bars, .animal-checklist-row .great-one-indicator { display: none; }
-            .dossier-tabs { flex-wrap: wrap; justify-content: center; }
-            .dossier-tab { padding: 8px 15px; font-size: 0.9rem; }
-            .ranking-table th, .ranking-table td { padding: 8px; font-size: 0.85rem; }
-            .ranking-table td[data-label="Animal"] { flex-direction: column; align-items: flex-start; gap: 5px; }
-            .table-animal-icon { width: 25px; height: 25px; }
-            .hotspot-detail-content { padding: 10px; gap: 15px; max-width: 98vw; max-height: 98vh; }
-            .hotspot-detail-content .hotspot-info-panel h3 { font-size: 1.4rem; }
-            .hotspot-detail-content .info-row { flex-direction: column; align-items: flex-start; gap: 2px; font-size: 0.9rem; }
-            .hotspot-detail-content .info-row strong, .hotspot-detail-content .info-row span { text-align: left; width: 100%; }
-            .overall-progress-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .progress-dial-card { padding: 15px; }
-            .progress-dial { width: 100px; height: 100px; }
-            .progress-dial-percentage { font-size: 1.5rem; }
-            .progress-dial-label { font-size: 1rem; }
-            .reserve-progress-container-v2 { grid-template-columns: 1fr; }
-        }
+            .navigation-hub {
+    display: grid; /* Ativa o layout em grade */
+    grid-template-columns: 1fr 1fr; /* Cria duas colunas de tamanho igual */
+    gap: 15px; /* Espaço entre os cards */
+    padding: 20px 15px; /* Ajusta o preenchimento da tela */
+    align-content: flex-start; /* Alinha a grade ao topo */
+}
+
+.hub-title {
+    grid-column: 1 / -1; /* Faz o título ocupar as duas colunas */
+    font-size: 3rem;
+    margin-top: 20px;
+}
+
+.nav-card {
+    width: 100%; /* Ocupa 100% da coluna da grade onde está */
+    height: 120px; /* Altura mais adequada para o conteúdo */
+    gap: 5px; /* Espaço menor entre ícone e texto */
+    font-size: 0.9rem; /* Tamanho da fonte ajustado para caber */
+    justify-content: center; /* Centraliza o conteúdo verticalmente */
+    padding-top: 0; /* Remove padding antigo se houver */
+}
+
+/* Ajuste de tamanho do ícone APENAS para celular, para caber na grade */
+.nav-card .custom-icon,
+.nav-card i {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 2.5rem;
+}
     </style>
 </head>
 <body>
