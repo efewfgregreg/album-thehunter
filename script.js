@@ -219,7 +219,7 @@ const rareFursData = {
 };
 const greatsFursData = { "alce": ["Dois Tons Lendário", "Cinza Lendário", "Bétula lendária", "Carvalho Lendário", "Salpicado Lendário", "Abeto lendário"], "urso_negro": ["Creme Lendário", "Espírito Lendário", "Castanho Lendário", "Pintado Lendário", "Gelo Lendário 2", "Gelo Lendário"], "veado_de_cauda_branca": ["Pardo", "Pardo Escuro", "Bronzeado", "Malhado"], "gamo": ["Café Lendário", "Pintado Lendário", "Dourado Lendário", "Misto Lendário", "Prata Lendário"], "raposa_vermelha": ["Lua de Sangue Lendária", "Bengala Doce Lendária", "Flor de Cerejeira Lendária", "Alcaçuz lendário", "Papoula da Meia Noite Lendária", "Floco de Neve Mística Lendária", "Hortelã-Pimenta Lendária", "Gelo Botão de Rosa Lendária", "Beladona Escarlate Lendária"], "veado_vermelho": ["Pintado Lendário"], "tahr": ["Dourado Lendário", "Cicatrizes Lendárias", "Cinza Lendário", "Café com Leite Lendário", "Crânio Lendário", "Metade Lendária", "Neve Lendário"], "veado_mula": ["Chuva de Gotículas Lendárias", "Via Láctea Lendária", "Sopro de Pétalas Lendário", "Manto Crepuscular Lendário", "Enigma Teia de Aranha Lendário", "Faixas de Canela Lendário"], "faisão": ["Rubi Lendário", "Pérola Lendário", "Granada Lendário", "Safira Lendário", "Obsidiana Lendário", "Citrino Lendário", "Esmeralda Lendário", "Morganita Lendário"] };
 
-const items = ["Alce","Antilocapra","Antílope Negro","Bantengue","Bisão da Floresta","Bisão das Planícies","Bisão Europeu","Búfalo Africano","Búfalo D'Água","Cabra da Montanha","Cabra de Leque","Cabra Selvagem","Caititu","Camurça","Canguru-cinza Oriental", "Chacal Listrado", "Caribu","Caribu da Floresta Boreal","Carneiro Azul","Carneiro Selvagem","Castor Norte-Americano","Cervo Almiscarado","Cervo Canadense","Cervo do Pântano","Cervo de Timor","Cervo Sika","Cervo-porco Indiano","Chital","Codorna-de-restolho","Codorniz da Virgínia","Coelho da Flórida","Coelho Europeu","Coiote","Corça","Crocodilo de Água Salgada","Cudo Menor","Faisão de Pescoço Anelado","Frisada","Galo Lira","Gamo","Ganso Bravo","Ganso Campestre da Tundra","Ganso das Neves","Ganso do Canadá","Ganso Pega","Gnu de Cauda Preta","Guaxinim Comum","Iaque Selvagem","Ibex de Beceite","Ibex de Gredos","Ibex de Ronda","Ibex Espanhol do Sudeste","Jacaré Americano","Javali","Javali Africano", "Lebre Europeia", "Lebre-antílope","Lebre-da-cauda-branca","Lebre Da Eurásia","Lebre Nuca Dourada","Lebre Peluda","Leão","Leopardo das Neves","Lince Euroasiática","Lince Pardo do México","Lobo Cinzento","Lobo Ibérico","Marreca Arrebio","Marreca Carijó","Marrequinha Americana","Marrequinha Comum","Mouflão Ibérico","Muntíaco vermelho do norte","Nilgó","Onça Parda","Órix do Cabo","Pato Carolino","Pato Arlequim","Pato Olho de Ouro","Pato Real","Peru Merriami","Peru Selvagem","Peru Selvagem do Rio Grande","Piadeira","Porco Selvagem","Raposa cinzenta","Raposa tibetana","Raposa Vermelha","Rena da Montanha","Sambar","Tahr","Tetraz Azul","Tetraz Grande","Tigre-de-Bengala","Urso Cinzento","Urso Negro","Urso Pardo","Veado das Montanhas Rochosas","Veado de Cauda Branca","Veado de Cauda Preta","Veado-Mula","Veado de Roosevelt","Veado Vermelho","Cão Guaxinim","Lagópode-Branco","Lagópode-Escocês","Galinha-Montês","Zarro-Negrinha","Zarro-castanho"];
+const items = ["Alce","Antilocapra","Antílope Negro","Bantengue","Bisão da Floresta","Bisão das Planícies","Bisão Europeu","Búfalo Africano","Búfalo D'Água","Cabra da Montanha","Cabra de Leque","Cabra Selvagem","Caititu","Camurça","Canguru-cinza Oriental", "Chacal Listrado", "Caribu","Caribu da Floresta Boreal","Carneiro Azul","Carneiro Selvagem","Castor Norte-Americano","Cervo Almiscarado","Cervo Canadense","Cervo do Pântano","Cervo de Timor","Cervo Sika","Cervo-porco Indiano","Chital","Codorna-de-restolho","Codorniz da Virgínia","Coelho da Flórida","Coelho Europeu","Coiote","Corça","Crocodilo de Água Salgada","Cudo Menor","Faisão de Pescoço Anelado","Frisada","Galo Lira","Gamo","Ganso Bravo","Ganso Campestre da Tundra","Ganso das Neves","Ganso do Canadá","Ganso Pega","Gnu de Cauda Preta","Guaxinim Comum","Iaque Selvagem","Ibex de Beceite","Ibex de Gredos","Ibex de Ronda","Ibex Espanhol do Sudeste","Jacaré Americano","Javali","Javali Africano", "Lebre Europeia", "Lebre-antílope","Lebre-da-cauda-branca","Lebre Da Eurásia","Lebre Nuca Dourada","Lebre Peluda","Leão","Leopardo das Neves","Lince Euroasiática","Lince Pardo do México","Lobo Cinzento","Lobo Ibérico","Marreca Arrebio","Marreca Carijó","Marrequinha Americana","Marrequinha Comum","Mouflão Ibérico","Muntíaco Vermelho do Norte","Nilgó","Onça Parda","Órix do Cabo","Pato Carolino","Pato Arlequim","Pato Olho de Ouro","Pato Real","Peru Merriami","Peru Selvagem","Peru Selvagem do Rio Grande","Piadeira","Porco Selvagem","Raposa cinzenta","Raposa tibetana","Raposa Vermelha","Rena da Montanha","Sambar","Tahr","Tetraz Azul","Tetraz Grande","Tigre-de-Bengala","Urso Cinzento","Urso Negro","Urso Pardo","Veado das Montanhas Rochosas","Veado de Cauda Branca","Veado de Cauda Preta","Veado-Mula","Veado de Roosevelt","Veado Vermelho","Cão Guaxinim","Lagópode-Branco","Lagópode-Escocês","Galinha-Montês","Zarro-Negrinha","Zarro-castanho"];
 
 const diamondFursData = {
     "alce": { macho: ["Bronzeado", "Pardo", "Pardo Claro"], femea: [] },
@@ -266,7 +266,7 @@ const diamondFursData = {
     "gamo": { macho: ["Escuro", "Escuro e Pintado", "Pintado", "Branco", "Chocolate"], femea: [] },
     "ganso_bravo": { macho: ["Pardo", "Cinzento"], femea: [] },
     "ganso_campestre_da_tundra": { macho: ["Cinza Claro", "Cinza Escuro", "Pardo"], femea: [] },
-    "ganso_das_neves": { macho: ["Variação Branca", "Variação Azul", "Variação Interm", "Híbrido"], femea: [] },
+    "ganso_das_neves": { macho: ["Variação Branca"], femea: [] },
     "ganso_do_canadá": { macho: ["Marrom Híbrido", "Pardo e Cinza"], femea: [] },
     "ganso_pega": { macho: ["Amarelo", "Bordô", "Laranja"], femea: [] },
     "gnu_de_cauda_preta": { macho: ["Cinzento", "Cinza Escuro", "Ouro"], femea: [] },
@@ -312,12 +312,12 @@ const diamondFursData = {
     "raposa_vermelha": { macho: ["Vermelho", "Vermelho Escuro", "Laranja"], femea: [] },
     "rena_da_montanha": { macho: ["Pardo Escuro", "Pardo Claro"], femea: [] },
     "sambar": { macho: ["Pardo", "Pardo Escuro", "Pardo Claro", "Gradiente Escuro"], femea: [] },
-    "tahr": { macho: ["Pardo Claro", "Pardo", "Palha", "Pardo Avermelhado"], femea: [] },
+    "tahr": { macho: ["Pardo Claro", "Palha", "Pardo Avermelhado"], femea: [] },
     "tetraz_grande": { macho: ["Escuro"], femea: [] },
     "tigre_de_bengala": { macho: ["Laranja"], femea: [] },
     "urso_cinzento": { macho: ["Pardo e Cinza"], femea: [] },
     "urso_negro": { macho: ["Preto", "Escuro", "Cinzento"], femea: [] },
-    "urso_pardo": { macho: ["Espírito", "Pardo", "Pardo Avermelhado", "Ouro", "Pardo Claro", "Pardo Escuro", "Amarelo", "Canela"], femea: [] },
+    "urso_pardo": { macho: ["Espírito", "Cinza", "Pardo Avermelhado", "Ouro", "Pardo Claro", "Pardo Escuro", "Amarelo", "Canela"], femea: [] },
     "veado_das_montanhas_rochosas": { macho: ["Pardo", "Pardo Claro"], femea: [] },
     "veado_de_cauda_branca": { macho: ["Pardo", "Pardo Escuro", "Bronzeado"], femea: [] },
     "veado_de_cauda_preta": { macho: ["Pardo e Cinza", "Cinzento", "Cinza Escuro"], femea: [] },
@@ -325,7 +325,7 @@ const diamondFursData = {
     "veado_mula": { macho: ["Pardo", "Cinzento", "Amarelado"], femea: [] },
     "veado_vermelho": { macho: ["Pardo Escuro", "Pardo Claro", "Pardo"], femea: [] },
     "zarro_negrinha": { macho: ["Preto"], femea: [] },
-    "zarro_castanho": { macho: ["Escuro", "Pardo Avermelhado"], femea: [] },
+    "zarro_castanho": { macho: ["Pardo Escuro", "Pardo Avermelhado"], femea: [] },
     "ibex_espanhol_do_sudeste": { macho: ["Pardo", "Marrom Hibrido", "Pardo Hibrido",  "Castanho Acinzentado", "Cinza Claro", "Laranja"], femea: [] },
     "ibex_de_gredos": { macho: ["Pardo e Cinza", "Marrom Hibrido", "Cinza Claro", "Cinzento"], femea: [] },
     "ibex_de_ronda": { macho: ["Pardo", "Pardo e Cinza", "Marrom Hibrido", "Cinzento"], femea: [] },
