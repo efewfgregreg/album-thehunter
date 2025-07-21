@@ -277,7 +277,7 @@ const diamondFursData = {
     "lagópode_branco": { macho: ["Muda Variação 1", "Muda Variação 2", "Bicolor"], femea: [] },
     "lagópode_escocês": { macho: ["Muda", "Bicolor"], femea: [] },  
     "javali": { macho: ["Pardo", "Pardo Claro Variação 1", "Pardo Claro Variação 2"], femea: [] },
-    "javali_africano": { macho: ["Pardo Avermelhado", "Cinzento", "Escuro"], femea: [] },
+    "javali_africano": { macho: ["Pardo Avermelhado", "Cinzento Escuro", "Escuro"], femea: [] },
     "lebre_antílope": { macho: ["Mosqueado", "Cinzento", "Pardo Escuro", "Pardo"], femea: [] },
     "lebre_da_cauda_branca": { macho: ["Bege", "Cinzento", "Pardo", "Pardo Claro"], femea: [] },
     "lebre_da_eurásia": { macho: ["Cinza Claro", "Cinza Escuro", "Pardo Claro", "Pardo Escuro"], femea: ["Cinza Claro", "Cinza Escuro", "Pardo Claro", "Pardo Escuro"] },
