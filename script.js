@@ -981,7 +981,7 @@ function renderHotspotDetailModal(reserveKey, animalSlug) {
             </div>
             <div class="hotspot-info-panel">
                 <h3>${animalName} - ${reserveName}</h3>
-                <div class="info-row"><strong>Pontuação Máxima:</strong> <span>${hotspotInfo.maxScore || 'N/A'}</span></div>
+                <div class="info-row"><strong>Pont. Troféu:</strong> <span>${hotspotInfo.maxScore || 'N/A'}</span></div>
                 <div class="info-row"><strong>Estimativa de Peso Máximo:</strong> <span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
                 <div class="info-row"><strong>Potencial Zonas:</strong> <span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
                 <div class="info-row"><strong>Classe:</strong> <span>${hotspotInfo.animalClass || 'N/A'}</span></div>
@@ -1011,7 +1011,7 @@ function renderHotspotDetailView(container, animalName, slug, originReserveKey) 
                  <img src="${imagePath}" alt="Mapa de Hotspot ${animalName}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';" class="hotspot-dossier-image">
             </div>
             <div class="hotspot-dossier-info">
-                <div class="info-row"><strong>Pontuação Máxima:</strong> <span>${hotspotInfo.maxScore || 'N/A'}</span></div>
+                <div class="info-row"><strong>Pont. Troféu:</strong> <span>${hotspotInfo.maxScore || 'N/A'}</span></div>
                 <div class="info-row"><strong>Estimativa de Peso Máximo:</strong> <span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
                 <div class="info-row"><strong>Potencial Zonas:</strong> <span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
                 <div class="info-row"><strong>Classe:</strong> <span>${hotspotInfo.animalClass || 'N/A'}</span></div>
@@ -1151,11 +1151,22 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
 
 
 // Renderiza a visualização de detalhes de diamantes
+// Função renderDiamondsDetailView em script.js
+
 function renderDiamondsDetailView(container, name, slug, originReserveKey = null) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
+
+    // ADICIONADO: Encontra as estatísticas do animal (pontuação/peso máx)
+    let animalStats = null;
+    for (const reserveKey in animalHotspotData) {
+        if (animalHotspotData[reserveKey][slug]) {
+            animalStats = animalHotspotData[reserveKey][slug];
+            break; // Para a busca assim que encontra o primeiro registro do animal
+        }
+    }
 
     const speciesDiamondFurs = diamondFursData[slug];
     if (!speciesDiamondFurs) {
@@ -1175,7 +1186,20 @@ function renderDiamondsDetailView(container, name, slug, originReserveKey = null
         const isCompleted = highestScoreTrophy.score !== -1;
         furCard.classList.add(isCompleted ? 'completed' : 'incomplete');
         const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender.toLowerCase();
-        furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info-header"><span class="gender-tag">${furInfo.gender}</span><div class="info">${furInfo.displayName}</div></div><div class="score-container">${isCompleted ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` : '<span class="score-add-btn">Adicionar Pontuação</span>'}</div><button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">⛶</button>`;
+        
+        // ADICIONADO: HTML para as novas informações de stats
+        let statsHTML = '';
+        if (animalStats) {
+            statsHTML = `
+                <div class="animal-stats-info">
+                    <div><i class="fas fa-trophy"></i>&nbsp;<strong>Pont. Troféu:</strong> ${animalStats.maxScore || 'N/A'}</div>
+                    <div><i class="fas fa-weight-hanging"></i>&nbsp;<strong>Peso Máx:</strong> ${animalStats.maxWeightEstimate || 'N/A'}</div>
+                </div>
+            `;
+        }
+        
+        // ATUALIZADO: O innerHTML do card agora inclui o statsHTML
+        furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info-header"><span class="gender-tag">${furInfo.gender}</span><div class="info">${furInfo.displayName}</div></div>${statsHTML}<div class="score-container">${isCompleted ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` : '<span class="score-add-btn">Adicionar Pontuação</span>'}</div><button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">⛶</button>`;
 
         const scoreContainer = furCard.querySelector('.score-container');
         scoreContainer.addEventListener('click', e => {
@@ -2141,7 +2165,7 @@ async function renderGrindCounterView(sessionId) {
                 </div>
                 
                 <div class="grind-header-details">
-                    <div class="detail-item"><i class="fas fa-trophy"></i><strong>Pontuação Máx:</strong><span>${hotspotInfo.maxScore || 'N/A'}</span></div>
+                    <div class="detail-item"><i class="fas fa-trophy"></i><strong>Pont. Troféu:</strong><span>${hotspotInfo.maxScore || 'N/A'}</span></div>
                     <div class="detail-item"><i class="fas fa-weight-hanging"></i><strong>Peso Máx:</strong><span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
                     <div class="detail-item"><i class="fas fa-clock"></i><strong>Bebida:</strong><span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
                     <div class="detail-item"><i class="fas fa-crosshairs"></i><strong>Classe:</strong><span>${hotspotInfo.animalClass || 'N/A'}</span></div>
