@@ -55,7 +55,7 @@
         .custom-icon {
             vertical-align: middle;
             object-fit: contain;
-            margin-right: 8px;
+            margin-right: 0px;
             width: 22px;
             height: 22px;
         }
@@ -153,9 +153,23 @@
         .reserve-card-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
         .reserve-card:hover .reserve-card-image { transform: scale(1.1); }
         .reserve-card-info-panel { padding: 15px; background-color: var(--surface-color); flex-grow: 1; display: flex; flex-direction: column; justify-content: center; text-align: center;}
-        .reserve-card-stats { display: flex; justify-content: space-around; font-size: 0.9rem; color: var(--text-color-muted); }
+        .reserve-card-stats {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start; /* Alinha os blocos no topo */
+    padding: 10px 0;
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+}
+.reserve-card-stats span {
+    display: flex;
+    flex-direction: column; /* Coloca o ícone acima do texto */
+    align-items: center;    /* Centraliza horizontalmente */
+    gap: 5px;               /* Espaço entre ícone e número */
+    min-width: 50px;        /* Garante um espaço mínimo para cada item */
+}
         .reserve-card-stats span { display: flex; align-items: center; gap: 5px; font-weight: bold; }
-        .mini-progress .custom-icon, .reserve-card-stats .custom-icon { width: 50px; height: 50px; margin-right: 5px; }
+        .mini-progress .custom-icon, .reserve-card-stats .custom-icon { width: 35px; height: 35px; margin-right: 0px; }
         .reserve-card-stats i { color: var(--primary-color); }
         
         .animal-checklist { display: flex; flex-direction: column; gap: 10px; }
@@ -251,10 +265,17 @@
         .grind-card-animal-name { font-family: var(--font-headings); font-size: 2rem; color: var(--text-color); display: block; line-height: 1.1; text-transform: uppercase; }
         .grind-card-reserve-name { font-size: 0.9rem; color: var(--text-color-muted); }
         .grind-card-reserve-name i { margin-right: 4px; }
-        .grind-card-stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+        .grind-card-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px; /* Diminuído o gap para caber melhor */
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
         .grind-stat { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
-        .grind-stat span { font-size: 1.5rem; font-family: var(--font-headings); font-weight: bold; }
-        .grind-stat .custom-icon { width: 50px; height: 50px; margin-right: 0; margin-bottom: 0.001px; vertical-align: initial; }
+        .grind-stat span { font-size: 1.3rem; font-family: var(--font-headings); font-weight: bold; }
+        .grind-stat .custom-icon { width: 35px; height: 35px; margin-right: 0; margin-bottom: 0.001px; vertical-align: initial; }
         
         /* --- CONTADOR DE GRIND (PÁGINA DETALHADA) --- */
         .grind-container { display: flex; flex-direction: column; align-items: center; gap: 30px; }
@@ -498,4 +519,4 @@
     <script src="script.js" defer></script>
 </body>
 </html>
-}
+

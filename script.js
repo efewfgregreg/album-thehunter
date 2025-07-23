@@ -808,17 +808,22 @@ function renderReservesList(container) {
     const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
     for (const [reserveKey, reserve] of sortedReserves) {
+        // A função agora retorna todos os dados que precisamos
         const progress = calcularReserveProgress(reserveKey);
         const card = document.createElement('div');
         card.className = 'reserve-card';
+         
+        // ATUALIZADO: Adicionados os contadores de Super Raro e Great One
          card.innerHTML = `
             <div class="reserve-image-container">
                 <img class="reserve-card-image" src="${reserve.image}" onerror="this.style.display='none'">
             </div>
             <div class="reserve-card-info-panel">
                 <div class="reserve-card-stats">
-                    <span><img src="icones/pata_icon.png" class="custom-icon"> ${progress.collectedRares}</span>
-                    <span><img src="icones/diamante_icon.png" class="custom-icon"> ${progress.collectedDiamonds}</span>
+                    <span><img src="icones/pata_icon.png" class="custom-icon" title="Peles Raras"> ${progress.collectedRares}</span>
+                    <span><img src="icones/diamante_icon.png" class="custom-icon" title="Diamantes"> ${progress.collectedDiamonds}</span>
+                    <span><img src="icones/coroa_icon.png" class="custom-icon" title="Super Raros"> ${progress.collectedSuperRares}</span>
+                    <span><img src="icones/greatone_icon.png" class="custom-icon" title="Great Ones"> ${progress.collectedGreatOnes}</span>
                 </div>
             </div>
         `;
@@ -1030,22 +1035,41 @@ function calcularReserveProgress(reserveKey) {
         collectedDiamonds: 0,
         totalDiamonds: 0,
         collectedGreatOnes: 0,
-        totalGreatOnes: 0
+        totalGreatOnes: 0,
+        // ADICIONADO: Contadores para Super Raros
+        collectedSuperRares: 0,
+        totalSuperRares: 0
     };
 
     reserveAnimals.forEach(slug => {
+        // Lógica de Peles Raras (sem alteração)
         if (rareFursData[slug]) {
             progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
             progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
         }
+        // Lógica de Diamantes (sem alteração)
         if (diamondFursData[slug]) {
             progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
             progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
         }
+        // Lógica de Great Ones (sem alteração)
         if (greatsFursData[slug]) {
             progress.totalGreatOnes += greatsFursData[slug].length;
             progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
         }
+        
+        // ADICIONADO: Lógica para contar Super Raros
+        const speciesRareFurs = rareFursData[slug];
+        const speciesDiamondFurs = diamondFursData[slug];
+        if (speciesRareFurs) {
+            if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
+                progress.totalSuperRares += speciesRareFurs.macho.length;
+            }
+            if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
+                progress.totalSuperRares += speciesRareFurs.femea.length;
+            }
+        }
+        progress.collectedSuperRares += Object.values(savedData.super_raros?.[slug] || {}).filter(v => v === true).length;
     });
     return progress;
 }
@@ -1619,15 +1643,8 @@ function renderProgressView(container) {
     showNewProgressPanel(); 
 }
 
-/**
- * ATUALIZAÇÃO: Nova função para renderizar o painel de progresso com design 2.0
- * @param {HTMLElement} container O elemento onde o painel será renderizado.
- */
-/**
- * ATUALIZAÇÃO: Nova função para renderizar o painel de progresso com design 2.0
- * @param {HTMLElement} container O elemento onde o painel será renderizado.
- */
-// SUBSTITUA A FUNÇÃO INTEIRA NO SEU script.js
+
+// SUBSTITUA A FUNÇÃO INTEIRA 
 function updateNewProgressPanel(container) {
     container.innerHTML = ''; // Limpa a área de conteúdo
 
@@ -1695,8 +1712,8 @@ function updateNewProgressPanel(container) {
 
     Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
         const reserveProgress = calcularReserveProgress(reserveKey);
-        const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes;
-        const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes;
+        const totalItems = reserveProgress.totalRares + reserveProgress.totalDiamonds + reserveProgress.totalGreatOnes + reserveProgress.totalSuperRares;
+        const collectedItems = reserveProgress.collectedRares + reserveProgress.collectedDiamonds + reserveProgress.collectedGreatOnes + reserveProgress.collectedSuperRares;
         const percentage = totalItems > 0 ? Math.round((collectedItems / totalItems) * 100) : 0;
 
         if (totalItems > 0) {
@@ -1704,7 +1721,8 @@ function updateNewProgressPanel(container) {
             card.className = 'reserve-progress-card-v2';
             card.style.backgroundImage = `url('${reserve.image}')`;
             card.addEventListener('click', () => showReserveDetailView(reserveKey, 'progresso'));
-
+            
+            // ATUALIZADO: Adicionado o contador de Super Raro
             card.innerHTML = `
                 <div class="rpc-overlay">
                     <div class="rpc-header">
@@ -1724,6 +1742,10 @@ function updateNewProgressPanel(container) {
                             <img src="icones/diamante_icon.png" class="custom-icon">
                             <span>${reserveProgress.collectedDiamonds} / ${reserveProgress.totalDiamonds}</span>
                         </div>
+                        <div class="rpc-detail-item" title="Super Raros">
+                            <img src="icones/coroa_icon.png" class="custom-icon">
+                            <span>${reserveProgress.collectedSuperRares} / ${reserveProgress.totalSuperRares}</span>
+                        </div>
                         <div class="rpc-detail-item" title="Great Ones">
                             <img src="icones/greatone_icon.png" class="custom-icon">
                             <span>${reserveProgress.collectedGreatOnes} / ${reserveProgress.totalGreatOnes}</span>
@@ -1741,7 +1763,6 @@ function updateNewProgressPanel(container) {
     container.appendChild(panel);
 }
 
-// Cria o painel de últimas conquistas
 // Cria o painel de últimas conquistas
 function createLatestAchievementsPanel() {
     const panel = document.createElement('div');
@@ -2315,6 +2336,8 @@ function renderGrindHubView(container) {
             const card = document.createElement('div');
             card.className = 'grind-card';
             card.addEventListener('click', () => renderGrindCounterView(session.id));
+            
+            // ATUALIZADO: Adicionado o contador de Super Raro no grid de stats
             card.innerHTML = `
                 <img src="animais/${session.animalSlug}.png" class="grind-card-bg-silhouette" onerror="this.style.display='none'">
                 <div class="grind-card-content">
@@ -2334,6 +2357,10 @@ function renderGrindHubView(container) {
                         <div class="grind-stat">
                             <img src="icones/pata_icon.png" class="custom-icon" alt="Raros">
                             <span>${counts.rares.length}</span>
+                        </div>
+                        <div class="grind-stat">
+                            <img src="icones/coroa_icon.png" class="custom-icon" alt="Super Raros">
+                            <span>${counts.super_raros.length}</span>
                         </div>
                     </div>
                 </div>
