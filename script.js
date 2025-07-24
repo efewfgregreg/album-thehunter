@@ -25,6 +25,12 @@ const adminWhitelist = [
     "emaildeum_amigo@exemplo.com",
     "outro_email_liberado@exemplo.com"
 ];
+
+const auth = firebase.auth(); // Serviço de Autenticação
+const db = firebase.firestore(); // Banco de dados Firestore
+const functions = firebase.functions(); // Funções do Firebase
+let currentUser = null; // Variável para guardar o usuário logado
+
 // =================================================================
 // =================== LÓGICA DE DADOS COM FIREBASE =================
 // =================================================================
