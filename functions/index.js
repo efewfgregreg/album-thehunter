@@ -2,16 +2,16 @@ const functions = require("firebase-functions");
 // Importa as classes necessárias da biblioteca moderna do Mercado Pago
 const { MercadoPagoConfig, Preference } = require('mercadopago');
 
-// Inicializa o cliente do Mercado Pago com o Access Token de forma segura
-const client = new MercadoPagoConfig({ 
-    accessToken: functions.config().mercadopago.accesstoken 
-});
-
 /**
  * Esta função é chamada pelo seu site para criar uma preferência de pagamento.
  * Ela gera um link de checkout seguro do Mercado Pago.
  */
 exports.createPaymentPreference = functions.https.onCall(async (data, context) => {
+  // CORREÇÃO: O cliente é inicializado DENTRO da função.
+  const client = new MercadoPagoConfig({ 
+      accessToken: functions.config().mercadopago.accesstoken 
+  });
+
   // Verifica se o usuário que está fazendo o pedido está logado
   if (!context.auth) {
     throw new functions.https.HttpsError(
