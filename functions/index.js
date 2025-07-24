@@ -1,26 +1,26 @@
-const functions = require("firebase-functions");
-// Importa as classes necessárias da biblioteca moderna do Mercado Pago
+const { onCall, HttpsError } = require("firebase-functions/v2/https");
 const { MercadoPagoConfig, Preference } = require('mercadopago');
+const { defineString } = require('firebase-functions/params');
 
-/**
- * Esta função é chamada pelo seu site para criar uma preferência de pagamento.
- * Ela gera um link de checkout seguro do Mercado Pago.
- */
-exports.createPaymentPreference = functions.https.onCall(async (data, context) => {
-  // CORREÇÃO: O cliente é inicializado DENTRO da função.
-  const client = new MercadoPagoConfig({ 
-      accessToken: functions.config().mercadopago.accesstoken 
-  });
+// NOVO MÉTODO (2ª Geração): Define o parâmetro que vai ler o segredo.
+// O nome "MERCADOPAGO_ACCESSTOKEN" deve ser o mesmo que você colocará no arquivo .env
+const mercadopagoAccessToken = defineString("MERCADOPAGO_ACCESSTOKEN");
 
-  // Verifica se o usuário que está fazendo o pedido está logado
-  if (!context.auth) {
-    throw new functions.https.HttpsError(
+exports.createPaymentPreference = onCall(async (request) => {
+  // A verificação de autenticação agora usa o objeto 'request'
+  if (!request.auth) {
+    throw new HttpsError(
       "unauthenticated",
       "Você precisa estar logado para fazer um pagamento."
     );
   }
 
-  // Cria uma instância da classe Preference, passando o cliente
+  // O cliente do Mercado Pago é inicializado aqui dentro
+  // e usa .value() para pegar o valor do parâmetro definido acima.
+  const client = new MercadoPagoConfig({ 
+      accessToken: mercadopagoAccessToken.value() 
+  });
+
   const preference = new Preference(client);
 
   try {
@@ -33,7 +33,7 @@ exports.createPaymentPreference = functions.https.onCall(async (data, context) =
                 description: "Liberação de acesso a todas as funcionalidades do aplicativo.",
                 quantity: 1,
                 currency_id: "BRL", // Moeda: Real Brasileiro
-                unit_price: 15.00, // <<<<<<<<<<<<<<< ALTERE AQUI O VALOR SIMBÓLICO
+                unit_price: 15.00,
               },
             ],
             // URLs para onde o usuário será redirecionado após o pagamento
@@ -43,8 +43,8 @@ exports.createPaymentPreference = functions.https.onCall(async (data, context) =
               pending: "https://album-thehunter.web.app",
             },
             auto_return: "approved",
-            // Guarda o ID do usuário do Firebase para sabermos quem pagou
-            external_reference: context.auth.uid, 
+            // O ID do usuário agora fica em request.auth.uid
+            external_reference: request.auth.uid, 
         }
     });
 
@@ -54,7 +54,7 @@ exports.createPaymentPreference = functions.https.onCall(async (data, context) =
 
   } catch (error) {
     console.error("Erro ao criar preferência de pagamento:", error);
-    throw new functions.https.HttpsError(
+    throw new HttpsError(
       "internal",
       "Não foi possível criar a preferência de pagamento."
     );
