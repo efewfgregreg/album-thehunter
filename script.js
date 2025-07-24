@@ -1,5 +1,6 @@
-// =================================================================
+// ========================================================================
 // ======== INICIALIZAÇÃO DO FIREBASE (COM SEUS DADOS) ========
+// Utilizando Firebase SDK versão 8.10.1
 // =================================================================
 const firebaseConfig = {
     apiKey: "AIzaSyD_vgZDTseipBQgo2oXJeZUyczCEzWg_8w",
@@ -11,22 +12,11 @@ const firebaseConfig = {
     measurementId: "G-3G5VBWBEDL"
 };
 
-
 // Inicializa os serviços do Firebase que vamos usar
 const app = firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth(); // Serviço de Autenticação
 const db = firebase.firestore(); // Banco de dados Firestore
-const functions = firebase.functions(); // Funções do Firebase
 let currentUser = null; // Variável para guardar o usuário logado
-
-// =================================================================
-// =================== LISTA DE ACESSO LIVRE ======================
-// =================================================================
-const adminWhitelist = [
-    "seuemailprincipal@exemplo.com",
-    "emaildeum_amigo@exemplo.com",
-    "outro_email_liberado@exemplo.com"
-];
 
 // =================================================================
 // =================== LÓGICA DE DADOS COM FIREBASE =================
@@ -35,14 +25,8 @@ const adminWhitelist = [
 let savedData = {}; // Objeto global para guardar os dados do usuário
 
 // Função para obter a estrutura de dados padrão para um novo usuário
-function getDefaultDataStructure(userEmail = '') {
-    // Verifica se o e-mail do novo usuário está na nossa lista de acesso livre
-    const hasFreeAccess = adminWhitelist.includes(userEmail.toLowerCase());
-    
-    console.log(`Verificando acesso livre para ${userEmail}: ${hasFreeAccess}`);
-
+function getDefaultDataStructure() {
     return {
-        acessoLiberado: hasFreeAccess, // Será 'true' se o email estiver na lista, senão 'false'
         pelagens: {},
         diamantes: {},
         greats: {},
@@ -51,7 +35,7 @@ function getDefaultDataStructure(userEmail = '') {
     };
 }
 
-/*
+/**
  * Carrega os dados do usuário logado a partir do Firestore.
  * Se o usuário for novo, retorna uma estrutura de dados vazia.
  */
@@ -60,7 +44,7 @@ async function loadDataFromFirestore() {
         console.error("Tentando carregar dados sem usuário logado.");
         return getDefaultDataStructure();
     }
-    const userDocRef = db.collection('users').doc(currentUser.uid);
+    const userDocRef = db.collection('usuários').doc(currentUser.uid);
     try {
         const doc = await userDocRef.get();
         if (doc.exists) {
@@ -69,10 +53,10 @@ async function loadDataFromFirestore() {
             const cloudData = doc.data();
             const defaultData = getDefaultDataStructure();
             return { ...defaultData, ...cloudData };
-         } else {
+        } else {
             console.log("Nenhum dado encontrado para o usuário, criando novo documento.");
             // Para um novo usuário, vamos salvar a estrutura padrão no Firestore
-            const defaultData = getDefaultDataStructure(currentUser.email); // <<<<<<<<<<< LINHA ALTERADA
+            const defaultData = getDefaultDataStructure();
             await userDocRef.set(defaultData);
             return defaultData;
         }
@@ -82,7 +66,7 @@ async function loadDataFromFirestore() {
     }
 }
 
-/*
+/**
  * Salva o objeto de dados completo no Firestore para o usuário logado.
  * @param {object} data O objeto de dados completo a ser salvo.
  */
@@ -91,7 +75,7 @@ function saveData(data) {
         console.error("Tentando salvar dados sem usuário logado.");
         return;
     }
-    const userDocRef = db.collection('users').doc(currentUser.uid);
+    const userDocRef = db.collection('usuários').doc(currentUser.uid);
     userDocRef.set(data)
         .then(() => {
             console.log("Progresso salvo na nuvem com sucesso!");
@@ -99,11 +83,19 @@ function saveData(data) {
         .catch((error) => {
             console.error("Erro ao salvar dados na nuvem: ", error);
         });
-    
+
     // A UI continua sendo atualizada localmente de forma otimista
     if (document.getElementById('progress-panel-main-container')) {
         const container = document.getElementById('progress-panel-main-container').parentNode;
-        renderProgressView(container);
+        // Chama a função de renderização correta, dependendo da vista ativa
+        const contentArea = document.getElementById('progress-content-area');
+        if (contentArea) {
+             if (document.querySelector('.ranking-table')) { // Se o ranking estiver visível
+                 renderHuntingRankingView(contentArea);
+             } else { // Caso contrário, atualiza o painel de progresso
+                 updateNewProgressPanel(contentArea);
+             }
+        }
     }
     const mountsGrid = document.querySelector('.mounts-grid');
     if (mountsGrid) {
@@ -645,91 +637,6 @@ card.innerHTML = `${iconHtml}<span>${cat.title}</span>`;
     setupLogoutButton(currentUser);
 }
 
-/* Renderiza a tela de pagamento para usuários que ainda não têm acesso.
- */
-function renderPaymentScreen() {
-    appContainer.innerHTML = `
-        <div class="payment-container">
-            <div class="payment-box">
-                <h2>Acesso Exclusivo ao Álbum</h2>
-                <p>Para ter acesso completo e salvar seu progresso na nuvem, é necessário um pagamento único simbólico.</p>
-                <p class="price">Valor: R$ 5,00</p>
-                <button id="payButton" class="auth-button">Liberar Acesso Agora</button>
-                <div id="paymentError" class="auth-error"></div>
-                <button id="logoutButtonPayment" class="link-button">Sair</button>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('logoutButtonPayment').addEventListener('click', () => auth.signOut());
-
-    document.getElementById('payButton').addEventListener('click', async () => {
-        const payButton = document.getElementById('payButton');
-        const errorDiv = document.getElementById('paymentError');
-        
-        payButton.disabled = true;
-        payButton.textContent = 'Gerando link de pagamento...';
-        errorDiv.textContent = '';
-
-        try {
-            // Chama a função que está na nuvem
-            const createPreference = functions.httpsCallable('createPaymentPreference');
-            const result = await createPreference();
-            
-            // Redireciona o usuário para a página de checkout do Mercado Pago
-            window.location.href = `https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${result.data.preferenceId}`;
-
-        } catch (error) {
-            console.error("Erro ao chamar a função de pagamento:", error);
-            errorDiv.textContent = "Erro ao gerar o link. Tente novamente mais tarde.";
-            payButton.disabled = false;
-            payButton.textContent = 'Liberar Acesso Agora';
-        }
-    });
-}
-
-/* Renderiza a tela de pagamento para usuários que ainda não têm acesso.
- */
-function renderPaymentScreen() {
-    appContainer.innerHTML = `
-        <div class="payment-container">
-            <div class="payment-box">
-                <h2>Acesso Exclusivo ao Álbum</h2>
-                <p>Para ter acesso completo e salvar seu progresso na nuvem, é necessário um pagamento único simbólico.</p>
-                <p class="price">Valor: R$ 5,00</p>
-                <button id="payButton" class="auth-button">Liberar Acesso Agora</button>
-                <div id="paymentError" class="auth-error"></div>
-                <button id="logoutButtonPayment" class="link-button">Sair</button>
-            </div>
-        </div>
-    `;
-
-    document.getElementById('logoutButtonPayment').addEventListener('click', () => auth.signOut());
-
-    document.getElementById('payButton').addEventListener('click', async () => {
-        const payButton = document.getElementById('payButton');
-        const errorDiv = document.getElementById('paymentError');
-        
-        payButton.disabled = true;
-        payButton.textContent = 'Gerando link de pagamento...';
-        errorDiv.textContent = '';
-
-        try {
-            // Chama a função que está na nuvem
-            const createPreference = functions.httpsCallable('createPaymentPreference');
-            const result = await createPreference();
-            
-            // Redireciona o usuário para a página de checkout do Mercado Pago
-            window.location.href = `https://www.mercadopago.com.br/checkout/v1/redirect?pref_id=${result.data.preferenceId}`;
-
-        } catch (error) {
-            console.error("Erro ao chamar a função de pagamento:", error);
-            errorDiv.textContent = "Erro ao gerar o link. Tente novamente mais tarde.";
-            payButton.disabled = false;
-            payButton.textContent = 'Liberar Acesso Agora';
-        }
-    });
-}
 // Renderiza a visualização principal de uma categoria
 function renderMainView(tabKey) {
     appContainer.innerHTML = '';
@@ -834,7 +741,7 @@ function renderSimpleDetailView(name, tabKey) {
         renderGreatsDetailView(detailContent, name, slug);
     } else if (tabKey === 'pelagens') {
         renderRareFursDetailView(detailContent, name, slug);
-    } else if (tabKey === 'super-raros') { // <-- CORRIGIDO
+    } else if (tabKey === 'super_raros') {
         renderSuperRareDetailView(detailContent, name, slug);
     } else if (tabKey === 'diamantes') {
         renderDiamondsDetailView(detailContent, name, slug);
@@ -1504,7 +1411,7 @@ async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey
     modal.style.display = 'flex';
 }
 
-/*
+/**
  * Atualiza a aparência de um cartão de animal (completed, inprogress, incomplete)
  */
 function updateCardAppearance(card, slug, tabKey) {
@@ -2667,8 +2574,7 @@ function renderHuntingRankingView(container) {
         </div>
     `;
 }
-// --- NOVAS FUNÇÕES DE AUTENTICAÇÃO ---
-
+// --- FUNÇÕES DE AUTENTICAÇÃO ---
 function renderLoginForm() {
     appContainer.innerHTML = `
         <div class="auth-container">
@@ -2688,7 +2594,7 @@ function renderLoginForm() {
         const email = document.getElementById('loginEmail').value;
         const password = document.getElementById('loginPassword').value;
         const errorDiv = document.getElementById('authError');
-        
+
         auth.signInWithEmailAndPassword(email, password)
             .catch((error) => {
                 errorDiv.textContent = `Erro ao entrar: ${error.message}`;
@@ -2728,7 +2634,7 @@ function renderRegisterForm() {
 }
 
 function setupLogoutButton(user) {
-    if (!user) return; 
+    if (!user) return;
 
     let pageHeader = document.querySelector('.page-header');
     if (!pageHeader) {
@@ -2737,15 +2643,15 @@ function setupLogoutButton(user) {
 
         pageHeader = document.createElement('div');
         pageHeader.className = 'page-header-logout-only';
-        
+
         const navHub = document.querySelector('.navigation-hub');
         if (navHub) {
             navHub.before(pageHeader);
         } else {
-             appContainer.prepend(pageHeader);
+            appContainer.prepend(pageHeader);
         }
     }
-    
+
     let logoutContainer = document.getElementById('logout-container');
     if (logoutContainer) logoutContainer.remove();
 
@@ -2761,7 +2667,6 @@ function setupLogoutButton(user) {
         auth.signOut();
     });
 }
-
 
 // --- FUNÇÕES DE BACKUP/RESTAURAÇÃO ---
 function exportUserData() {
@@ -2839,18 +2744,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (user) {
             currentUser = user;
             appContainer.innerHTML = `<div class="loading-spinner">Carregando seus dados...</div>`;
-            
             savedData = await loadDataFromFirestore();
-            
-            // VERIFICAÇÃO DE ACESSO
-            if (savedData.acessoLiberado === true) {
-                // Se o acesso estiver liberado, mostra o álbum
-                renderNavigationHub(); 
-            } else {
-                // Se não, mostra a tela de pagamento
-                renderPaymentScreen();
-            }
-
+            renderNavigationHub();
         } else {
             currentUser = null;
             renderLoginForm();
@@ -2868,10 +2763,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     });
+
+    const customAlertModal = document.getElementById('custom-alert-modal');
+    if (customAlertModal) {
+        customAlertModal.addEventListener('click', e => {
+            if (e.target === customAlertModal) customAlertModal.style.display = 'none';
+        });
+    }
+
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
             closeModal('image-viewer-modal');
             closeModal('form-modal');
+            closeModal('custom-alert-modal');
         }
     });
 });
