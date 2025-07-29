@@ -491,6 +491,27 @@
     color: var(--text-color-muted);
     opacity: 0.8;
 }
+/* --- ESTILO PARA O MODAL DE REDEFINIÇÃO DE SENHA --- */
+#password-reset-modal .modal-content-box {
+    max-width: 450px;
+}
+
+#password-reset-modal input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+#password-reset-modal .auth-button {
+    width: auto;
+    padding: 10px 20px;
+    font-size: 1rem;
+}
     </style>
 </head>
 <body>
@@ -509,7 +530,18 @@
             </div>
         </div>
     </div>
-
+<div id="password-reset-modal" class="modal-overlay">
+        <div class="modal-content-box">
+            <h3>Redefinir Senha</h3>
+            <p>Por favor, insira seu e-mail. Enviaremos um link para você redefinir sua senha.</p>
+            <input type="email" id="resetEmailInput" placeholder="Seu e-mail de cadastro">
+            <div id="resetError" class="auth-error"></div>
+            <div class="modal-buttons">
+                <button id="cancel-reset-btn" class="back-button">Cancelar</button>
+                <button id="send-reset-btn" class="auth-button" style="width: auto; padding: 10px 20px;">Enviar Link</button>
+            </div>
+        </div>
+    </div>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>

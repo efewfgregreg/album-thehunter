@@ -2584,6 +2584,7 @@ function renderLoginForm() {
                 <input type="email" id="loginEmail" placeholder="Seu e-mail">
                 <input type="password" id="loginPassword" placeholder="Sua senha">
                 <button id="loginButton" class="auth-button">Entrar</button>
+                <button id="showPasswordReset" class="link-button">Esqueceu sua senha?</button>
                 <button id="showRegister" class="link-button">Não tem uma conta? Cadastre-se</button>
                 <div id="authError" class="auth-error"></div>
             </div>
@@ -2601,9 +2602,58 @@ function renderLoginForm() {
             });
     });
 
+    // CORREÇÃO APLICADA AQUI: O nome da função agora é "renderRegisterForm" com "F" maiúsculo.
     document.getElementById('showRegister').addEventListener('click', renderRegisterForm);
+
+    // Adiciona o evento de clique para o botão de redefinir senha
+    document.getElementById('showPasswordReset').addEventListener('click', renderPasswordResetForm);
 }
 
+function renderPasswordResetForm() {
+    const modal = document.getElementById('password-reset-modal');
+    const emailInput = document.getElementById('resetEmailInput');
+    const sendBtn = document.getElementById('send-reset-btn');
+    const cancelBtn = document.getElementById('cancel-reset-btn');
+    const errorDiv = document.getElementById('resetError');
+
+    modal.style.display = 'flex';
+    emailInput.value = ''; // Limpa o campo
+    errorDiv.textContent = ''; // Limpa erros anteriores
+
+    // Função para fechar o modal
+    const closeModalReset = () => modal.style.display = 'none';
+
+    // Evento para o botão de enviar
+    sendBtn.onclick = () => {
+        const email = emailInput.value;
+        if (!email) {
+            errorDiv.textContent = 'Por favor, preencha seu e-mail.';
+            return;
+        }
+
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                closeModalReset();
+                showCustomAlert('Um e-mail de redefinição de senha foi enviado para ' + email + '. Verifique sua caixa de entrada (e spam).', 'E-mail Enviado');
+            })
+            .catch((error) => {
+                if (error.code === 'auth/user-not-found') {
+                    errorDiv.textContent = 'Nenhum usuário encontrado com este e-mail.';
+                } else {
+                    errorDiv.textContent = `Erro: ${error.message}`;
+                }
+                console.error("Erro ao enviar e-mail de redefinição:", error);
+            });
+    };
+
+    // Eventos para fechar o modal
+    cancelBtn.onclick = closeModalReset;
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            closeModalReset();
+        }
+    });
+}
 function renderRegisterForm() {
     appContainer.innerHTML = `
         <div class="auth-container">
@@ -2631,41 +2681,6 @@ function renderRegisterForm() {
     });
 
     document.getElementById('showLogin').addEventListener('click', renderLoginForm);
-}
-
-function setupLogoutButton(user) {
-    if (!user) return;
-
-    let pageHeader = document.querySelector('.page-header');
-    if (!pageHeader) {
-        let existingHeader = document.querySelector('.page-header-logout-only');
-        if (existingHeader) existingHeader.remove();
-
-        pageHeader = document.createElement('div');
-        pageHeader.className = 'page-header-logout-only';
-
-        const navHub = document.querySelector('.navigation-hub');
-        if (navHub) {
-            navHub.before(pageHeader);
-        } else {
-            appContainer.prepend(pageHeader);
-        }
-    }
-
-    let logoutContainer = document.getElementById('logout-container');
-    if (logoutContainer) logoutContainer.remove();
-
-    logoutContainer = document.createElement('div');
-    logoutContainer.id = 'logout-container';
-    logoutContainer.innerHTML = `
-        <span class="user-email">${user.email}</span>
-        <button id="logoutButton" class="back-button">Sair</button>
-    `;
-    pageHeader.appendChild(logoutContainer);
-
-    document.getElementById('logoutButton').addEventListener('click', () => {
-        auth.signOut();
-    });
 }
 
 // --- FUNÇÕES DE BACKUP/RESTAURAÇÃO ---
