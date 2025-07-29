@@ -217,17 +217,12 @@ const rareFursData = {
     "cervo_canadense": { macho: ["Albino", "Melânico", "Leucismo", "Malhado"], femea: ["Albino", "Melânico", "Leucismo", "Malhado"] },
     "bisão_da_floresta": { macho: ["Albino", "Melânico", "Leucismo", "Malhado", "Pardo Escuro"], femea: ["Albino", "Melânico", "Leucismo","Malhado","Pardo Escuro"] }
 };
-const greatsFursData = {
-    "alce": ["Dois Tons Lendário", "Cinza Lendário", "Bétula lendária", "Carvalho Lendário", "Salpicado Lendário", "Abeto lendário"],
-    "urso_negro": ["Creme Lendário", "Espírito Lendário", "Castanho Lendário", "Pintado Lendário", "Gelo Lendário 2", "Gelo Lendário"],
-    "veado_de_cauda_branca": ["Pardo", "Pardo Escuro", "Bronzeado", "Malhado"],
-    "gamo": ["Café Lendário", "Pintado Lendário", "Dourado Lendário", "Misto Lendário", "Prata Lendário"],
+const greatsFursData = {"alce": ["Dois Tons Lendário", "Cinza Lendário", "Bétula lendária", "Carvalho Lendário", "Salpicado Lendário", "Abeto lendário"], "urso_negro": ["Creme Lendário", "Espírito Lendário", "Castanho Lendário", "Pintado Lendário", "Gelo Lendário 2", "Gelo Lendário"],
+    "veado_de_cauda_branca": ["Pardo", "Pardo Escuro", "Bronzeado", "Malhado"],"gamo": ["Café Lendário", "Pintado Lendário", "Dourado Lendário", "Misto Lendário", "Prata Lendário"],
     "raposa_vermelha": ["Lua de Sangue Lendária", "Bengala Doce Lendária", "Flor de Cerejeira Lendária", "Alcaçuz lendário", "Papoula da Meia Noite Lendária", "Floco de Neve Mística Lendária", "Hortelã-Pimenta Lendária", "Gelo Botão de Rosa Lendária", "Beladona Escarlate Lendária"],
-    "veado_vermelho": ["Pintado Lendário"],
-    "tahr": ["Dourado Lendário", "Cicatrizes Lendárias", "Cinza Lendário", "Café com Leite Lendário", "Crânio Lendário", "Metade Lendária", "Neve Lendário"],
+    "veado_vermelho": ["Pintado Lendário"], "tahr": ["Dourado Lendário", "Cicatrizes Lendárias", "Cinza Lendário", "Café com Leite Lendário", "Crânio Lendário", "Metade Lendária", "Neve Lendário"],
     "veado_mula": ["Chuva de Gotículas Lendárias", "Via Láctea Lendária", "Sopro de Pétalas Lendário", "Manto Crepuscular Lendário", "Enigma Teia de Aranha Lendário", "Faixas de Canela Lendário"],
-    "faisão_de_pescoço_anelado": ["Rubi Lendário", "Pérola Lendário", "Granada Lendário", "Safira Lendário", "Obsidiana Lendário", "Citrino Lendário", "Esmeralda Lendário", "Morganita Lendário"]
-};
+    "faisão_de_pescoço_anelado": ["Rubi Lendário", "Pérola Lendário", "Granada Lendário", "Safira Lendário", "Obsidiana Lendário", "Citrino Lendário", "Esmeralda Lendário", "Morganita Lendário"]};
 
 const diamondFursData = {
     "alce": { macho: ["Bronzeado", "Pardo", "Pardo Claro"], femea: [] },
