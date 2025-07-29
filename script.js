@@ -107,7 +107,7 @@ function saveData(data) {
 // --- CONSTANTES DE DADOS ---
 const rareFursData = {
     "alce": { macho: ["Albino", "Melânico", "Malhado", "Café"], femea: ["Albino", "Melânico", "Malhado"] },
-    "antilocapra": { macho: ["Albino", "Malhado", "Leucismo"], femea: ["Albino", "Malhado", "Leucismo"] },
+    "antilocapra": { macho: ["Albino", "Malhado", "Leucismo", "Melânico"], femea: ["Albino", "Malhado", "Leucismo", "Melânico"] },
     "antílope_negro": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] },
     "bantengue": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "bisão_das_planícies": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
