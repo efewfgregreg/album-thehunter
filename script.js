@@ -619,7 +619,7 @@ function renderNavigationHub() {
 
     const title = document.createElement('h1');
     title.className = 'hub-title';
-    title.textContent = 'Álbum de Caça';
+    title.textContent = 'Registro do Caçador'; // <-- NOME ALTERADO AQUI
     hub.appendChild(title);
 
     Object.keys(categorias).forEach(key => {
@@ -627,7 +627,7 @@ function renderNavigationHub() {
         const card = document.createElement('div');
         card.className = 'nav-card';
         const iconHtml = cat.isHtml ? cat.icon.replace('custom-icon', 'custom-icon nav-card-icon') : `<i class="${cat.icon || 'fas fa-question-circle'}"></i>`;
-card.innerHTML = `${iconHtml}<span>${cat.title}</span>`;
+        card.innerHTML = `${iconHtml}<span>${cat.title}</span>`;
         card.dataset.target = key;
         card.addEventListener('click', () => renderMainView(key));
         hub.appendChild(card);
