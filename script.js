@@ -2682,7 +2682,40 @@ function renderRegisterForm() {
 
     document.getElementById('showLogin').addEventListener('click', renderLoginForm);
 }
+function setupLogoutButton(user) {
+    if (!user) return;
 
+    let pageHeader = document.querySelector('.page-header');
+    if (!pageHeader) {
+        let existingHeader = document.querySelector('.page-header-logout-only');
+        if (existingHeader) existingHeader.remove();
+
+        pageHeader = document.createElement('div');
+        pageHeader.className = 'page-header-logout-only';
+
+        const navHub = document.querySelector('.navigation-hub');
+        if (navHub) {
+            navHub.before(pageHeader);
+        } else {
+            appContainer.prepend(pageHeader);
+        }
+    }
+
+    let logoutContainer = document.getElementById('logout-container');
+    if (logoutContainer) logoutContainer.remove();
+
+    logoutContainer = document.createElement('div');
+    logoutContainer.id = 'logout-container';
+    logoutContainer.innerHTML = `
+        <span class="user-email">${user.email}</span>
+        <button id="logoutButton" class="back-button">Sair</button>
+    `;
+    pageHeader.appendChild(logoutContainer);
+
+    document.getElementById('logoutButton').addEventListener('click', () => {
+        auth.signOut();
+    });
+}
 // --- FUNÇÕES DE BACKUP/RESTAURAÇÃO ---
 function exportUserData() {
     if (!currentUser || !savedData) {
