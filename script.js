@@ -191,7 +191,7 @@ const rareFursData = {
     "marrequinha_comum": { macho: ["híbrido azul", "híbrido verde", "Leucismo Variação 1", "Leucismo Variação 2"], femea: ["Leucismo"] },
     "marrequinha_americana": { macho: ["Albino", "Verde Claro", "Malhado Variação 1", "Malhado Variação 2", "Malhado Variação 3"], femea: ["Malhado Variação 1", "Malhado Variação 2"] },
     "mouflão_ibérico": { macho: ["Albino", "Melânico", "cinza"], femea: ["Albino", "Melânico", "cinza"] },
-    "muntíaco_vermelho_do_norte": { macho: ["Albino", "Melânico", "Leucismo Variação 1", "Leucismo Variação 2", "Vermelho Variação 1", "Vermelho Variação 2"], femea: ["Albino", "Melânico", "Leucismo Variação 1", "Leucismo Variação 2"] },
+    "muntíaco_vermelho_do_norte": { macho: ["Albino", "Melânico", "Leucismo Variação 1", "Leucismo Variação 2"], femea: ["Albino", "Melânico", "Leucismo Variação 1", "Leucismo Variação 2"] },
     "nilgó": { macho: ["Malhado Variação 1", "Malhado Variação 2"], femea: ["Malhado Variação 1", "Malhado Variação 2"] },
     "onça_parda": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "órix_do_cabo": { macho: ["bege", "escuro", "ouro"], femea: ["bege", "escuro", "ouro"] },
