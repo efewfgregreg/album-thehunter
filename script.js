@@ -103,7 +103,23 @@ function saveData(data) {
         renderMultiMountsView(container);
     }
 }
+// --- FUNÇÃO PARA DEFINIR O BACKGROUND ALEATÓRIO ---
+function setRandomBackground() {
+    const totalBackgrounds = 39; // O número total de imagens que você tem
+    let lastBg = localStorage.getItem('lastBg'); // Pega o último fundo usado
 
+    let randomNumber;
+    // Garante que o novo número seja diferente do último
+    do {
+        randomNumber = Math.floor(Math.random() * totalBackgrounds) + 1;
+    } while (randomNumber == lastBg);
+
+    localStorage.setItem('lastBg', randomNumber); // Salva o novo número
+const imageUrl = `background/background_${randomNumber}.png`;
+    
+    // Aplica a nova imagem de fundo no body
+    document.body.style.backgroundImage = `linear-gradient(rgba(10, 10, 10, 0.7), rgba(10, 10, 10, 0.8)), url('${imageUrl}')`;
+}
 // --- CONSTANTES DE DADOS ---
 const rareFursData = {
     "alce": { macho: ["Albino", "Melânico", "Malhado", "Café"], femea: ["Albino", "Melânico", "Malhado"] },
@@ -133,7 +149,7 @@ const rareFursData = {
     "codorna_de_restolho": { macho: ["Albino", "Pardo Escuro"], femea: ["Albino"] },
     "codorniz_da_virgínia": { macho: ["Albino"], femea: ["Albino"] },
     "coelho_da_flórida": { macho: ["Albino", "melanico", "Leucismo Variação 1","Leucismo Variação 2" ], femea: ["Albino", "melanico", "Leucismo Variação 1","Leucismo Variação 2"] },
-    "coelho_europeu": { macho: ["Albino", "Melânico", "Leucismo", "Pardo Claro"], femea: ["Albino", "Melânico", "Leucismo", "Pardo Claro"] },
+    "coelho_europeu": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "coiote": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "corça": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "crocodilo_de_água_salgada": { macho: ["Albino", "Melânico", "Pardo Claro", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"], femea: ["Albino", "Melânico", "Pardo Claro", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"] },
@@ -144,7 +160,7 @@ const rareFursData = {
     "frisada": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "galinha_montês": { macho: ["Pálida", "Híbrido", "Escuro"], femea: ["Pálida", "Híbrido", "Escuro"] },
     "galo_lira": { macho: ["Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3", "melanico Variação 1", "melanico Variação 2"], femea: ["Laranja"] },
-    "gamo": { macho: ["Albino", "Melânico", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Albino", "Melânico"] },
+    "gamo": { macho: ["Albino", "Melânico", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Albino", "Melânico", "Malhado"] },
     "ganso_bravo": { macho: ["Híbrido", "Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3", "Leucismo Variação 4", "Leucismo Variação 5"], femea: ["Híbrido", "Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3", "Leucismo Variação 4", "Leucismo Variação 5"] },
     "ganso_campestre_da_tundra": { macho: ["Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3"], femea: ["Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3"] },
     "ganso_pega": { macho: ["Melânico", "Leucismo Variação 1", "Leucismo Variação 2", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Melânico", "Leucismo Variação 1", "Leucismo Variação 2", "Malhado Variação 1", "Malhado Variação 2"] },
@@ -611,27 +627,39 @@ function checkAndSetGreatOneCompletion(slug, currentData) {
     currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
 }
 
-// Renderiza o hub de navegação principal
+// Renderiza o hub de navegação principal COM O DESIGN "INTERFACE FLUTUANTE" (Layout Corrigido)
 function renderNavigationHub() {
     appContainer.innerHTML = '';
     const hub = document.createElement('div');
-    hub.className = 'navigation-hub';
+    hub.className = 'navigation-hub design-flutuante';
 
     const title = document.createElement('h1');
-    title.className = 'hub-title';
-    title.textContent = 'Registro do Caçador'; // <-- NOME ALTERADO AQUI
+    title.className = 'hub-title design-flutuante';
+    title.textContent = 'Registro do Caçador';
     hub.appendChild(title);
 
+    // --- MUDANÇA PRINCIPAL AQUI ---
+    // 1. Criamos um novo container apenas para os cards
+    const cardsContainer = document.createElement('div');
+    cardsContainer.className = 'cards-container-flutuante';
+
     Object.keys(categorias).forEach(key => {
-        const cat = categorias[key];
+        const cat = categorias?.[key];
+        if (!cat) return;
+
         const card = document.createElement('div');
-        card.className = 'nav-card';
+        card.className = 'nav-card design-flutuante';
         const iconHtml = cat.isHtml ? cat.icon.replace('custom-icon', 'custom-icon nav-card-icon') : `<i class="${cat.icon || 'fas fa-question-circle'}"></i>`;
         card.innerHTML = `${iconHtml}<span>${cat.title}</span>`;
         card.dataset.target = key;
         card.addEventListener('click', () => renderMainView(key));
-        hub.appendChild(card);
+        
+        // 2. Adicionamos o card dentro do NOVO container
+        cardsContainer.appendChild(card);
     });
+
+    // 3. Adicionamos o container de cards ao hub principal
+    hub.appendChild(cardsContainer);
 
     appContainer.appendChild(hub);
     setupLogoutButton(currentUser);
@@ -2786,6 +2814,8 @@ async function importUserData(event) {
 
 // --- INICIALIZAÇÃO DO APP ---
 document.addEventListener('DOMContentLoaded', () => {
+    setRandomBackground(); // <-- ADICIONE ESTA LINHA AQUI
+
     appContainer = document.getElementById('app-container');
 
     auth.onAuthStateChanged(async (user) => {
