@@ -755,63 +755,6 @@ function showDetailView(name, tabKey, originReserveKey = null) {
 // Renderiza a visualização de detalhes simples de um animal
 function renderSimpleDetailView(name, tabKey) {
     const mainContent = document.querySelector('.main-content');
-// Limpa qualquer container de filtro existente para evitar duplicatas
-    const oldFilterContainer = mainContent.querySelector('.filter-toggle-container');
-    if (oldFilterContainer) oldFilterContainer.remove();
-
-    // Cria o container para os botões de filtro
-    const filterContainer = document.createElement('div');
-    filterContainer.className = 'filter-toggle-container';
-
-    // Cria os botões
-    const btnShowAll = document.createElement('button');
-    btnShowAll.className = 'filter-toggle-btn active'; // "Todos" é o padrão
-    btnShowAll.textContent = 'Mostrar Todos';
-
-    const btnShowMissing = document.createElement('button');
-    btnShowMissing.className = 'filter-toggle-btn';
-    btnShowMissing.textContent = 'Mostrar Faltantes';
-    
-    filterContainer.appendChild(btnShowAll);
-    filterContainer.appendChild(btnShowMissing);
-
-    // Insere os botões logo após o cabeçalho da página
-    const header = mainContent.querySelector('.page-header');
-    header.insertAdjacentElement('afterend', filterContainer);
-
-    // Mapeia a tabKey para a função de renderização correta
-    const renderFunctionMap = {
-        'pelagens': renderRareFursDetailView,
-        'diamantes': renderDiamondsDetailView,
-        'super_raros': renderSuperRareDetailView,
-        'greats': renderGreatsDetailView
-    };
-
-    // Função para atualizar a classe 'active' dos botões
-    const setActiveButton = (activeButton) => {
-        btnShowAll.classList.remove('active');
-        btnShowMissing.classList.remove('active');
-        activeButton.classList.add('active');
-    };
-
-    // Adiciona os eventos de clique
-    btnShowAll.addEventListener('click', () => {
-        setActiveButton(btnShowAll);
-        const renderFunc = renderFunctionMap[tabKey];
-        if (renderFunc) {
-            // Re-renderiza o conteúdo da página com o filtro 'all'
-            renderFunc(contentContainer, name, slug, null, 'all');
-        }
-    });
-    
-    btnShowMissing.addEventListener('click', () => {
-        setActiveButton(btnShowMissing);
-        const renderFunc = renderFunctionMap[tabKey];
-        if (renderFunc) {
-            // Re-renderiza o conteúdo da página com o filtro 'missing'
-            renderFunc(contentContainer, name, slug, null, 'missing');
-        }
-    });
     const slug = slugify(name);
     const contentContainer = mainContent.querySelector('.content-container');
     contentContainer.className = `content-container detail-view ${tabKey}-detail-view`;
@@ -848,23 +791,6 @@ function renderAnimalDossier(animalName, originReserveKey) {
     const dossierTabs = document.createElement('div');
     dossierTabs.className = 'dossier-tabs';
     const dossierContent = document.createElement('div');
-// Cria o container para os botões de filtro
-    const filterContainer = document.createElement('div');
-    filterContainer.className = 'filter-toggle-container';
-
-    const btnShowAll = document.createElement('button');
-    btnShowAll.className = 'filter-toggle-btn active';
-    btnShowAll.textContent = 'Mostrar Todos';
-
-    const btnShowMissing = document.createElement('button');
-    btnShowMissing.className = 'filter-toggle-btn';
-    btnShowMissing.textContent = 'Mostrar Faltantes';
-
-    filterContainer.appendChild(btnShowAll);
-    filterContainer.appendChild(btnShowMissing);
-
-    // Adiciona o container ao DOM, antes dos tabs
-    dossierTabs.insertAdjacentElement('beforebegin', filterContainer);
     dossierContent.className = 'dossier-content';
 
     const tabs = {
@@ -889,55 +815,15 @@ function renderAnimalDossier(animalName, originReserveKey) {
     contentContainer.appendChild(dossierTabs);
     contentContainer.appendChild(dossierContent);
 
-   // Adiciona o listener para os TABS do dossiê
     dossierTabs.addEventListener('click', e => {
         const tab = e.target.closest('.dossier-tab');
         if(!tab) return;
         dossierTabs.querySelectorAll('.dossier-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
-
-        // Verifica qual filtro ('all' ou 'missing') está ativo
-        const currentFilter = btnShowAll.classList.contains('active') ? 'all' : 'missing';
-        
         const tabKey = tab.dataset.key;
-        // Chama a função de renderização passando o filtro atual
-        // Apenas chama a função se ela existir no objeto 'tabs'
-        if (tabs[tabKey] && typeof tabs[tabKey].renderFunc === 'function') {
-             tabs[tabKey].renderFunc(dossierContent, animalName, slug, originReserveKey, currentFilter);
-        }
+        tabs[tabKey].renderFunc(dossierContent, animalName, slug, originReserveKey);
     });
-
-    // Função para atualizar a classe 'active' dos botões de filtro
-    const setActiveButton = (activeButton) => {
-        btnShowAll.classList.remove('active');
-        btnShowMissing.classList.remove('active');
-        activeButton.classList.add('active');
-    };
-
-    // Função para re-renderizar o conteúdo da aba ativa com o novo filtro
-    const reRenderActiveTab = (filter) => {
-        const activeTab = dossierTabs.querySelector('.dossier-tab.active');
-        if (activeTab) {
-            const tabKey = activeTab.dataset.key;
-            const renderFunc = tabs[tabKey]?.renderFunc;
-            if (renderFunc) {
-                renderFunc(dossierContent, animalName, slug, originReserveKey, filter);
-            }
-        }
-    };
-    
-    // Adiciona os eventos de clique para os botões de filtro
-    btnShowAll.addEventListener('click', () => {
-        setActiveButton(btnShowAll);
-        reRenderActiveTab('all');
-    });
-
-    btnShowMissing.addEventListener('click', () => {
-        setActiveButton(btnShowMissing);
-        reRenderActiveTab('missing');
-    });
-
-    // Ativa a primeira aba por padrão ao carregar a página
+    // Ativa a primeira aba por padrão
     dossierTabs.querySelector('.dossier-tab').click();
 }
 // Renderizar para lista de reservas
@@ -1217,7 +1103,7 @@ function calcularReserveProgress(reserveKey) {
 }
 
 // Renderiza a visualização de detalhes de pelagens raras
-function renderRareFursDetailView(container, name, slug, originReserveKey = null, filter = 'all') {
+function renderRareFursDetailView(container, name, slug, originReserveKey = null) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -1236,10 +1122,6 @@ function renderRareFursDetailView(container, name, slug, originReserveKey = null
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
         const furCard = document.createElement('div');
         const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
-// Pula a renderização deste card se o filtro "faltantes" estiver ativo e o item já foi completado
-        if (filter === 'missing' && isCompleted) {
-            return; // 'return' aqui funciona como 'continue' para o forEach
-        }
         furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender;
         furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info">${furInfo.displayName}</div><button class="fullscreen-btn" onclick="openImageViewer(this.closest('.fur-card').querySelector('img').src); event.stopPropagation();" title="Ver em tela cheia">⛶</button>`;
@@ -1261,7 +1143,7 @@ function renderRareFursDetailView(container, name, slug, originReserveKey = null
 }
 
 // Renderiza a visualização de detalhes de super raros
-function renderSuperRareDetailView(container, name, slug, originReserveKey = null, filter = 'all') {
+function renderSuperRareDetailView(container, name, slug, originReserveKey = null) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -1296,9 +1178,6 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
         const furCard = document.createElement('div');
         const keyInSavedData = furInfo.displayName;
         const isCompleted = savedData.super_raros?.[slug]?.[keyInSavedData] === true;
-        if (filter === 'missing' && isCompleted) {
-            return;
-        }
         furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'} potential-super-rare`;
 
         const furSlug = slugify(furInfo.originalName);
@@ -1326,7 +1205,7 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
 // Renderiza a visualização de detalhes de diamantes
 // Função renderDiamondsDetailView em script.js
 
-function renderDiamondsDetailView(container, name, slug, originReserveKey = null, filter = 'all') {
+function renderDiamondsDetailView(container, name, slug, originReserveKey = null) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -1357,9 +1236,6 @@ function renderDiamondsDetailView(container, name, slug, originReserveKey = null
         const fullTrophyName = `${furInfo.gender} ${furInfo.displayName}`;
         const highestScoreTrophy = (savedData.diamantes?.[slug] || []).filter(t => t.type === fullTrophyName).reduce((max, t) => t.score > max.score ? t : max, { score: -1 });
         const isCompleted = highestScoreTrophy.score !== -1;
-        if (filter === 'missing' && isCompleted) {
-            return;
-        }
         furCard.classList.add(isCompleted ? 'completed' : 'incomplete');
         const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender.toLowerCase();
         
@@ -1429,7 +1305,7 @@ function renderDiamondsDetailView(container, name, slug, originReserveKey = null
 }
 
 // Renderiza a visualização de detalhes de Great Ones
-function renderGreatsDetailView(container, animalName, slug, originReserveKey = null, filter = 'all') {
+function renderGreatsDetailView(container, animalName, slug, originReserveKey = null) {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
@@ -1443,10 +1319,6 @@ function renderGreatsDetailView(container, animalName, slug, originReserveKey = 
 
     fursInfo.forEach(furName => {
         const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
-       const isCompleted = trophies.length > 0;
-        if (filter === 'missing' && isCompleted) {
-            return;
-        }
         const furCard = document.createElement('div');
         furCard.className = `fur-card trophy-frame ${trophies.length > 0 ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furName);
