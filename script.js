@@ -44,7 +44,7 @@ async function loadDataFromFirestore() {
         console.error("Tentando carregar dados sem usuário logado.");
         return getDefaultDataStructure();
     }
-    const userDocRef = db.collection('usuários').doc(currentUser.uid);
+    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
     try {
         const doc = await userDocRef.get();
         if (doc.exists) {
@@ -75,7 +75,7 @@ function saveData(data) {
         console.error("Tentando salvar dados sem usuário logado.");
         return;
     }
-    const userDocRef = db.collection('usuários').doc(currentUser.uid);
+    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
     userDocRef.set(data)
         .then(() => {
             console.log("Progresso salvo na nuvem com sucesso!");
