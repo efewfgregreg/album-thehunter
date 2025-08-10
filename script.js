@@ -149,7 +149,7 @@ const rareFursData = {
     "codorna_de_restolho": { macho: ["Albino", "Pardo Escuro"], femea: ["Albino"] },
     "codorniz_da_virgínia": { macho: ["Albino"], femea: ["Albino"] },
     "coelho_da_flórida": { macho: ["Albino", "melanico", "Leucismo Variação 1","Leucismo Variação 2" ], femea: ["Albino", "melanico", "Leucismo Variação 1","Leucismo Variação 2"] },
-    "coelho_europeu": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
+    "coelho_europeu": { macho: ["Albino", "Melânico", "Leucismo", "Cinza Claro"], femea: ["Albino", "Melânico", "Leucismo","Cinza Claro"] },
     "coiote": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "corça": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "crocodilo_de_água_salgada": { macho: ["Albino", "Melânico", "Pardo Claro", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"], femea: ["Albino", "Melânico", "Pardo Claro", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"] },
