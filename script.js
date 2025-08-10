@@ -474,7 +474,7 @@ const animalHotspotData = {
     "marreca_carijó": { "maxScore": "4.62", "maxWeightEstimate": "0 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" },
     "caititu": { "maxScore": "144.25", "maxWeightEstimate": "26-31 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
     "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "21:00-00:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+    "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
     "antílope_negro": { "maxScore": "132.26", "maxWeightEstimate": "44-51 KG", "drinkZonesPotential": "18:00-21:00", "animalClass": "3", "maxLevel": "5 (Médio)" },
     "búfalo_dágua": { "maxScore": "167.54", "maxWeightEstimate": "1067-1250 KG", "drinkZonesPotential": "12:00-15:00", "animalClass": "9", "maxLevel": "9 (Lendário)" },
     "chital": { "maxScore": "217.29", "maxWeightEstimate": "67-75 KG", "drinkZonesPotential": "03:00-06:00", "animalClass": "3", "maxLevel": "5 (Médio)" }
@@ -514,7 +514,7 @@ const animalHotspotData = {
     "bisão_das_planícies": { "maxScore": "183.5", "maxWeightEstimate": "987-1200 KG", "drinkZonesPotential": "08:00-12:00", "animalClass": "9", "maxLevel": "5 (Médio)" },
     "cabra_da_montanha": { "maxScore": "107.67", "maxWeightEstimate": "120-145 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "4", "maxLevel": "5 (Médio)" },
     "veado_mula": { "maxScore": "312.17", "maxWeightEstimate": "175-210 KG", "drinkZonesPotential": "15:00-18:00", "animalClass": "5", "maxLevel": "5 (Médio)" },
-    "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "21:00-00:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
+    "onça_parda": { "maxScore": "39", "maxWeightEstimate": "86-105 KG", "drinkZonesPotential": "00:00-03:00", "animalClass": "5", "maxLevel": "9 (Lendário)" },
     "urso_negro": { "maxScore": "22.8", "maxWeightEstimate": "227-290 KG", "drinkZonesPotential": "04:00 - 08:00", "animalClass": "7", "maxLevel": "9 (Lendário)" },
     "veado_das_montanhas_rochosas": { "maxScore": "481.41", "maxWeightEstimate": "410-480 KG", "drinkZonesPotential": "04:00-08:00", "animalClass": "7", "maxLevel": "5 (Médio)" },
     "peru_merriami": { "maxScore": "4.62", "maxWeightEstimate": "9-11 KG", "drinkZonesPotential": "O DIA TODO", "animalClass": "1", "maxLevel": "3 (Muito Fácil)" }
