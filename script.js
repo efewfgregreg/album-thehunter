@@ -271,7 +271,7 @@ const diamondFursData = {
     "coelho_da_flórida": { macho: [], femea: ["Pardo", "Pardo Claro", "Cinzento", "Cinza Claro"] },
     "coelho_europeu": { macho: ["Bronzeado", "Pardo", "Pardo Claro", "Pardo Escuro"], femea: [] },
     "coiote": { macho: ["Cinza Escuro", "Pardo e Cinza"], femea: [] },
-    "corça": { macho: ["Bronzeado", "Cinza Escuro", "Pardo", "Pardo Escuro"], femea: [] },
+    "corça": { macho: ["Cinza Escuro", "Pardo", "Pardo Escuro"], femea: [] },
     "crocodilo_de_água_salgada": { macho: ["Cinzento", "Oliva", "Pardo Escuro"], femea: [] },
     "cudo_menor": { macho: ["Cinzento"], femea: [] },
     "cão_guaxinim": { macho: ["Cinzento", "Pardo Claro", "Preto e Branco"], femea: [] },
