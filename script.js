@@ -153,7 +153,7 @@ const rareFursData = {
     "coiote": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "corça": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Malhado"] },
     "crocodilo_de_água_salgada": { macho: ["Albino", "Melânico", "Pardo Claro", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"], femea: ["Albino", "Melânico", "Pardo Claro", "Malhado Variação 1", "Malhado Variação 2", "Leucismo"] },
-    "cudo_menor": { macho: ["Albino"], femea: ["Albino"] },
+    "cudo_menor": { macho: ["Albino", "Melânico"], femea: ["Albino", "Marrom Avermelhado", "Escuro"] },
     "cão_guaxinim": { macho: ["Albino", "Laranja", "Pardo escuro", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Albino", "Laranja", "Pardo escuro", "Malhado Variação 1", "Malhado Variação 2"] },
     "faisão_de_pescoço_anelado": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "faisão": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
