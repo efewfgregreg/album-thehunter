@@ -123,7 +123,7 @@ const imageUrl = `background/background_${randomNumber}.png`;
 // --- CONSTANTES DE DADOS ---
 const rareFursData = {
     "alce": { macho: ["Albino", "Melânico", "Malhado", "Café"], femea: ["Albino", "Melânico", "Malhado"] },
-    "antilocapra": { macho: ["Albino", "Malhado", "Leucismo", "Melânico"], femea: ["Albino", "Malhado", "Leucismo", "Melânico"] },
+    "antilocapra": { macho: ["Albino", "Malhado Variação 1", "Leucismo", "Melânico", "Malhado Variação 2"], femea: ["Albino", "Malhado", "Leucismo", "Melânico"] },
     "antílope_negro": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] },
     "bantengue": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "bisão_das_planícies": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
@@ -132,7 +132,7 @@ const rareFursData = {
     "búfalo_dágua": { macho: ["Albino", "Laranja"], femea: ["Albino", "Laranja"] },
     "cabra_da_montanha": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "cabra_de_leque": { macho: ["Albino"], femea: ["Albino"] },
-    "cabra_selvagem": { macho: ["Albino", "Preto", "Cores Mistas"], femea: ["Albino", "Preto"] },
+    "cabra_selvagem": { macho: ["Albino", "Preto", "Cores Mistas Variação 1", "Cores Mistas Variação 2"], femea: ["Albino", "Preto"] },
     "caititu": { macho: ["Albino", "Melânico", "Ochre", "Leucismo"], femea: ["Albino", "Melânico", "Ochre", "Leucismo"] },
     "camurça": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "canguru_cinza_oriental": { macho: ["Albino", "Melânico", "Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3"], femea: ["Albino", "Melânico", "Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3"] },
@@ -197,7 +197,7 @@ const rareFursData = {
     "órix_do_cabo": { macho: ["bege", "escuro", "ouro"], femea: ["bege", "escuro", "ouro"] },
     "pato_olho_de_ouro": { macho: ["eclipse", "Leucismo Variação 1", "Leucismo Variação 2"], femea: ["escuro", "Leucismo Variação 1", "Leucismo Variação 2"] },
     "pato_arlequim": { macho: ["Albino", "Melânico"], femea: ["Albino", "Cinza", "Escuro"] },
-    "pato_real": { macho: ["Melânico"], femea: ["Melânico", "amarelado"] },
+    "pato_real": { macho: ["Melânico","Leucismo" ], femea: ["Melânico", "amarelado"] },
     "peru_merriami": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "peru_selvagem": { macho: ["Albino", "Melânico", "Leucismo", "bronze"], femea: ["Albino", "Melânico", "Leucismo"] },
     "peru_selvagem_do_rio_grande": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
