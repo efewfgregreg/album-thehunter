@@ -123,7 +123,7 @@ const imageUrl = `background/background_${randomNumber}.png`;
 // --- CONSTANTES DE DADOS ---
 const rareFursData = {
     "alce": { macho: ["Albino", "Melânico", "Malhado", "Café"], femea: ["Albino", "Melânico", "Malhado"] },
-    "antilocapra": { macho: ["Albino", "Malhado Variação 1", "Leucismo", "Melânico", "Malhado Variação 2"], femea: ["Albino", "Malhado", "Leucismo", "Melânico"] },
+    "antilocapra": { macho: ["Albino", "Leucismo", "Melânico", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Albino", "Malhado", "Leucismo", "Melânico"] },
     "antílope_negro": { macho: ["Albino", "Melânico", "Malhado", "Leucismo"], femea: ["Albino", "Melânico", "Malhado", "Leucismo"] },
     "bantengue": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "bisão_das_planícies": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
