@@ -1636,10 +1636,31 @@ function updateCardAppearance(card, slug, tabKey) {
 
         case 'pelagens':
             const collectedRareFurs = savedData.pelagens?.[slug] || {};
-            collectedCount = Object.values(collectedRareFurs).filter(v => v === true).length;
             const speciesRareData = rareFursData[slug];
+            
+            collectedCount = 0; // Reinicia a contagem
+            totalCount = 0;     // Reinicia a contagem
+
             if (speciesRareData) {
-                totalCount = (speciesRareData.macho?.length || 0) + (speciesRareData.femea?.length || 0);
+                const machoFurs = speciesRareData.macho || [];
+                const femeaFurs = speciesRareData.femea || [];
+                totalCount = machoFurs.length + femeaFurs.length;
+
+                // Itera sobre as pelagens de macho DEFINIDAS e verifica se estão salvas
+                machoFurs.forEach(fur => {
+                    if (collectedRareFurs[`Macho ${fur}`] === true) {
+                        collectedCount++;
+                    }
+                });
+
+                // Itera sobre as pelagens de fêmea DEFINIDAS e verifica se estão salvas
+                femeaFurs.forEach(fur => {
+                    if (collectedRareFurs[`Fêmea ${fur}`] === true) {
+                        collectedCount++;
+                    }
+                });
+
+                // A lógica de status permanece a mesma, mas agora com a contagem correta
                 if (totalCount > 0 && collectedCount === totalCount) {
                     status = 'completed';
                 } else if (collectedCount > 0 && collectedCount < totalCount) {
