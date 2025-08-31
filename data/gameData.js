@@ -109,7 +109,7 @@ export const rareFursData = {
     "ibex_de_gredos": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "ibex_de_ronda": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
     "tetraz_azul": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
-    "marreca_arrebio": { macho: ["Albino", "Melânico", "Malhado"], femea: ["Albino", "Melânico", "Leucismo", "Malhado", "brilhante", "eritristico"] },
+    "marreca_arrebio": { macho: ["Albino", "Melânico", "Malhado", "Leucismo", "Eritristico"], femea: ["Albino", "Melânico", "Leucismo", "Malhado", "Brilhante", "Eritristico"] },
     "pato_carolino": { macho: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"], femea: ["Albino", "Prata Diluída", "Dourado Eritrístico", "Leucísmo", "Melânico", "Malhado"] },
     "castor_norte_americano": { macho: ["Albino", "Melânico", "Leucismo","Malhado"], femea: ["Albino", "Melânico", "Leucismo","Malhado"] },
     "caribu_da_floresta_boreal": { macho: ["Albino", "Melânico", "Leucismo","Malhado Variação 1", "Malhado Variação 2"], femea: ["Albino", "Melânico", "Leucismo", "Malhado Variação 1", "Malhado Variação 2"] },
