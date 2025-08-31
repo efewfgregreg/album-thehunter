@@ -967,8 +967,7 @@ function renderHotspotDetailModal(reserveKey, animalSlug) {
 // =================================================================
 // ============ LÓGICA DE DETALHES E CONTEÚDO ESPECÍFICO ==========
 // =================================================================
-
-// ▼▼▼ COLE ESTE BLOCO CORRIGIDO NO LUGAR DO ANTIGO ▼▼▼
+// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
 
 function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
@@ -1015,19 +1014,26 @@ function updateCardAppearance(card, slug, tabKey) {
         case 'greats': {
             const sourceData = greatsFursData[slug];
             const animalData = savedData.greats?.[slug] || {};
-            checkAndSetGreatOneCompletion(slug, animalData); // Lógica específica do Great One
+            checkAndSetGreatOneCompletion(slug, animalData);
             collectedCount = Object.values(animalData.furs || {}).filter(f => f.trophies?.length > 0).length;
             totalCount = sourceData?.length || 0;
-            if(animalData.completo) { // Caso especial para Great Ones
-                 card.classList.add('completed');
+            
+            // --- CORREÇÃO APLICADA AQUI ---
+            // Adicionada a lógica para o status 'inprogress' dos Great Ones
+            if (animalData.completo) {
+                card.classList.add('completed');
+            } else if (collectedCount > 0) {
+                card.classList.add('inprogress'); // <-- ESTA LINHA FOI ADICIONADA
+            } else {
+                card.classList.add('incomplete'); // <-- ESTA LINHA FOI ADICIONADA
             }
             break;
         }
     }
 
-    // 4. Define o status do card (exceto para Great Ones, já tratado acima)
+    // 4. Define o status do card para as outras abas
     if (tabKey !== 'greats') {
-        if (totalCount > 0 && collectedCount === totalCount) {
+        if (totalCount > 0 && collectedCount >= totalCount) {
             card.classList.add('completed');
         } else if (collectedCount > 0) {
             card.classList.add('inprogress');
@@ -1038,8 +1044,10 @@ function updateCardAppearance(card, slug, tabKey) {
 
     // 5. Renderiza a barra de progresso visual, se houver dados
     if (progressContainer && totalCount > 0) {
-        const percentage = (collectedCount / totalCount) * 100;
-        const progressText = `${collectedCount} / ${totalCount}`;
+        const displayCollected = Math.min(collectedCount, totalCount);
+        const percentage = totalCount > 0 ? (displayCollected / totalCount) * 100 : 0;
+        const progressText = `${displayCollected} / ${totalCount}`;
+        
         const progressBarHTML = `
             <div class="progress-bar-container" title="${progressText}">
                 <div class="progress-bar-fill" style="width: ${percentage}%;"></div>
@@ -1049,8 +1057,6 @@ function updateCardAppearance(card, slug, tabKey) {
         progressContainer.innerHTML = progressBarHTML;
     }
 }
-// ▲▲▲ FIM DO BLOCO CORRIGIDO ▲▲▲
-
 function renderRareFursDetailView(container, name, slug, originReserveKey = null, filter = 'all') {
     container.innerHTML = '';
     const furGrid = document.createElement('div');
@@ -1413,6 +1419,8 @@ function openImageViewer(imageUrl) {
     modal.style.display = "flex";
 }
 
+// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
+
 function renderSettingsView(container) {
     container.innerHTML = '';
     const settingsContainer = document.createElement('div');
@@ -1448,11 +1456,26 @@ function renderSettingsView(container) {
     resetButton.textContent = 'Resetar Todo o Progresso';
     resetButton.className = 'back-button';
     resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a;';
+    
+    // --- LÓGICA DE RESET CORRIGIDA ---
     resetButton.onclick = async () => {
         if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
-            savedData = getDefaultDataStructure(); 
-            saveData(savedData);
-            location.reload(); 
+            if (currentUser) {
+                try {
+                    // Pega a referência do documento do usuário
+                    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+                    // Salva a estrutura de dados padrão (vazia) diretamente
+                    await userDocRef.set(getDefaultDataStructure());
+                    // Mostra um alerta de sucesso e recarrega a página
+                    await showCustomAlert('Seu progresso foi resetado com sucesso.', 'Progresso Resetado');
+                    location.reload();
+                } catch (error) {
+                    console.error("Erro ao resetar os dados:", error);
+                    showCustomAlert('Ocorreu um erro ao tentar resetar seus dados.', 'Erro');
+                }
+            } else {
+                showCustomAlert('Nenhum usuário logado para resetar os dados.', 'Erro');
+            }
         }
     };
     settingsContainer.appendChild(resetButton);
@@ -2414,8 +2437,157 @@ function renderHuntingRankingView(container) {
 }
 
 // ▲▲▲ FIM DO BLOCO NOVO ▲▲▲
-function exportUserData() { /* ... Lógica Omitida ... */ }
-async function importUserData(event) { /* ... Lógica Omitida ... */ }
+// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
+
+function exportUserData() {
+    if (!currentUser) {
+        showCustomAlert('Você precisa estar logado para fazer o backup.', 'Aviso');
+        return;
+    }
+    
+    // Cria uma string JSON formatada a partir dos dados salvos
+    const dataStr = JSON.stringify(savedData, null, 2);
+    // Cria um objeto Blob, que é um objeto semelhante a um arquivo
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    // Cria uma URL temporária para o Blob
+    const url = URL.createObjectURL(dataBlob);
+
+    // Cria um link de download invisível
+    const a = document.createElement('a');
+    a.href = url;
+    // Define o nome do arquivo de backup
+    const date = new Date().toISOString().split('T')[0];
+    a.download = `backup_registro_cacador_${date}.json`;
+    
+    // Simula um clique no link para iniciar o download
+    document.body.appendChild(a);
+    a.click();
+    
+    // Limpa o link e a URL da memória
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showCustomAlert('Backup gerado com sucesso!', 'Backup Concluído');
+}
+
+// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
+
+async function importUserData(event) {
+    if (!currentUser) {
+        showCustomAlert('Você precisa estar logado para restaurar um backup.', 'Aviso');
+        return;
+    }
+    
+    const file = event.target.files[0];
+    if (!file) return;
+
+    if (file.type !== 'application/json') {
+        showCustomAlert('Por favor, selecione um arquivo de backup .json válido.', 'Arquivo Inválido');
+        event.target.value = '';
+        return;
+    }
+
+    if (!await showCustomAlert(
+        'Restaurar este backup substituirá TODOS os seus dados atuais. Esta ação não pode ser desfeita. Deseja continuar?',
+        'Atenção: Restaurar Backup',
+        true
+    )) {
+        event.target.value = '';
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            let newData = getDefaultDataStructure();
+
+            // --- LÓGICA FINAL DE MIGRAÇÃO E LIMPEZA ---
+
+            if (!importedData || typeof importedData !== 'object') {
+                throw new Error("Formato de backup inválido.");
+            }
+
+            console.log("Iniciando processo de restauração, limpeza e migração de backup...");
+
+            // 1. Migração de Pelagens Raras com LIMPEZA
+            if (importedData.pelagens && typeof importedData.pelagens === 'object') {
+                for (const slug in importedData.pelagens) {
+                    const furs = importedData.pelagens[slug];
+                    if (typeof furs === 'object' && furs !== null) { // Adicionada verificação para não ser nulo
+                        newData.pelagens[slug] = {}; // Inicia o objeto para o animal
+                        for (const furName in furs) {
+                            // SÓ ADICIONA SE A PELAGEM ESTIVER MARCADA COMO 'true'
+                            if (furs[furName] === true) {
+                                newData.pelagens[slug][furName] = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. Migração de Diamantes (convertendo de contagem para lista se necessário)
+            if (importedData.diamantes && typeof importedData.diamantes === 'object') {
+                const firstAnimalData = Object.values(importedData.diamantes)[0];
+                if (firstAnimalData && !Array.isArray(firstAnimalData)) { // Detecta formato antigo (ex: "alce": 2)
+                     console.log("Detectado formato antigo de Diamantes. Convertendo...");
+                     for (const slug in importedData.diamantes) {
+                         const count = importedData.diamantes[slug];
+                         newData.diamantes[slug] = [];
+                         if (typeof count === 'number') {
+                            for (let i = 0; i < count; i++) {
+                                newData.diamantes[slug].push({ id: Date.now() + i, type: 'Pelagem de Legado', score: 'N/A' });
+                            }
+                         }
+                     }
+                } else { // Formato novo ou vazio
+                    newData.diamantes = importedData.diamantes;
+                }
+            }
+            
+            // 3. Migração de Greats e Super Raros (copiando diretamente)
+            if (importedData.greats) newData.greats = importedData.greats;
+            if (importedData.super_raros) newData.super_raros = importedData.super_raros;
+            if (importedData.customMarkers) newData.customMarkers = importedData.customMarkers;
+
+            // 4. Migração de Grind Sessions (convertendo contagens numéricas para listas)
+            if (Array.isArray(importedData.grindSessions)) {
+                newData.grindSessions = importedData.grindSessions.map(session => {
+                    const newCounts = { total: session.counts.total || 0, rares: [], diamonds: [], trolls: [], great_ones: [], super_raros: [] };
+                    for(const key in session.counts){
+                        if(Array.isArray(session.counts[key])){
+                            newCounts[key] = session.counts[key];
+                        } else if (typeof session.counts[key] === 'number' && key !== 'total'){
+                            newCounts[key] = Array(session.counts[key]).fill({ id: Date.now(), killCount: 'antigo' });
+                        }
+                    }
+                    return { ...session, counts: newCounts, zones: session.zones || [] };
+                });
+            }
+
+            // --- FIM DA LÓGICA DE MIGRAÇÃO ---
+
+            savedData = newData;
+            saveData(savedData);
+            
+            await showCustomAlert('Backup restaurado e atualizado com sucesso! O aplicativo será recarregado.', 'Restauração Concluída');
+            location.reload();
+
+        } catch (error) {
+            console.error("Erro ao processar o arquivo JSON:", error);
+            showCustomAlert('Ocorreu um erro ao ler o arquivo de backup. Verifique se ele não está corrompido ou em um formato inesperado.', 'Erro de Importação');
+        } finally {
+            event.target.value = '';
+        }
+    };
+
+    reader.onerror = () => {
+        showCustomAlert('Não foi possível ler o arquivo selecionado.', 'Erro de Leitura');
+        event.target.value = '';
+    };
+
+    reader.readAsText(file);
+}
 
 // =================================================================
 // ==================== INICIALIZAÇÃO DO APP =======================
