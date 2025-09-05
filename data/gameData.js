@@ -42,7 +42,7 @@ export const rareFursData = {
     "ganso_bravo": { macho: ["Híbrido", "Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3", "Leucismo Variação 4", "Leucismo Variação 5"], femea: ["Híbrido", "Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3", "Leucismo Variação 4", "Leucismo Variação 5"] },
     "ganso_campestre_da_tundra": { macho: ["Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3"], femea: ["Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3"] },
     "ganso_pega": { macho: ["Melânico", "Leucismo Variação 1", "Leucismo Variação 2", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Melânico", "Leucismo Variação 1", "Leucismo Variação 2", "Malhado Variação 1", "Malhado Variação 2"] },
-    "ganso_do_canadá": { macho: ["Melânico", "Leucismo Cinza Claro", "Hibrido Branco", "Marrom Hibrido"], femea: ["Marrom Hibrido", "Melânico", "Leucismo Cinza Claro", "Hibrido Branco"] },
+    "ganso_do_canadá": { macho: ["Melânico", "Leucismo Cinza Claro", "Hibrido Branco", "Marrom Hibrido","Albino"], femea: ["Marrom Hibrido", "Melânico", "Leucismo Cinza Claro", "Hibrido Branco", "Albino"] },
     "ganso_das_neves": { macho: ["Albino", "Melânico", "Variação azul", "hibrido", "intermediario"], femea: ["Albino", "Melânico", "Variação azul", "hibrido", "intermediario"] },
     "gnu_de_cauda_preta": { macho: ["Albino"], femea: ["Albino", "Coroado"] },
     "guaxinim_comum": { macho: ["Albino", "Melânico", "Loiro Malhado", "Cinza Malhado"], femea: ["Albino", "Melânico", "Loiro Malhado", "Cinza Malhado"] },

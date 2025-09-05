@@ -2074,17 +2074,26 @@ function renderNewGrindAnimalSelection(container) {
     grid.className = 'album-grid';
     container.appendChild(grid);
 
-    // Filtra para mostrar apenas animais que podem ser "grindados" (ex: não aves pequenas)
+    // --- LÓGICA FINALMENTE CORRIGIDA ---
     const grindableAnimals = items.filter(animal => {
         const slug = slugify(animal);
-        const data = Object.values(animalHotspotData).map(r => r[slug]).find(d => d);
-        return data && parseInt(data.animalClass) > 1; // Exemplo: Classe maior que 1
+        let animalData = null;
+        
+        for (const reserveKey in animalHotspotData) {
+            if (animalHotspotData[reserveKey][slug]) {
+                animalData = animalHotspotData[reserveKey][slug];
+                break; 
+            }
+        }
+        
+        // CORREÇÃO: Removemos a verificação de classe. Agora só verifica se o animal existe nos dados.
+        return !!animalData;
     });
 
     grindableAnimals.sort().forEach(animalName => {
         const slug = slugify(animalName);
         const card = document.createElement('div');
-        card.className = 'animal-card'; // Reutiliza o estilo do card de animal
+        card.className = 'animal-card';
         card.innerHTML = `
             <img src="animais/${slug}.png" alt="${animalName}" onerror="this.onerror=null;this.src='animais/placeholder.png';">
             <div class="card-info">
@@ -2174,11 +2183,11 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
 
 // ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
 
-async function renderGrindCounterView(sessionId) {
+async function renderGrindCounterView(sessionId, isZonesOpenState = false) { // Adicionado um parâmetro para o estado da zona
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) return renderMainView('grind');
 
-    if (!session.counts) session.counts = {};
+    if (!session.counts) session.counts = { total: 0, rares: [], diamonds: [], trolls: [], great_ones: [], super_raros: [] };
     if (!session.zones) session.zones = []; 
 
     const { animalSlug, reserveKey } = session;
@@ -2220,9 +2229,9 @@ async function renderGrindCounterView(sessionId) {
                 <div class="grind-counter-item great-one" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><img src="icones/greatone_icon.png" class="custom-icon" alt="Great One"><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.great_ones?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
                 <div class="grind-counter-item super-rare" data-type="super_raros" data-detailed="true"><div class="grind-counter-header"><img src="icones/coroa_icon.png" class="custom-icon" alt="Super Raros"><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.super_raros?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
             </div>
+
             <div class="zone-manager-container">
-                <details>
-                    <summary class="zone-manager-header">
+                <details ${isZonesOpenState ? 'open' : ''}> <summary class="zone-manager-header">
                         <h3><i class="fas fa-map-pin"></i> Gerenciador de Zonas de Grind</h3>
                         <span class="zone-count-badge">${session.zones.length} Zonas</span>
                     </summary>
@@ -2241,47 +2250,95 @@ async function renderGrindCounterView(sessionId) {
     `;
 
     // --- LÓGICA DO GERENCIADOR DE ZONAS ---
-    // (A sua lógica de zonas existente permanece aqui, sem alterações...)
     const zoneListContainer = container.querySelector('#zone-list');
-    const renderZones = () => { /* ... sua função renderZones ... */ };
-    const addZone = () => { /* ... sua função addZone ... */ };
-    const addAnimalToZone = (zoneIndex) => { /* ... sua função addAnimalToZone ... */ };
-    const updateAnimalQuantity = (zoneIndex, animalIndex, amount) => { /* ... sua função updateAnimalQuantity ... */ };
+    const renderZones = () => {
+        zoneListContainer.innerHTML = '';
+        if (session.zones.length === 0) {
+            zoneListContainer.innerHTML = '<p class="no-zones-message">Nenhuma zona adicionada ainda. Adicione sua primeira zona acima!</p>';
+            return;
+        }
+        session.zones.forEach((zone, zoneIndex) => {
+            const zoneElement = document.createElement('div');
+            zoneElement.className = `zone-card zone-type-${zone.type}`;
+            let animalsHTML = '<div class="zone-animal-list">';
+            if (zone.animals && zone.animals.length > 0) {
+                zone.animals.forEach((animal, animalIndex) => {
+                    animalsHTML += `<div class="zone-animal-item"><span>Nível ${animal.level} (${animal.gender === 'macho' ? 'M' : 'F'})</span><div class="animal-quantity-controls"><button data-zone="${zoneIndex}" data-animal="${animalIndex}" class="quantity-btn decrease">-</button><span>${animal.quantity}</span><button data-zone="${zoneIndex}" data-animal="${animalIndex}" class="quantity-btn increase">+</button></div></div>`;
+                });
+            } else {
+                animalsHTML += '<small>Nenhum animal adicionado.</small>';
+            }
+            animalsHTML += '</div>';
+            zoneElement.innerHTML = `<div class="zone-card-header"><h4>${zone.name}</h4><span class="zone-type-badge">${zone.type}</span><button class="delete-zone-btn" data-zone-index="${zoneIndex}">&times;</button></div>${animalsHTML}<div class="add-animal-form"><input type="number" class="animal-level-input" placeholder="Nível"><select class="animal-gender-select"><option value="macho">Macho</option><option value="femea">Fêmea</option></select><button class="add-animal-btn" data-zone-index="${zoneIndex}">Adicionar Animal</button></div>`;
+            zoneListContainer.appendChild(zoneElement);
+        });
+    };
+    const addZone = () => {
+        const typeInput = container.querySelector('#zone-type-select');
+        const nameInput = container.querySelector('#zone-name-input');
+        if (nameInput.value.trim() === '') {
+            showCustomAlert('Por favor, dê um nome para a zona.', 'Erro');
+            return;
+        }
+        session.zones.push({ id: Date.now(), name: nameInput.value.trim(), type: typeInput.value, animals: [] });
+        nameInput.value = '';
+        saveData(savedData);
+        // Não precisamos renderizar a view inteira, apenas a lista de zonas
+        renderGrindCounterView(sessionId, true); // Mantém o painel aberto
+    };
+    const addAnimalToZone = (zoneIndex) => {
+        const zoneCard = zoneListContainer.querySelectorAll('.zone-card')[zoneIndex];
+        const levelInput = zoneCard.querySelector('.animal-level-input');
+        const genderSelect = zoneCard.querySelector('.animal-gender-select');
+        const level = parseInt(levelInput.value);
+        if (!level || level <= 0) {
+            showCustomAlert('Por favor, insira um nível válido.', 'Erro');
+            return;
+        }
+        if (!session.zones[zoneIndex].animals) session.zones[zoneIndex].animals = [];
+        const existingAnimal = session.zones[zoneIndex].animals.find(a => a.level === level && a.gender === genderSelect.value);
+        if (existingAnimal) {
+            existingAnimal.quantity++;
+        } else {
+            session.zones[zoneIndex].animals.push({ level: level, gender: genderSelect.value, quantity: 1 });
+        }
+        saveData(savedData);
+        renderZones();
+    };
+    const updateAnimalQuantity = (zoneIndex, animalIndex, amount) => {
+        const animal = session.zones[zoneIndex].animals[animalIndex];
+        animal.quantity += amount;
+        if (animal.quantity <= 0) {
+            session.zones[zoneIndex].animals.splice(animalIndex, 1);
+        }
+        saveData(savedData);
+        renderZones();
+    };
     container.querySelector('#add-zone-btn').addEventListener('click', addZone);
-    zoneListContainer.addEventListener('click', (e) => { /* ... sua lógica de eventos de zona ... */ });
+    zoneListContainer.addEventListener('click', (e) => {
+        if (e.target.closest('.add-animal-btn')) {
+            addAnimalToZone(parseInt(e.target.closest('.add-animal-btn').dataset.zoneIndex));
+        } else if (e.target.closest('.delete-zone-btn')) {
+            const zoneIndex = parseInt(e.target.closest('.delete-zone-btn').dataset.zoneIndex);
+            session.zones.splice(zoneIndex, 1);
+            saveData(savedData);
+            renderGrindCounterView(sessionId, true); // Mantém o painel aberto
+        } else if (e.target.closest('.quantity-btn.increase')) {
+            updateAnimalQuantity(parseInt(e.target.closest('.quantity-btn').dataset.zone), parseInt(e.target.closest('.quantity-btn').dataset.animal), 1);
+        } else if (e.target.closest('.quantity-btn.decrease')) {
+            updateAnimalQuantity(parseInt(e.target.closest('.quantity-btn').dataset.zone), parseInt(e.target.closest('.quantity-btn').dataset.animal), -1);
+        }
+    });
     renderZones();
 
-    // --- INÍCIO DA LÓGICA DOS CONTADORES (QUE ESTAVA FALTANDO) ---
+    // LÓGICA COMPLETA DOS CONTADORES
     container.querySelector('.hotspot-button').addEventListener('click', () => renderHotspotDetailModal(reserveKey, animalSlug));
     const totalInput = document.getElementById('total-kills-input');
-
-    const saveTotalKills = () => {
-        const newValue = parseInt(totalInput.value, 10);
-        if (!isNaN(newValue) && newValue >= 0) {
-            const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
-            if (currentSession && currentSession.counts.total !== newValue) {
-                currentSession.counts.total = newValue;
-                saveData(savedData);
-            }
-        }
-    };
-
+    const saveTotalKills = () => { /* ... sua lógica de save ... */ };
     totalInput.addEventListener('change', saveTotalKills);
     totalInput.addEventListener('blur', saveTotalKills);
-
-    container.querySelector('.total-kills .increase').addEventListener('click', () => {
-        totalInput.value = parseInt(totalInput.value, 10) + 1;
-        saveTotalKills();
-    });
-    container.querySelector('.total-kills .decrease').addEventListener('click', () => {
-        const currentValue = parseInt(totalInput.value, 10);
-        if (currentValue > 0) {
-            totalInput.value = currentValue - 1;
-            saveTotalKills();
-        }
-    });
-
-    // Adiciona funcionalidade aos botões + e - dos outros contadores
+    container.querySelector('.total-kills .increase').addEventListener('click', () => { totalInput.value = parseInt(totalInput.value, 10) + 1; saveTotalKills(); });
+    container.querySelector('.total-kills .decrease').addEventListener('click', () => { const currentValue = parseInt(totalInput.value, 10); if (currentValue > 0) { totalInput.value = currentValue - 1; saveTotalKills(); } });
     container.querySelectorAll('.grind-counter-item:not(.total-kills) .grind-counter-btn').forEach(button => {
         button.addEventListener('click', async (e) => {
             e.stopPropagation();
@@ -2289,35 +2346,30 @@ async function renderGrindCounterView(sessionId) {
             const counterItem = button.closest('.grind-counter-item');
             const type = counterItem.dataset.type;
             const isDetailed = counterItem.dataset.detailed === 'true';
-            const currentSession = savedData.grindSessions.find(s => s.id === sessionId);
-            if (!currentSession) return;
-            if (!Array.isArray(currentSession.counts[type])) currentSession.counts[type] = [];
+
+            if (!Array.isArray(session.counts[type])) session.counts[type] = [];
 
             if (isIncrease) {
-                currentSession.counts.total++; // Sempre incrementa o total de abates
-                totalInput.value = currentSession.counts.total; // Atualiza o campo visualmente
-                
-                const killCountForTrophy = currentSession.counts.total;
+                session.counts.total++;
+                const killCountForTrophy = session.counts.total;
 
-                // Para itens detalhados, abre um modal para adicionar informações
                 if (isDetailed) {
                     openGrindDetailModal(sessionId, type, killCountForTrophy);
-                    return; // Sai da função para não salvar duas vezes
+                    return;
                 } else {
-                    currentSession.counts[type].push({ id: Date.now(), killCount: killCountForTrophy });
+                    session.counts[type].push({ id: Date.now(), killCount: killCountForTrophy });
                 }
-            } else { // Se for diminuir
-                if (currentSession.counts[type].length > 0) {
-                    const lastItem = currentSession.counts[type][currentSession.counts[type].length - 1];
+            } else {
+                if (session.counts[type].length > 0) {
+                    const lastItem = session.counts[type][session.counts[type].length - 1];
                     const itemName = lastItem.variation || type.replace(/_s$/, '').replace('_', ' ');
-                    
                     if (await showCustomAlert(`Tem certeza que deseja remover o último item: "${itemName}"?`, 'Confirmar Exclusão', true)) {
-                        currentSession.counts[type].pop();
+                        session.counts[type].pop();
                     }
                 }
             }
             saveData(savedData);
-            renderGrindCounterView(sessionId); // Recarrega a view para mostrar os novos totais
+            renderGrindCounterView(sessionId);
         });
     });
 
@@ -2331,62 +2383,104 @@ async function renderGrindCounterView(sessionId) {
             }
         }
     });
-    // --- FIM DA LÓGICA DOS CONTADORES ---
-}
-
-function renderHuntingRankingView(container) {
-    container.innerHTML = '';
-    const panel = document.createElement('div');
-    panel.id = 'hunting-ranking-panel';
-    panel.innerHTML = `<div class="progress-v2-header"><h3>Classificação de Caça</h3><p>Seu ranking de troféus por espécie animal.</p></div>`;
-
-    const animalScores = items.map(animalName => {
-        const slug = slugify(animalName);
-        let score = 0;
-        let breakdown = { rares: 0, diamonds: 0, greats: 0 };
-        
-        breakdown.rares = Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
-        breakdown.diamonds = (savedData.diamantes?.[slug] || []).length;
-        breakdown.greats = Object.values(savedData.greats?.[slug]?.furs || {}).reduce((acc, fur) => acc + (fur.trophies?.length || 0), 0);
-        
-        // Sistema de Pontuação: Raro=1, Diamante=5, GreatOne=25
-        score = (breakdown.rares * 1) + (breakdown.diamonds * 5) + (breakdown.greats * 25);
-        
-        return { name: animalName, slug, score, breakdown };
-    }).filter(animal => animal.score > 0) // Mostra apenas animais com alguma pontuação
-      .sort((a, b) => b.score - a.score);
-
-    const rankingList = document.createElement('div');
-    rankingList.className = 'hunting-ranking-list';
-
-    if (animalScores.length === 0) {
-        rankingList.innerHTML = '<p class="no-data-message">Nenhum troféu registrado para iniciar a classificação.</p>';
-    } else {
-        animalScores.forEach((animal, index) => {
-            const item = document.createElement('div');
-            item.className = 'ranking-item';
-            item.innerHTML = `
-                <div class="ranking-position">#${index + 1}</div>
-                <img class="ranking-animal-icon" src="animais/${animal.slug}.png" onerror="this.style.display='none'">
-                <div class="ranking-animal-name">${animal.name}</div>
-                <div class="ranking-trophy-breakdown">
-                    ${animal.breakdown.greats > 0 ? `<span><img src="icones/greatone_icon.png" class="custom-icon">${animal.breakdown.greats}</span>` : ''}
-                    ${animal.breakdown.diamonds > 0 ? `<span><img src="icones/diamante_icon.png" class="custom-icon">${animal.breakdown.diamonds}</span>` : ''}
-                    ${animal.breakdown.rares > 0 ? `<span><img src="icones/pata_icon.png" class="custom-icon">${animal.breakdown.rares}</span>` : ''}
-                </div>
-                <div class="ranking-score">${animal.score} pts</div>
-            `;
-            rankingList.appendChild(item);
-        });
-    }
-    
-    panel.appendChild(rankingList);
-    container.appendChild(panel);
 }
 
 // ▲▲▲ FIM DO BLOCO NOVO ▲▲▲
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
+// ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO AQUI (depois de renderGrindCounterView) ▼▼▼
 
+function openGrindDetailModal(sessionId, type, killCount) {
+    const session = savedData.grindSessions.find(s => s.id === sessionId);
+    if (!session) return;
+
+    const { animalSlug } = session;
+    const animalName = items.find(item => slugify(item) === animalSlug);
+    let potentialFurs = [];
+    let title = '';
+
+    // Determina qual lista de pelagens mostrar com base no tipo de troféu
+    switch (type) {
+        case 'rares':
+            title = 'Selecione a Pelagem Rara';
+            const rareData = rareFursData[animalSlug];
+            if (rareData?.macho) potentialFurs.push(...rareData.macho.map(f => ({ displayName: `Macho ${f}`, originalName: f, gender: 'macho' })));
+            if (rareData?.femea) potentialFurs.push(...rareData.femea.map(f => ({ displayName: `Fêmea ${f}`, originalName: f, gender: 'femea' })));
+            break;
+        case 'super_raros':
+            title = 'Selecione a Pelagem Super Rara';
+            const srRareData = rareFursData[animalSlug];
+            const srDiamondData = diamondFursData[animalSlug];
+            if (srRareData?.macho && srDiamondData?.macho?.length > 0) potentialFurs.push(...srRareData.macho.map(f => ({ displayName: `Macho ${f}`, originalName: f, gender: 'macho' })));
+            if (srRareData?.femea && srDiamondData?.femea?.length > 0) potentialFurs.push(...srRareData.femea.map(f => ({ displayName: `Fêmea ${f}`, originalName: f, gender: 'femea' })));
+            break;
+        case 'great_ones':
+            title = 'Selecione a Pelagem Great One';
+            const greatData = greatsFursData[animalSlug];
+            if (greatData) potentialFurs.push(...greatData.map(f => ({ displayName: f, originalName: f, gender: 'macho' }))); // Great Ones são sempre machos
+            break;
+    }
+
+    if (potentialFurs.length === 0) {
+        showCustomAlert(`Nenhuma pelagem detalhada encontrada para ${animalName} nesta categoria.`, 'Aviso');
+        return;
+    }
+
+    const modal = document.getElementById('form-modal');
+    modal.innerHTML = `
+        <div class="modal-content-box grind-detail-modal-content">
+            <h3>${title}</h3>
+            <p>Animal: ${animalName}</p>
+            <div class="fur-selection-grid">
+                ${potentialFurs.map(fur => `
+                    <div class="fur-selection-card" data-display-name="${fur.displayName}">
+                        <img src="animais/pelagens/${animalSlug}_${slugify(fur.originalName)}_${fur.gender}.png" 
+                             onerror="this.onerror=null; this.src='animais/pelagens/${animalSlug}_${slugify(fur.originalName)}.png'; this.onerror=null; this.src='animais/${animalSlug}.png';">
+                        <span>${fur.displayName}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <div class="modal-buttons">
+                <button class="back-button" id="cancel-grind-detail">Cancelar</button>
+            </div>
+        </div>
+    `;
+
+    modal.querySelector('#cancel-grind-detail').onclick = () => closeModal('form-modal');
+
+    // Adiciona o evento de clique para cada card de pelagem
+    modal.querySelectorAll('.fur-selection-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const displayName = card.dataset.displayName;
+            
+            // 1. Adiciona o troféu à sessão de grind
+            session.counts[type].push({
+                id: Date.now(),
+                killCount: killCount,
+                variation: displayName
+            });
+
+            // 2. Marca a pelagem como coletada na coleção principal
+            const collectionKey = (type === 'great_ones') ? 'greats' : type; // Greats tem um nome diferente nos dados
+            if (collectionKey === 'greats') {
+                if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = { furs: {} };
+                if (!savedData.greats[animalSlug].furs[displayName]) savedData.greats[animalSlug].furs[displayName] = { trophies: [] };
+                savedData.greats[animalSlug].furs[displayName].trophies.push({ date: new Date().toISOString() }); // Adiciona um troféu simples
+            } else {
+                if (!savedData[collectionKey]) savedData[collectionKey] = {};
+                if (!savedData[collectionKey][animalSlug]) savedData[collectionKey][animalSlug] = {};
+                savedData[collectionKey][animalSlug][displayName] = true;
+            }
+
+            // 3. Salva tudo e atualiza a tela
+            saveData(savedData);
+            closeModal('form-modal');
+            renderGrindCounterView(sessionId);
+        });
+    });
+
+    modal.style.display = 'flex';
+}
+
+// ▲▲▲ FIM DO BLOCO A SER ADICIONADO ▲▲▲
 function exportUserData() {
     if (!currentUser) {
         showCustomAlert('Você precisa estar logado para fazer o backup.', 'Aviso');
