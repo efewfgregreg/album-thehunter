@@ -2182,12 +2182,12 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
 // ▲▲▲ FIM DO NOVO BLOCO ▲▲▲
 
 // ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
+// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
 
 async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) return renderMainView('grind');
 
-    // Garante que a estrutura de dados seja compatível
     if (!session.counts) session.counts = { total: 0, rares: [], diamonds: [], trolls: [], great_ones: [], super_raros: [] };
     if (!session.zones) session.zones = []; 
 
@@ -2206,10 +2206,7 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
     container.innerHTML = `
         <div class="grind-container">
             <div class="grind-header">
-                <div class="grind-header-info">
-                    <h2>${animalName.toUpperCase()}</h2>
-                    <span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span>
-                </div>
+                <div class="grind-header-info"><h2>${animalName.toUpperCase()}</h2><span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span></div>
                 <div class="grind-header-details">
                     <div class="detail-item"><i class="fas fa-trophy"></i><strong>Pont. Troféu:</strong><span>${hotspotInfo.maxScore || 'N/A'}</span></div>
                     <div class="detail-item"><i class="fas fa-weight-hanging"></i><strong>Peso Máx:</strong><span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
@@ -2220,10 +2217,7 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
                 </div>
             </div>
             <div class="counters-wrapper">
-                <div class="grind-counter-item total-kills" data-type="total">
-                    <div class="grind-counter-header"><img src="icones/caveira_icon.png" class="custom-icon" alt="Total de Abates"><span>Total de Abates</span></div>
-                    <div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><input type="number" class="grind-total-input" id="total-kills-input" value="${session.counts.total || 0}"><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div>
-                </div>
+                <div class="grind-counter-item total-kills" data-type="total"><div class="grind-counter-header"><img src="icones/caveira_icon.png" class="custom-icon" alt="Total de Abates"><span>Total de Abates</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><input type="number" class="grind-total-input" id="total-kills-input" value="${session.counts.total || 0}"><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
                 <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><img src="icones/diamante_icon.png" class="custom-icon" alt="Diamante"><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.diamonds?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
                 <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><img src="icones/pata_icon.png" class="custom-icon" alt="Raros"><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.rares?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
                 <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><img src="icones/fantasma_icon.png" class="custom-icon" alt="Trolls"><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.trolls?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
@@ -2240,7 +2234,7 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
                     <div class="zone-manager-body">
                         <div class="add-zone-form">
                             <select id="zone-type-select"><option value="principal">Zona Principal</option><option value="secundaria">Zona Secundária</option><option value="solo">Zona Solo</option></select>
-                            <input type="text" id="zone-name-input" placeholder="Nome da Zona (Ex: Lago Sul)">
+                            <input type="text" id="zone-name-input" placeholder="Nome da Zona (Ex: 1, 2, ou Lago Sul)">
                             <button id="add-zone-btn" class="back-button"><i class="fas fa-plus"></i> Adicionar Zona</button>
                         </div>
                         <div id="zone-list" class="zone-list"></div>
@@ -2251,35 +2245,71 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
         </div>
     `;
 
-    // --- LÓGICA COMPLETA E CORRIGIDA DO GERENCIADOR DE ZONAS ---
+    // --- LÓGICA DO GERENCIADOR DE ZONAS (COM CORREÇÕES) ---
     const zoneListContainer = container.querySelector('#zone-list');
     const zoneCountBadge = container.querySelector('.zone-count-badge');
 
     const renderZones = () => {
         zoneListContainer.innerHTML = '';
-        zoneCountBadge.textContent = `${session.zones.length} Zonas`; // Atualiza o contador
+        zoneCountBadge.textContent = `${session.zones.length} Zonas`; 
         if (session.zones.length === 0) {
             zoneListContainer.innerHTML = '<p class="no-zones-message">Nenhuma zona adicionada ainda. Adicione sua primeira zona acima!</p>';
             return;
         }
-        session.zones.forEach((zone, zoneIndex) => {
+        
+        // ** INÍCIO DA MUDANÇA: ORDENAÇÃO **
+        // 1. Criamos uma cópia das zonas com o índice original
+        const zonesWithOriginalIndex = session.zones.map((zone, index) => ({
+            ...zone,
+            originalIndex: index 
+        }));
+
+        // 2. Ordenamos a cópia pelo nome, usando a opção 'numeric'
+        zonesWithOriginalIndex.sort((a, b) => 
+            a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
+        );
+
+        // 3. Iteramos sobre a lista ORDENADA
+        zonesWithOriginalIndex.forEach((zone) => { 
+            // 'zone' agora contém o objeto da zona E o seu 'originalIndex'
+            // O 'originalIndex' é o que usamos para editar/excluir
             const zoneElement = document.createElement('div');
             zoneElement.className = `zone-card zone-type-${zone.type}`;
             let animalsHTML = '<div class="zone-animal-list">';
             if (zone.animals && zone.animals.length > 0) {
                 zone.animals.forEach((animal, animalIndex) => {
-                    animalsHTML += `<div class="zone-animal-item"><span>Nível ${animal.level} (${animal.gender === 'macho' ? 'M' : 'F'})</span><div class="animal-quantity-controls"><button data-zone="${zoneIndex}" data-animal="${animalIndex}" class="quantity-btn decrease">-</button><span>${animal.quantity}</span><button data-zone="${zoneIndex}" data-animal="${animalIndex}" class="quantity-btn increase">+</button></div></div>`;
+                    // 4. Usamos o 'originalIndex' nos botões de animais
+                    animalsHTML += `<div class="zone-animal-item"><span>Nível ${animal.level} (${animal.gender === 'macho' ? 'M' : 'F'})</span><div class="animal-quantity-controls"><button data-zone="${zone.originalIndex}" data-animal="${animalIndex}" class="quantity-btn decrease">-</button><span>${animal.quantity}</span><button data-zone="${zone.originalIndex}" data-animal="${animalIndex}" class="quantity-btn increase">+</button></div></div>`;
                 });
             } else {
                 animalsHTML += '<small>Nenhum animal adicionado.</small>';
             }
             animalsHTML += '</div>';
-            zoneElement.innerHTML = `<div class="zone-card-header"><h4>${zone.name}</h4><span class="zone-type-badge">${zone.type}</span><button class="delete-zone-btn" data-zone-index="${zoneIndex}">&times;</button></div>${animalsHTML}<div class="add-animal-form"><input type="number" class="animal-level-input" placeholder="Nível"><select class="animal-gender-select"><option value="macho">Macho</option><option value="femea">Fêmea</option></select><button class="add-animal-btn" data-zone-index="${zoneIndex}">Adicionar Animal</button></div>`;
+
+            // 4. Usamos o 'originalIndex' nos botões de zona
+            zoneElement.innerHTML = `
+                <div class="zone-card-header">
+                    <h4>${zone.name}</h4>
+                    <div class="zone-card-controls">
+                        <span class="zone-type-badge">${zone.type}</span>
+                        <button class="zone-action-btn edit-zone-btn" data-zone-index="${zone.originalIndex}" title="Renomear Zona"><i class="fas fa-pencil-alt"></i></button>
+                        <button class="zone-action-btn delete-zone-btn" data-zone-index="${zone.originalIndex}" title="Excluir Zona">&times;</button>
+                    </div>
+                </div>
+                ${animalsHTML}
+                <div class="add-animal-form">
+                    <input type="number" class="animal-level-input" placeholder="Nível">
+                    <select class="animal-gender-select"><option value="macho">Macho</option><option value="femea">Fêmea</option></select>
+                    <button class="add-animal-btn" data-zone-index="${zone.originalIndex}">Adicionar Animal</button>
+                </div>
+            `;
             zoneListContainer.appendChild(zoneElement);
         });
+        // ** FIM DA MUDANÇA **
     };
 
     const addZone = () => {
+        // ... (função addZone continua igual)
         const typeInput = container.querySelector('#zone-type-select');
         const nameInput = container.querySelector('#zone-name-input');
         if (nameInput.value.trim() === '') {
@@ -2289,19 +2319,32 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
         session.zones.push({ id: Date.now(), name: nameInput.value.trim(), type: typeInput.value, animals: [] });
         nameInput.value = '';
         saveData(savedData);
-        renderZones(); // Apenas redesenha a lista de zonas, sem recarregar a página
+        renderZones(); 
     };
 
     const handleZoneListClick = (e) => {
         const target = e.target;
-        if (target.closest('.add-animal-btn')) {
+        // Os 'data-zone-index' agora se referem ao índice original,
+        // então todas as funções de editar/excluir funcionam perfeitamente.
+        
+        if (target.closest('.edit-zone-btn')) {
+            const zoneIndex = parseInt(target.closest('.edit-zone-btn').dataset.zoneIndex);
+            const currentName = session.zones[zoneIndex].name;
+            const newName = prompt('Digite o novo nome para a zona:', currentName);
+            
+            if (newName && newName.trim() !== '' && newName.trim() !== currentName) {
+                session.zones[zoneIndex].name = newName.trim();
+                saveData(savedData);
+                renderZones(); // Redesenha a lista, que será reordenada
+            }
+        } else if (target.closest('.add-animal-btn')) {
             const zoneIndex = parseInt(target.closest('.add-animal-btn').dataset.zoneIndex);
             addAnimalToZone(zoneIndex);
         } else if (target.closest('.delete-zone-btn')) {
             const zoneIndex = parseInt(target.closest('.delete-zone-btn').dataset.zoneIndex);
             session.zones.splice(zoneIndex, 1);
             saveData(savedData);
-            renderZones(); // Apenas redesenha a lista de zonas
+            renderZones(); // Redesenha a lista, que será reordenada
         } else if (target.closest('.quantity-btn.increase')) {
             const zoneIndex = parseInt(target.closest('.quantity-btn').dataset.zone);
             const animalIndex = parseInt(target.closest('.quantity-btn').dataset.animal);
@@ -2314,7 +2357,8 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
     };
 
     const addAnimalToZone = (zoneIndex) => {
-        const zoneCard = zoneListContainer.querySelectorAll('.zone-card')[zoneIndex];
+        // ... (esta função continua igual)
+        const zoneCard = zoneListContainer.querySelector(`.add-animal-btn[data-zone-index="${zoneIndex}"]`).closest('.zone-card');
         const levelInput = zoneCard.querySelector('.animal-level-input');
         const genderSelect = zoneCard.querySelector('.animal-gender-select');
         const level = parseInt(levelInput.value);
@@ -2335,6 +2379,7 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
     };
 
     const updateAnimalQuantity = (zoneIndex, animalIndex, amount) => {
+        // ... (esta função continua igual)
         const animal = session.zones[zoneIndex].animals[animalIndex];
         animal.quantity += amount;
         if (animal.quantity <= 0) {
@@ -2344,77 +2389,22 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
         renderZones();
     };
 
-    // Adiciona os "escutadores" de eventos
     container.querySelector('#add-zone-btn').addEventListener('click', addZone);
     zoneListContainer.addEventListener('click', handleZoneListClick);
     
-    // Renderiza o estado inicial
     renderZones();
 
-    // --- LÓGICA COMPLETA DOS CONTADORES ---
+    // --- LÓGICA DOS CONTADORES ---
+    // (toda a sua lógica de contadores permanece inalterada aqui)
     container.querySelector('.hotspot-button').addEventListener('click', () => renderHotspotDetailModal(reserveKey, animalSlug));
     const totalInput = document.getElementById('total-kills-input');
-    
-    const saveTotalKills = () => {
-        const newValue = parseInt(totalInput.value, 10);
-        if (!isNaN(newValue) && newValue >= 0) {
-            session.counts.total = newValue;
-            saveData(savedData);
-        }
-    };
+    const saveTotalKills = () => { const newValue = parseInt(totalInput.value, 10); if (!isNaN(newValue) && newValue >= 0) { session.counts.total = newValue; saveData(savedData); } };
     totalInput.addEventListener('change', saveTotalKills);
     totalInput.addEventListener('blur', saveTotalKills);
-    
     container.querySelector('.total-kills .increase').addEventListener('click', () => { totalInput.value = parseInt(totalInput.value, 10) + 1; saveTotalKills(); });
     container.querySelector('.total-kills .decrease').addEventListener('click', () => { const currentValue = parseInt(totalInput.value, 10); if (currentValue > 0) { totalInput.value = currentValue - 1; saveTotalKills(); } });
-    
-    container.querySelectorAll('.grind-counter-item:not(.total-kills) .grind-counter-btn').forEach(button => {
-        button.addEventListener('click', async (e) => {
-            e.stopPropagation();
-            const isIncrease = button.classList.contains('increase');
-            const counterItem = button.closest('.grind-counter-item');
-            const type = counterItem.dataset.type;
-            const isDetailed = counterItem.dataset.detailed === 'true';
-            
-            if (!Array.isArray(session.counts[type])) session.counts[type] = [];
-            
-            if (isIncrease) {
-                session.counts.total++;
-                const killCountForTrophy = session.counts.total;
-                
-                if (isDetailed) {
-                    openGrindDetailModal(sessionId, type, killCountForTrophy);
-                    return;
-                } else {
-                    session.counts[type].push({ id: Date.now(), killCount: killCountForTrophy });
-                }
-            } else {
-                if (session.counts[type].length > 0) {
-                    const lastItem = session.counts[type][session.counts[type].length - 1];
-                    const itemName = lastItem.variation || type.replace(/_s$/, '').replace('_', ' ');
-                    if (await showCustomAlert(`Tem certeza que deseja remover o último item: "${itemName}"?`, 'Confirmar Exclusão', true)) {
-                        session.counts[type].pop();
-                    }
-                }
-            }
-            saveData(savedData);
-            renderGrindCounterView(sessionId);
-        });
-    });
-    
-    container.querySelector('#delete-grind-btn').addEventListener('click', async () => {
-        const isZonesOpen = container.querySelector('details').open; // Salva o estado
-        if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) {
-            const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId);
-            if (sessionIndex > -1) {
-                savedData.grindSessions.splice(sessionIndex, 1);
-                saveData(savedData);
-                renderMainView('grind');
-            }
-        } else {
-            renderGrindCounterView(sessionId, isZonesOpen); // Restaura o estado se cancelar
-        }
-    });
+    container.querySelectorAll('.grind-counter-item:not(.total-kills) .grind-counter-btn').forEach(button => { button.addEventListener('click', async (e) => { e.stopPropagation(); const isIncrease = button.classList.contains('increase'); const counterItem = button.closest('.grind-counter-item'); const type = counterItem.dataset.type; const isDetailed = counterItem.dataset.detailed === 'true'; if (!Array.isArray(session.counts[type])) session.counts[type] = []; if (isIncrease) { session.counts.total++; const killCountForTrophy = session.counts.total; if (isDetailed) { openGrindDetailModal(sessionId, type, killCountForTrophy); return; } else { session.counts[type].push({ id: Date.now(), killCount: killCountForTrophy }); } } else { if (session.counts[type].length > 0) { const lastItem = session.counts[type][session.counts[type].length - 1]; const itemName = lastItem.variation || type.replace(/_s$/, '').replace('_', ' '); if (await showCustomAlert(`Tem certeza que deseja remover o último item: "${itemName}"?`, 'Confirmar Exclusão', true)) { session.counts[type].pop(); } } } saveData(savedData); renderGrindCounterView(sessionId); }); });
+    container.querySelector('#delete-grind-btn').addEventListener('click', async () => { const isZonesOpen = container.querySelector('details').open; if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) { const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId); if (sessionIndex > -1) { savedData.grindSessions.splice(sessionIndex, 1); saveData(savedData); renderMainView('grind'); } } else { renderGrindCounterView(sessionId, isZonesOpen); } });
 }
 // ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO AQUI (depois de renderGrindCounterView) ▼▼▼
 

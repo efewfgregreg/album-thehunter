@@ -588,6 +588,25 @@ body {
         width: auto;
         align-self: flex-start;
     }
+/* ▼▼▼ COLE ESTE NOVO BLOCO DENTRO do @media (max-width: 768px) { ... } ▼▼▼ */
+
+    .add-zone-form {
+        flex-direction: column; /* Empilha os campos verticalmente */
+        align-items: stretch; /* Estica os campos para preencher a largura */
+    }
+
+    .add-zone-form select,
+    .add-zone-form input,
+    .add-zone-form button {
+        width: 100%; /* Faz todos os elementos terem largura total */
+    }
+
+    .zone-list {
+        /* Garante que os cards de zona não fiquem muito pequenos */
+        grid-template-columns: 1fr; /* Coluna única para os cards de zona */
+    }
+
+/* ▲▲▲ Fim do bloco a ser adicionado ▲▲▲ */
 
     .navigation-hub {
         display: grid; 
@@ -1227,6 +1246,7 @@ body.light-theme .hub-dashboard {
         border-bottom: 1px solid var(--border-color);
         padding-bottom: 20px;
     }
+
 }
 /* ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO NO FINAL DO ARQUIVO ▼▼▼ */
 
@@ -1754,4 +1774,79 @@ body.light-theme .hub-dashboard {
     justify-content: flex-end;
 }
 
+/* ▲▲▲ FIM DO BLOCO A SER ADICIONADO ▲▲▲ */
+
+/* ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO NO FINAL DO ARQUIVO ▼▼▼ */
+
+/* ============================================== */
+/* ===    NOVOS ESTILOS - CONTROLES DE ZONA   === */
+/* ============================================== */
+
+.zone-card-header {
+    /* Alinha o Título à esquerda e os Controles à direita */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.zone-card-header h4 {
+    /* Impede que o título quebre o layout */
+    flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-right: 10px; /* Espaço antes dos botões */
+}
+
+.zone-card-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0; /* Impede que os controles encolham */
+}
+
+/* Remove o estilo antigo do botão de deletar */
+.delete-zone-btn {
+    background: none;
+    border: none;
+    font-size: 1rem; /* Tamanho padrão do ícone */
+    cursor: pointer;
+    padding: 0;
+    margin: 0;
+    line-height: 1;
+}
+
+/* Novo estilo para os botões de Ação (Editar e Deletar) */
+.zone-action-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    color: var(--text-color-muted);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem; /* Tamanho do ícone de lápis */
+    line-height: 28px; /* Centraliza o ícone */
+    text-align: center;
+    transition: all 0.2s ease;
+}
+
+/* Botão de Editar */
+.zone-action-btn.edit-zone-btn:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Botão de Deletar (agora como ícone) */
+.zone-action-btn.delete-zone-btn {
+    color: #d9534f;
+    border-color: #d9534f;
+    font-size: 1.2rem; /* 'X' um pouco maior */
+    font-weight: bold;
+}
+
+.zone-action-btn.delete-zone-btn:hover {
+    background-color: #d9534f;
+    color: white;
+}
 /* ▲▲▲ FIM DO BLOCO A SER ADICIONADO ▲▲▲ */
