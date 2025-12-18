@@ -909,7 +909,7 @@ function renderHotspotGalleryView(container, reserveKey) {
     }
 
     availableHotspots.sort((a, b) => a.name.localeCompare(b.name)).forEach(animal => {
-        const slugReserve = slugify(reservesData[reserveKey].name);
+        const slugReserve = slugify(reservesData[reserveKey].name).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const imagePath = `hotspots/${slugReserve}_${animal.slug}_hotspot.jpg`;
         const card = document.createElement('div');
         card.className = 'hotspot-card';
