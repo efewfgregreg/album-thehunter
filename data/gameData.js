@@ -54,7 +54,6 @@ export const rareFursData = {
     "lagópode_branco": { macho: ["Branco", "Muda Variação 1", "Muda Variação 2"], femea: ["Branco", "Muda Variação 1", "Muda Variação 2", "mosqueado Variação 1", "mosqueado Variação 2"] },
     "lagópode_escocês": { macho: ["Branco"], femea: ["Branco"] },
     "lebre_antílope": { macho: ["Albino", "Melânico"], femea: ["Albino", "Melânico"] },
-    "lebre_da_eurásia": { macho: ["Albino", "Branco", "Muda Variação 1", "Muda Variação 2", "Pardo Claro", "Pardo Escuro", "Cinza Claro", "Cinza Escuro"], femea: ["Albino", "Branco", "Muda Variação 1", "Muda Variação 2"] },
     "lebre_da_eurásia": { macho: ["Albino", "Branco", "Muda Variação 1", "Muda Variação 2", "Pardo Claro", "Pardo Escuro", "Cinza Claro", "Cinza Escuro"], femea: ["Albino", "Branco", "Muda Variação 1", "muda Variação 2"] },
     "lebre_peluda": { macho: ["Albino", "Branco"], femea: ["Albino", "Branco"] },
     "lebre_da_cauda_branca": { macho: ["Albino"], femea: ["Albino"] },

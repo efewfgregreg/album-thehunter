@@ -6,8 +6,33 @@
 import { renderLoginForm, renderRegisterForm, setupLogoutButton, closeModal, showCustomAlert } from './auth.js';
 import { rareFursData, greatsFursData, items, diamondFursData, reservesData, animalHotspotData, multiMountsData } from '../data/gameData.js';
 import { auth, db } from './firebase.js';
-
-
+import { runDataValidation } from './dataValidator.js';
+// Adicione esta linha junto com os outros imports no topo
+import { slugify, showToast, setRandomBackground, isTimeInRanges } from './utils.js';
+import { createCardElement } from './components/AnimalCard.js';
+import { TABS } from './constants.js';
+import { createPageHeader } from './components/PageHeader.js';
+import { createFurCard } from './components/FurCard.js';
+import { createReserveCard } from './components/ReserveCard.js';
+import { createGrindCard } from './components/GrindCard.js';
+import { createHotspotCard } from './components/HotspotCard.js';
+import { createMultiMountCard } from './components/MultiMountCard.js';
+import { createReserveProgressCard } from './components/ReserveProgressCard.js';
+import { createAchievementCard } from './components/AchievementCard.js';
+import { createAnimalChecklistRow } from './components/AnimalChecklistRow.js';
+import { createGrindCounter } from './components/GrindCounter.js';
+import { createGreatOneTrophyContent, createGrindFurSelectionContent } from './components/Modals.js';
+import { createNavigationCard } from './components/NavigationCard.js';
+import { createSettingsPanel } from './components/SettingsPanel.js';
+// --- IMPORTAÇÕES DA NOVA LÓGICA (PASSO 2) ---
+import { 
+    getUniqueAnimalData, 
+    getAnimalAttributes, 
+    checkAndSetGreatOneCompletion, 
+    calcularProgressoDetalhado, 
+    calcularReserveProgress, 
+    getAnimalCardStatus
+} from './progressLogic.js';
 // =================================================================
 // =================== VARIÁVEIS GLOBAIS DO APP ====================
 // =================================================================
@@ -15,338 +40,57 @@ let appContainer;
 let currentUser = null;
 let savedData = {};
 
+// =================================================================
+// =================== GERENCIAMENTO DE HISTÓRICO ==================
+// =================================================================
 
+// Escuta quando o usuário aperta "Voltar" no navegador/celular
+window.addEventListener('popstate', (event) => {
+    if (event.state) {
+        // Se houver um estado salvo, restaura a tela correta
+        if (event.state.view === 'hub') {
+            renderNavigationHub(false); // false = não criar novo histórico
+        } else if (event.state.view === 'category') {
+            renderMainView(event.state.tabKey, false);
+        } else if (event.state.view === 'detail') {
+            showDetailView(event.state.name, event.state.tabKey, event.state.originReserve, false);
+        }
+    } else {
+        // Se não houver estado (ex: carregou a página agora), vai pro Hub
+        renderNavigationHub(false);
+    }
+});
+
+// Função auxiliar para salvar o histórico sem repetir código
+function pushHistory(stateObj) {
+    // Só salva se o estado atual for diferente do novo (evita duplicatas)
+    const currentState = history.state;
+    if (!currentState || currentState.view !== stateObj.view || currentState.name !== stateObj.name) {
+        history.pushState(stateObj, '', '');
+    }
+}
 // =================================================================
 // ===================== FUNÇÕES UTILITÁRIAS =======================
 // =================================================================
 
-function setRandomBackground() {
-    const totalBackgrounds = 39;
-    let lastBg = localStorage.getItem('lastBg');
-    let randomNumber;
-    do {
-        randomNumber = Math.floor(Math.random() * totalBackgrounds) + 1;
-    } while (randomNumber == lastBg);
-    localStorage.setItem('lastBg', randomNumber);
-    const imageUrl = `background/background_${randomNumber}.png`;
-    document.body.style.backgroundImage = `url('${imageUrl}')`;
-}
 
-function slugify(texto) {
-    return texto.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
-}
-// ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO AQUI ▼▼▼
-
-function getUniqueAnimalData() {
-    const classes = new Set();
-    const levels = new Set();
-
-    Object.values(animalHotspotData).forEach(reserve => {
-        Object.values(reserve).forEach(animal => {
-            if (animal.animalClass) classes.add(animal.animalClass);
-            if (animal.maxLevel) levels.add(animal.maxLevel);
-        });
-    });
-
-    // Ordena numericamente, tratando "9 (Lendário)" como 9.
-    const sortedClasses = [...classes].sort((a, b) => parseInt(a) - parseInt(b));
-    const sortedLevels = [...levels].sort((a, b) => parseInt(a) - parseInt(b));
-
-    return { classes: sortedClasses, levels: sortedLevels };
-}
-
-function getAnimalAttributes(slug) {
-    const attributes = {
-        classes: new Set(),
-        levels: new Set(),
-        reserves: new Set()
-    };
-
-    // Coleta classes e níveis
-    Object.values(animalHotspotData).forEach(reserve => {
-        if (reserve[slug]) {
-            if (reserve[slug].animalClass) attributes.classes.add(reserve[slug].animalClass);
-            if (reserve[slug].maxLevel) attributes.levels.add(reserve[slug].maxLevel);
-        }
-    });
-
-    // Coleta reservas
-    Object.entries(reservesData).forEach(([reserveKey, reserveData]) => {
-        if (reserveData.animals.includes(slug)) {
-            attributes.reserves.add(reserveKey);
-        }
-    });
-
-    return {
-        classes: [...attributes.classes],
-        levels: [...attributes.levels],
-        reserves: [...attributes.reserves]
-    };
-}
-
-// ▲▲▲ FIM DO BLOCO A SER ADICIONADO ▲▲▲
 
 // =================================================================
 // ====================== DADOS E CATEGORIAS =======================
 // =================================================================
 
 const categorias = {
-    pelagens: { title: 'Pelagens Raras', items: items, icon: '<img src="icones/pata_icon.png" class="custom-icon">', isHtml: true },
-    diamantes: { title: 'Diamantes', items: items, icon: '<img src="icones/diamante_icon.png" class="custom-icon">', isHtml: true },
-    greats: { title: 'Great Ones', items: items.filter(item => Object.keys(greatsFursData).includes(slugify(item))), icon: '<img src="icones/greatone_icon.png" class="custom-icon">', isHtml: true },
-    super_raros: { title: 'Super Raros', items: items, icon: '<img src="icones/coroa_icon.png" class="custom-icon">', isHtml: true },
-    montagens: { title: 'Montagens Múltiplas', icon: '<img src="icones/trofeu_icon.png" class="custom-icon">', isHtml: true },
-    grind: { title: 'Contador de Grind', icon: '<img src="icones/cruz_icon.png" class="custom-icon">', isHtml: true },
-    reservas: { title: 'Reservas de Caça', icon: '<img src="icones/mapa_icon.png" class="custom-icon">', isHtml: true },
-    progresso: { title: 'Painel de Progresso', icon: '<img src="icones/progresso_icon.png" class="custom-icon">', isHtml: true },
-    configuracoes: { title: 'Configurações', icon: '<img src="icones/configuracoes_icon.png" class="custom-icon">', isHtml: true } // <<< LINHA ALTERADA
+    [TABS.PELAGENS]: { title: 'Pelagens Raras', items: items, icon: '<img src="icones/pata_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.DIAMANTES]: { title: 'Diamantes', items: items, icon: '<img src="icones/diamante_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.GREATS]: { title: 'Great Ones', items: items.filter(item => Object.keys(greatsFursData).includes(slugify(item))), icon: '<img src="icones/greatone_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.SUPER_RAROS]: { title: 'Super Raros', items: items, icon: '<img src="icones/coroa_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.MONTAGENS]: { title: 'Montagens Múltiplas', icon: '<img src="icones/trofeu_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.GRIND]: { title: 'Contador de Grind', icon: '<img src="icones/cruz_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.RESERVAS]: { title: 'Reservas de Caça', icon: '<img src="icones/mapa_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.PROGRESSO]: { title: 'Painel de Progresso', icon: '<img src="icones/progresso_icon.png" class="custom-icon">', isHtml: true },
+    [TABS.CONFIGURACOES]: { title: 'Configurações', icon: '<img src="icones/configuracoes_icon.png" class="custom-icon">', isHtml: true }
 };
 
-
-// =================================================================
-// ============ LÓGICA DE CÁLCULOS DE PROGRESSO ==================
-// =================================================================
-
-function checkAndSetGreatOneCompletion(slug, currentData) {
-    const requiredFurs = greatsFursData[slug];
-    if (!requiredFurs || !currentData) return;
-    currentData.completo = requiredFurs.every(furName => currentData.furs?.[furName]?.trophies?.length > 0);
-}
-
-function calcularOverallProgress() {
-    const progress = {
-        collectedRares: 0, totalRares: 0,
-        collectedDiamonds: 0, totalDiamonds: 0,
-        collectedGreatOnes: 0, totalGreatOnes: 0,
-        collectedSuperRares: 0, totalSuperRares: 0
-    };
-    const allAnimalSlugs = [...new Set(Object.keys(rareFursData).concat(Object.keys(diamondFursData)))];
-    allAnimalSlugs.forEach(slug => {
-        if (rareFursData[slug]) {
-            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
-        }
-        progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
-        if (diamondFursData[slug]) {
-            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
-        }
-        progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
-        if (greatsFursData[slug]) {
-            progress.totalGreatOnes += greatsFursData[slug].length;
-            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
-        }
-        const speciesRareFurs = rareFursData[slug];
-        const speciesDiamondFurs = diamondFursData[slug];
-        if (speciesRareFurs) {
-            if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
-                progress.totalSuperRares += speciesRareFurs.macho.length;
-            }
-            if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
-                progress.totalSuperRares += speciesRareFurs.femea.length;
-            }
-        }
-        progress.collectedSuperRares += Object.values(savedData.super_raros?.[slug] || {}).filter(v => v === true).length;
-    });
-    return progress;
-}
-
-function calcularReserveProgress(reserveKey) {
-    const reserveAnimals = reservesData[reserveKey]?.animals || [];
-    let progress = {
-        collectedRares: 0, totalRares: 0,
-        collectedDiamonds: 0, totalDiamonds: 0,
-        collectedGreatOnes: 0, totalGreatOnes: 0,
-        collectedSuperRares: 0, totalSuperRares: 0
-    };
-    reserveAnimals.forEach(slug => {
-        if (rareFursData[slug]) {
-            progress.totalRares += (rareFursData[slug].macho?.length || 0) + (rareFursData[slug].femea?.length || 0);
-            progress.collectedRares += Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
-        }
-        if (diamondFursData[slug]) {
-            progress.totalDiamonds += (diamondFursData[slug].macho?.length || 0) + (diamondFursData[slug].femea?.length || 0);
-            progress.collectedDiamonds += new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
-        }
-        if (greatsFursData[slug]) {
-            progress.totalGreatOnes += greatsFursData[slug].length;
-            progress.collectedGreatOnes += Object.values(savedData.greats?.[slug]?.furs || {}).filter(f => f.trophies?.length > 0).length;
-        }
-        const speciesRareFurs = rareFursData[slug];
-        const speciesDiamondFurs = diamondFursData[slug];
-        if (speciesRareFurs) {
-            if (speciesRareFurs.macho && (speciesDiamondFurs?.macho?.length || 0) > 0) {
-                progress.totalSuperRares += speciesRareFurs.macho.length;
-            }
-            if (speciesRareFurs.femea && (speciesDiamondFurs?.femea?.length || 0) > 0) {
-                progress.totalSuperRares += speciesRareFurs.femea.length;
-            }
-        }
-        progress.collectedSuperRares += Object.values(savedData.super_raros?.[slug] || {}).filter(v => v === true).length;
-    });
-    return progress;
-}
-// ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO AQUI ▼▼▼
-
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
-
-function calcularProgressoCorrigido() {
-    const progress = {
-        rares: { collected: 0, total: 0 },
-        diamonds: { collected: 0, total: 0 },
-        greats: { collected: 0, total: 0 },
-        super_raros: { collected: 0, total: 0 }
-    };
-
-    const allAnimalSlugs = items.map(slugify);
-
-    allAnimalSlugs.forEach(slug => {
-        // Pelagens Raras (por espécie)
-        const totalRaresForSlug = (rareFursData[slug]?.macho?.length || 0) + (rareFursData[slug]?.femea?.length || 0);
-        if (totalRaresForSlug > 0) {
-            progress.rares.total++;
-            const collectedRares = Object.values(savedData.pelagens?.[slug] || {}).filter(v => v).length;
-            if (collectedRares === totalRaresForSlug) {
-                progress.rares.collected++;
-            }
-        }
-        
-        // Diamantes (por espécie)
-        const totalDiamondsForSlug = (diamondFursData[slug]?.macho?.length || 0) + (diamondFursData[slug]?.femea?.length || 0);
-        if (totalDiamondsForSlug > 0) {
-            progress.diamonds.total++;
-            if ((savedData.diamantes?.[slug] || []).length > 0) {
-                progress.diamonds.collected++;
-            }
-        }
-
-        // Great Ones (por espécie)
-        if (greatsFursData[slug]) {
-            progress.greats.total++;
-            const requiredFurs = greatsFursData[slug];
-            const isComplete = requiredFurs.every(fur => savedData.greats?.[slug]?.furs?.[fur]?.trophies?.length > 0);
-            if (isComplete) {
-                progress.greats.collected++;
-            }
-        }
-
-        // Super Raros (por espécie)
-        const speciesRareFurs = rareFursData[slug];
-        const speciesDiamondData = diamondFursData[slug]; // Nome correto da variável
-        let totalSuperRaresForSlug = 0;
-        // CORREÇÃO APLICADA AQUI: Usando "speciesDiamondData"
-        if (speciesRareFurs?.macho && (speciesDiamondData?.macho?.length || 0) > 0) totalSuperRaresForSlug += speciesRareFurs.macho.length;
-        if (speciesRareFurs?.femea && (speciesDiamondData?.femea?.length || 0) > 0) totalSuperRaresForSlug += speciesRareFurs.femea.length;
-        
-        if (totalSuperRaresForSlug > 0) {
-            progress.super_raros.total++;
-            const collectedSuperRares = Object.values(savedData.super_raros?.[slug] || {}).filter(v => v).length;
-            if (collectedSuperRares === totalSuperRaresForSlug) {
-                progress.super_raros.collected++;
-            }
-        }
-    });
-
-    return progress;
-}
-
-// ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO AQUI ▼▼▼
-
-function calcularProgressoDetalhado() {
-    const progress = {
-        rares: { collected: 0, total: 0, maleCollected: 0, maleTotal: 0, femaleCollected: 0, femaleTotal: 0, speciesCollected: 0, speciesTotal: 0 },
-        diamonds: { collected: 0, total: 0, speciesCollected: 0, speciesTotal: 0 },
-        greats: { collected: 0, total: 0, byAnimal: {} },
-        super_raros: { collected: 0, total: 0 }
-    };
-
-    const allAnimalSlugs = items.map(slugify);
-
-    // Itera sobre todos os animais para os cálculos
-    allAnimalSlugs.forEach(slug => {
-        // --- Pelagens Raras ---
-        const rareData = rareFursData[slug];
-        if (rareData) {
-            const maleTotal = rareData.macho?.length || 0;
-            const femaleTotal = rareData.femea?.length || 0;
-            if (maleTotal + femaleTotal > 0) {
-                progress.rares.speciesTotal++;
-                progress.rares.total += maleTotal + femaleTotal;
-                progress.rares.maleTotal += maleTotal;
-                progress.rares.femaleTotal += femaleTotal;
-
-                const savedRares = savedData.pelagens?.[slug] || {};
-                let collectedCountForSpecies = 0;
-                if (rareData.macho) {
-                    rareData.macho.forEach(fur => {
-                        if (savedRares[`Macho ${fur}`]) {
-                            progress.rares.collected++;
-                            progress.rares.maleCollected++;
-                            collectedCountForSpecies++;
-                        }
-                    });
-                }
-                if (rareData.femea) {
-                    rareData.femea.forEach(fur => {
-                        if (savedRares[`Fêmea ${fur}`]) {
-                            progress.rares.collected++;
-                            progress.rares.femaleCollected++;
-                            collectedCountForSpecies++;
-                        }
-                    });
-                }
-                if (collectedCountForSpecies === (maleTotal + femaleTotal)) {
-                    progress.rares.speciesCollected++;
-                }
-            }
-        }
-
-        // --- Diamantes ---
-        const diamondData = diamondFursData[slug];
-        if (diamondData) {
-            const totalForSpecies = (diamondData.macho?.length || 0) + (diamondData.femea?.length || 0);
-            if (totalForSpecies > 0) {
-                progress.diamonds.speciesTotal++;
-                progress.diamonds.total += totalForSpecies;
-                const collectedForSpecies = new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
-                progress.diamonds.collected += collectedForSpecies;
-                if (collectedForSpecies > 0) {
-                    progress.diamonds.speciesCollected++;
-                }
-            }
-        }
-
-        // --- Super Raros ---
-        const srRareData = rareFursData[slug];
-        const srDiamondData = diamondFursData[slug];
-        if (srRareData && srDiamondData) {
-            let totalForSpecies = 0;
-            if (srRareData.macho && (srDiamondData.macho?.length || 0) > 0) totalForSpecies += srRareData.macho.length;
-            if (srRareData.femea && (srDiamondData.femea?.length || 0) > 0) totalForSpecies += srRareData.femea.length;
-
-            if (totalForSpecies > 0) {
-                progress.super_raros.total += totalForSpecies;
-                progress.super_raros.collected += Object.values(savedData.super_raros?.[slug] || {}).filter(v => v).length;
-            }
-        }
-    });
-
-    // --- Great Ones ---
-    Object.entries(greatsFursData).forEach(([slug, furs]) => {
-        progress.greats.total += furs.length;
-        const animalName = items.find(i => slugify(i) === slug) || slug;
-        let collectedForAnimal = 0;
-        furs.forEach(furName => {
-            if (savedData.greats?.[slug]?.furs?.[furName]?.trophies?.length > 0) {
-                progress.greats.collected++;
-                collectedForAnimal++;
-            }
-        });
-        progress.greats.byAnimal[animalName] = { collected: collectedForAnimal, total: furs.length };
-    });
-
-    return progress;
-}
-
-// ▲▲▲ FIM DO BLOCO A SER ADICIONADO ▲▲▲
 // =================================================================
 // =================== LÓGICA DE DADOS (FIREBASE) ==================
 // =================================================================
@@ -391,9 +135,13 @@ function saveData(data) {
         return;
     }
     const userDocRef = db.collection('usuarios').doc(currentUser.uid);
-    userDocRef.set(data)
+    
+    // --- CORREÇÃO DE SEGURANÇA (PASSO 1) ---
+    // Usamos { merge: true } para evitar sobrescrever dados não carregados
+    userDocRef.set(data, { merge: true })
         .then(() => {
-            console.log("Progresso salvo na nuvem com sucesso!");
+            // console.log("Salvo..."); // Pode comentar o log se quiser
+            showToast("Progresso salvo com sucesso!"); // <--- FEEDBACK VISUAL
         })
         .catch((error) => {
             console.error("Erro ao salvar dados na nuvem: ", error);
@@ -431,38 +179,54 @@ function renderSkeletonLoader() {
     `;
 }
 
-function renderNavigationHub() {
+function renderNavigationHub(addToHistory = true) {
+    if (addToHistory) {
+        history.pushState({ view: 'hub' }, '', '');
+    }
+    
     appContainer.innerHTML = '';
+    
+    // Container Principal
     const hub = document.createElement('div');
     hub.className = 'navigation-hub design-flutuante';
 
+    // Título
     const title = document.createElement('h1');
     title.className = 'hub-title design-flutuante';
     title.textContent = 'Registro do Caçador';
     hub.appendChild(title);
 
-
+    // Grid de Cards
     const cardsContainer = document.createElement('div');
     cardsContainer.className = 'cards-container-flutuante';
+
     Object.keys(categorias).forEach(key => {
         const cat = categorias[key];
         if (!cat) return;
-        const card = document.createElement('div');
-card.className = `nav-card design-flutuante card-${key}`;
-        const iconHtml = cat.isHtml ? cat.icon.replace('custom-icon', 'custom-icon nav-card-icon') : `<i class="${cat.icon || 'fas fa-question-circle'}"></i>`;
-        card.innerHTML = `${iconHtml}<span>${cat.title}</span>`;
-        card.addEventListener('click', () => renderMainView(key));
+
+        // USA O NOVO COMPONENTE
+        const card = createNavigationCard({
+            key: key,
+            title: cat.title,
+            icon: cat.icon,
+            isHtml: cat.isHtml,
+            onClick: () => renderMainView(key)
+        });
+
         cardsContainer.appendChild(card);
     });
-    hub.appendChild(cardsContainer);
 
+    hub.appendChild(cardsContainer);
     appContainer.appendChild(hub);
+    
     setupLogoutButton(currentUser, appContainer);
 }
 
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
-
-function renderMainView(tabKey) {
+function renderMainView(tabKey, addToHistory = true) {
+    if (addToHistory) {
+        pushHistory({ view: 'category', tabKey: tabKey });
+    }
+    // ... resto da função continua igual
     appContainer.innerHTML = '';
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
@@ -470,17 +234,9 @@ function renderMainView(tabKey) {
     const mainContent = document.createElement('div');
     mainContent.className = 'main-content';
 
-    const header = document.createElement('div');
-    header.className = 'page-header';
-    const title = document.createElement('h2');
-    title.textContent = currentTab.title;
-    const backButton = document.createElement('button');
-    backButton.className = 'back-button';
-    backButton.innerHTML = '&larr; Voltar ao Menu';
-    backButton.onclick = renderNavigationHub;
-    header.appendChild(title);
-    header.appendChild(backButton);
-    mainContent.appendChild(header);
+    // Cria o cabeçalho usando o novo componente
+const header = createPageHeader(currentTab.title, renderNavigationHub, 'Voltar ao Menu');
+mainContent.appendChild(header);
 
     const contentContainer = document.createElement('div');
     contentContainer.className = `content-container ${tabKey}-view`;
@@ -501,10 +257,11 @@ function renderMainView(tabKey) {
     } else if (tabKey === 'configuracoes') {
         renderSettingsView(contentContainer);
     } else {
-        // --- INÍCIO DA SEÇÃO DE FILTROS ---
+        // --- INÍCIO DA SEÇÃO DE FILTROS (ATUALIZADA) ---
         const filtersContainer = document.createElement('div');
         filtersContainer.className = 'filters-container';
         
+        // 1. Busca por Nome
         const filterInput = document.createElement('input');
         filterInput.type = 'text';
         filterInput.className = 'filter-input';
@@ -514,20 +271,28 @@ function renderMainView(tabKey) {
         const { classes, levels } = getUniqueAnimalData();
         const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
-        // Dropdown de Classe
+        // 2. Filtro de Classe
         const classSelect = document.createElement('select');
         classSelect.innerHTML = `<option value="">Classe (Todas)</option>` + classes.map(c => `<option value="${c}">Classe ${c}</option>`).join('');
         filtersContainer.appendChild(classSelect);
 
-        // Dropdown de Dificuldade
+        // 3. Filtro de Dificuldade
         const levelSelect = document.createElement('select');
         levelSelect.innerHTML = `<option value="">Dificuldade (Todas)</option>` + levels.map(l => `<option value="${l}">${l}</option>`).join('');
         filtersContainer.appendChild(levelSelect);
 
-        // Dropdown de Reserva
+        // 4. Filtro de Reserva
         const reserveSelect = document.createElement('select');
         reserveSelect.innerHTML = `<option value="">Reserva (Todas)</option>` + sortedReserves.map(([key, data]) => `<option value="${key}">${data.name}</option>`).join('');
         filtersContainer.appendChild(reserveSelect);
+
+        // 5. NOVO: Filtro de Horário
+        const timeInput = document.createElement('input');
+        timeInput.type = 'time';
+        timeInput.className = 'filter-input'; // Reutiliza estilo para manter consistência
+        timeInput.style.minWidth = '130px'; // Ajuste fino para não ficar espremido
+        timeInput.title = "Filtrar por Horário de Bebida";
+        filtersContainer.appendChild(timeInput);
         
         contentContainer.appendChild(filtersContainer);
         // --- FIM DA SEÇÃO DE FILTROS ---
@@ -547,12 +312,13 @@ function renderMainView(tabKey) {
             card.style.animationDelay = `${index * 0.03}s`;
         });
 
-        // --- LÓGICA PARA APLICAR FILTROS ---
+        // --- LÓGICA PARA APLICAR FILTROS (COM HORÁRIO) ---
         const applyFilters = () => {
             const searchTerm = filterInput.value.toLowerCase();
             const selectedClass = classSelect.value;
             const selectedLevel = levelSelect.value;
             const selectedReserve = reserveSelect.value;
+            const selectedTime = timeInput.value; // Pega o valor do relógio (HH:MM)
 
             albumGrid.querySelectorAll('.animal-card').forEach(card => {
                 const animalName = card.querySelector('.info').textContent.toLowerCase();
@@ -564,44 +330,59 @@ function renderMainView(tabKey) {
                 const levelMatch = !selectedLevel || attributes.levels.includes(selectedLevel);
                 const reserveMatch = !selectedReserve || attributes.reserves.includes(selectedReserve);
                 
-                // O card só é visível se corresponder a TODOS os filtros ativos
-                if (nameMatch && classMatch && levelMatch && reserveMatch) {
-                    card.style.display = 'flex'; // Usamos 'flex' por causa do novo estilo do card
+                // Nova Lógica de Horário:
+                let timeMatch = true;
+                if (selectedTime) {
+                    if (selectedReserve) {
+                        // Se tem reserva selecionada, checa o horário específico nela
+                        const info = animalHotspotData[selectedReserve]?.[slug];
+                        timeMatch = info ? isTimeInRanges(selectedTime, info.drinkZonesPotential) : false;
+                    } else {
+                        // Se "Todas as Reservas", checa se ele bebe nesse horário em QUALQUER lugar
+                        timeMatch = Object.values(animalHotspotData).some(reserve => 
+                            reserve[slug] && isTimeInRanges(selectedTime, reserve[slug].drinkZonesPotential)
+                        );
+                    }
+                }
+
+                if (nameMatch && classMatch && levelMatch && reserveMatch && timeMatch) {
+                    card.style.display = 'flex';
                 } else {
                     card.style.display = 'none';
                 }
             });
         };
 
-        // Adiciona os "escutadores" de eventos a todos os campos de filtro
+        // Adiciona os "escutadores" de eventos
         filterInput.addEventListener('input', applyFilters);
         classSelect.addEventListener('change', applyFilters);
         levelSelect.addEventListener('change', applyFilters);
         reserveSelect.addEventListener('change', applyFilters);
+        timeInput.addEventListener('input', applyFilters); // Escuta mudança no relógio
+
+        
     }
 }
 
-// ▲▲▲ FIM DO BLOCO NOVO ▲▲▲
-
 function createAnimalCard(name, tabKey) {
-    const card = document.createElement('div');
-    card.className = 'animal-card';
-    const slug = slugify(name);
-    card.dataset.slug = slug;
-    // Nova estrutura em main.js -> createAnimalCard
-card.innerHTML = `
-    <img src="animais/${slug}.png" alt="${name}" onerror="this.onerror=null;this.src='animais/placeholder.png';">
-    <div class="card-info">
-        <div class="info">${name}</div>
-        <div class="progress-container"></div> 
-    </div>
-`;
+    // 1. Usa o componente novo para criar o visual
+    const card = createCardElement(name);
+    const slug = card.dataset.slug; // Pega o slug que o componente gerou
+
+    // 2. Adiciona o evento de clique (Lógica)
     card.addEventListener('click', () => showDetailView(name, tabKey));
+
+    // 3. Atualiza as barrinhas de progresso e cores (Lógica)
     updateCardAppearance(card, slug, tabKey);
+    
     return card;
 }
 // Decide qual tipo de visualização de detalhes mostrar
-function showDetailView(name, tabKey, originReserveKey = null) {
+function showDetailView(name, tabKey, originReserveKey = null, addToHistory = true) {
+    if (addToHistory) {
+        pushHistory({ view: 'detail', name: name, tabKey: tabKey, originReserve: originReserveKey });
+    }
+    // ... resto da função continua igual
     if (originReserveKey) {
         renderAnimalDossier(name, originReserveKey);
     } else {
@@ -612,7 +393,7 @@ function showDetailView(name, tabKey, originReserveKey = null) {
 // Renderiza a visualização de detalhes simples (quando acessado pelo menu principal)
 function renderSimpleDetailView(name, tabKey) {
     const mainContent = document.querySelector('.main-content');
-    const slug = slugify(name);
+    const slug = slugify(name); // Importado
     const contentContainer = mainContent.querySelector('.content-container');
     contentContainer.className = `content-container detail-view ${tabKey}-detail-view`;
     contentContainer.innerHTML = '';
@@ -764,7 +545,7 @@ function renderAnimalDossier(animalName, originReserveKey) {
     dossierTabs.querySelector('.dossier-tab').click();
 }
 
-// Renderiza a lista de reservas
+// Substitua a função antiga por esta:
 function renderReservesList(container) {
     container.innerHTML = '';
     const grid = document.createElement('div');
@@ -774,28 +555,15 @@ function renderReservesList(container) {
     const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
 
     for (const [reserveKey, reserve] of sortedReserves) {
-        const progress = calcularReserveProgress(reserveKey);
-        const card = document.createElement('div');
-        card.className = 'reserve-card';
-         card.innerHTML = `
-            <div class="reserve-image-container">
-                <img class="reserve-card-image" src="${reserve.image}" onerror="this.style.display='none'">
-            </div>
-            <div class="reserve-card-info-panel">
-                <h3>${reserve.name}</h3>
-                <div class="reserve-card-stats">
-                    <span><img src="icones/pata_icon.png" class="custom-icon" title="Peles Raras"> ${progress.collectedRares}</span>
-                    <span><img src="icones/diamante_icon.png" class="custom-icon" title="Diamantes"> ${progress.collectedDiamonds}</span>
-                    <span><img src="icones/coroa_icon.png" class="custom-icon" title="Super Raros"> ${progress.collectedSuperRares}</span>
-                    <span><img src="icones/greatone_icon.png" class="custom-icon" title="Great Ones"> ${progress.collectedGreatOnes}</span>
-                </div>
-            </div>
-        `;
-        card.addEventListener('click', () => showReserveDetailView(reserveKey));
+        // 1. Calcula o progresso (Lógica)
+        const progress = calcularReserveProgress(reserveKey, savedData);
+        
+        // 2. Cria o visual usando o componente novo
+        const card = createReserveCard(reserve, progress, () => showReserveDetailView(reserveKey));
+        
         grid.appendChild(card);
     }
 }
-
 // Mostra a visualização de detalhes de uma reserva
 function showReserveDetailView(reserveKey, originPage = 'reservas') { 
     const mainContent = document.querySelector('.main-content');
@@ -843,7 +611,7 @@ function showReserveDetailView(reserveKey, originPage = 'reservas') {
     renderAnimalChecklist(viewArea, reserveKey);
 }
 
-// Renderiza a lista de animais de uma reserva
+// Renderiza a lista de animais de uma reserva (VERSÃO NOVA)
 function renderAnimalChecklist(container, reserveKey) {
     container.innerHTML = '';
     const checklistContainer = document.createElement('div');
@@ -857,36 +625,32 @@ function renderAnimalChecklist(container, reserveKey) {
 
     animalNames.sort((a,b) => a.localeCompare(b)).forEach(animalName => {
         const slug = slugify(animalName);
+        
+        // Mantemos os cálculos aqui para garantir precisão
         const totalRares = (rareFursData[slug]?.macho?.length || 0) + (rareFursData[slug]?.femea?.length || 0);
         const collectedRares = Object.values(savedData.pelagens?.[slug] || {}).filter(v => v === true).length;
         const raresPercentage = totalRares > 0 ? (collectedRares / totalRares) * 100 : 0;
+        
         const totalDiamonds = (diamondFursData[slug]?.macho?.length || 0) + (diamondFursData[slug]?.femea?.length || 0);
         const collectedDiamonds = new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
         const diamondsPercentage = totalDiamonds > 0 ? (collectedDiamonds / totalDiamonds) * 100 : 0;
+        
         const isGreatOne = greatsFursData.hasOwnProperty(slug);
 
-        const row = document.createElement('div');
-        row.className = 'animal-checklist-row';
-        row.innerHTML = `
-            <img class="animal-icon" src="animais/${slug}.png" onerror="this.src='animais/placeholder.png'">
-            <div class="animal-name">${animalName}</div>
-            <div class="mini-progress-bars">
-                <div class="mini-progress" title="Pelagens Raras: ${collectedRares}/${totalRares}">
-                    <img src="icones/pata_icon.png" class="custom-icon">
-                    <div class="mini-progress-bar-container">
-                        <div class="mini-progress-bar" style="width: ${raresPercentage}%"></div>
-                    </div>
-                </div>
-                <div class="mini-progress" title="Diamantes: ${collectedDiamonds}/${totalDiamonds}">
-                    <img src="icones/diamante_icon.png" class="custom-icon">
-                    <div class="mini-progress-bar-container">
-                        <div class="mini-progress-bar" style="width: ${diamondsPercentage}%"></div>
-                    </div>
-                </div>
-            </div>
-            <img src="icones/greatone_icon.png" class="custom-icon great-one-indicator ${isGreatOne ? 'possible' : ''}" title="Pode ser Great One">
-        `;
-        row.addEventListener('click', () => showDetailView(animalName, 'reservas', reserveKey));
+        // Agrupamos os dados para passar pro componente
+        const stats = {
+            collectedRares, totalRares, raresPercentage,
+            collectedDiamonds, totalDiamonds, diamondsPercentage
+        };
+
+        // USA O NOVO COMPONENTE
+        const row = createAnimalChecklistRow({
+            animalName,
+            stats,
+            isGreatOne,
+            onClick: () => showDetailView(animalName, 'reservas', reserveKey)
+        });
+
         checklistContainer.appendChild(row);
     });
 }
@@ -909,22 +673,20 @@ function renderHotspotGalleryView(container, reserveKey) {
     }
 
     availableHotspots.sort((a, b) => a.name.localeCompare(b.name)).forEach(animal => {
+        // Mantemos a lógica de nome de arquivo aqui, pois é específica dessa tela
         const slugReserve = slugify(reservesData[reserveKey].name).normalize("NFD").replace(/[\u0300-\u036f]/g, "");
         const imagePath = `hotspots/${slugReserve}_${animal.slug}_hotspot.jpg`;
-        const card = document.createElement('div');
-        card.className = 'hotspot-card';
-        card.innerHTML = `
-            <img src="${imagePath}" alt="Mapa de Hotspot ${animal.name}" onerror="this.onerror=null;this.src='animais/placeholder.jpg';">
-            <div class="info-overlay">
-                <span class="animal-name">${animal.name}</span>
-                <span class="hotspot-label"><i class="fas fa-map-marker-alt"></i> Hotspot</span>
-            </div>
-        `;
-        card.addEventListener('click', () => renderHotspotDetailModal(reserveKey, animal.slug));
+        
+        // Usamos o componente
+        const card = createHotspotCard(
+            animal.name, 
+            imagePath, 
+            () => renderHotspotDetailModal(reserveKey, animal.slug)
+        );
+        
         hotspotGrid.appendChild(card);
     });
 }
-
 // Renderiza o modal com detalhes do hotspot
 function renderHotspotDetailModal(reserveKey, animalSlug) {
     const hotspotInfo = animalHotspotData[reserveKey]?.[animalSlug];
@@ -967,94 +729,34 @@ function renderHotspotDetailModal(reserveKey, animalSlug) {
 // =================================================================
 // ============ LÓGICA DE DETALHES E CONTEÚDO ESPECÍFICO ==========
 // =================================================================
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
 
 function updateCardAppearance(card, slug, tabKey) {
     if (!card) return;
 
-    // 1. Limpa o estado visual anterior do card
+    // 1. Limpa o visual anterior
     card.classList.remove('completed', 'inprogress', 'incomplete');
     const progressContainer = card.querySelector('.progress-container');
     if (progressContainer) progressContainer.innerHTML = '';
-    const oldSummary = card.querySelector('.card-progress-summary');
-    if (oldSummary) oldSummary.remove();
 
-    // 2. Variáveis para calcular o progresso
-    let collectedCount = 0;
-    let totalCount = 0;
+    // 2. Obtém os dados calculados da nossa nova função centralizada
+    const stats = getAnimalCardStatus(slug, tabKey, savedData);
 
-    // 3. Bloco ÚNICO para calcular os totais baseado no tipo de aba
-    switch (tabKey) {
-        case 'pelagens':
-        case 'super_raros': {
-            const dataSet = tabKey === 'pelagens' ? savedData.pelagens : savedData.super_raros;
-            const sourceData = rareFursData[slug];
-            collectedCount = Object.values(dataSet?.[slug] || {}).filter(v => v === true).length;
-            if (sourceData) {
-                if (tabKey === 'super_raros') {
-                    const diamondData = diamondFursData[slug];
-                    let possible = 0;
-                    if (sourceData.macho && (diamondData?.macho?.length || 0) > 0) possible += sourceData.macho.length;
-                    if (sourceData.femea && (diamondData?.femea?.length || 0) > 0) possible += sourceData.femea.length;
-                    totalCount = possible;
-                } else {
-                    totalCount = (sourceData.macho?.length || 0) + (sourceData.femea?.length || 0);
-                }
-            }
-            break;
-        }
-        case 'diamantes': {
-            const sourceData = diamondFursData[slug];
-            collectedCount = new Set((savedData.diamantes?.[slug] || []).map(t => t.type)).size;
-            if (sourceData) {
-                totalCount = (sourceData.macho?.length || 0) + (sourceData.femea?.length || 0);
-            }
-            break;
-        }
-        case 'greats': {
-            const sourceData = greatsFursData[slug];
-            const animalData = savedData.greats?.[slug] || {};
-            checkAndSetGreatOneCompletion(slug, animalData);
-            collectedCount = Object.values(animalData.furs || {}).filter(f => f.trophies?.length > 0).length;
-            totalCount = sourceData?.length || 0;
-            
-            // --- CORREÇÃO APLICADA AQUI ---
-            // Adicionada a lógica para o status 'inprogress' dos Great Ones
-            if (animalData.completo) {
-                card.classList.add('completed');
-            } else if (collectedCount > 0) {
-                card.classList.add('inprogress'); // <-- ESTA LINHA FOI ADICIONADA
-            } else {
-                card.classList.add('incomplete'); // <-- ESTA LINHA FOI ADICIONADA
-            }
-            break;
-        }
-    }
+    // 3. Aplica as classes CSS baseadas no status retornado
+    card.classList.add(stats.status);
 
-    // 4. Define o status do card para as outras abas
-    if (tabKey !== 'greats') {
-        if (totalCount > 0 && collectedCount >= totalCount) {
-            card.classList.add('completed');
-        } else if (collectedCount > 0) {
-            card.classList.add('inprogress');
-        } else {
-            card.classList.add('incomplete');
-        }
-    }
-
-    // 5. Renderiza a barra de progresso visual, se houver dados
-    if (progressContainer && totalCount > 0) {
-        const displayCollected = Math.min(collectedCount, totalCount);
-        const percentage = totalCount > 0 ? (displayCollected / totalCount) * 100 : 0;
-        const progressText = `${displayCollected} / ${totalCount}`;
+    // 4. Desenha a barra de progresso (apenas visual)
+    if (progressContainer && stats.total > 0) {
+        // Garante que não ultrapasse 100% visualmente
+        const displayCollected = Math.min(stats.collected, stats.total);
+        const percentage = (displayCollected / stats.total) * 100;
+        const progressText = `${displayCollected} / ${stats.total}`;
         
-        const progressBarHTML = `
+        progressContainer.innerHTML = `
             <div class="progress-bar-container" title="${progressText}">
                 <div class="progress-bar-fill" style="width: ${percentage}%;"></div>
             </div>
             <span class="progress-bar-text">${progressText}</span>
         `;
-        progressContainer.innerHTML = progressBarHTML;
     }
 }
 function renderRareFursDetailView(container, name, slug, originReserveKey = null, filter = 'all') {
@@ -1062,37 +764,42 @@ function renderRareFursDetailView(container, name, slug, originReserveKey = null
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
+
     const speciesFurs = rareFursData[slug];
     if (!speciesFurs || (!speciesFurs.macho?.length && !speciesFurs.femea?.length)) {
         furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
         return;
     }
+
     const genderedFurs = [];
     if (speciesFurs.macho) speciesFurs.macho.forEach(fur => genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur, gender: 'macho' }));
     if (speciesFurs.femea) speciesFurs.femea.forEach(fur => genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur, gender: 'femea' }));
+
     genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
         const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
         if (filter === 'missing' && isCompleted) return;
-        const furCard = document.createElement('div');
-        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender;
-        furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info">${furInfo.displayName}</div><button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>`;
-        furCard.addEventListener('click', () => {
-            if (!savedData.pelagens) savedData.pelagens = {};
-            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
-            savedData.pelagens[slug][furInfo.displayName] = !savedData.pelagens[slug][furInfo.displayName];
-            saveData(savedData);
-            if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
-            else renderSimpleDetailView(name, 'pelagens');
+
+        // USA O NOVO COMPONENTE AQUI
+        const card = createFurCard({
+            animalSlug: slug,
+            furOriginalName: furInfo.originalName,
+            furDisplayName: furInfo.displayName,
+            gender: furInfo.gender,
+            isCompleted: isCompleted,
+            onToggle: () => {
+                // Lógica de Salvar
+                if (!savedData.pelagens) savedData.pelagens = {};
+                if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
+                savedData.pelagens[slug][furInfo.displayName] = !savedData.pelagens[slug][furInfo.displayName];
+                saveData(savedData);
+                
+                // Se estivermos num dossiê (reserva), atualiza o progresso visualmente
+                if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
+            },
+            onFullscreen: (src) => openImageViewer(src)
         });
-        furGrid.appendChild(furCard);
-    });
-    furGrid.querySelectorAll('.fullscreen-btn').forEach(btn => {
-        btn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const imgSrc = btn.closest('.fur-card').querySelector('img').src;
-            openImageViewer(imgSrc);
-        });
+
+        furGrid.appendChild(card);
     });
 }
 
@@ -1101,43 +808,46 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
+
     const speciesRareFurs = rareFursData[slug];
     const speciesDiamondData = diamondFursData[slug];
     const fursToDisplay = [];
+
     if (speciesRareFurs?.macho && (speciesDiamondData?.macho?.length || 0) > 0) {
         speciesRareFurs.macho.forEach(rareFur => fursToDisplay.push({ displayName: `Macho ${rareFur}`, originalName: rareFur, gender: 'macho' }));
     }
     if (speciesRareFurs?.femea && (speciesDiamondData?.femea?.length || 0) > 0) {
         speciesRareFurs.femea.forEach(rareFur => fursToDisplay.push({ displayName: `Fêmea ${rareFur}`, originalName: rareFur, gender: 'femea' }));
     }
+
     if (fursToDisplay.length === 0) {
-        furGrid.innerHTML = '<p>Nenhuma pelagem Super Rara (rara + diamante) encontrada para este animal.</p>';
+        furGrid.innerHTML = '<p>Nenhuma pelagem Super Rara encontrada para este animal.</p>';
         return;
     }
+
     fursToDisplay.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
         const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true;
         if (filter === 'missing' && isCompleted) return;
-        const furCard = document.createElement('div');
-        furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'} potential-super-rare`;
-        const furSlug = slugify(furInfo.originalName);
-        const genderSlug = furInfo.gender.toLowerCase();
-        furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info">${furInfo.displayName}</div><button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>`;
-        furCard.addEventListener('click', () => {
-            if (!savedData.super_raros) savedData.super_raros = {};
-            if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
-            savedData.super_raros[slug][furInfo.displayName] = !savedData.super_raros[slug][furInfo.displayName];
-            saveData(savedData);
-            if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
-            else renderSimpleDetailView(name, 'super_raros');
+
+        // USA O NOVO COMPONENTE AQUI (Com isSuperRare = true)
+        const card = createFurCard({
+            animalSlug: slug,
+            furOriginalName: furInfo.originalName,
+            furDisplayName: furInfo.displayName,
+            gender: furInfo.gender,
+            isCompleted: isCompleted,
+            isSuperRare: true, // Adiciona borda especial
+            onToggle: () => {
+                if (!savedData.super_raros) savedData.super_raros = {};
+                if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
+                savedData.super_raros[slug][furInfo.displayName] = !savedData.super_raros[slug][furInfo.displayName];
+                saveData(savedData);
+                if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
+            },
+            onFullscreen: (src) => openImageViewer(src)
         });
-        furGrid.appendChild(furCard);
-    });
-    furGrid.querySelectorAll('.fullscreen-btn').forEach(btn => {
-        btn.addEventListener('click', (event) => {
-            event.stopPropagation();
-            const imgSrc = btn.closest('.fur-card').querySelector('img').src;
-            openImageViewer(imgSrc);
-        });
+
+        furGrid.appendChild(card);
     });
 }
 
@@ -1260,142 +970,54 @@ function renderGreatsDetailView(container, animalName, slug, originReserveKey = 
     });
 }
 
-// Em main.js, substitua a função inteira por esta:
-
 async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey = null) {
     const modal = document.getElementById('form-modal');
-    modal.innerHTML = ''; // Limpa o modal anterior
+    modal.innerHTML = '';
     modal.className = 'modal-overlay form-modal';
 
-    const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content-box trophy-modal-content'; // Nova classe para estilização específica
-    modal.appendChild(modalContent);
-
-    // Título do Modal
-    modalContent.innerHTML = `
-        <div class="trophy-modal-header">
-            <h3><img src="icones/greatone_icon.png" class="custom-icon">${furName}</h3>
-            <p>Gerencie seus troféus de Great One para ${animalName}</p>
-        </div>
-    `;
-
-    // Container principal com layout de duas colunas
-    const mainContainer = document.createElement('div');
-    mainContainer.className = 'trophy-modal-main';
-    modalContent.appendChild(mainContainer);
-
-    // Coluna da Esquerda: Lista de Troféus
-    const trophyListColumn = document.createElement('div');
-    trophyListColumn.className = 'trophy-column trophy-list-column';
-    trophyListColumn.innerHTML = '<h4>Troféus Registrados</h4>';
-    mainContainer.appendChild(trophyListColumn);
-
-    const logList = document.createElement('div');
-    logList.className = 'trophy-log-grid'; // Usaremos grid ao invés de lista
     const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
 
-    if (trophies.length === 0) {
-        logList.innerHTML = '<p class="no-trophies-message">Nenhum abate registrado ainda.</p>';
-    } else {
-        trophies.forEach((trophy, index) => {
-            const trophyCard = document.createElement('div');
-            trophyCard.className = 'trophy-log-card';
-            trophyCard.innerHTML = `
-                <div class="trophy-card-header">
-                    <strong>Abate de ${new Date(trophy.date).toLocaleDateString()}</strong>
-                    <button class="delete-trophy-btn" title="Excluir troféu">&times;</button>
-                </div>
-                <div class="trophy-card-stats">
-                    <div class="stat-item">
-                        <img src="icones/caveira_icon.png" class="custom-icon">
-                        <span>${trophy.abates || 0} Abates</span>
-                    </div>
-                    <div class="stat-item">
-                        <img src="icones/diamante_icon.png" class="custom-icon">
-                        <span>${trophy.diamantes || 0} Diamantes</span>
-                    </div>
-                    <div class="stat-item">
-                        <img src="icones/pata_icon.png" class="custom-icon">
-                        <span>${trophy.pelesRaras || 0} Raros</span>
-                    </div>
-                </div>
-            `;
-            trophyCard.querySelector('.delete-trophy-btn').onclick = async () => {
-                if (await showCustomAlert('Tem certeza que deseja remover este abate?', 'Confirmar Exclusão', true)) {
-                    trophies.splice(index, 1);
-                    saveData(savedData);
-                    closeModal('form-modal');
-                    // Atualiza a visualização anterior
-                    const activeDossierTab = document.querySelector('.dossier-tab.active');
-                    if (activeDossierTab) {
-                        reRenderActiveDossierTab(originReserveKey, animalName, slug);
-                    } else {
-                        renderSimpleDetailView(animalName, 'greats');
-                    }
-                }
-            };
-            logList.appendChild(trophyCard);
-        });
-    }
-    trophyListColumn.appendChild(logList);
-
-    // Coluna da Direita: Formulário de Registro
-    const formColumn = document.createElement('div');
-    formColumn.className = 'trophy-column trophy-form-column';
-    formColumn.innerHTML = `
-        <h4>Registrar Novo Abate</h4>
-        <div class="add-trophy-form">
-            <label for="abates">Qtd. Abates na Grind:</label>
-            <input type="number" id="abates" name="abates" placeholder="0">
-            <label for="diamantes">Qtd. Diamantes na Grind:</label>
-            <input type="number" id="diamantes" name="diamantes" placeholder="0">
-            <label for="pelesRaras">Qtd. Peles Raras na Grind:</label>
-            <input type="number" id="pelesRaras" name="pelesRaras" placeholder="0">
-            <label for="date">Data do Abate:</label>
-            <input type="date" id="date" name="date" value="${new Date().toISOString().split('T')[0]}">
-        </div>
-    `;
-    mainContainer.appendChild(formColumn);
-
-    // Botões de Ação
-    const buttonsDiv = document.createElement('div');
-    buttonsDiv.className = 'modal-buttons trophy-modal-buttons';
-    const cancelBtn = document.createElement('button');
-    cancelBtn.className = 'back-button';
-    cancelBtn.textContent = 'Cancelar';
-    cancelBtn.onclick = () => closeModal('form-modal');
-
-    const saveBtn = document.createElement('button');
-    saveBtn.className = 'back-button primary-action'; // Nova classe para destaque
-    saveBtn.textContent = 'Salvar Troféu';
-    saveBtn.onclick = () => {
-        const form = modal.querySelector('.add-trophy-form');
-        const newTrophy = {
-            abates: parseInt(form.querySelector('[name="abates"]').value) || 0,
-            diamantes: parseInt(form.querySelector('[name="diamantes"]').value) || 0,
-            pelesRaras: parseInt(form.querySelector('[name="pelesRaras"]').value) || 0,
-            date: form.querySelector('[name="date"]').value || new Date().toISOString().split('T')[0]
-        };
-        // Lógica para salvar os dados (semelhante à sua versão)
+    // Lógica de Salvar
+    const handleSave = (newTrophyData) => {
         if (!savedData.greats) savedData.greats = {};
         if (!savedData.greats[slug]) savedData.greats[slug] = {};
         if (!savedData.greats[slug].furs) savedData.greats[slug].furs = {};
         if (!savedData.greats[slug].furs[furName]) savedData.greats[slug].furs[furName] = { trophies: [] };
-        savedData.greats[slug].furs[furName].trophies.push(newTrophy);
+        
+        savedData.greats[slug].furs[furName].trophies.push(newTrophyData);
         checkAndSetGreatOneCompletion(slug, savedData.greats[slug]);
         saveData(savedData);
         closeModal('form-modal');
-        // Atualiza a visualização anterior
+        
+        // Atualiza a tela de fundo
         const activeDossierTab = document.querySelector('.dossier-tab.active');
-        if (activeDossierTab) {
-            reRenderActiveDossierTab(originReserveKey, animalName, slug);
-        } else {
-            renderSimpleDetailView(animalName, 'greats');
+        if (activeDossierTab) reRenderActiveDossierTab(originReserveKey, animalName, slug);
+        else renderSimpleDetailView(animalName, 'greats');
+    };
+
+    // Lógica de Deletar
+    const handleDelete = async (index) => {
+        if (await showCustomAlert('Tem certeza que deseja remover este abate?', 'Confirmar Exclusão', true)) {
+            trophies.splice(index, 1);
+            saveData(savedData);
+            closeModal('form-modal');
+            
+            // Atualiza a tela de fundo
+            const activeDossierTab = document.querySelector('.dossier-tab.active');
+            if (activeDossierTab) reRenderActiveDossierTab(originReserveKey, animalName, slug);
+            else renderSimpleDetailView(animalName, 'greats');
         }
     };
-    buttonsDiv.appendChild(cancelBtn);
-    buttonsDiv.appendChild(saveBtn);
-    modalContent.appendChild(buttonsDiv);
+
+    // Usa o novo componente
+    const content = createGreatOneTrophyContent({
+        animalName, furName, trophies,
+        onSave: handleSave,
+        onDelete: handleDelete,
+        onCancel: () => closeModal('form-modal')
+    });
+
+    modal.appendChild(content);
     modal.style.display = 'flex';
 }
 // =================================================================
@@ -1419,81 +1041,36 @@ function openImageViewer(imageUrl) {
     modal.style.display = "flex";
 }
 
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
-
 function renderSettingsView(container) {
     container.innerHTML = '';
-    const settingsContainer = document.createElement('div');
-    settingsContainer.className = 'settings-container';
     
-    const exportButton = document.createElement('button');
-    exportButton.className = 'back-button';
-    exportButton.innerHTML = '<i class="fas fa-download"></i> Fazer Backup (JSON)';
-    exportButton.onclick = exportUserData;
-    settingsContainer.appendChild(exportButton);
-
-    const importLabel = document.createElement('label');
-    importLabel.htmlFor = 'import-file-input';
-    importLabel.className = 'back-button';
-    importLabel.style.cssText = 'display: inline-block; width: fit-content; cursor: pointer; background-color: var(--inprogress-color); color: #111;';    
-    importLabel.innerHTML = '<i class="fas fa-upload"></i> Restaurar Backup (JSON)';
-    settingsContainer.appendChild(importLabel);
-
-    const importInput = document.createElement('input');
-    importInput.type = 'file';
-    importInput.id = 'import-file-input';
-    importInput.accept = '.json';
-    importInput.style.display = 'none';
-    importInput.addEventListener('change', importUserData);
-    settingsContainer.appendChild(importInput);
-
-    const themeButton = document.createElement('button');
-    themeButton.id = 'theme-toggle-btn';
-    themeButton.className = 'back-button';
-    settingsContainer.appendChild(themeButton);
-
-    const resetButton = document.createElement('button');
-    resetButton.textContent = 'Resetar Todo o Progresso';
-    resetButton.className = 'back-button';
-    resetButton.style.cssText = 'background-color: #d9534f; border-color: #d43f3a;';
-    
-    // --- LÓGICA DE RESET CORRIGIDA ---
-    resetButton.onclick = async () => {
-        if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
-            if (currentUser) {
-                try {
-                    // Pega a referência do documento do usuário
-                    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
-                    // Salva a estrutura de dados padrão (vazia) diretamente
-                    await userDocRef.set(getDefaultDataStructure());
-                    // Mostra um alerta de sucesso e recarrega a página
-                    await showCustomAlert('Seu progresso foi resetado com sucesso.', 'Progresso Resetado');
-                    location.reload();
-                } catch (error) {
-                    console.error("Erro ao resetar os dados:", error);
-                    showCustomAlert('Ocorreu um erro ao tentar resetar seus dados.', 'Erro');
+    const panel = createSettingsPanel({
+        onExport: exportUserData,
+        onImport: importUserData,
+        onReset: async () => {
+            if (await showCustomAlert('Tem certeza que deseja apagar TODO o seu progresso? Esta ação não pode ser desfeita.', 'Resetar Progresso', true)) {
+                if (currentUser) {
+                    try {
+                        const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+                        await userDocRef.set(getDefaultDataStructure());
+                        await showCustomAlert('Seu progresso foi resetado com sucesso.', 'Progresso Resetado');
+                        location.reload();
+                    } catch (error) {
+                        console.error("Erro ao resetar os dados:", error);
+                        showCustomAlert('Ocorreu um erro ao tentar resetar seus dados.', 'Erro');
+                    }
+                } else {
+                    showCustomAlert('Nenhum usuário logado para resetar os dados.', 'Erro');
                 }
-            } else {
-                showCustomAlert('Nenhum usuário logado para resetar os dados.', 'Erro');
             }
+        },
+        onThemeToggle: () => {
+            document.body.classList.toggle('light-theme');
+            localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
         }
-    };
-    settingsContainer.appendChild(resetButton);
-    container.appendChild(settingsContainer);
-
-    const updateThemeButton = () => {
-        if (document.body.classList.contains('light-theme')) {
-            themeButton.innerHTML = '<i class="fas fa-moon"></i> Mudar para Tema Escuro';
-        } else {
-            themeButton.innerHTML = '<i class="fas fa-sun"></i> Mudar para Tema Claro';
-        }
-    };
-    themeButton.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        localStorage.setItem('theme', document.body.classList.contains('light-theme') ? 'light' : 'dark');
-        updateThemeButton();
     });
-    updateThemeButton();
+
+    container.appendChild(panel);
 }
 
 function renderProgressView(container) {
@@ -1532,14 +1109,13 @@ function renderProgressView(container) {
     showNewProgressPanel(); 
 }
 
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
-
 function updateNewProgressPanel(container) {
     container.innerHTML = '';
     const panel = document.createElement('div');
-    panel.id = 'progress-panel-v3'; // Nova ID para o painel
+    panel.id = 'progress-panel-v3'; 
 
-    const progress = calcularProgressoDetalhado();
+    // CORREÇÃO: Passando savedData
+    const progress = calcularProgressoDetalhado(savedData);
 
     // --- SEÇÃO DE PROGRESSO GERAL ---
     panel.innerHTML = `<div class="progress-v2-header"><h3>Progresso Geral do Caçador</h3><p>Suas estatísticas de caça detalhadas.</p></div>`;
@@ -1650,118 +1226,51 @@ function updateNewProgressPanel(container) {
 
     panel.appendChild(overallGrid);
 
-    // ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO (APENAS a seção Domínio das Reservas) ▼▼▼
-
-    // --- SEÇÃO DE DOMÍNIO DAS RESERVAS (NOVO LAYOUT DE CARDS EXPANSÍVEIS) ---
+    // --- SEÇÃO DE DOMÍNIO DAS RESERVAS ---
     const reservesSection = document.createElement('div');
     reservesSection.innerHTML = `<div class="progress-v2-header"><h3>Domínio das Reservas</h3><p>Seu progresso detalhado em cada território de caça.</p></div>`;
     const reservesCardsContainer = document.createElement('div');
     reservesCardsContainer.className = 'reserves-cards-container';
     
+    // --- SEÇÃO DE DOMÍNIO DAS RESERVAS (NOVA LÓGICA) ---
     Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name)).forEach(([reserveKey, reserve]) => {
-        const reserveProgress = calcularReserveProgress(reserveKey);
-        const totalOverallItems = (reserveProgress.totalRares || 0) + (reserveProgress.totalDiamonds || 0) + (reserveProgress.totalGreatOnes || 0) + (reserveProgress.totalSuperRares || 0);
-        const collectedOverallItems = (reserveProgress.collectedRares || 0) + (reserveProgress.collectedDiamonds || 0) + (reserveProgress.collectedGreatOnes || 0) + (reserveProgress.collectedSuperRares || 0);
-        const overallPercentage = totalOverallItems > 0 ? Math.round((collectedOverallItems / totalOverallItems) * 100) : 0;
-
-        const reserveCard = document.createElement('div');
-        reserveCard.className = 'reserve-progress-card-v4';
-        reserveCard.dataset.reserveKey = reserveKey;
-        reserveCard.style.backgroundImage = `linear-gradient(rgba(44, 47, 51, 0.7), rgba(44, 47, 51, 0.9)), url('${reserve.image}')`;
+        const reserveProgress = calcularReserveProgress(reserveKey, savedData);
         
-        let detailBarsHTML = '';
-        const reserveCats = [
-            { label: 'Raras', collected: reserveProgress.collectedRares, total: reserveProgress.totalRares, icon: 'icones/pata_icon.png' },
-            { label: 'Diamantes', collected: reserveProgress.collectedDiamonds, total: reserveProgress.totalDiamonds, icon: 'icones/diamante_icon.png' },
-            { label: 'Super Raras', collected: reserveProgress.collectedSuperRares, total: reserveProgress.totalSuperRares, icon: 'icones/coroa_icon.png' },
-            { label: 'Great Ones', collected: reserveProgress.collectedGreatOnes, total: reserveProgress.totalGreatOnes, icon: 'icones/greatone_icon.png' }
-        ];
+        // Usa o componente novo (toda a lógica de clique e visual está dentro dele)
+        const card = createReserveProgressCard(
+            reserve, 
+            reserveProgress, 
+            () => showReserveDetailView(reserveKey, 'progresso'), // Ação do botão Detalhes
+            () => renderHotspotGalleryView(document.querySelector('.reserve-view-area') || container, reserveKey) // Ação do botão Mapa
+        );
 
-        reserveCats.forEach(cat => {
-            if (cat.total > 0) {
-                const perc = (cat.collected / cat.total) * 100;
-                detailBarsHTML += `
-                    <div class="rp-detail-item">
-                        <img src="${cat.icon}" class="custom-icon" alt="${cat.label}">
-                        <span>${cat.label}:</span>
-                        <div class="rp-bar-bg"><div class="rp-bar-fill" style="width: ${perc}%;"></div></div>
-                        <span class="rp-bar-percentage">${Math.round(perc)}%</span>
-                    </div>`;
-            }
-        });
-
-        reserveCard.innerHTML = `
-            <div class="rp-card-header">
-                <h3>${reserve.name}</h3>
-                <div class="rp-header-percentage">${overallPercentage}%</div>
-            </div>
-            <div class="rp-card-details">
-                ${detailBarsHTML}
-                <div class="rp-actions">
-                    <button class="back-button view-reserve-btn" data-reserve-key="${reserveKey}">Ver Detalhes</button>
-                    <button class="back-button view-hotspots-btn" data-reserve-key="${reserveKey}"><i class="fas fa-map-marked-alt"></i> Ver Mapa</button>
-                </div>
-            </div>
-            <i class="fas fa-chevron-down rp-toggle-icon"></i>
-        `;
-        reservesCardsContainer.appendChild(reserveCard);
+        reservesCardsContainer.appendChild(card);
     });
 
     reservesSection.appendChild(reservesCardsContainer);
     panel.appendChild(reservesSection);
     container.appendChild(panel);
-
-    // Adicionar funcionalidade de expansão/colapso
-    container.querySelectorAll('.reserve-progress-card-v4').forEach(card => {
-        card.addEventListener('click', (e) => {
-            // Impedir que cliques nos botões fechem/abram o card
-            if (e.target.closest('.rp-actions button')) {
-                return;
-            }
-            card.classList.toggle('expanded');
-            const icon = card.querySelector('.rp-toggle-icon');
-            if (card.classList.contains('expanded')) {
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-up');
-            } else {
-                icon.classList.remove('fa-chevron-up');
-                icon.classList.add('fa-chevron-down');
-            }
-        });
-    });
-
-    // Eventos para os botões "Ver Detalhes"
-    container.querySelectorAll('.reserve-progress-card-v4 .view-reserve-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita que o card se colapse
-            showReserveDetailView(btn.dataset.reserveKey, 'progresso');
-        });
-    });
-
-    // Eventos para os botões "Ver Mapa"
-    container.querySelectorAll('.reserve-progress-card-v4 .view-hotspots-btn').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.stopPropagation(); // Evita que o card se colapse
-            renderHotspotModalByReserve(btn.dataset.reserveKey);
-        });
-    });
- }
-
-// ▲▲▲ FIM DO BLOCO NOVO (APENAS a seção Domínio das Reservas) ▲▲▲
+}
 
 function createLatestAchievementsPanel() {
     const panel = document.createElement('div');
     panel.className = 'latest-achievements-panel';
     panel.innerHTML = '<h3><i class="fas fa-star"></i> Últimas Conquistas</h3>';
+    
     const grid = document.createElement('div');
     grid.className = 'achievements-grid';
+    
     const allTrophies = [];
+
+    // 1. Coleta Diamantes
     if(savedData.diamantes) {
         Object.entries(savedData.diamantes).forEach(([slug, trophies]) => {
             const animalName = items.find(i => slugify(i) === slug) || slug;
             trophies.forEach(trophy => allTrophies.push({ id: trophy.id, animalName, furName: trophy.type, slug, type: 'diamante' }));
         });
     }
+
+    // 2. Coleta Great Ones
     if(savedData.greats) {
         Object.entries(savedData.greats).forEach(([slug, greatOneData]) => {
             const animalName = items.find(i => slugify(i) === slug) || slug;
@@ -1772,39 +1281,24 @@ function createLatestAchievementsPanel() {
             }
         });
     }
+
+    // 3. Renderiza os Top 4 mais recentes
     if (allTrophies.length === 0) {
         grid.innerHTML = '<p style="color: var(--text-color-muted); grid-column: 1 / -1;">Nenhum troféu de destaque registrado ainda.</p>';
     } else {
         allTrophies.sort((a, b) => b.id - a.id).slice(0, 4).forEach(trophy => {
-            const card = document.createElement('div');
-            card.className = 'achievement-card';
-            const rotation = Math.random() * 6 - 3;
-            card.style.transform = `rotate(${rotation}deg)`;
-            card.addEventListener('mouseenter', () => card.style.zIndex = 10);
-            card.addEventListener('mouseleave', () => card.style.zIndex = 1);
-            const animalSlug = trophy.slug;
-            let imagePathString;
-            if (trophy.type === 'diamante') {
-                const gender = trophy.furName.toLowerCase().includes('macho') ? 'macho' : 'femea';
-                const pureFurName = trophy.furName.replace(/^(macho|fêmea)\s/i, '').trim();
-                const furSlug = slugify(pureFurName);
-                imagePathString = `src="animais/pelagens/${animalSlug}_${furSlug}_${gender}.png" onerror="this.onerror=null; this.src='animais/pelagens/${animalSlug}_${furSlug}.png'; this.onerror=null; this.src='animais/${animalSlug}.png';"`;
-            } else if (trophy.type === 'greatone') {
-                const furSlug = slugify(trophy.furName);
-                imagePathString = `src="animais/pelagens/great_${animalSlug}_${furSlug}.png" onerror="this.onerror=null; this.src='animais/${animalSlug}.png';"`;
-            } else {
-                imagePathString = `src="animais/${animalSlug}.png"`;
-            }
-            card.innerHTML = `<img ${imagePathString}><div class="achievement-card-info"><div class="animal-name">${trophy.animalName}</div><div class="fur-name">${trophy.furName.replace(' Diamante','')}</div></div>`;
+            // USA O NOVO COMPONENTE AQUI
+            const card = createAchievementCard(trophy);
             grid.appendChild(card);
         });
     }
+    
     panel.appendChild(grid);
     return panel;
 }
-// ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO AQUI ▼▼▼
 
 // Obtém o inventário completo de troféus para montagens múltiplas
+// NOTA: Esta função pode ser movida para progressLogic.js futuramente, mas mantemos aqui para evitar quebras imediatas
 function getCompleteTrophyInventory() {
     const inventory = [];
 
@@ -1886,7 +1380,7 @@ function checkMountRequirements(requiredAnimals) {
     return { isComplete, fulfillmentRequirements };
 }
 
-// Renderiza a visualização de montagens múltiplas
+/// Renderiza a visualização de montagens múltiplas (VERSÃO NOVA)
 function renderMultiMountsView(container) {
     container.innerHTML = '';
     const grid = document.createElement('div');
@@ -1901,28 +1395,12 @@ function renderMultiMountsView(container) {
     }
 
     sortedMounts.forEach(([mountKey, mount]) => {
+        // 1. Calcula o status
         const status = checkMountRequirements(mount.animals);
-        const progressCount = status.fulfillmentRequirements.filter(r => r.met).length;
-
-        const card = document.createElement('div');
-        card.className = `mount-card ${status.isComplete ? 'completed' : 'incomplete'}`;
-        card.dataset.mountKey = mountKey;
-
-        let animalsHTML = '<div class="mount-card-animals">';
-        mount.animals.forEach(animal => {
-            animalsHTML += `<img src="animais/${animal.slug}.png" title="${items.find(i => slugify(i) === animal.slug) || animal.slug}" onerror="this.style.display='none'">`;
-        });
-        animalsHTML += '</div>';
-
-        card.innerHTML = `
-            <div class="mount-card-header">
-                <h3>${mount.name}</h3>
-                <div class="mount-progress">${progressCount} / ${mount.animals.length}</div>
-            </div>
-            ${animalsHTML}
-            ${status.isComplete ? '<div class="mount-completed-banner"><i class="fas fa-check"></i></div>' : ''}
-        `;
-        card.addEventListener('click', () => renderMultiMountDetailModal(mountKey));
+        
+        // 2. Cria o card visual usando o componente novo
+        const card = createMultiMountCard(mount, status, () => renderMultiMountDetailModal(mountKey));
+        
         grid.appendChild(card);
     });
 }
@@ -2021,23 +1499,12 @@ function renderGrindHubView(container) {
             reserveGroup.appendChild(reserveTitle);
             const grid = document.createElement('div');
             grid.className = 'grinds-grid';
-            reserveSessions.forEach(session => {
+           reserveSessions.forEach(session => {
                 const animalName = items.find(item => slugify(item) === session.animalSlug);
-                const counts = session.counts;
-                const card = document.createElement('div');
-                card.className = 'grind-card';
-                card.addEventListener('click', () => renderGrindCounterView(session.id));
-                card.innerHTML = `
-                    <img src="animais/${session.animalSlug}.png" class="grind-card-bg-silhouette" onerror="this.style.display='none'">
-                    <div class="grind-card-content">
-                        <div class="grind-card-header"><span class="grind-card-animal-name">${animalName}</span></div>
-                        <div class="grind-card-stats-grid">
-                            <div class="grind-stat"><img src="icones/caveira_icon.png" class="custom-icon" alt="Abates"><span>${counts.total || 0}</span></div>
-                            <div class="grind-stat"><img src="icones/diamante_icon.png" class="custom-icon" alt="Diamantes"><span>${counts.diamonds?.length || 0}</span></div>
-                            <div class="grind-stat"><img src="icones/pata_icon.png" class="custom-icon" alt="Raros"><span>${counts.rares?.length || 0}</span></div>
-                            <div class="grind-stat"><img src="icones/coroa_icon.png" class="custom-icon" alt="Super Raros"><span>${counts.super_raros?.length || 0}</span></div>
-                        </div>
-                    </div>`;
+                
+                // Usa o novo componente, muito mais limpo!
+                const card = createGrindCard(session, animalName, () => renderGrindCounterView(session.id));
+                
                 grid.appendChild(card);
             });
             reserveGroup.appendChild(grid);
@@ -2051,8 +1518,6 @@ function renderGrindHubView(container) {
     }
 }
 
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
-
 function renderNewGrindAnimalSelection(container) {
     const mainContent = container.closest('.main-content');
     const header = mainContent.querySelector('.page-header h2');
@@ -2062,7 +1527,7 @@ function renderNewGrindAnimalSelection(container) {
     backButton.innerHTML = '&larr; Voltar para o Hub de Grind';
     backButton.onclick = () => renderMainView('grind');
 
-    container.innerHTML = ''; // Limpa o conteúdo anterior
+    container.innerHTML = ''; 
 
     const filterInput = document.createElement('input');
     filterInput.type = 'text';
@@ -2074,43 +1539,41 @@ function renderNewGrindAnimalSelection(container) {
     grid.className = 'album-grid';
     container.appendChild(grid);
 
-    // --- LÓGICA FINALMENTE CORRIGIDA ---
+    // Filtra apenas animais que têm Hotspots (mapas)
     const grindableAnimals = items.filter(animal => {
         const slug = slugify(animal);
         let animalData = null;
-        
         for (const reserveKey in animalHotspotData) {
             if (animalHotspotData[reserveKey][slug]) {
                 animalData = animalHotspotData[reserveKey][slug];
                 break; 
             }
         }
-        
-        // CORREÇÃO: Removemos a verificação de classe. Agora só verifica se o animal existe nos dados.
         return !!animalData;
     });
 
     grindableAnimals.sort().forEach(animalName => {
         const slug = slugify(animalName);
-        const card = document.createElement('div');
-        card.className = 'animal-card';
-        card.innerHTML = `
-            <img src="animais/${slug}.png" alt="${animalName}" onerror="this.onerror=null;this.src='animais/placeholder.png';">
-            <div class="card-info">
-                <div class="info">${animalName}</div>
-            </div>
-        `;
+        
+        // 1. REUTILIZAÇÃO: Usa o componente padrão (já vem com loading="lazy")
+        const card = createCardElement(animalName);
+        
+        // 2. LÓGICA ESPECÍFICA: Ao clicar, vai para a seleção de reserva (não para detalhes)
         card.addEventListener('click', () => renderReserveSelectionForGrind(container, slug));
+        
         grid.appendChild(card);
     });
 
-    filterInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
+    // 3. PERFORMANCE: Aplica o Debounce na busca
+    const filterAnimals = () => {
+        const searchTerm = filterInput.value.toLowerCase();
         grid.querySelectorAll('.animal-card').forEach(card => {
             const name = card.querySelector('.info').textContent.toLowerCase();
             card.style.display = name.includes(searchTerm) ? 'flex' : 'none';
         });
-    });
+    };
+    
+    filterInput.addEventListener('input', debounce(filterAnimals, 300));
 }
 
 async function renderReserveSelectionForGrind(container, animalSlug) {
@@ -2119,11 +1582,10 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
     const animalName = items.find(item => slugify(item) === animalSlug);
 
     header.textContent = `Selecione a Reserva para ${animalName}`;
-    // O botão voltar agora retorna para a seleção de animal
     mainContent.querySelector('.page-header .back-button').onclick = () => renderNewGrindAnimalSelection(container);
 
 
-    container.innerHTML = ''; // Limpa a lista de animais
+    container.innerHTML = '';
 
     const grid = document.createElement('div');
     grid.className = 'reserves-grid';
@@ -2140,7 +1602,7 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
 
     availableReserves.forEach(([reserveKey, reserve]) => {
         const card = document.createElement('div');
-        card.className = 'reserve-card'; // Reutiliza o estilo do card de reserva
+        card.className = 'reserve-card';
         card.innerHTML = `
             <div class="reserve-image-container">
                 <img class="reserve-card-image" src="${reserve.image}" onerror="this.style.display='none'">
@@ -2150,7 +1612,6 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
             </div>
         `;
         card.addEventListener('click', async () => {
-           // ▼▼▼ COLE ESTE NOVO OBJETO NO LUGAR DO ANTIGO ▼▼▼
             const newSession = {
                 id: Date.now(),
                 animalSlug: animalSlug,
@@ -2164,7 +1625,7 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
                     trolls: [],
                     great_ones: []
                 },
-                zones: [] // <<< NOVA PROPRIEDADE PARA ARMAZENAR AS ZONAS
+                zones: [] 
             };
 
             if (!savedData.grindSessions) {
@@ -2179,15 +1640,12 @@ async function renderReserveSelectionForGrind(container, animalSlug) {
     });
 }
 
-// ▲▲▲ FIM DO NOVO BLOCO ▲▲▲
-
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
-
+// Renderiza a tela principal do Contador de Grind
 async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) return renderMainView('grind');
 
+    // Inicializa dados se não existirem
     if (!session.counts) session.counts = { total: 0, rares: [], diamonds: [], trolls: [], great_ones: [], super_raros: [] };
     if (!session.zones) session.zones = []; 
 
@@ -2199,214 +1657,231 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
     const mainContent = document.querySelector('.main-content');
     const container = mainContent.querySelector('.content-container');
     mainContent.querySelector('.page-header h2').textContent = `Contador de Grind`;
+    
+    // Configura botão voltar
     const backButton = mainContent.querySelector('.page-header .back-button');
     backButton.innerHTML = `&larr; Voltar para o Hub de Grind`;
     backButton.onclick = () => renderMainView('grind');
 
-    container.innerHTML = `
-        <div class="grind-container">
-            <div class="grind-header">
-                <div class="grind-header-info"><h2>${animalName.toUpperCase()}</h2><span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span></div>
-                <div class="grind-header-details">
-                    <div class="detail-item"><i class="fas fa-trophy"></i><strong>Pont. Troféu:</strong><span>${hotspotInfo.maxScore || 'N/A'}</span></div>
-                    <div class="detail-item"><i class="fas fa-weight-hanging"></i><strong>Peso Máx:</strong><span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
-                    <div class="detail-item"><i class="fas fa-clock"></i><strong>Bebida:</strong><span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
-                    <div class="detail-item"><i class="fas fa-crosshairs"></i><strong>Classe:</strong><span>${hotspotInfo.animalClass || 'N/A'}</span></div>
-                    <div class="detail-item"><i class="fas fa-star"></i><strong>Nível Máx:</strong><span>${hotspotInfo.maxLevel || 'N/A'}</span></div>
-                    <div class="detail-item"><button class="hotspot-button"><i class="fas fa-map-marked-alt"></i> Ver Mapa</button></div>
-                </div>
+    // Limpa e prepara o container
+    container.innerHTML = '';
+    
+    // 1. Renderiza o Cabeçalho (Header)
+    const headerHTML = `
+        <div class="grind-header">
+            <div class="grind-header-info"><h2>${animalName.toUpperCase()}</h2><span><i class="fas fa-map-marker-alt"></i> Em ${reserveName}</span></div>
+            <div class="grind-header-details">
+                <div class="detail-item"><i class="fas fa-trophy"></i><strong>Pont. Troféu:</strong><span>${hotspotInfo.maxScore || 'N/A'}</span></div>
+                <div class="detail-item"><i class="fas fa-weight-hanging"></i><strong>Peso Máx:</strong><span>${hotspotInfo.maxWeightEstimate || 'N/A'}</span></div>
+                <div class="detail-item"><i class="fas fa-clock"></i><strong>Bebida:</strong><span>${hotspotInfo.drinkZonesPotential || 'N/A'}</span></div>
+                <div class="detail-item"><i class="fas fa-crosshairs"></i><strong>Classe:</strong><span>${hotspotInfo.animalClass || 'N/A'}</span></div>
+                <div class="detail-item"><i class="fas fa-star"></i><strong>Nível Máx:</strong><span>${hotspotInfo.maxLevel || 'N/A'}</span></div>
+                <div class="detail-item"><button class="hotspot-button"><i class="fas fa-map-marked-alt"></i> Ver Mapa</button></div>
             </div>
-            <div class="counters-wrapper">
-                <div class="grind-counter-item total-kills" data-type="total"><div class="grind-counter-header"><img src="icones/caveira_icon.png" class="custom-icon" alt="Total de Abates"><span>Total de Abates</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><input type="number" class="grind-total-input" id="total-kills-input" value="${session.counts.total || 0}"><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item diamond" data-type="diamonds"><div class="grind-counter-header"><img src="icones/diamante_icon.png" class="custom-icon" alt="Diamante"><span>Diamantes</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.diamonds?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item rare" data-type="rares" data-detailed="true"><div class="grind-counter-header"><img src="icones/pata_icon.png" class="custom-icon" alt="Raros"><span>Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.rares?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item troll" data-type="trolls"><div class="grind-counter-header"><img src="icones/fantasma_icon.png" class="custom-icon" alt="Trolls"><span>Trolls</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.trolls?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item great-one" data-type="great_ones" data-detailed="true"><div class="grind-counter-header"><img src="icones/greatone_icon.png" class="custom-icon" alt="Great One"><span>Great One</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.great_ones?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-                <div class="grind-counter-item super-rare" data-type="super_raros" data-detailed="true"><div class="grind-counter-header"><img src="icones/coroa_icon.png" class="custom-icon" alt="Super Raros"><span>Super Raros</span></div><div class="grind-counter-body"><button class="grind-counter-btn decrease"><i class="fas fa-minus"></i></button><span class="grind-counter-value">${session.counts.super_raros?.length || 0}</span><button class="grind-counter-btn increase"><i class="fas fa-plus"></i></button></div></div>
-            </div>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', headerHTML);
+    container.querySelector('.hotspot-button').addEventListener('click', () => renderHotspotDetailModal(reserveKey, animalSlug));
 
-            <div class="zone-manager-container">
-                <details ${isZonesOpenState ? 'open' : ''}>
-                    <summary class="zone-manager-header">
-                        <h3><i class="fas fa-map-pin"></i> Gerenciador de Zonas de Grind</h3>
-                        <span class="zone-count-badge">0 Zonas</span>
-                    </summary>
-                    <div class="zone-manager-body">
-                        <div class="add-zone-form">
-                            <select id="zone-type-select"><option value="principal">Zona Principal</option><option value="secundaria">Zona Secundária</option><option value="solo">Zona Solo</option></select>
-                            <input type="text" id="zone-name-input" placeholder="Nome da Zona (Ex: 1, 2, ou Lago Sul)">
-                            <button id="add-zone-btn" class="back-button"><i class="fas fa-plus"></i> Adicionar Zona</button>
-                        </div>
-                        <div id="zone-list" class="zone-list"></div>
-                    </div>
-                </details>
+    const grindContainer = document.createElement('div');
+    grindContainer.className = 'grind-container';
+    
+    // 2. Renderiza os Contadores usando o NOVO COMPONENTE
+    const countersWrapper = document.createElement('div');
+    countersWrapper.className = 'counters-wrapper';
+
+    // Helper para lógica de adicionar troféu detalhado
+    const handleIncrease = async (type, isDetailed) => {
+        session.counts.total++;
+        if (isDetailed) {
+            openGrindDetailModal(sessionId, type, session.counts.total);
+        } else {
+            session.counts[type].push({ id: Date.now(), killCount: session.counts.total });
+            saveData(savedData);
+            renderGrindCounterView(sessionId, isZonesOpenState);
+        }
+        // Se for apenas abates, já salva no input change, mas aqui garante atualização visual se precisar
+        if (type === 'total') saveData(savedData); 
+    };
+
+    // Helper para lógica de remover último troféu
+    const handleDecrease = async (type) => {
+        if (type === 'total') {
+            if (session.counts.total > 0) {
+                session.counts.total--;
+                saveData(savedData);
+                renderGrindCounterView(sessionId, isZonesOpenState);
+            }
+            return;
+        }
+        if (session.counts[type].length > 0) {
+            const lastItem = session.counts[type][session.counts[type].length - 1];
+            const itemName = lastItem.variation || type.replace(/_s$/, '').replace('_', ' ');
+            if (await showCustomAlert(`Remover o último item: "${itemName}"?`, 'Confirmar', true)) {
+                session.counts[type].pop();
+                saveData(savedData);
+                renderGrindCounterView(sessionId, isZonesOpenState);
+            }
+        }
+    };
+
+    // Lista de configurações dos contadores
+    const countersConfig = [
+        { label: 'Total de Abates', icon: 'icones/caveira_icon.png', value: session.counts.total, type: 'total-kills', isInput: true, 
+          onInput: (val) => { session.counts.total = parseInt(val) || 0; saveData(savedData); } },
+        { label: 'Diamantes', icon: 'icones/diamante_icon.png', value: session.counts.diamonds?.length || 0, type: 'diamond', dataKey: 'diamonds' },
+        { label: 'Raros', icon: 'icones/pata_icon.png', value: session.counts.rares?.length || 0, type: 'rare', dataKey: 'rares', detailed: true },
+        { label: 'Trolls', icon: 'icones/fantasma_icon.png', value: session.counts.trolls?.length || 0, type: 'troll', dataKey: 'trolls' },
+        { label: 'Great One', icon: 'icones/greatone_icon.png', value: session.counts.great_ones?.length || 0, type: 'great-one', dataKey: 'great_ones', detailed: true },
+        { label: 'Super Raros', icon: 'icones/coroa_icon.png', value: session.counts.super_raros?.length || 0, type: 'super-rare', dataKey: 'super_raros', detailed: true }
+    ];
+
+    countersConfig.forEach(cfg => {
+        const card = createGrindCounter({
+            label: cfg.label,
+            icon: cfg.icon,
+            value: cfg.value,
+            type: cfg.type,
+            isInput: cfg.isInput,
+            onIncrease: () => handleIncrease(cfg.dataKey || 'total', cfg.detailed),
+            onDecrease: () => handleDecrease(cfg.dataKey || 'total'),
+            onInput: cfg.onInput
+        });
+        countersWrapper.appendChild(card);
+    });
+
+    grindContainer.appendChild(countersWrapper);
+    
+    // 3. Renderiza o Gerenciador de Zonas (Função separada agora!)
+    renderZoneManager(grindContainer, session, isZonesOpenState);
+
+    // Botão de Excluir Grind
+    const deleteBtn = document.createElement('button');
+    deleteBtn.id = 'delete-grind-btn';
+    deleteBtn.className = 'back-button';
+    deleteBtn.textContent = 'Excluir este Grind';
+    deleteBtn.onclick = async () => { 
+        const isZonesOpen = grindContainer.querySelector('details')?.open; 
+        if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName}?`, 'Excluir Grind', true)) { 
+            const idx = savedData.grindSessions.findIndex(s => s.id === sessionId); 
+            if (idx > -1) { 
+                savedData.grindSessions.splice(idx, 1); 
+                saveData(savedData); 
+                renderMainView('grind'); 
+            } 
+        } 
+    };
+    grindContainer.appendChild(deleteBtn);
+
+    container.appendChild(grindContainer);
+}
+
+// Função Separada para Gerenciar Zonas (Limpeza de código!)
+function renderZoneManager(container, session, isOpen) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'zone-manager-container';
+    
+    wrapper.innerHTML = `
+        <details ${isOpen ? 'open' : ''}>
+            <summary class="zone-manager-header">
+                <h3><i class="fas fa-map-pin"></i> Gerenciador de Zonas de Grind</h3>
+                <span class="zone-count-badge">${session.zones.length} Zonas</span>
+            </summary>
+            <div class="zone-manager-body">
+                <div class="add-zone-form">
+                    <select id="zone-type-select"><option value="principal">Zona Principal</option><option value="secundaria">Zona Secundária</option><option value="solo">Zona Solo</option></select>
+                    <input type="text" id="zone-name-input" placeholder="Nome (Ex: Lago 1)">
+                    <button id="add-zone-btn" class="back-button"><i class="fas fa-plus"></i> Adicionar Zona</button>
+                </div>
+                <div id="zone-list" class="zone-list"></div>
             </div>
-            <button id="delete-grind-btn" class="back-button">Excluir este Grind</button>
-        </div>
+        </details>
     `;
 
-    // --- LÓGICA DO GERENCIADOR DE ZONAS (COM CORREÇÕES) ---
-    const zoneListContainer = container.querySelector('#zone-list');
-    const zoneCountBadge = container.querySelector('.zone-count-badge');
-
-    const renderZones = () => {
+    const zoneListContainer = wrapper.querySelector('#zone-list');
+    
+    // Lógica de Renderizar Lista de Zonas
+    const renderList = () => {
         zoneListContainer.innerHTML = '';
-        zoneCountBadge.textContent = `${session.zones.length} Zonas`; 
         if (session.zones.length === 0) {
-            zoneListContainer.innerHTML = '<p class="no-zones-message">Nenhuma zona adicionada ainda. Adicione sua primeira zona acima!</p>';
+            zoneListContainer.innerHTML = '<p class="no-zones-message">Nenhuma zona adicionada.</p>';
             return;
         }
         
-        // ** INÍCIO DA MUDANÇA: ORDENAÇÃO **
-        // 1. Criamos uma cópia das zonas com o índice original
-        const zonesWithOriginalIndex = session.zones.map((zone, index) => ({
-            ...zone,
-            originalIndex: index 
-        }));
-
-        // 2. Ordenamos a cópia pelo nome, usando a opção 'numeric'
-        zonesWithOriginalIndex.sort((a, b) => 
-            a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' })
-        );
-
-        // 3. Iteramos sobre a lista ORDENADA
-        zonesWithOriginalIndex.forEach((zone) => { 
-            // 'zone' agora contém o objeto da zona E o seu 'originalIndex'
-            // O 'originalIndex' é o que usamos para editar/excluir
-            const zoneElement = document.createElement('div');
-            zoneElement.className = `zone-card zone-type-${zone.type}`;
+        session.zones.map((z, i) => ({...z, idx: i})).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
+        .forEach(zone => {
+            const el = document.createElement('div');
+            el.className = `zone-card zone-type-${zone.type}`;
+            
             let animalsHTML = '<div class="zone-animal-list">';
             if (zone.animals && zone.animals.length > 0) {
-                zone.animals.forEach((animal, animalIndex) => {
-                    // 4. Usamos o 'originalIndex' nos botões de animais
-                    animalsHTML += `<div class="zone-animal-item"><span>Nível ${animal.level} (${animal.gender === 'macho' ? 'M' : 'F'})</span><div class="animal-quantity-controls"><button data-zone="${zone.originalIndex}" data-animal="${animalIndex}" class="quantity-btn decrease">-</button><span>${animal.quantity}</span><button data-zone="${zone.originalIndex}" data-animal="${animalIndex}" class="quantity-btn increase">+</button></div></div>`;
+                zone.animals.forEach((animal, aIdx) => {
+                    animalsHTML += `<div class="zone-animal-item"><span>Nv ${animal.level} (${animal.gender === 'macho'?'M':'F'})</span><div class="animal-quantity-controls"><button class="qty-btn dec" data-z="${zone.idx}" data-a="${aIdx}">-</button><span>${animal.quantity}</span><button class="qty-btn inc" data-z="${zone.idx}" data-a="${aIdx}">+</button></div></div>`;
                 });
-            } else {
-                animalsHTML += '<small>Nenhum animal adicionado.</small>';
-            }
+            } else { animalsHTML += '<small>Sem animais.</small>'; }
             animalsHTML += '</div>';
 
-            // 4. Usamos o 'originalIndex' nos botões de zona
-            zoneElement.innerHTML = `
+            el.innerHTML = `
                 <div class="zone-card-header">
                     <h4>${zone.name}</h4>
-                    <div class="zone-card-controls">
-                        <span class="zone-type-badge">${zone.type}</span>
-                        <button class="zone-action-btn edit-zone-btn" data-zone-index="${zone.originalIndex}" title="Renomear Zona"><i class="fas fa-pencil-alt"></i></button>
-                        <button class="zone-action-btn delete-zone-btn" data-zone-index="${zone.originalIndex}" title="Excluir Zona">&times;</button>
-                    </div>
+                    <div class="zone-card-controls"><span class="zone-type-badge">${zone.type}</span><button class="zone-action-btn edit" data-idx="${zone.idx}"><i class="fas fa-pencil-alt"></i></button><button class="zone-action-btn del" data-idx="${zone.idx}">&times;</button></div>
                 </div>
                 ${animalsHTML}
-                <div class="add-animal-form">
-                    <input type="number" class="animal-level-input" placeholder="Nível">
-                    <select class="animal-gender-select"><option value="macho">Macho</option><option value="femea">Fêmea</option></select>
-                    <button class="add-animal-btn" data-zone-index="${zone.originalIndex}">Adicionar Animal</button>
-                </div>
+                <div class="add-animal-form"><input type="number" class="lvl-in" placeholder="Nv"><select class="gnd-sel"><option value="macho">M</option><option value="femea">F</option></select><button class="add-ani-btn" data-idx="${zone.idx}">Add</button></div>
             `;
-            zoneListContainer.appendChild(zoneElement);
+            zoneListContainer.appendChild(el);
         });
-        // ** FIM DA MUDANÇA **
     };
 
-    const addZone = () => {
-        // ... (função addZone continua igual)
-        const typeInput = container.querySelector('#zone-type-select');
-        const nameInput = container.querySelector('#zone-name-input');
-        if (nameInput.value.trim() === '') {
-            showCustomAlert('Por favor, dê um nome para a zona.', 'Erro');
-            return;
-        }
-        session.zones.push({ id: Date.now(), name: nameInput.value.trim(), type: typeInput.value, animals: [] });
-        nameInput.value = '';
+    // Eventos da Zona
+    wrapper.querySelector('#add-zone-btn').onclick = () => {
+        const name = wrapper.querySelector('#zone-name-input').value.trim();
+        const type = wrapper.querySelector('#zone-type-select').value;
+        if (!name) return showCustomAlert('Nome inválido', 'Erro');
+        session.zones.push({ id: Date.now(), name, type, animals: [] });
         saveData(savedData);
-        renderZones(); 
+        renderGrindCounterView(session.id, true); // Recarrega mantendo aberto
     };
 
-    const handleZoneListClick = (e) => {
-        const target = e.target;
-        // Os 'data-zone-index' agora se referem ao índice original,
-        // então todas as funções de editar/excluir funcionam perfeitamente.
+    zoneListContainer.onclick = (e) => {
+        const t = e.target;
+        const btn = t.closest('button');
+        if (!btn) return;
         
-        if (target.closest('.edit-zone-btn')) {
-            const zoneIndex = parseInt(target.closest('.edit-zone-btn').dataset.zoneIndex);
-            const currentName = session.zones[zoneIndex].name;
-            const newName = prompt('Digite o novo nome para a zona:', currentName);
-            
-            if (newName && newName.trim() !== '' && newName.trim() !== currentName) {
-                session.zones[zoneIndex].name = newName.trim();
-                saveData(savedData);
-                renderZones(); // Redesenha a lista, que será reordenada
-            }
-        } else if (target.closest('.add-animal-btn')) {
-            const zoneIndex = parseInt(target.closest('.add-animal-btn').dataset.zoneIndex);
-            addAnimalToZone(zoneIndex);
-        } else if (target.closest('.delete-zone-btn')) {
-            const zoneIndex = parseInt(target.closest('.delete-zone-btn').dataset.zoneIndex);
-            session.zones.splice(zoneIndex, 1);
+        const zIdx = parseInt(btn.dataset.idx || btn.dataset.z);
+        const aIdx = parseInt(btn.dataset.a);
+
+        if (btn.classList.contains('del')) {
+            session.zones.splice(zIdx, 1);
             saveData(savedData);
-            renderZones(); // Redesenha a lista, que será reordenada
-        } else if (target.closest('.quantity-btn.increase')) {
-            const zoneIndex = parseInt(target.closest('.quantity-btn').dataset.zone);
-            const animalIndex = parseInt(target.closest('.quantity-btn').dataset.animal);
-            updateAnimalQuantity(zoneIndex, animalIndex, 1);
-        } else if (target.closest('.quantity-btn.decrease')) {
-            const zoneIndex = parseInt(target.closest('.quantity-btn').dataset.zone);
-            const animalIndex = parseInt(target.closest('.quantity-btn').dataset.animal);
-            updateAnimalQuantity(zoneIndex, animalIndex, -1);
+            renderGrindCounterView(session.id, true);
+        } else if (btn.classList.contains('edit')) {
+            const newName = prompt('Novo nome:', session.zones[zIdx].name);
+            if (newName) { session.zones[zIdx].name = newName; saveData(savedData); renderGrindCounterView(session.id, true); }
+        } else if (btn.classList.contains('add-ani-btn')) {
+            const card = btn.closest('.zone-card');
+            const lvl = parseInt(card.querySelector('.lvl-in').value);
+            const gen = card.querySelector('.gnd-sel').value;
+            if (!lvl) return;
+            const existing = session.zones[zIdx].animals.find(a => a.level === lvl && a.gender === gen);
+            if (existing) existing.quantity++;
+            else session.zones[zIdx].animals.push({ level: lvl, gender: gen, quantity: 1 });
+            saveData(savedData);
+            renderGrindCounterView(session.id, true);
+        } else if (btn.classList.contains('inc')) {
+            session.zones[zIdx].animals[aIdx].quantity++;
+            saveData(savedData);
+            renderGrindCounterView(session.id, true);
+        } else if (btn.classList.contains('dec')) {
+            session.zones[zIdx].animals[aIdx].quantity--;
+            if (session.zones[zIdx].animals[aIdx].quantity <= 0) session.zones[zIdx].animals.splice(aIdx, 1);
+            saveData(savedData);
+            renderGrindCounterView(session.id, true);
         }
     };
 
-    const addAnimalToZone = (zoneIndex) => {
-        // ... (esta função continua igual)
-        const zoneCard = zoneListContainer.querySelector(`.add-animal-btn[data-zone-index="${zoneIndex}"]`).closest('.zone-card');
-        const levelInput = zoneCard.querySelector('.animal-level-input');
-        const genderSelect = zoneCard.querySelector('.animal-gender-select');
-        const level = parseInt(levelInput.value);
-        if (!level || level <= 0) {
-            showCustomAlert('Por favor, insira um nível válido.', 'Erro');
-            return;
-        }
-        if (!session.zones[zoneIndex].animals) session.zones[zoneIndex].animals = [];
-        const existingAnimal = session.zones[zoneIndex].animals.find(a => a.level === level && a.gender === genderSelect.value);
-        if (existingAnimal) {
-            existingAnimal.quantity++;
-        } else {
-            session.zones[zoneIndex].animals.push({ level: level, gender: genderSelect.value, quantity: 1 });
-        }
-        levelInput.value = '';
-        saveData(savedData);
-        renderZones();
-    };
-
-    const updateAnimalQuantity = (zoneIndex, animalIndex, amount) => {
-        // ... (esta função continua igual)
-        const animal = session.zones[zoneIndex].animals[animalIndex];
-        animal.quantity += amount;
-        if (animal.quantity <= 0) {
-            session.zones[zoneIndex].animals.splice(animalIndex, 1);
-        }
-        saveData(savedData);
-        renderZones();
-    };
-
-    container.querySelector('#add-zone-btn').addEventListener('click', addZone);
-    zoneListContainer.addEventListener('click', handleZoneListClick);
-    
-    renderZones();
-
-    // --- LÓGICA DOS CONTADORES ---
-    // (toda a sua lógica de contadores permanece inalterada aqui)
-    container.querySelector('.hotspot-button').addEventListener('click', () => renderHotspotDetailModal(reserveKey, animalSlug));
-    const totalInput = document.getElementById('total-kills-input');
-    const saveTotalKills = () => { const newValue = parseInt(totalInput.value, 10); if (!isNaN(newValue) && newValue >= 0) { session.counts.total = newValue; saveData(savedData); } };
-    totalInput.addEventListener('change', saveTotalKills);
-    totalInput.addEventListener('blur', saveTotalKills);
-    container.querySelector('.total-kills .increase').addEventListener('click', () => { totalInput.value = parseInt(totalInput.value, 10) + 1; saveTotalKills(); });
-    container.querySelector('.total-kills .decrease').addEventListener('click', () => { const currentValue = parseInt(totalInput.value, 10); if (currentValue > 0) { totalInput.value = currentValue - 1; saveTotalKills(); } });
-    container.querySelectorAll('.grind-counter-item:not(.total-kills) .grind-counter-btn').forEach(button => { button.addEventListener('click', async (e) => { e.stopPropagation(); const isIncrease = button.classList.contains('increase'); const counterItem = button.closest('.grind-counter-item'); const type = counterItem.dataset.type; const isDetailed = counterItem.dataset.detailed === 'true'; if (!Array.isArray(session.counts[type])) session.counts[type] = []; if (isIncrease) { session.counts.total++; const killCountForTrophy = session.counts.total; if (isDetailed) { openGrindDetailModal(sessionId, type, killCountForTrophy); return; } else { session.counts[type].push({ id: Date.now(), killCount: killCountForTrophy }); } } else { if (session.counts[type].length > 0) { const lastItem = session.counts[type][session.counts[type].length - 1]; const itemName = lastItem.variation || type.replace(/_s$/, '').replace('_', ' '); if (await showCustomAlert(`Tem certeza que deseja remover o último item: "${itemName}"?`, 'Confirmar Exclusão', true)) { session.counts[type].pop(); } } } saveData(savedData); renderGrindCounterView(sessionId); }); });
-    container.querySelector('#delete-grind-btn').addEventListener('click', async () => { const isZonesOpen = container.querySelector('details').open; if (await showCustomAlert(`Tem certeza que deseja excluir o grind de ${animalName} em ${reserveName}?`, 'Excluir Grind', true)) { const sessionIndex = savedData.grindSessions.findIndex(s => s.id === sessionId); if (sessionIndex > -1) { savedData.grindSessions.splice(sessionIndex, 1); saveData(savedData); renderMainView('grind'); } } else { renderGrindCounterView(sessionId, isZonesOpen); } });
+    renderList();
+    container.appendChild(wrapper);
 }
-// ▼▼▼ COLE ESTE NOVO BLOCO DE CÓDIGO AQUI (depois de renderGrindCounterView) ▼▼▼
 
 function openGrindDetailModal(sessionId, type, killCount) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
@@ -2417,7 +1892,7 @@ function openGrindDetailModal(sessionId, type, killCount) {
     let potentialFurs = [];
     let title = '';
 
-    // Determina qual lista de pelagens mostrar com base no tipo de troféu
+    // Prepara os dados (Mantivemos a lógica aqui, só tiramos o visual)
     switch (type) {
         case 'rares':
             title = 'Selecione a Pelagem Rara';
@@ -2435,7 +1910,7 @@ function openGrindDetailModal(sessionId, type, killCount) {
         case 'great_ones':
             title = 'Selecione a Pelagem Great One';
             const greatData = greatsFursData[animalSlug];
-            if (greatData) potentialFurs.push(...greatData.map(f => ({ displayName: f, originalName: f, gender: 'macho' }))); // Great Ones são sempre machos
+            if (greatData) potentialFurs.push(...greatData.map(f => ({ displayName: f, originalName: f, gender: 'macho' })));
             break;
     }
 
@@ -2445,94 +1920,62 @@ function openGrindDetailModal(sessionId, type, killCount) {
     }
 
     const modal = document.getElementById('form-modal');
-    modal.innerHTML = `
-        <div class="modal-content-box grind-detail-modal-content">
-            <h3>${title}</h3>
-            <p>Animal: ${animalName}</p>
-            <div class="fur-selection-grid">
-                ${potentialFurs.map(fur => `
-                    <div class="fur-selection-card" data-display-name="${fur.displayName}">
-                        <img src="animais/pelagens/${animalSlug}_${slugify(fur.originalName)}_${fur.gender}.png" 
-                             onerror="this.onerror=null; this.src='animais/pelagens/${animalSlug}_${slugify(fur.originalName)}.png'; this.onerror=null; this.src='animais/${animalSlug}.png';">
-                        <span>${fur.displayName}</span>
-                    </div>
-                `).join('')}
-            </div>
-            <div class="modal-buttons">
-                <button class="back-button" id="cancel-grind-detail">Cancelar</button>
-            </div>
-        </div>
-    `;
+    modal.innerHTML = ''; // Limpa
+    modal.className = 'modal-overlay form-modal';
 
-    modal.querySelector('#cancel-grind-detail').onclick = () => closeModal('form-modal');
+    // Usa o novo componente
+    const content = createGrindFurSelectionContent({
+        title, animalName, animalSlug,
+        furs: potentialFurs,
+        onCancel: () => closeModal('form-modal'),
+        onSelect: (displayName) => {
+            // Lógica de Salvar Seleção
+            session.counts[type].push({ id: Date.now(), killCount: killCount, variation: displayName });
 
-    // Adiciona o evento de clique para cada card de pelagem
-    modal.querySelectorAll('.fur-selection-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const displayName = card.dataset.displayName;
-            
-            // 1. Adiciona o troféu à sessão de grind
-            session.counts[type].push({
-                id: Date.now(),
-                killCount: killCount,
-                variation: displayName
-            });
-
-            // 2. Marca a pelagem como coletada na coleção principal
-            const collectionKey = (type === 'great_ones') ? 'greats' : type; // Greats tem um nome diferente nos dados
+            const collectionKey = (type === 'great_ones') ? 'greats' : type;
             if (collectionKey === 'greats') {
                 if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = { furs: {} };
                 if (!savedData.greats[animalSlug].furs[displayName]) savedData.greats[animalSlug].furs[displayName] = { trophies: [] };
-                savedData.greats[animalSlug].furs[displayName].trophies.push({ date: new Date().toISOString() }); // Adiciona um troféu simples
+                savedData.greats[animalSlug].furs[displayName].trophies.push({ date: new Date().toISOString() });
             } else {
                 if (!savedData[collectionKey]) savedData[collectionKey] = {};
                 if (!savedData[collectionKey][animalSlug]) savedData[collectionKey][animalSlug] = {};
                 savedData[collectionKey][animalSlug][displayName] = true;
             }
 
-            // 3. Salva tudo e atualiza a tela
             saveData(savedData);
             closeModal('form-modal');
             renderGrindCounterView(sessionId);
-        });
+        }
     });
 
+    modal.appendChild(content);
     modal.style.display = 'flex';
 }
 
-// ▲▲▲ FIM DO BLOCO A SER ADICIONADO ▲▲▲
 function exportUserData() {
     if (!currentUser) {
         showCustomAlert('Você precisa estar logado para fazer o backup.', 'Aviso');
         return;
     }
     
-    // Cria uma string JSON formatada a partir dos dados salvos
     const dataStr = JSON.stringify(savedData, null, 2);
-    // Cria um objeto Blob, que é um objeto semelhante a um arquivo
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    // Cria uma URL temporária para o Blob
     const url = URL.createObjectURL(dataBlob);
 
-    // Cria um link de download invisível
     const a = document.createElement('a');
     a.href = url;
-    // Define o nome do arquivo de backup
     const date = new Date().toISOString().split('T')[0];
     a.download = `backup_registro_cacador_${date}.json`;
     
-    // Simula um clique no link para iniciar o download
     document.body.appendChild(a);
     a.click();
     
-    // Limpa o link e a URL da memória
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 
     showCustomAlert('Backup gerado com sucesso!', 'Backup Concluído');
 }
-
-// ▼▼▼ COLE ESTE NOVO BLOCO NO LUGAR DO ANTIGO ▼▼▼
 
 async function importUserData(event) {
     if (!currentUser) {
@@ -2576,10 +2019,9 @@ async function importUserData(event) {
             if (importedData.pelagens && typeof importedData.pelagens === 'object') {
                 for (const slug in importedData.pelagens) {
                     const furs = importedData.pelagens[slug];
-                    if (typeof furs === 'object' && furs !== null) { // Adicionada verificação para não ser nulo
-                        newData.pelagens[slug] = {}; // Inicia o objeto para o animal
+                    if (typeof furs === 'object' && furs !== null) { 
+                        newData.pelagens[slug] = {};
                         for (const furName in furs) {
-                            // SÓ ADICIONA SE A PELAGEM ESTIVER MARCADA COMO 'true'
                             if (furs[furName] === true) {
                                 newData.pelagens[slug][furName] = true;
                             }
@@ -2588,10 +2030,10 @@ async function importUserData(event) {
                 }
             }
 
-            // 2. Migração de Diamantes (convertendo de contagem para lista se necessário)
+            // 2. Migração de Diamantes
             if (importedData.diamantes && typeof importedData.diamantes === 'object') {
                 const firstAnimalData = Object.values(importedData.diamantes)[0];
-                if (firstAnimalData && !Array.isArray(firstAnimalData)) { // Detecta formato antigo (ex: "alce": 2)
+                if (firstAnimalData && !Array.isArray(firstAnimalData)) { 
                      console.log("Detectado formato antigo de Diamantes. Convertendo...");
                      for (const slug in importedData.diamantes) {
                          const count = importedData.diamantes[slug];
@@ -2602,17 +2044,17 @@ async function importUserData(event) {
                             }
                          }
                      }
-                } else { // Formato novo ou vazio
+                } else { 
                     newData.diamantes = importedData.diamantes;
                 }
             }
             
-            // 3. Migração de Greats e Super Raros (copiando diretamente)
+            // 3. Migração de Greats e Super Raros
             if (importedData.greats) newData.greats = importedData.greats;
             if (importedData.super_raros) newData.super_raros = importedData.super_raros;
             if (importedData.customMarkers) newData.customMarkers = importedData.customMarkers;
 
-            // 4. Migração de Grind Sessions (convertendo contagens numéricas para listas)
+            // 4. Migração de Grind Sessions
             if (Array.isArray(importedData.grindSessions)) {
                 newData.grindSessions = importedData.grindSessions.map(session => {
                     const newCounts = { total: session.counts.total || 0, rares: [], diamonds: [], trolls: [], great_ones: [], super_raros: [] };
@@ -2705,4 +2147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     backToTopButton.addEventListener('click', () => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
     });
+
+    // Roda a verificação de erros no Console (Apenas para desenvolvimento)
+    runDataValidation();
 });

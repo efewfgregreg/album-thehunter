@@ -1850,3 +1850,86 @@ body.light-theme .hub-dashboard {
     color: white;
 }
 /* ▲▲▲ FIM DO BLOCO A SER ADICIONADO ▲▲▲ */
+/* --- Notificação Toast (Feedback de Salvamento) --- */
+#toast-notification {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: var(--surface-color); /* Fundo escuro do tema */
+    color: var(--text-color);
+    text-align: center;
+    border-radius: 4px;
+    padding: 16px;
+    position: fixed;
+    z-index: 2000; /* Acima de tudo */
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%); /* Centraliza na tela */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border-left: 5px solid var(--completed-color); /* Verde do tema */
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    opacity: 0;
+    transition: opacity 0.5s, bottom 0.5s;
+}
+
+#toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px; /* Sobe um pouquinho ao aparecer */
+}
+
+/* Ajuste para Mobile */
+@media (max-width: 768px) {
+    #toast-notification {
+        min-width: 90%;
+        bottom: 20px;
+    }
+}
+/* --- AJUSTES FINOS PARA MOBILE (PASSO FINAL) --- */
+@media (max-width: 768px) {
+    /* 1. Melhora a grade de animais para não ficar com cards minúsculos */
+    .album-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)) !important;
+        gap: 12px !important;
+    }
+
+    /* 2. Ajusta os filtros para não quebrarem o layout de forma feia */
+    .filters-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filters-container select, 
+    .filters-container .filter-input {
+        width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    /* 3. Aumenta os botões do contador de Grind para facilitar o toque */
+    .grind-counter-btn {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.5rem !important;
+    }
+
+    .grind-total-input {
+        font-size: 2.5rem !important;
+    }
+
+    /* 4. Ajusta o cabeçalho para ocupar menos espaço vertical */
+    .page-header {
+        padding-top: 40px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .page-header h2 {
+        font-size: 1.8rem !important;
+    }
+}
+
+/* Toque de mestre: Feedback visual ao tocar (Mobile) */
+.nav-card:active, .animal-card:active, .back-button:active {
+    transform: scale(0.95);
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: transform 0.1s;
+}
