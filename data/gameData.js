@@ -34,7 +34,6 @@ export const rareFursData = {
     "cudo_menor": { macho: ["Albino", "Melânico"], femea: ["Albino", "Marrom Avermelhado", "Escuro"] },
     "cão_guaxinim": { macho: ["Albino", "Laranja", "Pardo Escuro", "Malhado Variação 1", "Malhado Variação 2"], femea: ["Albino", "Laranja", "Pardo Escuro", "Malhado Variação 1", "Malhado Variação 2"] },
     "faisão_de_pescoço_anelado": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
-    "faisão": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "frisada": { macho: ["Albino", "Melânico", "Leucismo"], femea: ["Albino", "Melânico", "Leucismo"] },
     "galinha_montês": { macho: ["Pálida", "Híbrido", "Escuro"], femea: ["Pálida", "Híbrido", "Escuro"] },
     "galo_lira": { macho: ["Leucismo Variação 1", "Leucismo Variação 2", "Leucismo Variação 3", "Melânico Variação 1", "Melânico Variação 2"], femea: ["Laranja"] },
