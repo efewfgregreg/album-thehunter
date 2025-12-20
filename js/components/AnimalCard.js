@@ -1,27 +1,33 @@
-// Arquivo: js/components/AnimalCard.js
 import { slugify } from '../utils.js';
 
-/**
- * Cria apenas a estrutura visual (HTML) do card do animal.
- * Adicionamos loading="lazy" para melhorar a performance.
- */
 export function createCardElement(name) {
-    const slug = slugify(name);
     const card = document.createElement('div');
     card.className = 'animal-card';
-    card.dataset.slug = slug;
     
-    // Dica Visual: loading="lazy" faz o app carregar imagens sob demanda
+    // Gera o slug (nome do arquivo) usando a nova lógica sem acentos
+    const slug = slugify(name);
+    card.dataset.slug = slug; // Guarda o slug para uso nos filtros
+
+    // Tenta carregar a imagem da pasta 'animais'
+    // Se der erro, carrega o ícone da pata (pata_icon.png) que sabemos que existe na pasta icones
+    const imgHTML = `
+        <img 
+            src="animais/${slug}.png" 
+            alt="${name}" 
+            loading="lazy"
+            onerror="this.onerror=null; this.src='icones/pata_icon.png';"
+        >
+    `;
+
     card.innerHTML = `
-        <img src="animais/${slug}.png" 
-             alt="${name}" 
-             loading="lazy" 
-             onerror="this.onerror=null;this.src='animais/placeholder.png';">
-        <div class="card-info">
+        <div class="card-image-wrapper">
+            ${imgHTML}
+        </div>
+        <div class="info-container">
             <div class="info">${name}</div>
             <div class="progress-container"></div> 
         </div>
     `;
-    
+
     return card;
 }

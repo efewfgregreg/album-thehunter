@@ -26,12 +26,28 @@ export function createMultiMountCard(mount, status, onClick) {
     const animalsContainer = document.createElement('div');
     animalsContainer.className = 'mount-card-animals';
     
-    // Mostra até 3 ícones para não poluir
+   // Mostra até 3 ícones para não poluir
     const uniqueAnimals = [...new Set(mount.animals.map(a => a.slug))].slice(0, 3);
     uniqueAnimals.forEach(slug => {
         const img = document.createElement('img');
-        img.src = `icones/${slug}_icon.png`; // Tenta carregar ícone específico
-        img.onerror = () => { img.src = 'icones/pata_icon.png'; }; // Fallback
+        
+        // NOVA LÓGICA: Busca na pasta 'animais' em vez de 'icones'
+        img.src = `animais/${slug}.png`; 
+        
+        // Se der erro (imagem não existir), usa a pata genérica
+        img.onerror = () => { 
+            img.src = 'icones/pata_icon.png'; 
+            img.onerror = null; // Segurança para evitar loop infinito
+        }; 
+
+        // Estilo visual para garantir que pareça um ícone (pequeno e redondo)
+        img.style.width = '35px';
+        img.style.height = '35px';
+        img.style.objectFit = 'cover';
+        img.style.borderRadius = '50%';
+        img.style.border = '1px solid #444';
+        img.style.margin = '0 2px';
+        
         animalsContainer.appendChild(img);
     });
     

@@ -6,6 +6,7 @@
  */
 export function slugify(texto) {
     if (!texto) return '';
+    // Versão que MANTÉM acentos (ã, é, ç), apenas coloca em minúsculo e troca espaços por _
     return texto.toLowerCase().replace(/[-\s]+/g, '_').replace(/'/g, '');
 }
 
@@ -87,4 +88,16 @@ export function isTimeInRanges(searchTime, rangesStr) {
     }
 
     return false;
+}
+
+/**
+ * Função para evitar que uma ação seja executada muitas vezes seguidas (ex: digitar na busca).
+ */
+export function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
 }
