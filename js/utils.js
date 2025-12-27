@@ -101,3 +101,26 @@ export function debounce(func, wait) {
         timeout = setTimeout(() => func.apply(context, args), wait);
     };
 }
+/**
+ * Gera uma tag <img> segura com lógica de fallback (tentativas em cascata).
+ * Útil para pelagens onde tentamos: Específico (com gênero) -> Genérico (sem gênero) -> Placeholder do Animal.
+ */
+export function createSafeImgTag(primaryPath, fallbackPath, placeholderPath, altText, className = '') {
+    // Escapa as aspas simples para evitar quebrar o HTML inline
+    const safePrimary = primaryPath.replace(/'/g, "\\'");
+    const safeFallback = fallbackPath ? fallbackPath.replace(/'/g, "\\'") : '';
+    const safePlaceholder = placeholderPath ? placeholderPath.replace(/'/g, "\\'") : '';
+    
+    // Monta a lógica do onerror
+    // 1. Se falhar o primário, tenta o secundário.
+    // 2. Se falhar o secundário (ou não existir), vai para o placeholder.
+    let onErrorLogic = `this.onerror=null; `;
+    
+    if (safeFallback) {
+        onErrorLogic += `if (this.src !== '${safeFallback}') { this.src = '${safeFallback}'; } else { this.src = '${safePlaceholder}'; }`;
+    } else {
+        onErrorLogic += `this.src = '${safePlaceholder}';`;
+    }
+
+    return `<img src="${safePrimary}" alt="${altText}" class="${className}" loading="lazy" onerror="${onErrorLogic}">`;
+}

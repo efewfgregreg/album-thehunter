@@ -8,7 +8,7 @@ import { rareFursData, greatsFursData, items, diamondFursData, reservesData, ani
 import { auth, db } from './firebase.js';
 import { runDataValidation } from './dataValidator.js';
 // Adicione esta linha junto com os outros imports no topo
-import { slugify, showToast, setRandomBackground, isTimeInRanges, debounce } from './utils.js';
+import { slugify, showToast, setRandomBackground, isTimeInRanges, debounce, createSafeImgTag } from './utils.js';
 import { createCardElement } from './components/AnimalCard.js';
 import { TABS } from './constants.js';
 import { createPageHeader } from './components/PageHeader.js';
@@ -24,6 +24,7 @@ import { createGrindCounter } from './components/GrindCounter.js';
 import { createGreatOneTrophyContent, createGrindFurSelectionContent } from './components/Modals.js';
 import { createNavigationCard } from './components/NavigationCard.js';
 import { createSettingsPanel } from './components/SettingsPanel.js';
+import { renderZoneManager } from './components/ZoneManager.js';
 // --- IMPORTAÇÕES DA NOVA LÓGICA (PASSO 2) ---
 import { 
     getUniqueAnimalData, 
@@ -39,7 +40,7 @@ import {
 let appContainer;
 let currentUser = null;
 let savedData = {};
-
+let tabScrollPositions = {}; 
 // =================================================================
 // =================== GERENCIAMENTO DE HISTÓRICO ==================
 // =================================================================
@@ -106,52 +107,102 @@ function getDefaultDataStructure() {
 }
 
 async function loadDataFromFirestore() {
-    if (!currentUser) {
-        console.error("Tentando carregar dados sem usuário logado.");
-        return getDefaultDataStructure();
-    }
-    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+    // Dados padrão para começar
+    let finalData = getDefaultDataStructure();
+    let localData = null;
+
+    // 1. Tenta pegar o Backup Local primeiro (para garantir)
     try {
+        const localStr = localStorage.getItem('hunter_backup_local');
+        if (localStr) {
+            localData = JSON.parse(localStr);
+        }
+    } catch(e) { console.log("Sem backup local legível"); }
+
+    if (!currentUser) {
+        // Se não tem usuário logado, mas tem dados locais, usa eles (Modo Offline)
+        if (localData) return { ...finalData, ...localData };
+        return finalData;
+    }
+
+    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+
+    try {
+        // 2. Tenta pegar da Nuvem (Firebase)
         const doc = await userDocRef.get();
+        
         if (doc.exists) {
             console.log("Dados carregados do Firestore!");
             const cloudData = doc.data();
-            return { ...getDefaultDataStructure(), ...cloudData };
+            
+            // Lógica de Segurança: Se a nuvem estiver vazia mas você tiver backup local,
+            // (ex: erro de sincronização anterior), preferimos o local para não zerar seu progresso.
+            if (Object.keys(cloudData).length < 3 && localData && Object.keys(localData).length > 5) {
+                 console.warn("Nuvem parece vazia, recuperando do Local Storage.");
+                 finalData = { ...finalData, ...localData };
+                 // Atualiza a nuvem com o backup local
+                 saveData(finalData);
+            } else {
+                 finalData = { ...finalData, ...cloudData };
+            }
         } else {
-            console.log("Nenhum dado encontrado para o usuário, criando novo documento.");
-            const defaultData = getDefaultDataStructure();
-            await userDocRef.set(defaultData);
-            return defaultData;
+            console.log("Novo usuário ou banco resetado.");
+            if (localData) {
+                console.log("Recuperando backup local para nova conta.");
+                finalData = { ...finalData, ...localData };
+                saveData(finalData); // Sobe pro Firebase
+            } else {
+                await userDocRef.set(finalData);
+            }
         }
     } catch (error) {
-        console.error("Erro ao carregar dados do Firestore:", error);
-        return getDefaultDataStructure();
+        console.error("Erro ao carregar do Firestore (Sem internet?):", error);
+        // 3. Se der erro na nuvem (Net caiu), usa o Backup Local
+        if (localData) {
+            showToast("⚠️ Modo Offline: Usando dados salvos no dispositivo.");
+            finalData = { ...finalData, ...localData };
+        }
     }
+
+    return finalData;
 }
 
 function saveData(data) {
-    if (!currentUser) {
-        console.error("Tentando salvar dados sem usuário logado.");
-        return;
-    }
-    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
-    
-    // --- CORREÇÃO DE SEGURANÇA (PASSO 1) ---
-    // Usamos { merge: true } para evitar sobrescrever dados não carregados
-    userDocRef.set(data, { merge: true })
-        .then(() => {
-            // console.log("Salvo..."); // Pode comentar o log se quiser
-            showToast("Progresso salvo com sucesso!"); // <--- FEEDBACK VISUAL
-        })
-        .catch((error) => {
-            console.error("Erro ao salvar dados na nuvem: ", error);
-        });
+    // 1. Atualiza a variável global imediatamente
+    savedData = data;
 
+    // 2. BACKUP LOCAL DE SEGURANÇA (Isso resolve seu problema de tempo ocioso)
+    // Salva no navegador instantaneamente. Se a net cair, isso te salva.
+    try {
+        localStorage.setItem('hunter_backup_local', JSON.stringify(data));
+        // Marcamos a hora que salvou
+        localStorage.setItem('hunter_backup_time', Date.now());
+    } catch (e) {
+        console.warn("Aviso: Não foi possível salvar backup local (Memória cheia?)", e);
+    }
+
+    // 3. Salvamento na Nuvem (Firebase)
+    if (currentUser) {
+        const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+        
+        userDocRef.set(data, { merge: true })
+            .then(() => {
+                showToast("Progresso salvo!"); 
+            })
+            .catch((error) => {
+                console.error("Erro no Firebase (mas salvo localmente): ", error);
+                // Avisa o usuário que deu erro na nuvem, mas o local garantiu
+                showToast("⚠️ Nuvem instável. Salvo no dispositivo.");
+            });
+    }
+
+    // 4. Atualiza a Interface (Mantido do seu código original)
     if (document.getElementById('progress-panel-main-container')) {
         const contentArea = document.getElementById('progress-content-area');
         if (contentArea) {
              if (document.querySelector('.ranking-table')) {
-                 renderHuntingRankingView(contentArea);
+                 // Se tiver a função de ranking importada, chame-a aqui, senão ignore
+                 if(typeof renderHuntingRankingView === 'function') renderHuntingRankingView(contentArea);
              } else {
                  updateNewProgressPanel(contentArea);
              }
@@ -162,7 +213,6 @@ function saveData(data) {
         renderMultiMountsView(mountsGrid.parentNode);
     }
 }
-
 
 // =================================================================
 // =================== LÓGICA DE RENDERIZAÇÃO (UI) =================
@@ -222,11 +272,132 @@ function renderNavigationHub(addToHistory = true) {
     setupLogoutButton(currentUser, appContainer);
 }
 
+// =================================================================
+// --- NOVA FUNÇÃO: Renderiza a visualização padrão (Filtros + Grade) ---
+// =================================================================
+function renderStandardCategoryView(container, tabKey, currentTab) {
+    // 1. Cria container de filtros
+    const filtersContainer = document.createElement('div');
+    filtersContainer.className = 'filters-container';
+    
+    // 2. Busca por Nome
+    const filterInput = document.createElement('input');
+    filterInput.type = 'text';
+    filterInput.className = 'filter-input';
+    filterInput.placeholder = 'Buscar animal...';
+    filtersContainer.appendChild(filterInput);
+
+    // Prepara dados para os selects (importados de progressLogic.js e gameData.js)
+    const { classes, levels } = getUniqueAnimalData(); 
+    const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
+
+    // 3. Filtro de Classe
+    const classSelect = document.createElement('select');
+    classSelect.innerHTML = `<option value="">Classe (Todas)</option>` + classes.map(c => `<option value="${c}">Classe ${c}</option>`).join('');
+    filtersContainer.appendChild(classSelect);
+
+    // 4. Filtro de Dificuldade
+    const levelSelect = document.createElement('select');
+    levelSelect.innerHTML = `<option value="">Dificuldade (Todas)</option>` + levels.map(l => `<option value="${l}">${l}</option>`).join('');
+    filtersContainer.appendChild(levelSelect);
+
+    // 5. Filtro de Reserva
+    const reserveSelect = document.createElement('select');
+    reserveSelect.innerHTML = `<option value="">Reserva (Todas)</option>` + sortedReserves.map(([key, data]) => `<option value="${key}">${data.name}</option>`).join('');
+    filtersContainer.appendChild(reserveSelect);
+
+    // 6. Filtro de Horário
+    const timeInput = document.createElement('input');
+    timeInput.type = 'time';
+    timeInput.className = 'filter-input';
+    timeInput.style.minWidth = '130px';
+    timeInput.title = "Filtrar por Horário de Bebida";
+    filtersContainer.appendChild(timeInput);
+    
+    container.appendChild(filtersContainer);
+
+    // 7. Grid de Animais
+    const albumGrid = document.createElement('div');
+    albumGrid.className = 'album-grid';
+    container.appendChild(albumGrid);
+
+    const itemsToRender = (currentTab.items || []).filter(item => typeof item === 'string' && item !== null && item.trim() !== '');
+
+    itemsToRender.sort((a, b) => a.localeCompare(b)).forEach(name => {
+        const card = createAnimalCard(name, tabKey);
+        albumGrid.appendChild(card);
+    });
+    
+    // Animação de entrada
+    albumGrid.querySelectorAll('.animal-card').forEach((card, index) => {
+        card.style.animationDelay = `${index * 0.03}s`;
+    });
+
+    // 8. Lógica de Filtragem
+    const applyFilters = () => {
+        const searchTerm = filterInput.value.toLowerCase();
+        const selectedClass = classSelect.value;
+        const selectedLevel = levelSelect.value;
+        const selectedReserve = reserveSelect.value;
+        const selectedTime = timeInput.value;
+
+        albumGrid.querySelectorAll('.animal-card').forEach(card => {
+            const animalName = card.querySelector('.info').textContent.toLowerCase();
+            const slug = card.dataset.slug;
+            const attributes = getAnimalAttributes(slug);
+
+            const nameMatch = animalName.includes(searchTerm);
+            const classMatch = !selectedClass || attributes.classes.includes(selectedClass);
+            const levelMatch = !selectedLevel || attributes.levels.includes(selectedLevel);
+            const reserveMatch = !selectedReserve || attributes.reserves.includes(selectedReserve);
+            
+            let timeMatch = true;
+            if (selectedTime) {
+                if (selectedReserve) {
+                    const info = animalHotspotData[selectedReserve]?.[slug];
+                    timeMatch = info ? isTimeInRanges(selectedTime, info.drinkZonesPotential) : false;
+                } else {
+                    timeMatch = Object.values(animalHotspotData).some(reserve => 
+                        reserve[slug] && isTimeInRanges(selectedTime, reserve[slug].drinkZonesPotential)
+                    );
+                }
+            }
+
+            if (nameMatch && classMatch && levelMatch && reserveMatch && timeMatch) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    };
+
+    filterInput.addEventListener('input', applyFilters);
+    classSelect.addEventListener('change', applyFilters);
+    levelSelect.addEventListener('change', applyFilters);
+    reserveSelect.addEventListener('change', applyFilters);
+    timeInput.addEventListener('input', applyFilters);
+
+    // --- NOVO (PASSO 3): Restaura a posição da rolagem ---
+    // Verifica se existe uma posição salva para esta aba
+    if (typeof tabScrollPositions !== 'undefined' && tabScrollPositions[tabKey]) {
+        // Um pequeno delay (50ms) é necessário para o navegador "respirar" e desenhar os cards antes de rolar
+        setTimeout(() => {
+            window.scrollTo(0, tabScrollPositions[tabKey]);
+        }, 50); 
+    } else {
+        // Se for a primeira vez entrando na aba, garante que começa no topo
+        window.scrollTo(0, 0);
+    }
+}
+
+// =================================================================
+// --- FUNÇÃO PRINCIPAL REFATORADA (ROTEADOR) ---
+// =================================================================
 function renderMainView(tabKey, addToHistory = true) {
     if (addToHistory) {
         pushHistory({ view: 'category', tabKey: tabKey });
     }
-    // ... resto da função continua igual
+    
     appContainer.innerHTML = '';
     const currentTab = categorias[tabKey];
     if (!currentTab) return;
@@ -234,9 +405,9 @@ function renderMainView(tabKey, addToHistory = true) {
     const mainContent = document.createElement('div');
     mainContent.className = 'main-content';
 
-    // Cria o cabeçalho usando o novo componente
-const header = createPageHeader(currentTab.title, renderNavigationHub, 'Voltar ao Menu');
-mainContent.appendChild(header);
+    // Cria o cabeçalho usando o componente existente
+    const header = createPageHeader(currentTab.title, renderNavigationHub, 'Voltar ao Menu');
+    mainContent.appendChild(header);
 
     const contentContainer = document.createElement('div');
     contentContainer.className = `content-container ${tabKey}-view`;
@@ -245,122 +416,25 @@ mainContent.appendChild(header);
 
     setupLogoutButton(currentUser, appContainer);
 
-    // Lógica para páginas especiais (sem filtros)
-    if (tabKey === 'progresso') {
-        renderProgressView(contentContainer);
-    } else if (tabKey === 'reservas') {
-        renderReservesList(contentContainer);
-    } else if (tabKey === 'montagens') {
-        renderMultiMountsView(contentContainer);
-    } else if (tabKey === 'grind') {
-        renderGrindHubView(contentContainer);
-    } else if (tabKey === 'configuracoes') {
-        renderSettingsView(contentContainer);
+    // --- ROTEADOR: Mapa de Rotas ---
+    // Define qual função desenha cada tela específica
+    const routes = {
+        [TABS.PROGRESSO]: () => renderProgressView(contentContainer),
+        [TABS.RESERVAS]: () => renderReservesList(contentContainer),
+        [TABS.MONTAGENS]: () => renderMultiMountsView(contentContainer),
+        [TABS.GRIND]: () => renderGrindHubView(contentContainer),
+        [TABS.CONFIGURACOES]: () => renderSettingsView(contentContainer)
+    };
+
+    // Verifica se existe uma rota especial para a aba clicada
+    const renderFunction = routes[tabKey];
+
+    if (renderFunction) {
+        // Se for uma tela especial (Progresso, Grind, etc), executa a função dela
+        renderFunction();
     } else {
-        // --- INÍCIO DA SEÇÃO DE FILTROS (ATUALIZADA) ---
-        const filtersContainer = document.createElement('div');
-        filtersContainer.className = 'filters-container';
-        
-        // 1. Busca por Nome
-        const filterInput = document.createElement('input');
-        filterInput.type = 'text';
-        filterInput.className = 'filter-input';
-        filterInput.placeholder = 'Buscar animal...';
-        filtersContainer.appendChild(filterInput);
-
-        const { classes, levels } = getUniqueAnimalData();
-        const sortedReserves = Object.entries(reservesData).sort(([, a], [, b]) => a.name.localeCompare(b.name));
-
-        // 2. Filtro de Classe
-        const classSelect = document.createElement('select');
-        classSelect.innerHTML = `<option value="">Classe (Todas)</option>` + classes.map(c => `<option value="${c}">Classe ${c}</option>`).join('');
-        filtersContainer.appendChild(classSelect);
-
-        // 3. Filtro de Dificuldade
-        const levelSelect = document.createElement('select');
-        levelSelect.innerHTML = `<option value="">Dificuldade (Todas)</option>` + levels.map(l => `<option value="${l}">${l}</option>`).join('');
-        filtersContainer.appendChild(levelSelect);
-
-        // 4. Filtro de Reserva
-        const reserveSelect = document.createElement('select');
-        reserveSelect.innerHTML = `<option value="">Reserva (Todas)</option>` + sortedReserves.map(([key, data]) => `<option value="${key}">${data.name}</option>`).join('');
-        filtersContainer.appendChild(reserveSelect);
-
-        // 5. NOVO: Filtro de Horário
-        const timeInput = document.createElement('input');
-        timeInput.type = 'time';
-        timeInput.className = 'filter-input'; // Reutiliza estilo para manter consistência
-        timeInput.style.minWidth = '130px'; // Ajuste fino para não ficar espremido
-        timeInput.title = "Filtrar por Horário de Bebida";
-        filtersContainer.appendChild(timeInput);
-        
-        contentContainer.appendChild(filtersContainer);
-        // --- FIM DA SEÇÃO DE FILTROS ---
-
-        const albumGrid = document.createElement('div');
-        albumGrid.className = 'album-grid';
-        contentContainer.appendChild(albumGrid);
-
-        const itemsToRender = (currentTab.items || []).filter(item => typeof item === 'string' && item !== null && item.trim() !== '');
-
-        itemsToRender.sort((a, b) => a.localeCompare(b)).forEach(name => {
-            const card = createAnimalCard(name, tabKey);
-            albumGrid.appendChild(card);
-        });
-        
-        albumGrid.querySelectorAll('.animal-card').forEach((card, index) => {
-            card.style.animationDelay = `${index * 0.03}s`;
-        });
-
-        // --- LÓGICA PARA APLICAR FILTROS (COM HORÁRIO) ---
-        const applyFilters = () => {
-            const searchTerm = filterInput.value.toLowerCase();
-            const selectedClass = classSelect.value;
-            const selectedLevel = levelSelect.value;
-            const selectedReserve = reserveSelect.value;
-            const selectedTime = timeInput.value; // Pega o valor do relógio (HH:MM)
-
-            albumGrid.querySelectorAll('.animal-card').forEach(card => {
-                const animalName = card.querySelector('.info').textContent.toLowerCase();
-                const slug = card.dataset.slug;
-                const attributes = getAnimalAttributes(slug);
-
-                const nameMatch = animalName.includes(searchTerm);
-                const classMatch = !selectedClass || attributes.classes.includes(selectedClass);
-                const levelMatch = !selectedLevel || attributes.levels.includes(selectedLevel);
-                const reserveMatch = !selectedReserve || attributes.reserves.includes(selectedReserve);
-                
-                // Nova Lógica de Horário:
-                let timeMatch = true;
-                if (selectedTime) {
-                    if (selectedReserve) {
-                        // Se tem reserva selecionada, checa o horário específico nela
-                        const info = animalHotspotData[selectedReserve]?.[slug];
-                        timeMatch = info ? isTimeInRanges(selectedTime, info.drinkZonesPotential) : false;
-                    } else {
-                        // Se "Todas as Reservas", checa se ele bebe nesse horário em QUALQUER lugar
-                        timeMatch = Object.values(animalHotspotData).some(reserve => 
-                            reserve[slug] && isTimeInRanges(selectedTime, reserve[slug].drinkZonesPotential)
-                        );
-                    }
-                }
-
-                if (nameMatch && classMatch && levelMatch && reserveMatch && timeMatch) {
-                    card.style.display = 'flex';
-                } else {
-                    card.style.display = 'none';
-                }
-            });
-        };
-
-        // Adiciona os "escutadores" de eventos
-        filterInput.addEventListener('input', applyFilters);
-        classSelect.addEventListener('change', applyFilters);
-        levelSelect.addEventListener('change', applyFilters);
-        reserveSelect.addEventListener('change', applyFilters);
-        timeInput.addEventListener('input', applyFilters); // Escuta mudança no relógio
-
-        
+        // Se não for especial, desenha a tela padrão de grade (Pelagens, Diamantes, etc)
+        renderStandardCategoryView(contentContainer, tabKey, currentTab);
     }
 }
 
@@ -379,10 +453,16 @@ function createAnimalCard(name, tabKey) {
 }
 // Decide qual tipo de visualização de detalhes mostrar
 function showDetailView(name, tabKey, originReserveKey = null, addToHistory = true) {
+    // --- NOVO (PASSO 2): Salva a posição da rolagem ---
+    // Guarda a altura atual da tela para usarmos quando voltar
+    if (typeof tabScrollPositions !== 'undefined') {
+        tabScrollPositions[tabKey] = window.scrollY;
+    }
+
     if (addToHistory) {
         pushHistory({ view: 'detail', name: name, tabKey: tabKey, originReserve: originReserveKey });
     }
-    // ... resto da função continua igual
+    
     if (originReserveKey) {
         renderAnimalDossier(name, originReserveKey);
     } else {
@@ -698,7 +778,9 @@ function renderHotspotDetailModal(reserveKey, animalSlug) {
         return;
     }
 
-    const slugReserve = slugify(reserveName);
+    // CORREÇÃO: Força a remoção de acentos (ó -> o, í -> i) para bater com o nome do arquivo
+    const slugReserve = slugify(reserveName).normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+    
     const imagePath = `hotspots/${slugReserve}_${animalSlug}_hotspot.jpg`;
     const modal = document.getElementById('image-viewer-modal');
     modal.innerHTML = `
@@ -765,38 +847,80 @@ function renderRareFursDetailView(container, name, slug, originReserveKey = null
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
 
-    const speciesFurs = rareFursData[slug];
-    if (!speciesFurs || (!speciesFurs.macho?.length && !speciesFurs.femea?.length)) {
+    const speciesData = rareFursData[slug];
+    if (!speciesData) {
         furGrid.innerHTML = '<p>Nenhuma pelagem rara listada para este animal.</p>';
         return;
     }
 
-    const genderedFurs = [];
-    if (speciesFurs.macho) speciesFurs.macho.forEach(fur => genderedFurs.push({ displayName: `Macho ${fur}`, originalName: fur, gender: 'macho' }));
-    if (speciesFurs.femea) speciesFurs.femea.forEach(fur => genderedFurs.push({ displayName: `Fêmea ${fur}`, originalName: fur, gender: 'femea' }));
+    const fursToDisplay = [];
+    // Adiciona machos e fêmeas à lista
+    if (speciesData.macho) speciesData.macho.forEach(fur => fursToDisplay.push({ displayName: `Macho ${fur}`, originalName: fur, gender: 'macho' }));
+    if (speciesData.femea) speciesData.femea.forEach(fur => fursToDisplay.push({ displayName: `Fêmea ${fur}`, originalName: fur, gender: 'femea' }));
 
-    genderedFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
+    if (fursToDisplay.length === 0) {
+        furGrid.innerHTML = '<p>Dados incompletos para este animal.</p>';
+        return;
+    }
+
+    fursToDisplay.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
+        // Verifica se já está marcado no save
         const isCompleted = savedData.pelagens?.[slug]?.[furInfo.displayName] === true;
+
+        // Filtro de "Mostrar Faltantes"
         if (filter === 'missing' && isCompleted) return;
 
-        // USA O NOVO COMPONENTE AQUI
-        const card = createFurCard({
-            animalSlug: slug,
-            furOriginalName: furInfo.originalName,
-            furDisplayName: furInfo.displayName,
-            gender: furInfo.gender,
-            isCompleted: isCompleted,
-            onToggle: () => {
-                // Lógica de Salvar
-                if (!savedData.pelagens) savedData.pelagens = {};
-                if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
-                savedData.pelagens[slug][furInfo.displayName] = !savedData.pelagens[slug][furInfo.displayName];
-                saveData(savedData);
-                
-                // Se estivermos num dossiê (reserva), atualiza o progresso visualmente
-                if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
-            },
-            onFullscreen: (src) => openImageViewer(src)
+        // --- LÓGICA DE IMAGEM SEGURA ---
+        const furSlug = slugify(furInfo.originalName);
+        const genderSlug = furInfo.gender; // 'macho' ou 'femea'
+        
+        // Caminho 1: Específico com gênero (ex: alce_albino_macho.png)
+        const primaryPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
+        // Caminho 2: Genérico (ex: alce_albino.png) - caso a imagem seja igual pros dois
+        const fallbackPath = `animais/pelagens/${slug}_${furSlug}.png`;
+        // Caminho 3: Placeholder (ex: alce.png)
+        const placeholderPath = `animais/${slug}.png`;
+        
+        const imgTag = createSafeImgTag(primaryPath, fallbackPath, placeholderPath, furInfo.displayName);
+        // -------------------------------
+
+        const card = document.createElement('div');
+        card.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        
+        card.innerHTML = `
+            ${imgTag}
+            <div class="info-header">
+                <div class="info">${furInfo.displayName}</div>
+            </div>
+            <button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>
+        `;
+
+        // Evento de Clique para Marcar/Desmarcar
+        card.addEventListener('click', () => {
+            if (!savedData.pelagens) savedData.pelagens = {};
+            if (!savedData.pelagens[slug]) savedData.pelagens[slug] = {};
+            
+            // Inverte o estado (se true vira false, se false vira true)
+            const newState = !savedData.pelagens[slug][furInfo.displayName];
+            savedData.pelagens[slug][furInfo.displayName] = newState;
+            
+            // Atualiza visual instantâneo
+            if (newState) card.classList.replace('incomplete', 'completed');
+            else card.classList.replace('completed', 'incomplete');
+            
+            // Salva
+            saveData(savedData);
+            
+            // Se estiver dentro do Dossiê de Reserva, atualiza as abas
+            if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
+        });
+
+        // Evento de Tela Cheia
+        const btnFull = card.querySelector('.fullscreen-btn');
+        btnFull.addEventListener('click', (e) => {
+            e.stopPropagation(); // Impede que marque o card ao clicar no botão
+            const imgSrc = card.querySelector('img').src;
+            openImageViewer(imgSrc);
         });
 
         furGrid.appendChild(card);
@@ -813,6 +937,7 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
     const speciesDiamondData = diamondFursData[slug];
     const fursToDisplay = [];
 
+    // Só mostra Super Raros se o animal tiver Diamante E Pelagem Rara
     if (speciesRareFurs?.macho && (speciesDiamondData?.macho?.length || 0) > 0) {
         speciesRareFurs.macho.forEach(rareFur => fursToDisplay.push({ displayName: `Macho ${rareFur}`, originalName: rareFur, gender: 'macho' }));
     }
@@ -829,22 +954,46 @@ function renderSuperRareDetailView(container, name, slug, originReserveKey = nul
         const isCompleted = savedData.super_raros?.[slug]?.[furInfo.displayName] === true;
         if (filter === 'missing' && isCompleted) return;
 
-        // USA O NOVO COMPONENTE AQUI (Com isSuperRare = true)
-        const card = createFurCard({
-            animalSlug: slug,
-            furOriginalName: furInfo.originalName,
-            furDisplayName: furInfo.displayName,
-            gender: furInfo.gender,
-            isCompleted: isCompleted,
-            isSuperRare: true, // Adiciona borda especial
-            onToggle: () => {
-                if (!savedData.super_raros) savedData.super_raros = {};
-                if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
-                savedData.super_raros[slug][furInfo.displayName] = !savedData.super_raros[slug][furInfo.displayName];
-                saveData(savedData);
-                if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
-            },
-            onFullscreen: (src) => openImageViewer(src)
+        // --- LÓGICA DE IMAGEM SEGURA ---
+        const furSlug = slugify(furInfo.originalName);
+        const genderSlug = furInfo.gender;
+        const primaryPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
+        const fallbackPath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const placeholderPath = `animais/${slug}.png`;
+        
+        const imgTag = createSafeImgTag(primaryPath, fallbackPath, placeholderPath, furInfo.displayName);
+        // -------------------------------
+
+        const card = document.createElement('div');
+        // Adicionamos 'super-rare-card' para estilização extra (borda dourada/roxa)
+        card.className = `fur-card super-rare-card ${isCompleted ? 'completed' : 'incomplete'}`;
+        card.innerHTML = `
+            ${imgTag}
+            <div class="info-header">
+                <div class="info">${furInfo.displayName}</div>
+            </div>
+            <button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>
+        `;
+
+        card.addEventListener('click', () => {
+            if (!savedData.super_raros) savedData.super_raros = {};
+            if (!savedData.super_raros[slug]) savedData.super_raros[slug] = {};
+            
+            const newState = !savedData.super_raros[slug][furInfo.displayName];
+            savedData.super_raros[slug][furInfo.displayName] = newState;
+            
+            if (newState) card.classList.replace('incomplete', 'completed');
+            else card.classList.replace('completed', 'incomplete');
+            
+            saveData(savedData);
+            if (originReserveKey) reRenderActiveDossierTab(originReserveKey, name, slug);
+        });
+
+        const btnFull = card.querySelector('.fullscreen-btn');
+        btnFull.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const imgSrc = card.querySelector('img').src;
+            openImageViewer(imgSrc);
         });
 
         furGrid.appendChild(card);
@@ -856,25 +1005,61 @@ function renderDiamondsDetailView(container, name, slug, originReserveKey = null
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
+    
     let animalStats = Object.values(animalHotspotData).map(r => r[slug]).find(s => s) || null;
     const speciesDiamondFurs = diamondFursData[slug];
+    
     if (!speciesDiamondFurs) {
         furGrid.innerHTML = '<p>Nenhuma pelagem de diamante listada para este animal.</p>';
         return;
     }
+    
     const allPossibleFurs = [];
     if (speciesDiamondFurs.macho) speciesDiamondFurs.macho.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Macho' }));
     if (speciesDiamondFurs.femea) speciesDiamondFurs.femea.forEach(fur => allPossibleFurs.push({ displayName: `${fur}`, originalName: fur, gender: 'Fêmea' }));
+    
     allPossibleFurs.sort((a, b) => a.displayName.localeCompare(b.displayName)).forEach(furInfo => {
         const fullTrophyName = `${furInfo.gender} ${furInfo.displayName}`;
-        const highestScoreTrophy = (savedData.diamantes?.[slug] || []).filter(t => t.type === fullTrophyName).reduce((max, t) => t.score > max.score ? t : max, { score: -1 });
+        // Lógica de troféu mais alto
+        const highestScoreTrophy = (savedData.diamantes?.[slug] || [])
+            .filter(t => t.type === fullTrophyName)
+            .reduce((max, t) => t.score > max.score ? t : max, { score: -1 });
+            
         const isCompleted = highestScoreTrophy.score !== -1;
         if (filter === 'missing' && isCompleted) return;
+        
         const furCard = document.createElement('div');
         furCard.className = `fur-card ${isCompleted ? 'completed' : 'incomplete'}`;
-        const furSlug = slugify(furInfo.originalName), genderSlug = furInfo.gender.toLowerCase();
+        
+        // --- AQUI ESTÁ A MÁGICA DA LIMPEZA ---
+        const furSlug = slugify(furInfo.originalName);
+        const genderSlug = furInfo.gender.toLowerCase();
+        
+        // Definimos os caminhos
+        const primaryPath = `animais/pelagens/${slug}_${furSlug}_${genderSlug}.png`;
+        const fallbackPath = `animais/pelagens/${slug}_${furSlug}.png`;
+        const placeholderPath = `animais/${slug}.png`;
+        
+        // Geramos a imagem segura
+        const imgTag = createSafeImgTag(primaryPath, fallbackPath, placeholderPath, furInfo.displayName);
+        // -------------------------------------
+
         let statsHTML = animalStats ? `<div class="animal-stats-info"><div><i class="fas fa-trophy"></i>&nbsp;<strong>Pont. Troféu:</strong> ${animalStats.maxScore || 'N/A'}</div><div><i class="fas fa-weight-hanging"></i>&nbsp;<strong>Peso Máx:</strong> ${animalStats.maxWeightEstimate || 'N/A'}</div></div>` : '';
-        furCard.innerHTML = `<img src="animais/pelagens/${slug}_${furSlug}_${genderSlug}.png" onerror="this.onerror=null; this.src='animais/pelagens/${slug}_${furSlug}.png'; this.onerror=null; this.src='animais/${slug}.png';"><div class="info-header"><span class="gender-tag">${furInfo.gender}</span><div class="info">${furInfo.displayName}</div></div>${statsHTML}<div class="score-container">${isCompleted ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` : '<span class="score-add-btn">Adicionar Pontuação</span>'}</div><button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>`;
+        
+        furCard.innerHTML = `
+            ${imgTag}
+            <div class="info-header">
+                <span class="gender-tag">${furInfo.gender}</span>
+                <div class="info">${furInfo.displayName}</div>
+            </div>
+            ${statsHTML}
+            <div class="score-container">
+                ${isCompleted ? `<span class="score-display"><i class="fas fa-trophy"></i> ${highestScoreTrophy.score}</span>` : '<span class="score-add-btn">Adicionar Pontuação</span>'}
+            </div>
+            <button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>
+        `;
+
+        // ... (O resto da lógica de clique e input continua igual, omiti para brevidade, mas você deve manter o código original de eventos abaixo) ...
         const scoreContainer = furCard.querySelector('.score-container');
         scoreContainer.addEventListener('click', e => {
             e.stopPropagation();
@@ -905,8 +1090,10 @@ function renderDiamondsDetailView(container, name, slug, originReserveKey = null
                 }
             });
         });
+        
         furGrid.appendChild(furCard);
     });
+    
     furGrid.querySelectorAll('.fullscreen-btn').forEach(btn => {
         btn.addEventListener('click', (event) => {
             event.stopPropagation();
@@ -942,25 +1129,43 @@ function renderGreatsDetailView(container, animalName, slug, originReserveKey = 
     const furGrid = document.createElement('div');
     furGrid.className = 'fur-grid';
     container.appendChild(furGrid);
+    
     const fursInfo = greatsFursData[slug];
     if (!fursInfo) {
         furGrid.innerHTML = '<p>Nenhuma pelagem de Great One para este animal.</p>';
         return;
     }
+    
     fursInfo.forEach(furName => {
         const trophies = savedData.greats?.[slug]?.furs?.[furName]?.trophies || [];
         const isCompleted = trophies.length > 0;
+        
         if (filter === 'missing' && isCompleted) return;
+        
         const furCard = document.createElement('div');
         furCard.className = `fur-card trophy-frame ${isCompleted ? 'completed' : 'incomplete'}`;
         const furSlug = slugify(furName);
+        
+        // --- USO DA NOVA FUNÇÃO SEGURA ---
+        const primaryPath = `animais/pelagens/great_${slug}_${furSlug}.png`;
+        const placeholderPath = `animais/${slug}.png`;
+        
+        // Cria a imagem usando nossa fábrica segura (sem fallback secundário aqui, vai direto pro placeholder)
+        const imgTag = createSafeImgTag(primaryPath, null, placeholderPath, furName);
+        // ---------------------------------
+
         furCard.innerHTML = `
-            <img src="animais/pelagens/great_${slug}_${furSlug}.png" alt="${furName}" onerror="this.onerror=null; this.src='animais/${slug}.png';">
-            <div class="info-plaque"><div class="info">${furName}</div><div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div></div>
+            ${imgTag}
+            <div class="info-plaque">
+                <div class="info">${furName}</div>
+                <div class="kill-counter"><i class="fas fa-trophy"></i> x${trophies.length}</div>
+            </div>
             <button class="fullscreen-btn" title="Ver em tela cheia">⛶</button>`;
+            
         furCard.addEventListener('click', () => openGreatsTrophyModal(animalName, slug, furName, originReserveKey));
         furGrid.appendChild(furCard);
     });
+    
     furGrid.querySelectorAll('.fullscreen-btn').forEach(btn => {
         btn.addEventListener('click', (event) => {
             event.stopPropagation();
@@ -982,70 +1187,10 @@ async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey
 
     const trophies = savedData.greats[slug].furs[furName].trophies;
 
-    // --- ESTILOS CSS INJETADOS (Visual Gamer/Moderno) ---
-    const customStyles = `
-        <style>
-            .go-modal-header { text-align: center; margin-bottom: 25px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; }
-            .go-modal-header h3 { color: var(--accent-color, #00e5ff); font-size: 1.5rem; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
-            .go-modal-header p { color: #ccc; margin-top: 5px; font-size: 0.9rem; }
-            
-            /* Estilo dos Cards da Lista */
-            .go-history-card { 
-                background: linear-gradient(145deg, #2a2a2a, #222); 
-                border-radius: 10px; 
-                padding: 15px; 
-                margin-bottom: 12px; 
-                border-left: 4px solid var(--accent-color, #00e5ff); 
-                box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-                position: relative;
-            }
-            .go-card-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 8px; }
-            .go-card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-            .go-stat-pill { background: rgba(0,0,0,0.4); padding: 5px 10px; border-radius: 4px; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; color: #ddd; }
-            .go-stat-pill i { width: 16px; text-align: center; }
-            
-            /* Cores dos Ícones */
-            .icon-kill { color: #ff5555; }
-            .icon-dia { color: #00e5ff; }
-            .icon-troll { color: #a385ff; }
-            .icon-rare { color: #ffd700; }
-
-            /* Botão de Deletar Discreto */
-            .btn-delete-log { position: absolute; top: 10px; right: 10px; color: #555; background: none; border: none; cursor: pointer; transition: 0.3s; }
-            .btn-delete-log:hover { color: #ff5555; }
-
-            /* Estilo do Formulário */
-            .go-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
-            .go-input-wrapper { position: relative; }
-            .go-input-wrapper i { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #666; font-size: 1.1rem; transition: 0.3s; }
-            .go-input-wrapper input { 
-                width: 100%; 
-                background: #1a1a1a; 
-                border: 1px solid #333; 
-                padding: 12px 12px 12px 40px; 
-                border-radius: 8px; 
-                color: white; 
-                outline: none; 
-                transition: 0.3s;
-            }
-            .go-input-wrapper input:focus { border-color: var(--accent-color, #00e5ff); background: #252525; }
-            .go-input-wrapper input:focus + i { color: var(--accent-color, #00e5ff); }
-            .go-label { display: block; font-size: 0.8rem; color: #888; margin-bottom: 4px; margin-left: 4px; }
-
-            /* Botões Principais */
-            .go-btn-group { display: flex; gap: 10px; margin-top: 10px; }
-            .go-btn { flex: 1; padding: 12px; border-radius: 6px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 0.9rem; transition: 0.2s; }
-            .go-btn-primary { background: var(--accent-color, #00e5ff); color: #000; }
-            .go-btn-primary:hover { filter: brightness(1.1); transform: translateY(-2px); }
-            .go-btn-secondary { background: #333; color: white; }
-            .go-btn-secondary:hover { background: #444; }
-        </style>
-    `;
 
     // --- FUNÇÃO 1: RENDERIZA A LISTA (Tela Inicial) ---
     const renderList = () => {
         let htmlContent = `
-            ${customStyles}
             <div class="modal-content-box" style="max-width: 500px; width: 95%;">
                 <div class="go-modal-header">
                     <h3>${animalName}</h3>
@@ -1113,7 +1258,6 @@ async function openGreatsTrophyModal(animalName, slug, furName, originReserveKey
     // --- FUNÇÃO 2: RENDERIZA O FORMULÁRIO (Tela de Cadastro) ---
     const renderForm = () => {
         modal.innerHTML = `
-            ${customStyles}
             <div class="modal-content-box" style="max-width: 500px; width: 95%;">
                 <div class="go-modal-header">
                     <h3>Novo Registro</h3>
@@ -1916,7 +2060,7 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
         { label: 'Super Raros', icon: 'icones/coroa_icon.png', value: session.counts.super_raros?.length || 0, type: 'super-rare', dataKey: 'super_raros', detailed: true }
     ];
 
-    countersConfig.forEach(cfg => {
+       countersConfig.forEach(cfg => {
         const card = createGrindCounter({
             label: cfg.label,
             icon: cfg.icon,
@@ -1927,13 +2071,23 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
             onDecrease: () => handleDecrease(cfg.dataKey || 'total'),
             onInput: cfg.onInput
         });
+
+        // LÓGICA DO BRILHO: Adiciona classes extras se tiver valor > 0
+        card.classList.add(`type-${cfg.type}`);
+        if (cfg.value > 0) {
+            card.classList.add('active-glow');
+        }
+
         countersWrapper.appendChild(card);
     });
 
     grindContainer.appendChild(countersWrapper);
     
-    // 3. Renderiza o Gerenciador de Zonas (Função separada agora!)
-    renderZoneManager(grindContainer, session, isZonesOpenState);
+    // 3. Renderiza o Gerenciador de Zonas (Usando Componente Importado)
+    renderZoneManager(grindContainer, session, isZonesOpenState, () => {
+        saveData(savedData);
+        renderGrindCounterView(sessionId, true); // true mantem o details aberto
+    });
 
     // Botão de Excluir Grind
     const deleteBtn = document.createElement('button');
@@ -1956,114 +2110,6 @@ async function renderGrindCounterView(sessionId, isZonesOpenState = false) {
     container.appendChild(grindContainer);
 }
 
-// Função Separada para Gerenciar Zonas (Limpeza de código!)
-function renderZoneManager(container, session, isOpen) {
-    const wrapper = document.createElement('div');
-    wrapper.className = 'zone-manager-container';
-    
-    wrapper.innerHTML = `
-        <details ${isOpen ? 'open' : ''}>
-            <summary class="zone-manager-header">
-                <h3><i class="fas fa-map-pin"></i> Gerenciador de Zonas de Grind</h3>
-                <span class="zone-count-badge">${session.zones.length} Zonas</span>
-            </summary>
-            <div class="zone-manager-body">
-                <div class="add-zone-form">
-                    <select id="zone-type-select"><option value="principal">Zona Principal</option><option value="secundaria">Zona Secundária</option><option value="solo">Zona Solo</option></select>
-                    <input type="text" id="zone-name-input" placeholder="Nome (Ex: Lago 1)">
-                    <button id="add-zone-btn" class="back-button"><i class="fas fa-plus"></i> Adicionar Zona</button>
-                </div>
-                <div id="zone-list" class="zone-list"></div>
-            </div>
-        </details>
-    `;
-
-    const zoneListContainer = wrapper.querySelector('#zone-list');
-    
-    // Lógica de Renderizar Lista de Zonas
-    const renderList = () => {
-        zoneListContainer.innerHTML = '';
-        if (session.zones.length === 0) {
-            zoneListContainer.innerHTML = '<p class="no-zones-message">Nenhuma zona adicionada.</p>';
-            return;
-        }
-        
-        session.zones.map((z, i) => ({...z, idx: i})).sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }))
-        .forEach(zone => {
-            const el = document.createElement('div');
-            el.className = `zone-card zone-type-${zone.type}`;
-            
-            let animalsHTML = '<div class="zone-animal-list">';
-            if (zone.animals && zone.animals.length > 0) {
-                zone.animals.forEach((animal, aIdx) => {
-                    animalsHTML += `<div class="zone-animal-item"><span>Nv ${animal.level} (${animal.gender === 'macho'?'M':'F'})</span><div class="animal-quantity-controls"><button class="qty-btn dec" data-z="${zone.idx}" data-a="${aIdx}">-</button><span>${animal.quantity}</span><button class="qty-btn inc" data-z="${zone.idx}" data-a="${aIdx}">+</button></div></div>`;
-                });
-            } else { animalsHTML += '<small>Sem animais.</small>'; }
-            animalsHTML += '</div>';
-
-            el.innerHTML = `
-                <div class="zone-card-header">
-                    <h4>${zone.name}</h4>
-                    <div class="zone-card-controls"><span class="zone-type-badge">${zone.type}</span><button class="zone-action-btn edit" data-idx="${zone.idx}"><i class="fas fa-pencil-alt"></i></button><button class="zone-action-btn del" data-idx="${zone.idx}">&times;</button></div>
-                </div>
-                ${animalsHTML}
-                <div class="add-animal-form"><input type="number" class="lvl-in" placeholder="Nv"><select class="gnd-sel"><option value="macho">M</option><option value="femea">F</option></select><button class="add-ani-btn" data-idx="${zone.idx}">Add</button></div>
-            `;
-            zoneListContainer.appendChild(el);
-        });
-    };
-
-    // Eventos da Zona
-    wrapper.querySelector('#add-zone-btn').onclick = () => {
-        const name = wrapper.querySelector('#zone-name-input').value.trim();
-        const type = wrapper.querySelector('#zone-type-select').value;
-        if (!name) return showCustomAlert('Nome inválido', 'Erro');
-        session.zones.push({ id: Date.now(), name, type, animals: [] });
-        saveData(savedData);
-        renderGrindCounterView(session.id, true); // Recarrega mantendo aberto
-    };
-
-    zoneListContainer.onclick = (e) => {
-        const t = e.target;
-        const btn = t.closest('button');
-        if (!btn) return;
-        
-        const zIdx = parseInt(btn.dataset.idx || btn.dataset.z);
-        const aIdx = parseInt(btn.dataset.a);
-
-        if (btn.classList.contains('del')) {
-            session.zones.splice(zIdx, 1);
-            saveData(savedData);
-            renderGrindCounterView(session.id, true);
-        } else if (btn.classList.contains('edit')) {
-            const newName = prompt('Novo nome:', session.zones[zIdx].name);
-            if (newName) { session.zones[zIdx].name = newName; saveData(savedData); renderGrindCounterView(session.id, true); }
-        } else if (btn.classList.contains('add-ani-btn')) {
-            const card = btn.closest('.zone-card');
-            const lvl = parseInt(card.querySelector('.lvl-in').value);
-            const gen = card.querySelector('.gnd-sel').value;
-            if (!lvl) return;
-            const existing = session.zones[zIdx].animals.find(a => a.level === lvl && a.gender === gen);
-            if (existing) existing.quantity++;
-            else session.zones[zIdx].animals.push({ level: lvl, gender: gen, quantity: 1 });
-            saveData(savedData);
-            renderGrindCounterView(session.id, true);
-        } else if (btn.classList.contains('inc')) {
-            session.zones[zIdx].animals[aIdx].quantity++;
-            saveData(savedData);
-            renderGrindCounterView(session.id, true);
-        } else if (btn.classList.contains('dec')) {
-            session.zones[zIdx].animals[aIdx].quantity--;
-            if (session.zones[zIdx].animals[aIdx].quantity <= 0) session.zones[zIdx].animals.splice(aIdx, 1);
-            saveData(savedData);
-            renderGrindCounterView(session.id, true);
-        }
-    };
-
-    renderList();
-    container.appendChild(wrapper);
-}
-
 function openGrindDetailModal(sessionId, type, killCount) {
     const session = savedData.grindSessions.find(s => s.id === sessionId);
     if (!session) return;
@@ -2073,7 +2119,7 @@ function openGrindDetailModal(sessionId, type, killCount) {
     let potentialFurs = [];
     let title = '';
 
-    // Prepara os dados
+    // Prepara os dados (Mantemos a lógica original que já estava boa)
     switch (type) {
         case 'rares':
             title = 'Selecione a Pelagem Rara';
@@ -2104,102 +2150,106 @@ function openGrindDetailModal(sessionId, type, killCount) {
     modal.innerHTML = '';
     modal.className = 'modal-overlay form-modal';
 
-    const styles = `
-        <style>
-            .grind-select-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; max-height: 500px; overflow-y: auto; padding: 10px; }
-            .grind-option-card { 
-                background: #1e1e1e; border: 1px solid #333; border-radius: 8px; overflow: hidden; 
-                cursor: pointer; transition: 0.2s; position: relative; 
-            }
-            .grind-option-card:hover { transform: translateY(-3px); border-color: var(--accent-color, #00e5ff); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-            .grind-opt-img { height: 110px; width: 100%; background: #111; display: flex; align-items: center; justify-content: center; }
-            .grind-opt-img img { max-width: 90%; max-height: 90%; object-fit: contain; }
-            .grind-opt-name { padding: 10px; text-align: center; font-size: 0.85rem; color: #eee; background: #252525; min-height: 50px; display: flex; align-items: center; justify-content: center; line-height: 1.2; }
-            .modal-header-simple { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 10px; }
-        </style>
+    // Cria a estrutura base do modal
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content-box';
+    modalContent.style.maxWidth = '800px';
+    modalContent.style.width = '95%';
+    
+    modalContent.innerHTML = `
+        <div class="modal-header-simple">
+            <h3 style="color: var(--accent-color); margin: 0;">${title}</h3>
+            <p style="color: #888; margin: 5px 0 0 0;">${animalName}</p>
+        </div>
+        <div class="grind-select-grid"></div>
+        <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
+            <button id="btn-cancel-select" class="back-button">Cancelar</button>
+        </div>
     `;
 
-    let htmlContent = `
-        ${styles}
-        <div class="modal-content-box" style="max-width: 800px; width: 95%;">
-            <div class="modal-header-simple">
-                <h3 style="color: var(--accent-color); margin: 0;">${title}</h3>
-                <p style="color: #888; margin: 5px 0 0 0;">${animalName}</p>
-            </div>
-            
-            <div class="grind-select-grid">
-    `;
+    const gridContainer = modalContent.querySelector('.grind-select-grid');
 
-    potentialFurs.forEach((fur, index) => {
-        // CORREÇÃO FINAL: Usamos slugify para manter consistência com o resto do site (mantendo acentos se configurado)
+    // Gera os cartões usando a lógica segura
+    potentialFurs.forEach((fur) => {
         const furSlug = slugify(fur.originalName);
         const animalSlugFixed = slugify(animalName); 
         const genderSuffix = fur.gender === 'macho' ? '_macho' : (fur.gender === 'femea' ? '_femea' : '');
         
-        let imagePath;
-        
+        let primaryPath;
         if (type === 'great_ones') {
-             // Caminho padrão para Great Ones
-             imagePath = `animais/pelagens/great_${animalSlugFixed}_${furSlug}.png`;
+             primaryPath = `animais/pelagens/great_${animalSlugFixed}_${furSlug}.png`;
         } else {
-             // Caminho padrão para Raros
-             imagePath = `animais/pelagens/${animalSlugFixed}_${furSlug}${genderSuffix}.png`;
+             primaryPath = `animais/pelagens/${animalSlugFixed}_${furSlug}${genderSuffix}.png`;
         }
 
-        const animalFallback = `animais/${animalSlugFixed}.png`;
+        const fallbackPath = `animais/pelagens/${animalSlugFixed}_${furSlug}.png`; // Tenta sem gênero se falhar
+        const placeholderPath = `animais/${animalSlugFixed}.png`; // Último caso: foto do animal
 
-        htmlContent += `
-            <div class="grind-option-card" data-index="${index}">
-                <div class="grind-opt-img">
-                    <img src="${imagePath}" 
-                         onerror="this.onerror=null; this.src='${animalFallback}'; this.style.opacity='0.5';"
-                         alt="${fur.displayName}">
-                </div>
-                <div class="grind-opt-name">${fur.displayName}</div>
+        // --- MÁGICA SEGURA ---
+        // Aqui usamos a função centralizada que criamos no utils.js
+        const imgTag = createSafeImgTag(primaryPath, fallbackPath, placeholderPath, fur.displayName);
+        // --------------------
+
+        const card = document.createElement('div');
+        card.className = 'grind-option-card';
+        card.innerHTML = `
+            <div class="grind-opt-img">
+                ${imgTag}
             </div>
+            <div class="grind-opt-name">${fur.displayName}</div>
         `;
-    });
 
-    htmlContent += `
-            </div>
-            <div style="margin-top: 20px; display: flex; justify-content: flex-end;">
-                <button id="btn-cancel-select" class="back-button">Cancelar</button>
-            </div>
-        </div>
-    `;
-
-    modal.innerHTML = htmlContent;
-
-    const cards = modal.querySelectorAll('.grind-option-card');
-    cards.forEach(card => {
+        // Evento de Clique
         card.onclick = () => {
-            const index = card.dataset.index;
-            const selectedFur = potentialFurs[index];
-            const displayName = selectedFur.displayName;
+            const displayName = fur.displayName;
 
+            // 1. Salvar no Contador do Grind (Sessão Atual)
+            if (!session.counts[type]) session.counts[type] = []; 
             session.counts[type].push({ id: Date.now(), killCount: killCount, variation: displayName });
 
-            const collectionKey = (type === 'great_ones') ? 'greats' : type;
+            // 2. TRADUÇÃO DE CHAVES (A Correção da Sincronização)
+            // Aqui garantimos que o nome usado no Grind bata com o nome usado nas abas principais
+            let collectionKey = type;
+            if (type === 'great_ones') collectionKey = 'greats';
+            else if (type === 'rares') collectionKey = 'pelagens';   // <--- CORREÇÃO: Mapeia 'rares' para 'pelagens'
+            else if (type === 'diamonds') collectionKey = 'diamantes'; // Precaução para diamantes
+
+            // 3. Salvar na Coleção Geral
             if (collectionKey === 'greats') {
+                // Lógica específica para Great Ones
                 if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = { furs: {} };
                 if (!savedData.greats[animalSlug].furs[displayName]) savedData.greats[animalSlug].furs[displayName] = { trophies: [] };
                 savedData.greats[animalSlug].furs[displayName].trophies.push({ date: new Date().toISOString() });
             } else {
+                // Lógica para Pelagens e Diamantes
                 if (!savedData[collectionKey]) savedData[collectionKey] = {};
                 if (!savedData[collectionKey][animalSlug]) savedData[collectionKey][animalSlug] = {};
-                savedData[collectionKey][animalSlug][displayName] = true;
+                
+                // Se for Diamante, salva como array (lista). Se for pelagem, salva como "true" (marcado).
+                if (collectionKey === 'diamantes') {
+                     if (!Array.isArray(savedData[collectionKey][animalSlug])) savedData[collectionKey][animalSlug] = [];
+                     // Adiciona o diamante com pontuação 0, pois no grind rápido não colocamos a pontuação na hora
+                     savedData[collectionKey][animalSlug].push({ id: Date.now(), type: displayName, score: 0 });
+                } else {
+                     savedData[collectionKey][animalSlug][displayName] = true;
+                }
             }
 
             saveData(savedData);
             closeModal('form-modal');
             renderGrindCounterView(sessionId);
+            
+            // Feedback visual para você saber que funcionou
+            showToast(`${displayName} salvo no Grind e na Coleção Principal!`);
         };
+
+        gridContainer.appendChild(card);
     });
 
-    document.getElementById('btn-cancel-select').onclick = () => closeModal('form-modal');
+    modal.appendChild(modalContent);
+    modalContent.querySelector('#btn-cancel-select').onclick = () => closeModal('form-modal');
     modal.style.display = 'flex';
 }
-
 function exportUserData() {
     if (!currentUser) {
         showCustomAlert('Você precisa estar logado para fazer o backup.', 'Aviso');
@@ -2224,6 +2274,8 @@ function exportUserData() {
     showCustomAlert('Backup gerado com sucesso!', 'Backup Concluído');
 }
 
+// Substitua toda a função importUserData por esta versão robusta:
+
 async function importUserData(event) {
     if (!currentUser) {
         showCustomAlert('Você precisa estar logado para restaurar um backup.', 'Aviso');
@@ -2234,14 +2286,15 @@ async function importUserData(event) {
     if (!file) return;
 
     if (file.type !== 'application/json') {
-        showCustomAlert('Por favor, selecione um arquivo de backup .json válido.', 'Arquivo Inválido');
+        showCustomAlert('Por favor, selecione um arquivo .json válido.', 'Arquivo Inválido');
         event.target.value = '';
         return;
     }
 
+    // Alerta de segurança
     if (!await showCustomAlert(
-        'Restaurar este backup substituirá TODOS os seus dados atuais. Esta ação não pode ser desfeita. Deseja continuar?',
-        'Atenção: Restaurar Backup',
+        'Isso irá mesclar o backup com seus dados. Dados do arquivo substituirão os atuais. Campos novos de atualizações futuras serão preservados. Deseja continuar?',
+        'Restaurar Backup',
         true
     )) {
         event.target.value = '';
@@ -2252,89 +2305,85 @@ async function importUserData(event) {
     reader.onload = async (e) => {
         try {
             const importedData = JSON.parse(e.target.result);
-            let newData = getDefaultDataStructure();
-
-            // --- LÓGICA FINAL DE MIGRAÇÃO E LIMPEZA ---
-
-            if (!importedData || typeof importedData !== 'object') {
-                throw new Error("Formato de backup inválido.");
-            }
-
-            console.log("Iniciando processo de restauração, limpeza e migração de backup...");
-
-            // 1. Migração de Pelagens Raras com LIMPEZA
-            if (importedData.pelagens && typeof importedData.pelagens === 'object') {
-                for (const slug in importedData.pelagens) {
-                    const furs = importedData.pelagens[slug];
-                    if (typeof furs === 'object' && furs !== null) { 
-                        newData.pelagens[slug] = {};
-                        for (const furName in furs) {
-                            if (furs[furName] === true) {
-                                newData.pelagens[slug][furName] = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            // 2. Migração de Diamantes
-            if (importedData.diamantes && typeof importedData.diamantes === 'object') {
-                const firstAnimalData = Object.values(importedData.diamantes)[0];
-                if (firstAnimalData && !Array.isArray(firstAnimalData)) { 
-                     console.log("Detectado formato antigo de Diamantes. Convertendo...");
-                     for (const slug in importedData.diamantes) {
-                         const count = importedData.diamantes[slug];
-                         newData.diamantes[slug] = [];
-                         if (typeof count === 'number') {
-                            for (let i = 0; i < count; i++) {
-                                newData.diamantes[slug].push({ id: Date.now() + i, type: 'Pelagem de Legado', score: 'N/A' });
-                            }
-                         }
-                     }
-                } else { 
-                    newData.diamantes = importedData.diamantes;
-                }
-            }
             
-            // 3. Migração de Greats e Super Raros
-            if (importedData.greats) newData.greats = importedData.greats;
-            if (importedData.super_raros) newData.super_raros = importedData.super_raros;
-            if (importedData.customMarkers) newData.customMarkers = importedData.customMarkers;
+            // 1. Carrega a estrutura mais atual do aplicativo (com todas as abas novas que existirem)
+            let finalData = getDefaultDataStructure();
 
-            // 4. Migração de Grind Sessions
-            if (Array.isArray(importedData.grindSessions)) {
-                newData.grindSessions = importedData.grindSessions.map(session => {
-                    const newCounts = { total: session.counts.total || 0, rares: [], diamonds: [], trolls: [], great_ones: [], super_raros: [] };
-                    for(const key in session.counts){
-                        if(Array.isArray(session.counts[key])){
-                            newCounts[key] = session.counts[key];
-                        } else if (typeof session.counts[key] === 'number' && key !== 'total'){
-                            newCounts[key] = Array(session.counts[key]).fill({ id: Date.now(), killCount: 'antigo' });
-                        }
+            console.log("Iniciando Mesclagem Inteligente de Backup...");
+
+            // ======================================================
+            // MIGRAÇÃO DE DADOS ANTIGOS (Para backups velhos)
+            // ======================================================
+            
+            // Correção de Diamantes (Número -> Objeto)
+            if (importedData.diamantes) {
+                for (const slug in importedData.diamantes) {
+                    const data = importedData.diamantes[slug];
+                    // Se for número antigo, converte para array novo
+                    if (typeof data === 'number') {
+                         if (!Array.isArray(importedData.diamantes[slug])) importedData.diamantes[slug] = [];
+                         for (let i = 0; i < data; i++) {
+                            importedData.diamantes[slug].push({ id: Date.now() + i, type: 'Legado', score: 0 });
+                         }
                     }
-                    return { ...session, counts: newCounts, zones: session.zones || [] };
+                }
+            }
+
+            // Correção de Grind Sessions (Estrutura antiga -> Nova)
+            if (Array.isArray(importedData.grindSessions)) {
+                importedData.grindSessions = importedData.grindSessions.map(session => {
+                    // Garante que a sessão tenha todos os arrays necessários
+                    const safeCounts = { 
+                        total: session.counts?.total || 0, 
+                        rares: session.counts?.rares || [], 
+                        diamonds: session.counts?.diamonds || [], 
+                        trolls: session.counts?.trolls || [], 
+                        great_ones: session.counts?.great_ones || [], 
+                        super_raros: session.counts?.super_raros || [] 
+                    };
+                    return { ...session, counts: safeCounts, zones: session.zones || [] };
                 });
             }
 
-            // --- FIM DA LÓGICA DE MIGRAÇÃO ---
+            // ======================================================
+            // LÓGICA DE DEEP MERGE (O SEGREDO DA COMPATIBILIDADE)
+            // ======================================================
+            
+            // Função auxiliar para mesclar objetos sem apagar chaves novas
+            const deepMerge = (target, source) => {
+                for (const key in source) {
+                    // Se for objeto (e não array), mergulha mais fundo
+                    if (source[key] instanceof Object && key in target && !Array.isArray(source[key])) {
+                        Object.assign(source[key], deepMerge(target[key], source[key]));
+                    } else {
+                        // Se for valor direto ou array, o backup ganha
+                        target[key] = source[key];
+                    }
+                }
+                return target;
+            };
 
-            savedData = newData;
+            // Aplica o backup (source) sobre a estrutura padrão (target)
+            // Assim, se getDefaultDataStructure() tiver uma chave nova "novos_recursos: {}",
+            // e o backup não tiver, a chave "novos_recursos" continua existindo vazia.
+            finalData = deepMerge(finalData, importedData);
+
+            // Adiciona metadados de controle
+            finalData.lastBackupRestore = new Date().toISOString();
+
+            // Salva na Nuvem e Local
+            savedData = finalData;
             saveData(savedData);
             
-            await showCustomAlert('Backup restaurado e atualizado com sucesso! O aplicativo será recarregado.', 'Restauração Concluída');
+            await showCustomAlert('Backup restaurado e atualizado com sucesso! A página será recarregada.', 'Concluído');
             location.reload();
 
         } catch (error) {
-            console.error("Erro ao processar o arquivo JSON:", error);
-            showCustomAlert('Ocorreu um erro ao ler o arquivo de backup. Verifique se ele não está corrompido ou em um formato inesperado.', 'Erro de Importação');
+            console.error("Erro crítico no import:", error);
+            showCustomAlert('Arquivo corrompido ou incompatível.', 'Erro Fatal');
         } finally {
             event.target.value = '';
         }
-    };
-
-    reader.onerror = () => {
-        showCustomAlert('Não foi possível ler o arquivo selecionado.', 'Erro de Leitura');
-        event.target.value = '';
     };
 
     reader.readAsText(file);
