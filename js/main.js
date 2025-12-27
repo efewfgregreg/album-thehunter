@@ -34,6 +34,10 @@ import {
     calcularReserveProgress, 
     getAnimalCardStatus
 } from './progressLogic.js';
+// Função auxiliar para busca sem acentos (Ex: "Évora" vira "evora")
+const normalizeText = (text) => {
+    return text.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+};
 // =================================================================
 // =================== VARIÁVEIS GLOBAIS DO APP ====================
 // =================================================================
@@ -167,41 +171,46 @@ async function loadDataFromFirestore() {
     return finalData;
 }
 
-function saveData(data) {
-    // 1. Atualiza a variável global imediatamente
-    savedData = data;
-
-    // 2. BACKUP LOCAL DE SEGURANÇA (Isso resolve seu problema de tempo ocioso)
-    // Salva no navegador instantaneamente. Se a net cair, isso te salva.
-    try {
-        localStorage.setItem('hunter_backup_local', JSON.stringify(data));
-        // Marcamos a hora que salvou
-        localStorage.setItem('hunter_backup_time', Date.now());
-    } catch (e) {
-        console.warn("Aviso: Não foi possível salvar backup local (Memória cheia?)", e);
-    }
-
-    // 3. Salvamento na Nuvem (Firebase)
+// --- OTIMIZAÇÃO: Salva na nuvem apenas após 2 segundos de inatividade ---
+const saveToCloudDebounced = debounce((data) => {
     if (currentUser) {
         const userDocRef = db.collection('usuarios').doc(currentUser.uid);
         
         userDocRef.set(data, { merge: true })
             .then(() => {
-                showToast("Progresso salvo!"); 
+                console.log("☁️ Salvo no Firebase (Sincronizado)");
+                // Opcional: Mostrar um toast discreto ou apenas logar
             })
             .catch((error) => {
                 console.error("Erro no Firebase (mas salvo localmente): ", error);
-                // Avisa o usuário que deu erro na nuvem, mas o local garantiu
                 showToast("⚠️ Nuvem instável. Salvo no dispositivo.");
             });
     }
+}, 2000); // Tempo de espera: 2000ms = 2 segundos
 
-    // 4. Atualiza a Interface (Mantido do seu código original)
+function saveData(data) {
+    // 1. Atualiza a variável global imediatamente
+    savedData = data;
+
+    // 2. BACKUP LOCAL DE SEGURANÇA (Instantâneo)
+    // Isso garante que se você fechar a aba agora, está salvo no navegador.
+    try {
+        localStorage.setItem('hunter_backup_local', JSON.stringify(data));
+        localStorage.setItem('hunter_backup_time', Date.now());
+    } catch (e) {
+        console.warn("Aviso: Não foi possível salvar backup local", e);
+    }
+
+    // 3. Salvamento na Nuvem (Com Atraso/Debounce)
+    // Chama a função otimizada criada acima
+    saveToCloudDebounced(data);
+
+    // 4. Atualiza a Interface Visual (Instantâneo)
+    // Mantemos a interface ágil para o usuário não sentir lentidão
     if (document.getElementById('progress-panel-main-container')) {
         const contentArea = document.getElementById('progress-content-area');
         if (contentArea) {
              if (document.querySelector('.ranking-table')) {
-                 // Se tiver a função de ranking importada, chame-a aqui, senão ignore
                  if(typeof renderHuntingRankingView === 'function') renderHuntingRankingView(contentArea);
              } else {
                  updateNewProgressPanel(contentArea);
@@ -212,6 +221,8 @@ function saveData(data) {
     if (mountsGrid) {
         renderMultiMountsView(mountsGrid.parentNode);
     }
+    
+    // Feedback visual imediato (Opcional, removemos o toast daqui para não pipocar toda hora no grind)
 }
 
 // =================================================================
@@ -333,16 +344,20 @@ function renderStandardCategoryView(container, tabKey, currentTab) {
         card.style.animationDelay = `${index * 0.03}s`;
     });
 
-    // 8. Lógica de Filtragem
+   // 8. Lógica de Filtragem (Atualizada com normalizeText)
     const applyFilters = () => {
-        const searchTerm = filterInput.value.toLowerCase();
+        // Usa a nova função para limpar o termo digitado
+        const searchTerm = normalizeText(filterInput.value);
+        
         const selectedClass = classSelect.value;
         const selectedLevel = levelSelect.value;
         const selectedReserve = reserveSelect.value;
         const selectedTime = timeInput.value;
 
         albumGrid.querySelectorAll('.animal-card').forEach(card => {
-            const animalName = card.querySelector('.info').textContent.toLowerCase();
+            // Usa a nova função para limpar o nome do animal no card
+            const animalName = normalizeText(card.querySelector('.info').textContent);
+            
             const slug = card.dataset.slug;
             const attributes = getAnimalAttributes(slug);
 
@@ -371,7 +386,8 @@ function renderStandardCategoryView(container, tabKey, currentTab) {
         });
     };
 
-    filterInput.addEventListener('input', applyFilters);
+    // Usa o debounce para esperar 300ms após parar de digitar
+    filterInput.addEventListener('input', debounce(applyFilters, 300));
     classSelect.addEventListener('change', applyFilters);
     levelSelect.addEventListener('change', applyFilters);
     reserveSelect.addEventListener('change', applyFilters);
@@ -1883,11 +1899,12 @@ function renderNewGrindAnimalSelection(container) {
         grid.appendChild(card);
     });
 
-    // 3. PERFORMANCE: Aplica o Debounce na busca
+   // 3. PERFORMANCE: Aplica o Debounce na busca (Atualizada)
     const filterAnimals = () => {
-        const searchTerm = filterInput.value.toLowerCase();
+        const searchTerm = normalizeText(filterInput.value);
+        
         grid.querySelectorAll('.animal-card').forEach(card => {
-            const name = card.querySelector('.info').textContent.toLowerCase();
+            const name = normalizeText(card.querySelector('.info').textContent);
             card.style.display = name.includes(searchTerm) ? 'flex' : 'none';
         });
     };
