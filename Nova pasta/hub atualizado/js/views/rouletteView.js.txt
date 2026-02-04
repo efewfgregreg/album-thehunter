@@ -1,0 +1,116 @@
+import { items, reservesData } from '../../data/gameData.js';
+import { slugify } from '../utils.js';
+
+export function renderRouletteView(container) {
+    container.innerHTML = '';
+
+    const style = document.createElement('style');
+    style.textContent = `
+        .roulette-container { padding: 40px; color: #fff; animation: fadeIn 0.5s ease; max-width: 1000px; margin: 0 auto; }
+        .roulette-setup { 
+            display: grid; grid-template-columns: 1fr 300px; gap: 30px; 
+            background: rgba(15,15,15,0.8); padding: 30px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .filter-group { margin-bottom: 20px; }
+        .filter-label { display: block; font-size: 0.7rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; margin-bottom: 10px; }
+        
+        .roulette-display {
+            background: #000; border: 2px solid var(--primary-color); border-radius: 10px;
+            height: 200px; display: flex; align-items: center; justify-content: center;
+            flex-direction: column; position: relative; overflow: hidden;
+            box-shadow: inset 0 0 50px rgba(var(--primary-rgb), 0.2);
+        }
+        .result-name { font-family: 'Bebas Neue', cursive; font-size: 4rem; letter-spacing: 3px; }
+        .result-sub { font-size: 0.9rem; color: #888; text-transform: uppercase; margin-top: -10px; }
+
+        .spin-button {
+            width: 100%; padding: 20px; background: var(--primary-color); color: #000;
+            border: none; border-radius: 8px; font-family: 'Bebas Neue', cursive; font-size: 1.8rem;
+            cursor: pointer; transition: 0.3s; margin-top: 20px;
+        }
+        .spin-button:hover { transform: scale(1.02); filter: brightness(1.2); }
+
+        .option-chip { 
+            display: inline-block; padding: 5px 12px; background: rgba(255,255,255,0.05); 
+            border-radius: 20px; font-size: 0.75rem; margin: 3px; cursor: pointer; border: 1px solid transparent;
+        }
+        .option-chip.active { border-color: var(--primary-color); background: rgba(var(--primary-rgb), 0.1); color: var(--primary-color); }
+    `;
+    container.appendChild(style);
+
+    const content = document.createElement('div');
+    content.className = 'roulette-container';
+    content.innerHTML = `
+        <div class="feeders-header">
+            <h2>ROLETA DO CAÇADOR</h2>
+            <p>Defina os filtros e deixe o destino escolher sua presa</p>
+        </div>
+
+        <div class="roulette-setup">
+            <div class="filters-panel">
+                <div class="filter-group">
+                    <span class="filter-label">Modo de Sorteio</span>
+                    <div id="mode-selector">
+                        <span class="option-chip active" data-mode="all">Tudo</span>
+                        <span class="option-chip" data-mode="greats">Apenas Great Ones</span>
+                        <span class="option-chip" data-mode="custom">Seleção Manual</span>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <span class="filter-label">Filtrar por Reserva</span>
+                    <div id="reserve-chips">
+                        ${Object.keys(reservesData).map(key => `<span class="option-chip" data-res="${key}">${reservesData[key].name}</span>`).join('')}
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-panel">
+                <div class="roulette-display">
+                    <div class="result-name" id="draw-result">???</div>
+                    <div class="result-sub" id="draw-sub">Pronto para o sorteio</div>
+                </div>
+                <button class="spin-button" id="btn-spin">SORTEAR ALVO</button>
+                <div style="margin-top:15px; font-size:0.7rem; color:#555; text-align:center;">
+                    <label><input type="checkbox" id="draw-reserve-too"> Sortear reserva após o animal</label>
+                </div>
+            </div>
+        </div>
+    `;
+
+    container.appendChild(content);
+
+    // Lógica do Sorteio
+    const btnSpin = content.querySelector('#btn-spin');
+    const display = content.querySelector('#draw-result');
+    const subDisplay = content.querySelector('#draw-sub');
+
+    btnSpin.onclick = () => {
+        btnSpin.disabled = true;
+        let counter = 0;
+        const interval = setInterval(() => {
+            display.innerText = items[Math.floor(Math.random() * items.length)].toUpperCase();
+            display.style.opacity = Math.random();
+            counter++;
+            if (counter > 20) {
+                clearInterval(interval);
+                finalizeDraw();
+            }
+        }, 50);
+    };
+
+    function finalizeDraw() {
+        const finalAnimal = items[Math.floor(Math.random() * items.length)];
+        display.innerText = finalAnimal.toUpperCase();
+        display.style.opacity = '1';
+        btnSpin.disabled = false;
+
+        if (content.querySelector('#draw-reserve-too').checked) {
+            const resKeys = Object.keys(reservesData);
+            const randomRes = reservesData[resKeys[Math.floor(Math.random() * resKeys.length)]].name;
+            subDisplay.innerText = `EM: ${randomRes}`;
+        } else {
+            subDisplay.innerText = `BOA CAÇADA!`;
+        }
+    }
+}

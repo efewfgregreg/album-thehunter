@@ -1,0 +1,355 @@
+import { items, reservesData } from '../../data/gameData.js';
+import { slugify } from '../utils.js';
+import { TABS } from '../constants.js';
+
+/**
+ * Renderiza o Dashboard Tático Principal (Substitui o antigo NavigationHub)
+ * @param {HTMLElement} container - O container onde o dashboard será desenhado
+ * @param {Object} savedData - Dados salvos do usuário para estatísticas
+ * @param {Function} navigateCallback - Função para navegar entre abas (renderMainView)
+ */
+export function renderDashboardView(container, savedData, navigateCallback) {
+    container.innerHTML = '';
+    
+    // 1. Injeção de CSS Scoped (Estilo Tático do Dashboard)
+    // Isso mantém o CSS perto do componente, sem poluir o global se não quiser
+    const style = document.createElement('style');
+    style.textContent = `
+        /* Layout Geral do Dashboard */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            color: #fff;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Hero Section (Topo) */
+        .db-hero {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .db-welcome h1 {
+            font-family: var(--font-headings);
+            font-size: 2.5rem;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+        }
+        .db-welcome p {
+            color: var(--primary-color);
+            margin: 5px 0 0 0;
+            font-size: 1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .db-date {
+            font-family: monospace;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Stats Bar (Resumo de Carreira) */
+        .db-stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        .db-stat-card {
+            background: rgba(20, 20, 20, 0.85);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-left: 4px solid var(--primary-color);
+            padding: 15px 20px;
+            border-radius: 8px;
+            backdrop-filter: blur(5px);
+            transition: transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .db-stat-card:hover { transform: translateY(-2px); background: rgba(30,30,30,0.9); }
+        .db-stat-label { font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .db-stat-value { font-family: var(--font-headings); font-size: 1.8rem; color: #fff; font-weight: bold; }
+        .db-stat-icon { float: right; font-size: 1.5rem; color: rgba(255,255,255,0.1); margin-top: 5px; }
+
+        /* Área Principal (Grid Assimétrico) */
+        .db-main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Esquerda Larga, Direita Estreita */
+            gap: 25px;
+        }
+        @media (max-width: 900px) { .db-main-grid { grid-template-columns: 1fr; } }
+
+        /* Seções */
+        .db-section-title {
+            font-size: 0.9rem;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .db-section-title::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.1); }
+
+        /* Active Grind Card (Destaque) */
+        .active-grind-card {
+            background: linear-gradient(135deg, rgba(30,30,30,0.9) 0%, rgba(10,10,10,0.95) 100%);
+            border: 1px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex; flex-direction: column; justify-content: center;
+            min-height: 180px;
+        }
+        .active-grind-card:hover { box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2); transform: scale(1.01); }
+        .agc-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-size: cover; background-position: center;
+            opacity: 0.2; filter: grayscale(100%); transition: 0.5s; z-index: 0;
+        }
+        .active-grind-card:hover .agc-bg { opacity: 0.3; transform: scale(1.05); }
+        .agc-content { position: relative; z-index: 2; }
+        .agc-badge { 
+            display: inline-block; background: var(--primary-color); color: #000; 
+            padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 0.7rem; 
+            text-transform: uppercase; margin-bottom: 10px;
+        }
+        .agc-title { font-family: var(--font-headings); font-size: 2rem; margin: 0; line-height: 1; text-transform: uppercase; }
+        .agc-subtitle { color: #ccc; margin-top: 5px; font-size: 0.9rem; }
+        .agc-stats { margin-top: 15px; display: flex; gap: 20px; }
+        .agc-stat-item { display: flex; flex-direction: column; }
+        .agc-stat-val { font-size: 1.2rem; font-weight: bold; color: var(--primary-color); }
+        .agc-stat-lbl { font-size: 0.65rem; color: #888; text-transform: uppercase; }
+
+        /* Grid de Ferramentas */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 15px;
+        }
+        .tool-card {
+            background: rgba(25,25,25,0.8);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+            aspect-ratio: 1/1;
+        }
+        .tool-card:hover { background: #222; border-color: #fff; transform: translateY(-3px); }
+        .tool-icon { font-size: 2rem; color: #ccc; transition: 0.2s; }
+        .tool-card:hover .tool-icon { color: var(--primary-color); transform: scale(1.1); }
+        .tool-name { font-size: 0.8rem; font-weight: bold; text-transform: uppercase; color: #fff; }
+
+        /* Lista Compacta (Direita) */
+        .compact-list { display: flex; flex-direction: column; gap: 10px; }
+        .compact-item {
+            display: flex; align-items: center; gap: 15px;
+            padding: 12px;
+            background: rgba(25,25,25,0.6);
+            border-radius: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .compact-item:hover { background: rgba(40,40,40,0.8); border-color: rgba(255,255,255,0.1); }
+        .ci-icon-box { 
+            width: 40px; height: 40px; background: #111; border-radius: 50%; 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 1.1rem; border: 1px solid #333;
+        }
+        .ci-info { flex: 1; }
+        .ci-title { font-weight: bold; font-size: 0.9rem; display: block; }
+        .ci-desc { font-size: 0.7rem; color: #777; display: block; }
+        
+        /* Footer */
+        .db-footer {
+            margin-top: 20px;
+            display: flex; justify-content: flex-end; gap: 10px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 15px;
+        }
+        .footer-btn {
+            background: transparent; border: 1px solid #333; color: #777;
+            padding: 8px 15px; border-radius: 4px; font-size: 0.8rem; cursor: pointer;
+            transition: 0.2s; display: flex; align-items: center; gap: 6px;
+        }
+        .footer-btn:hover { border-color: #666; color: #fff; }
+    `;
+    container.appendChild(style);
+
+    // 2. Cálculos de Dados (Helper Functions Locais)
+    const stats = calculateUserStats(savedData);
+    const activeGrind = getMostRecentGrind(savedData);
+
+    // 3. HTML do Dashboard
+    const dashboard = document.createElement('div');
+    dashboard.className = 'dashboard-container';
+
+    dashboard.innerHTML = `
+        <div class="db-hero">
+            <div class="db-welcome">
+                <h1>Painel Tático</h1>
+                <p>Bem-vindo, Caçador</p>
+            </div>
+            <div class="db-date">${new Date().toLocaleDateString('pt-BR')}</div>
+        </div>
+
+        <div class="db-stats-row">
+            <div class="db-stat-card">
+                <i class="fas fa-crosshairs db-stat-icon"></i>
+                <div class="db-stat-label">Total de Abates</div>
+                <div class="db-stat-value">${stats.kills}</div>
+            </div>
+            <div class="db-stat-card" style="border-left-color: #00bcd4;">
+                <i class="fas fa-gem db-stat-icon"></i>
+                <div class="db-stat-label">Diamantes</div>
+                <div class="db-stat-value">${stats.diamonds}</div>
+            </div>
+            <div class="db-stat-card" style="border-left-color: #ffd700;">
+                <i class="fas fa-crown db-stat-icon"></i>
+                <div class="db-stat-label">Great Ones</div>
+                <div class="db-stat-value">${stats.greatOnes}</div>
+            </div>
+        </div>
+
+        <div class="db-main-grid">
+            <div class="left-col">
+                <div class="db-section-title"><i class="fas fa-bolt"></i> Status Operacional</div>
+                
+                ${activeGrind ? `
+                <div class="active-grind-card" id="btn-resume-grind">
+                    <div class="agc-bg" style="background-image: url('animais/${activeGrind.slug.replace(/-/g, '_')}.png');"></div>
+                    <div class="agc-content">
+                        <span class="agc-badge">SESSÃO ATIVA</span>
+                        <h2 class="agc-title">${activeGrind.name}</h2>
+                        <div class="agc-subtitle">Reserva: ${activeGrind.reserveName}</div>
+                        <div class="agc-stats">
+                            <div class="agc-stat-item"><span class="agc-stat-val">${activeGrind.kills}</span><span class="agc-stat-lbl">Abates</span></div>
+                            <div class="agc-stat-item"><span class="agc-stat-val">${activeGrind.diamonds}</span><span class="agc-stat-lbl">Diamantes</span></div>
+                        </div>
+                    </div>
+                </div>
+                ` : `
+                <div class="active-grind-card" id="btn-start-grind" style="align-items: center; text-align: center;">
+                    <div class="agc-content">
+                        <i class="fas fa-plus-circle" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 10px;"></i>
+                        <h2 class="agc-title">INICIAR NOVO GRIND</h2>
+                    </div>
+                </div>
+                `}
+
+                <div class="db-section-title" style="margin-top: 30px;"><i class="fas fa-toolbox"></i> Ferramentas de Campo</div>
+                <div class="tools-grid">
+                    <div class="tool-card" id="nav-reserves"><i class="fas fa-map-marked-alt tool-icon"></i><span class="tool-name">Reservas</span></div>
+                    <div class="tool-card" id="nav-grind"><i class="fas fa-list-ul tool-icon"></i><span class="tool-name">Grinds</span></div>
+                    <div class="tool-card" id="nav-progresso"><i class="fas fa-chart-line tool-icon"></i><span class="tool-name">Progresso</span></div>
+                </div>
+            </div>
+
+            <div class="right-col">
+                <div class="db-section-title"><i class="fas fa-trophy"></i> Sala de Troféus</div>
+                <div class="compact-list">
+                    <div class="compact-item" id="nav-greats" style="border-left: 3px solid #ffd700;">
+                        <div class="ci-icon-box" style="color: #ffd700;"><i class="fas fa-crown"></i></div>
+                        <div class="ci-info"><span class="ci-title">Great Ones</span><span class="ci-desc">Registro das lendas</span></div>
+                    </div>
+                    <div class="compact-item" id="nav-diamonds" style="border-left: 3px solid #00bcd4;">
+                        <div class="ci-icon-box" style="color: #00bcd4;"><i class="fas fa-gem"></i></div>
+                        <div class="ci-info"><span class="ci-title">Diamantes</span><span class="ci-desc">Coleção de elite</span></div>
+                    </div>
+                    <div class="compact-item" id="nav-rares" style="border-left: 3px solid #ff9800;">
+                        <div class="ci-icon-box" style="color: #ff9800;"><i class="fas fa-paw"></i></div>
+                        <div class="ci-info"><span class="ci-title">Pelagens Raras</span><span class="ci-desc">Variações</span></div>
+                    </div>
+                    <div class="compact-item" id="nav-super" style="border-left: 3px solid #e040fb;">
+                        <div class="ci-icon-box" style="color: #e040fb;"><i class="fas fa-star"></i></div>
+                        <div class="ci-info"><span class="ci-title">Super Raros</span><span class="ci-desc">Combos únicos</span></div>
+                    </div>
+                    <div class="compact-item" id="nav-mounts">
+                        <div class="ci-icon-box"><i class="fas fa-shapes"></i></div>
+                        <div class="ci-info"><span class="ci-title">Montagens</span><span class="ci-desc">Multimounts</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="db-footer">
+            <button class="footer-btn" id="nav-settings"><i class="fas fa-cog"></i> Configurações</button>
+        </div>
+    `;
+
+    container.appendChild(dashboard);
+
+    // 4. Configuração de Eventos de Navegação
+    // Usamos o callback 'navigateCallback' passado pelo Controller (Main.js)
+    const bindNav = (id, tabKey) => {
+        const el = dashboard.querySelector(`#${id}`);
+        if(el) el.onclick = () => navigateCallback(tabKey);
+    };
+
+    bindNav('nav-reserves', TABS.RESERVAS);
+    bindNav('nav-grind', TABS.GRIND);
+    bindNav('nav-progresso', TABS.PROGRESSO);
+    bindNav('nav-greats', TABS.GREATS);
+    bindNav('nav-diamonds', TABS.DIAMANTES);
+    bindNav('nav-rares', TABS.PELAGENS);
+    bindNav('nav-super', TABS.SUPER_RAROS);
+    bindNav('nav-mounts', TABS.MONTAGENS);
+    bindNav('nav-settings', TABS.CONFIGURACOES);
+    
+    // Botão de Iniciar Novo Grind (Estado Vazio)
+    bindNav('btn-start-grind', TABS.GRIND);
+
+    // Botão de Retomar Grind (Ação Especial)
+    const resumeBtn = dashboard.querySelector('#btn-resume-grind');
+    if (resumeBtn && activeGrind) {
+        resumeBtn.onclick = () => {
+             // Precisamos importar o renderGrindCounterView dinamicamente ou passar via callback?
+             // Como estamos modularizando, o ideal é usar um evento customizado ou callback especial
+             // Para simplificar, vou assumir que o navigateCallback pode lidar com objetos ou criar um evento
+             
+             // Opção Modular: Despachar um evento que o main.js ouve
+             const event = new CustomEvent('resume-grind', { detail: { sessionId: activeGrind.id } });
+             document.dispatchEvent(event);
+        };
+    }
+}
+
+// --- FUNÇÕES AUXILIARES LOCAIS (Não poluem o escopo global) ---
+
+function calculateUserStats(data) {
+    let kills = 0, diamonds = 0, greatOnes = 0;
+    if (data.grindSessions) data.grindSessions.forEach(s => kills += (s.counts?.total || 0));
+    if (data.diamantes) Object.values(data.diamantes).forEach(list => { if (Array.isArray(list)) diamonds += list.length; });
+    if (data.greats) Object.values(data.greats).forEach(entry => { 
+        if(entry.furs) Object.values(entry.furs).forEach(f => { if(f.trophies) greatOnes += f.trophies.length; }); 
+    });
+    return { kills, diamonds, greatOnes };
+}
+
+function getMostRecentGrind(data) {
+    if (!data.grindSessions || data.grindSessions.length === 0) return null;
+    const lastSession = data.grindSessions[data.grindSessions.length - 1];
+    const animalName = items.find(i => slugify(i) === lastSession.animalSlug) || 'Animal';
+    const reserveObj = reservesData[lastSession.reserveKey];
+    return {
+        id: lastSession.id,
+        name: animalName,
+        slug: lastSession.animalSlug,
+        reserveName: reserveObj ? reserveObj.name : 'Desconhecida',
+        kills: lastSession.counts?.total || 0,
+        diamonds: lastSession.counts?.diamonds?.length || 0
+    };
+}

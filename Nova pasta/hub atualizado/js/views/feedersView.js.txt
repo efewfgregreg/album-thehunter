@@ -1,0 +1,150 @@
+/**
+ * Módulo de Visualização: Tratadores (Feeders)
+ * Baseado nos guias de Barril de Isca, Caixa e Poste.
+ */
+export function renderFeedersView(container) {
+    container.innerHTML = '';
+
+    const style = document.createElement('style');
+    style.textContent = `
+        .feeders-container { padding: 40px; color: #e0e0e0; animation: fadeIn 0.5s ease; }
+        .feeders-header { margin-bottom: 40px; border-left: 5px solid #4caf50; padding-left: 20px; }
+        .feeders-header h2 { font-family: 'Bebas Neue', cursive; font-size: 3rem; letter-spacing: 2px; margin: 0; }
+        .feeders-header p { color: #888; text-transform: uppercase; font-size: 0.8rem; font-weight: 700; margin-top: 5px; }
+
+        .feeders-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); 
+            gap: 30px; 
+        }
+
+        .feeder-card {
+            background: rgba(18, 18, 18, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .feeder-card:hover { border-color: #4caf50; transform: translateY(-5px); }
+
+        .feeder-banner {
+            height: 120px;
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 2px solid #4caf50;
+        }
+        .feeder-banner h3 { font-family: 'Bebas Neue', cursive; font-size: 2.2rem; color: #fff; text-shadow: 0 0 15px rgba(76, 175, 80, 0.4); margin: 0; }
+
+        .feeder-content { padding: 25px; }
+        
+        .bait-section { margin-bottom: 25px; }
+        .bait-title { 
+            color: #4caf50; 
+            font-size: 0.75rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-bottom: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+        }
+        .bait-title::after { content: ''; flex: 1; height: 1px; background: rgba(76, 175, 80, 0.2); }
+
+        .animal-list { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 8px; 
+        }
+        .animal-item { 
+            font-size: 0.85rem; 
+            color: #ccc; 
+            padding: 4px 0; 
+            border-bottom: 1px solid rgba(255,255,255,0.03); 
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    `;
+    container.appendChild(style);
+
+    const content = document.createElement('div');
+    content.className = 'feeders-container';
+    content.innerHTML = `
+        <div class="feeders-header">
+            <h2>GUIA DE TRATADORES</h2>
+            <p>Atração de animais por tipo de isca e alimentador</p>
+        </div>
+
+        <div class="feeders-grid">
+            <div class="feeder-card">
+                <div class="feeder-banner"><h3>BARRIL DE ISCA</h3></div>
+                <div class="feeder-content">
+                    <div class="bait-section">
+                        <div class="bait-title">MISTURA FERMENTADA AZEDA</div>
+                        <div class="animal-list">
+                            <span class="animal-item">Urso Negro</span><span class="animal-item">Urso Pardo</span>
+                            <span class="animal-item">Urso Cinzento</span><span class="animal-item">Caititu</span>
+                            <span class="animal-item">Javali Selvagem</span><span class="animal-item">Javali Africano</span>
+                            <span class="animal-item">Porco Selvagem</span><span class="animal-item">Javali</span>
+                        </div>
+                    </div>
+                    <div class="bait-section">
+                        <div class="bait-title" style="color: #ff5252;">RESTOS DE CARNE</div>
+                        <div class="animal-list">
+                            <span class="animal-item">Urso Negro</span><span class="animal-item">Urso Pardo</span>
+                            <span class="animal-item">Urso Cinzento</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feeder-card">
+                <div class="feeder-banner"><h3>ALIMENTADOR DE CAIXA</h3></div>
+                <div class="feeder-content">
+                    <div class="bait-section">
+                        <div class="bait-title">GRANULOS FORTIFICADOS</div>
+                        <div class="animal-list">
+                            <span class="animal-item">Cervo Sika</span><span class="animal-item">Veado Vermelho</span>
+                            <span class="animal-item">Veado Cauda Branca</span><span class="animal-item">Rena da Montanha</span>
+                            <span class="animal-item">Alce</span><span class="animal-item">Gamo</span>
+                            <span class="animal-item">Sambar</span><span class="animal-item">Veado Mula</span>
+                        </div>
+                    </div>
+                    <div class="bait-section">
+                        <div class="bait-title">MIX FLOC MULTIGRAO</div>
+                        <div class="animal-list">
+                            <span class="animal-item">Urso Negro</span><span class="animal-item">Gamo</span>
+                            <span class="animal-item">Urso Cinzento</span><span class="animal-item">Nilgo</span>
+                            <span class="animal-item">Gnu</span><span class="animal-item">Orix</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="feeder-card">
+                <div class="feeder-banner"><h3>ALIMENTADOR DE POSTE</h3></div>
+                <div class="feeder-content">
+                    <div class="bait-section">
+                        <div class="bait-title">MIX FLOC MULTIGRAO</div>
+                        <div class="animal-list">
+                            <span class="animal-item">Veado Cauda Preta</span><span class="animal-item">Lebre Antílope</span>
+                            <span class="animal-item">Coelho Europeu</span><span class="animal-item">Lebre Europeia</span>
+                            <span class="animal-item">Gamo</span><span class="animal-item">Guaxinim Comum</span>
+                        </div>
+                    </div>
+                    <div class="bait-section">
+                        <div class="bait-title">GRANULOS FORTIFICADOS</div>
+                        <div class="animal-list">
+                            <span class="animal-item">Cervo Sika</span><span class="animal-item">Caribu da Floresta</span>
+                            <span class="animal-item">Alce</span><span class="animal-item">Rena da Montanha</span>
+                            <span class="animal-item">Cervo Canadense</span><span class="animal-item">Veado Mula</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    container.appendChild(content);
+}

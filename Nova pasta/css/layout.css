@@ -1,0 +1,850 @@
+/* ==========================================================================
+   3. ESTRUTURA DE PÁGINAS E HEADER
+   ========================================================================== */
+.main-content { 
+    padding: 20px 40px; 
+    background-color: rgba(24, 26, 27, 0.8); 
+    min-height: 100vh; 
+}
+
+/* Header Padrão das Páginas */
+.page-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    border-bottom: 2px solid var(--primary-color); 
+    padding-bottom: 10px; 
+    margin-bottom: 25px;
+    position: relative;
+    padding-top: 70px; /* Espaço para o botão voltar absoluto */
+}
+
+.page-header h2 { 
+    font-family: var(--font-headings); 
+    font-size: 2.5rem; 
+}
+
+/* Input de Filtro/Busca */
+.filter-input { 
+    width: 100%; 
+    background-color: rgba(0, 0, 0, 0.3); 
+    border: 1px solid var(--border-color); 
+    border-radius: 20px; 
+    padding: 10px 20px; 
+    font-size: 1rem; 
+    color: var(--text-color); 
+    transition: all 0.3s ease; 
+    margin-bottom: 30px; 
+}
+
+.filter-input:focus { 
+    outline: none; 
+    border-color: var(--primary-color); 
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.5); 
+}
+
+/* --- Botão Voltar (Comportamento Específico nos Headers) --- */
+/* Esta regra garante que o botão fique flutuante no canto esquerdo */
+.detail-view .page-header .back-button,
+.dossier-view .page-header .back-button,
+.reserve-detail-view .page-header .back-button,
+.grind-container .page-header .back-button,
+.grind-hub-container .page-header .back-button {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 1000;
+    background-color: var(--primary-color);
+    color: #111; /* Contraste melhorado */
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-headings);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.detail-view .page-header .back-button:hover,
+.dossier-view .page-header .back-button:hover,
+.reserve-detail-view .page-header .back-button:hover,
+.grind-container .page-header .back-button:hover,
+.grind-hub-container .page-header .back-button:hover {
+    background-color: #00acc1;
+    transform: translateY(-2px);
+    color: #000;
+}
+
+/* Ícones Customizados (usados dentro de textos ou botões) */
+.custom-icon {
+    vertical-align: middle;
+    object-fit: contain;
+    margin-right: 0px;
+    width: 22px;
+    height: 22px;
+}
+
+/* ==========================================================================
+   4. HUB DE NAVEGAÇÃO (MENU PRINCIPAL)
+   ========================================================================== */
+.navigation-hub { 
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; 
+    gap: 25px; 
+    padding: 40px; 
+    min-height: 100vh; 
+    width: 100%; 
+}
+
+.hub-title.design-flutuante {
+    font-family: 'Bebas Neue', sans-serif;
+    font-weight: 400;
+    font-size: 6rem;
+    letter-spacing: 8px;
+    color: #E0E0E0;
+    text-shadow: 0px 6px 20px rgba(0, 0, 0, 0.9);
+    -webkit-text-stroke: 1px rgba(0, 0, 0, 0.5);
+    width: 100%; 
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.cards-container-flutuante {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+    justify-content: center;
+    width: 100%;
+}
+
+/* Estilo dos Cards de Navegação */
+.nav-card.design-flutuante {
+    background-color: rgba(30, 32, 33, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-family: var(--font-headings);
+    text-transform: uppercase;
+    height: 140px;
+    width: 240px;
+    padding: 20px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.nav-card.design-flutuante .nav-card-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 12px;
+    filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Efeitos de Hover no Card */
+.nav-card.design-flutuante:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+.nav-card.design-flutuante:hover .nav-card-icon {
+    transform: scale(1.1);
+}
+
+/* Cores Temáticas por Categoria */
+.nav-card.card-pelagens:hover { border-color: #ffd700; }
+.nav-card.card-diamantes:hover { border-color: #00bcd4; }
+.nav-card.card-greats:hover { border-color: #ffc107; }
+.nav-card.card-super_raros:hover { border-color: #e8bd4a; }
+.nav-card.card-montagens:hover { border-color: #c0c0c0; }
+.nav-card.card-grind:hover { border-color: #f44336; }
+.nav-card.card-reservas:hover { border-color: #4CAF50; }
+.nav-card.card-progresso:hover { border-color: #9c27b0; }
+.nav-card.card-configuracoes:hover { border-color: #78909c; }
+
+/* ==========================================================================
+   16. AUTENTICAÇÃO (LOGIN) E LOGOUT (ATUALIZADO)
+   ========================================================================== */
+
+/* Container de Login: Força tela cheia e centralização */
+.auth-container {
+    position: fixed; /* Garante que fique fixo na tela */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--bg-color); /* Fundo sólido para esconder o app atrás */
+    z-index: 5000; /* Garante que fique acima de tudo */
+    background-image: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('assets/pattern.png'); /* Opcional: imagem de fundo */
+    background-size: cover;
+}
+
+.auth-box {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--surface-color);
+    padding: 40px 30px;
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.auth-box h2 {
+    font-family: var(--font-headings);
+    margin-bottom: 15px;
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.auth-box p {
+    color: var(--text-color-muted);
+    margin-bottom: 30px;
+}
+
+/* Inputs do Login */
+.auth-box input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 15px;
+    background-color: rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.auth-box input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Links (Esqueci a senha) */
+.link-button {
+    background: none;
+    border: none;
+    color: var(--text-color-muted);
+    cursor: pointer;
+    margin-top: 20px;
+    text-decoration: underline;
+    font-size: 0.9rem;
+}
+.link-button:hover { color: var(--primary-color); }
+
+/* --- LOGOUT (BOTÃO SAIR) --- */
+/* Força o container de logout a ficar no topo direito */
+#logout-container {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 1000; /* Acima do conteúdo normal */
+    background-color: rgba(0,0,0,0.6); /* Fundo semi-transparente para leitura */
+    padding: 8px 15px;
+    border-radius: 30px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.user-email {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    font-weight: bold;
+}
+
+/* Ajuste para mobile: esconde o email e deixa só o ícone se for pequeno */
+@media (max-width: 600px) {
+    .user-email { display: none; }
+    #logout-container {
+        padding: 5px;
+        background: none;
+        border: none;
+        top: 15px;
+        right: 15px;
+    }
+}
+
+/* Spinner de Carregamento */
+.loading-spinner {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-family: var(--font-headings);
+    color: var(--primary-color);
+    z-index: 6000;
+}
+/* ==========================================================================
+   18. RESPONSIVIDADE (MOBILE / TABLET) - ATUALIZADO
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Ajustes Gerais de Layout */
+    .main-content { padding: 15px; }
+
+    .page-header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 15px; 
+        padding-top: 60px; 
+    }
+
+    .page-header h2 { font-size: 2rem; }
+
+    .page-header .back-button { 
+        width: auto;
+        align-self: flex-start;
+    }
+
+    /* Formulários e Listas */
+    .add-zone-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .add-zone-form select, .add-zone-form input, .add-zone-form button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .zone-list { grid-template-columns: 1fr; }
+
+    /* Hub de Navegação */
+    .navigation-hub {
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 15px; 
+        padding: 20px 15px; 
+        align-content: flex-start; 
+        height: auto; 
+        min-height: 100vh;
+    }
+
+    .hub-title.design-flutuante {
+        grid-column: 1 / -1; 
+        font-size: 3rem;
+        margin-top: 20px;
+    }
+
+    .cards-container-flutuante { display: contents; }
+
+    .nav-card.design-flutuante {
+        width: 100%; 
+        height: 120px; 
+        font-size: 0.9rem;
+    }
+
+    .nav-card.design-flutuante .nav-card-icon { width: 2.5rem; height: 2.5rem; }
+    
+    /* Modais e Tabelas */
+    .modal-content-box { width: 95%; padding: 15px; margin: 10px; }
+    .ranking-table th, .ranking-table td { padding: 8px 5px; font-size: 0.8rem; }
+    .ranking-table td[data-label="Animal"] { flex-direction: column; align-items: flex-start; gap: 5px; }
+    .table-animal-icon { width: 25px; height: 25px; }
+
+    /* Ajuste Fino de Grids para Telas Pequenas */
+    .album-grid, .fur-grid, .reserves-grid, .mounts-grid, .achievements-grid, .grinds-grid { 
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
+        gap: 15px; 
+    }
+    
+    .hotspot-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .overall-progress-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .reserve-progress-container-v2 { grid-template-columns: 1fr; }
+
+    /* Ajustes Específicos de Componentes Mobile */
+    .animal-checklist-row { grid-template-columns: 40px 1fr; gap: 10px; }
+    .animal-checklist-row .mini-progress-bars, .animal-checklist-row .great-one-indicator { display: none; }
+    
+    .dossier-tabs { flex-wrap: wrap; justify-content: center; }
+    .dossier-tab { padding: 8px 15px; font-size: 0.9rem; }
+
+    /* Ajustes do Modal de Hotspot Mobile */
+    .hotspot-detail-content { padding: 10px; gap: 15px; max-width: 98vw; max-height: 98vh; }
+    .hotspot-detail-content .hotspot-info-panel h3 { font-size: 1.4rem; }
+    .hotspot-detail-content .info-row { flex-direction: column; align-items: flex-start; gap: 2px; font-size: 0.9rem; }
+    .hotspot-detail-content .info-row strong, .hotspot-detail-content .info-row span { text-align: left; width: 100%; }
+
+    /* Gráficos e Contadores Mobile */
+    .progress-dial-card { padding: 15px; }
+    .progress-dial { width: 100px; height: 100px; }
+    .progress-dial-percentage { font-size: 1.5rem; }
+    .progress-dial-label { font-size: 1rem; }
+
+    .grind-total-input { font-size: 2rem; padding: 8px 0; }
+    .grind-counter-btn { width: 38px; height: 38px; font-size: 1.1rem; }
+    .grind-counter-value { font-size: 2rem; }
+    
+    /* Skeletons Mobile */
+    .skeleton-loader-container {
+        display: grid; 
+        grid-template-columns: 1fr 1fr; 
+        gap: 15px; 
+        padding: 20px 15px; 
+        align-content: flex-start; 
+    }
+    .skeleton-title { grid-column: 1 / -1; height: 60px; margin-top: 20px; }
+    .skeleton-cards-container { grid-column: 1 / -1; display: contents; }
+    .skeleton-nav-card { width: 100%; height: 120px; }
+}
+
+
+
+/* ==========================================================================
+   33. NOTIFICAÇÕES TOAST (FEEDBACK FLUTUANTE)
+   ========================================================================== */
+#toast-notification {
+    visibility: hidden;
+    min-width: 250px;
+    background-color: var(--surface-color); /* Fundo escuro do tema */
+    color: var(--text-color);
+    text-align: center;
+    border-radius: 4px;
+    padding: 16px;
+    position: fixed;
+    z-index: 2000; /* Acima de tudo */
+    left: 50%;
+    bottom: 30px;
+    transform: translateX(-50%); /* Centraliza na tela */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    border-left: 5px solid var(--completed-color); /* Verde do tema */
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    opacity: 0;
+    transition: opacity 0.5s, bottom 0.5s;
+}
+
+#toast-notification.show {
+    visibility: visible;
+    opacity: 1;
+    bottom: 50px; /* Sobe um pouquinho ao aparecer */
+}
+
+/* Ajuste de posição do Toast para Mobile */
+@media (max-width: 768px) {
+    #toast-notification {
+        min-width: 90%;
+        bottom: 20px;
+    }
+}
+
+/* ==========================================================================
+   34. AJUSTES FINAIS DE MOBILE E UX (TOQUE DE MESTRE)
+   ========================================================================== */
+
+/* Feedback visual imediato ao tocar (Melhora sensação de app nativo) */
+.nav-card:active, 
+.animal-card:active, 
+.back-button:active {
+    transform: scale(0.95);
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: transform 0.1s;
+}
+
+/* Sobrescritas de Alta Prioridade para Telas Pequenas */
+@media (max-width: 768px) {
+    
+   
+    /* 3. Aumenta os botões do contador de Grind (Facilita o toque) */
+    .grind-counter-btn {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.5rem !important;
+    }
+
+    .grind-total-input {
+        font-size: 2.5rem !important;
+    }
+
+    /* 4. Otimiza o cabeçalho para ocupar menos espaço vertical */
+    .page-header {
+        padding-top: 40px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .page-header h2 {
+        font-size: 1.8rem !important;
+    }
+}
+
+/* ==========================================================================
+   44. SOLUÇÃO FINAL: LAYOUT DE CABEÇALHO E NAVEGAÇÃO (OVERRIDES)
+   ========================================================================== */
+
+/* 1. HEADER DO TOPO (Barra Preta com Email e Sair) */
+.app-header, header {
+    display: flex !important;
+    flex-direction: row !important;       /* Garante que fiquem lado a lado */
+    justify-content: flex-end !important; /* Empurra tudo para a DIREITA da tela */
+    align-items: center !important;       /* Alinha na altura */
+    height: 50px !important;
+    padding: 0 30px !important;
+    background: #121212 !important;
+    border-bottom: 1px solid #222 !important;
+    gap: 20px !important;                 /* Espaço entre o email e o botão */
+    position: relative !important;
+    z-index: 1000 !important;
+}
+
+/* FORÇA O TEXTO (EMAIL) A FICAR NA ESQUERDA DO GRUPO */
+.app-header > *:not(button) {
+    order: 1 !important;       /* Ordem 1 (Primeiro) */
+    margin: 0 !important;
+    color: #aaa !important;
+    font-size: 0.9rem !important;
+}
+
+/* FORÇA O BOTÃO (SAIR) A IR PARA A DIREITA EXTREMA */
+.app-header button {
+    order: 999 !important;    /* Ordem 999 (Sempre será o último) */
+    margin: 0 !important;
+}
+
+/* 2. HEADER DA PÁGINA (Título e Voltar) */
+.page-header {
+    display: grid !important;
+    /* 3 Colunas: Botão(auto) - Espaço - Título(centro) - Espaço */
+    /* Isso garante que o título fique exato no centro, independente do tamanho do botão voltar */
+    grid-template-columns: 80px 1fr 80px !important; 
+    align-items: end !important; /* Alinha tudo por baixo */
+    height: 60px !important;
+    padding: 0 20px 10px 20px !important;
+    margin-bottom: 15px !important;
+    border-bottom: 1px solid rgba(255,255,255,0.1) !important;
+    background: transparent !important;
+    position: relative !important;
+}
+
+/* Título no MEIO e EMBAIXO */
+.page-header h2 {
+    grid-column: 2; /* Fica na coluna do meio */
+    justify-self: center;
+    margin: 0 !important;
+    line-height: 1 !important;
+    font-family: var(--font-headings);
+    font-size: 1.5rem !important;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+}
+
+/* Botão Voltar na ESQUERDA e no MEIO VERTICAL */
+.page-header .back-button {
+    grid-column: 1; /* Fica na primeira coluna */
+    justify-self: start;
+    align-self: center !important;
+    
+    margin-bottom: 0 !important;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #999;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 8px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.page-header .back-button:hover {
+    background: var(--primary-color);
+    color: #000;
+    border-color: var(--primary-color);
+}
+/* ==========================================================================
+   HUB DE FILTROS HORIZONTAL (DESIGN PREMIUM)
+   ========================================================================== */
+.filters-container-v2 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 15px !important;
+    padding: 15px 20px !important;
+    background: rgba(20, 20, 20, 0.7) !important; /* Fundo escuro translúcido */
+    border: 1px solid rgba(0, 188, 212, 0.2) !important; /* Borda ciano sutil */
+    border-radius: 12px !important;
+    margin-bottom: 25px !important;
+    backdrop-filter: blur(10px) !important; /* Efeito de vidro */
+}
+
+/* Estilização do Campo de Busca */
+.filter-input-main-v2 {
+    flex: 3 !important;
+    background: rgba(0, 0, 0, 0.5) !important;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 8px !important;
+    padding: 10px 15px !important;
+    color: #fff !important;
+    font-family: var(--font-body) !important;
+    transition: all 0.3s ease !important;
+}
+
+.filter-input-main-v2:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 8px rgba(0, 188, 212, 0.3) !important;
+    outline: none !important;
+}
+
+/* Estilização dos Selects e Time */
+.filter-select-v2, .filter-input-time-v2 {
+    flex: 1 !important;
+    background: rgba(44, 47, 51, 0.8) !important; /* var(--surface-color) */
+    border: 1px solid var(--border-color) !important;
+    border-radius: 6px !important;
+    padding: 10px !important;
+    color: var(--primary-color) !important; /* Texto em Ciano */
+    font-weight: bold !important;
+    cursor: pointer !important;
+    appearance: none !important; /* Remove seta padrão em alguns browsers */
+}
+
+.filter-select-v2:hover, .filter-input-time-v2:hover {
+    background: rgba(50, 55, 60, 1) !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Ajuste específico para o seletor de tempo */
+.filter-input-time-v2 {
+    max-width: 130px !important;
+    text-align: center !important;
+}
+
+/* Responsividade: Scroll lateral em telas pequenas para manter a linha */
+@media (max-width: 1024px) {
+    .filters-container-v2 {
+        overflow-x: auto !important;
+        white-space: nowrap !important;
+        justify-content: flex-start !important;
+    }
+    .filter-input-main-v2, .filter-select-v2 {
+        min-width: 150px !important;
+    }
+}
+/* ==========================================================================
+   HUB DE FILTROS HORIZONTAL - DESIGN GLASSMORPHER AAA
+   ========================================================================== */
+div.filters-container-v2 {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 15px !important;
+    padding: 15px 25px !important;
+    background: rgba(18, 20, 22, 0.75) !important; /* Vidro Fumê */
+    border: 1px solid rgba(0, 188, 212, 0.25) !important;
+    border-radius: 15px !important;
+    margin: 20px 0 !important;
+    width: 100% !important;
+    backdrop-filter: blur(15px) saturate(150%) !important; /* Efeito de Vidro Profundo */
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Inputs e Selects com brilho interno */
+input.filter-input-main-v2, 
+select.filter-select-v2, 
+input.filter-input-time-v2 {
+    background: rgba(0, 0, 0, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    color: #fff !important;
+}
+
+select.filter-select-v2, input.filter-input-time-v2 {
+    color: var(--primary-color) !important;
+    font-weight: 700 !important;
+}
+
+/* Feedback de Foco Neon */
+input.filter-input-main-v2:focus, 
+select.filter-select-v2:hover {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 12px rgba(0, 188, 212, 0.4), inset 0 0 5px rgba(0, 188, 212, 0.2) !important;
+}
+/* ==========================================================================
+   CARDS DE ANIMAIS - ILUMINAÇÃO DINÂMICA E PROFUNDIDADE (V4)
+   ========================================================================== */
+.animal-card {
+    background: linear-gradient(145deg, #1e2124, #141618) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 12px !important;
+    padding: 15px !important;
+    height: 240px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important; /* Centralização total */
+    gap: 10px !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.5) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Garante que o texto do animal esteja sempre centralizado e legível */
+.animal-card .info {
+    font-family: var(--font-headings);
+    font-size: 1rem !important;
+    text-transform: uppercase;
+    text-align: center;
+    color: #eee;
+    margin: 5px 0 !important;
+    width: 100%;
+    display: block;
+    white-space: normal; /* Permite quebra de linha se necessário */
+    min-height: 2.4em; /* Reserva espaço para 2 linhas, mantendo o alinhamento */
+}
+
+/* Sombra Dinâmica Ciano no Hover */
+.animal-card:hover {
+    transform: translateY(-12px) scale(1.02) !important;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 188, 212, 0.3) !important;
+}
+
+/* Ícone com Brilho e Reflexo */
+.animal-card img {
+    width: 105px !important;
+    height: 105px !important;
+    object-fit: contain !important;
+    background: radial-gradient(circle, #25282c 0%, #111 100%) !important; /* Fundo circular escuro */
+    border: 2px solid rgba(0, 188, 212, 0.3) !important;
+    border-radius: 50% !important; /* ESSA LINHA FAZ FICAR REDONDO */
+    padding: 8px !important;
+    margin-bottom: 0 !important;
+    filter: drop-shadow(0 8px 15px rgba(0,0,0,0.6)) !important;
+    transition: all 0.3s ease !important;
+    position: relative;
+    z-index: 2;
+}
+
+.animal-card:hover img {
+    border-color: var(--primary-color) !important;
+    transform: rotate(3deg) scale(1.05) !important;
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.2) !important;
+}
+
+/* Barra de Progresso com Pulso Animado */
+.animal-card .progress-container {
+    width: 100% !important;
+    height: 14px !important;
+    background: #080808 !important;
+    border-radius: 12px !important;
+    border: 1px solid #222 !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5) !important;
+}
+
+.animal-card .progress-bar {
+    height: 100% !important;
+    background: linear-gradient(90deg, #00bcd4, #80deea, #00bcd4) !important;
+    background-size: 200% 100% !important;
+    animation: barFlow 3s linear infinite !important; /* Efeito de fluxo */
+    box-shadow: 0 0 15px rgba(0, 188, 212, 0.6) !important;
+}
+
+@keyframes barFlow {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 200% 50%; }
+}
+
+/* --- ESTADO CONCLUÍDO (VERDE NEON) --- */
+.animal-card.is-completed {
+    border: 2px solid #4CAF50 !important;
+    background: linear-gradient(145deg, #1a1c1e, #0d210e) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(76, 175, 80, 0.3) !important;
+}
+
+.animal-card.is-completed .progress-bar {
+    background: linear-gradient(90deg, #4CAF50, #81c784, #4CAF50) !important;
+    background-size: 200% 100% !important;
+    box-shadow: 0 0 15px rgba(76, 175, 80, 0.8) !important;
+/* ==========================================================================
+   EFEITOS ESPECIAIS: REFLEXO E BADGE DE CONCLUSÃO
+   ========================================================================== */
+
+/* 1. O Reflexo (Glint) - Passa um brilho linear pelo card a cada 8 segundos */
+.card-glint {
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+        to right, 
+        transparent, 
+        rgba(255, 255, 255, 0.1), 
+        transparent
+    );
+    transform: skewX(-25deg);
+    transition: none;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.animal-card:hover .card-glint {
+    animation: glintScan 1.5s ease-in-out;
+}
+
+@keyframes glintScan {
+    100% { left: 200%; }
+}
+
+/* 2. Badge de Conclusão (Checkmark) */
+.completion-badge {
+    top: 10px !important;
+    right: 10px !important;
+    width: 25px !important;
+    height: 25px !important;
+    font-size: 1.1rem !important;
+}
+
+/* 3. Ativação Visual quando Completo */
+.animal-card.is-completed .completion-badge {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Ajuste adicional para o ícone do animal quando completo */
+.animal-card.is-completed img {
+    border-color: #4CAF50 !important;
+    filter: drop-shadow(0 0 10px rgba(76, 175, 80, 0.3)) !important;
+}
+/* Ajuste de profundidade para elementos internos do card */
+.animal-card img {
+    position: relative;
+    z-index: 2; /* Fica acima do brilho de fundo */
+}
+
+.animal-card .info {
+    font-size: 1.15rem !important; /* Ajuste leve para equilíbrio */
+    margin: 5px 0 !important;
+    line-height: 1.2 !important;
+}
+
+/* Garante que o Checkmark apareça com um leve 'pop' */
+.completion-badge i {
+    filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.8));
+}

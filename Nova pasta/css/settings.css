@@ -1,0 +1,309 @@
+/* =================================================================
+   ====================== SETTINGS.CSS =============================
+   ================================================================= */
+
+/* Container Principal - Layout em Grid */
+.settings-view-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 350px 1fr; /* Coluna Perfil Fixa | Coluna Opções Flexível */
+    gap: 30px;
+    align-items: start;
+    padding-bottom: 50px;
+}
+
+/* =================================================================
+   1. COLUNA DA ESQUERDA: PERFIL E STATUS
+   ================================================================= */
+
+.settings-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card de Perfil */
+.profile-card {
+    background: linear-gradient(145deg, var(--surface-color), #202225);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Aumentado para separar Avatar dos Textos */
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Avatar com efeito de brilho */
+.profile-avatar-large {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(45deg, var(--primary-color), #00d4c3);
+    color: #111;
+    font-size: 2.5rem;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 25px rgba(0, 188, 212, 0.4);
+    border: 3px solid #fff;
+    margin-bottom: 5px;
+}
+
+/* Container das Informações (Nome e Email) */
+.profile-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px; /* Espaçamento entre Nome e Email */
+}
+
+/* Input do Nome (Estilizado como Título) */
+.profile-name-input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent; /* Invisível até focar ou passar mouse */
+    color: var(--text-color);
+    font-family: var(--font-headings);
+    font-size: 1.6rem;
+    text-align: center;
+    width: 90%;
+    padding: 5px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.profile-name-input:hover {
+    border-bottom-color: rgba(255, 255, 255, 0.2);
+}
+
+.profile-name-input:focus {
+    outline: none;
+    border-bottom-color: var(--primary-color);
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 4px;
+}
+
+/* Placeholder sutil se estiver vazio */
+.profile-name-input::placeholder {
+    color: var(--text-color-muted);
+    opacity: 0.5;
+}
+
+.profile-email {
+    color: var(--text-color-muted);
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.3);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Card de Status do Sistema (Nuvem/Local) */
+.system-status-card {
+    background-color: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.status-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+}
+
+.status-row:last-child { margin-bottom: 0; }
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #555;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+.status-dot.online { background-color: #00e676; box-shadow: 0 0 8px #00e676; }
+.status-dot.offline { background-color: #ff5252; box-shadow: 0 0 8px #ff5252; }
+
+/* =================================================================
+   2. COLUNA DA DIREITA: GRUPOS DE CONFIGURAÇÃO
+   ================================================================= */
+
+.settings-content {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.settings-group {
+    background-color: var(--surface-color);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid var(--border-color);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.settings-group:hover {
+    border-color: rgba(255,255,255,0.2);
+}
+
+.settings-group h4 {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    font-family: var(--font-headings);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Estilo dos Itens de Configuração (Linhas) */
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.setting-item:last-child { border-bottom: none; }
+
+.setting-label {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.setting-title { font-weight: bold; color: var(--text-color); }
+.setting-desc { font-size: 0.85rem; color: var(--text-color-muted); }
+
+/* Toggle Switch (Interruptor Moderno) */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #444;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider { background-color: var(--primary-color); }
+input:focus + .slider { box-shadow: 0 0 1px var(--primary-color); }
+input:checked + .slider:before { transform: translateX(24px); }
+
+/* Botões de Ação Normais */
+.btn-action {
+    background-color: #333;
+    color: #fff;
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.btn-action:hover { background-color: #444; border-color: #fff; }
+
+/* =================================================================
+   3. ZONA DE PERIGO (RESET DE DADOS)
+   ================================================================= */
+
+.danger-zone {
+    border: 1px dashed rgba(255, 82, 82, 0.4);
+    background: linear-gradient(145deg, rgba(40, 20, 20, 0.8), rgba(20, 10, 10, 0.8));
+}
+
+.danger-zone h4 { color: #ff5252; border-bottom-color: rgba(255, 82, 82, 0.2); }
+
+.danger-description {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    line-height: 1.5;
+}
+
+.btn-danger {
+    background-color: rgba(255, 82, 82, 0.1);
+    color: #ff5252;
+    border: 1px solid #ff5252;
+    width: 100%;
+    padding: 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.btn-danger:hover {
+    background-color: #ff5252;
+    color: white;
+    box-shadow: 0 0 15px rgba(255, 82, 82, 0.4);
+}
+
+/* =================================================================
+   4. RESPONSIVIDADE
+   ================================================================= */
+@media (max-width: 850px) {
+    .settings-view-container {
+        grid-template-columns: 1fr; /* Vira uma coluna só */
+        gap: 20px;
+    }
+    
+    .settings-sidebar {
+        flex-direction: row; /* No mobile, perfil e status lado a lado se der */
+        flex-wrap: wrap;
+    }
+
+    .profile-card, .system-status-card {
+        flex: 1;
+        min-width: 280px;
+    }
+}

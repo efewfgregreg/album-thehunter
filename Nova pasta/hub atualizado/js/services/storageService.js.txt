@@ -1,0 +1,131 @@
+import { auth, db } from '../firebase.js';
+import { showToast, debounce } from '../utils.js';
+
+// =================================================================
+// =================== LÓGICA DE DADOS (FIREBASE) ==================
+// =================================================================
+
+export function getDefaultDataStructure() {
+    return {
+        pelagens: {},
+        diamantes: {},
+        greats: {},
+        super_raros: {},
+        grindSessions: []
+    };
+}
+
+export async function loadDataFromFirestore() {
+    // Dados padrão para começar
+    let finalData = getDefaultDataStructure();
+    let localData = null;
+
+    // 1. Tenta pegar o Backup Local primeiro (para garantir)
+    try {
+        const localStr = localStorage.getItem('hunter_backup_local');
+        if (localStr) {
+            localData = JSON.parse(localStr);
+        }
+    } catch(e) { console.log("Sem backup local legível"); }
+
+    if (!currentUser) {
+        // Se não tem usuário logado, mas tem dados locais, usa eles (Modo Offline)
+        if (localData) return { ...finalData, ...localData };
+        return finalData;
+    }
+
+    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+
+    try {
+        // 2. Tenta pegar da Nuvem (Firebase)
+        const doc = await userDocRef.get();
+        
+        if (doc.exists) {
+            console.log("Dados carregados do Firestore!");
+            const cloudData = doc.data();
+            
+            // Lógica de Segurança: Se a nuvem estiver vazia mas você tiver backup local,
+            // (ex: erro de sincronização anterior), preferimos o local para não zerar seu progresso.
+            if (Object.keys(cloudData).length < 3 && localData && Object.keys(localData).length > 5) {
+                 console.warn("Nuvem parece vazia, recuperando do Local Storage.");
+                 finalData = { ...finalData, ...localData };
+                 // Atualiza a nuvem com o backup local
+                 saveData(finalData);
+            } else {
+                 finalData = { ...finalData, ...cloudData };
+            }
+        } else {
+            console.log("Novo usuário ou banco resetado.");
+            if (localData) {
+                console.log("Recuperando backup local para nova conta.");
+                finalData = { ...finalData, ...localData };
+                saveData(finalData); // Sobe pro Firebase
+            } else {
+                await userDocRef.set(finalData);
+            }
+        }
+    } catch (error) {
+        console.error("Erro ao carregar do Firestore (Sem internet?):", error);
+        // 3. Se der erro na nuvem (Net caiu), usa o Backup Local
+        if (localData) {
+            showToast("⚠️ Modo Offline: Usando dados salvos no dispositivo.");
+            finalData = { ...finalData, ...localData };
+        }
+    }
+
+    return finalData;
+}
+
+// --- OTIMIZAÇÃO: Salva na nuvem apenas após 2 segundos de inatividade ---
+const saveToCloudDebounced = debounce((data) => {
+    if (currentUser) {
+        const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+        
+        userDocRef.set(data, { merge: true })
+            .then(() => {
+                console.log("☁️ Salvo no Firebase (Sincronizado)");
+                // Opcional: Mostrar um toast discreto ou apenas logar
+            })
+            .catch((error) => {
+                console.error("Erro no Firebase (mas salvo localmente): ", error);
+                showToast("⚠️ Nuvem instável. Salvo no dispositivo.");
+            });
+    }
+}, 2000); // Tempo de espera: 2000ms = 2 segundos
+
+export function saveData(data) {
+    // 1. Atualiza a variável global imediatamente
+    savedData = data;
+
+    // 2. BACKUP LOCAL DE SEGURANÇA (Instantâneo)
+    // Isso garante que se você fechar a aba agora, está salvo no navegador.
+    try {
+        localStorage.setItem('hunter_backup_local', JSON.stringify(data));
+        localStorage.setItem('hunter_backup_time', Date.now());
+    } catch (e) {
+        console.warn("Aviso: Não foi possível salvar backup local", e);
+    }
+
+    // 3. Salvamento na Nuvem (Com Atraso/Debounce)
+    // Chama a função otimizada criada acima
+    saveToCloudDebounced(data);
+
+    // 4. Atualiza a Interface Visual (Instantâneo)
+    // Mantemos a interface ágil para o usuário não sentir lentidão
+    if (document.getElementById('progress-panel-main-container')) {
+        const contentArea = document.getElementById('progress-content-area');
+        if (contentArea) {
+             if (document.querySelector('.ranking-table')) {
+                 if(typeof renderHuntingRankingView === 'function') renderHuntingRankingView(contentArea);
+             } else {
+                 updateNewProgressPanel(contentArea);
+             }
+        }
+    }
+    const mountsGrid = document.querySelector('.mounts-grid');
+    if (mountsGrid) {
+        renderMultiMountsView(mountsGrid.parentNode);
+    }
+    
+    // Feedback visual imediato (Opcional, removemos o toast daqui para não pipocar toda hora no grind)
+}
