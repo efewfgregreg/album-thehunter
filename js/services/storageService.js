@@ -1,5 +1,5 @@
 import { db } from '../firebase.js';
-import { showToast, debounce } from '../utils.js';
+import { debounce } from '../utils.js';
 
 // =================================================================
 // =================== LÓGICA DE DADOS (STORAGE) ===================
@@ -19,55 +19,83 @@ export function getDefaultDataStructure() {
 }
 
 /**
- * Carrega os dados do usuário, priorizando a nuvem mas mantendo backup local.
+ * Função interna para salvar na nuvem com debounce.
+ * ORDEM DOS PARÂMETROS CORRIGIDA: (currentUser, data)
+ */
+const saveToCloudDebounced = debounce((currentUser, data) => {
+    if (!currentUser || !data) return;
+
+    const userDocRef = db.collection('usuarios').doc(currentUser.uid);
+    
+    try {
+        // Sanitização para garantir objeto puro
+        const sanitizedData = JSON.parse(JSON.stringify(data));
+
+        userDocRef.set(sanitizedData, { merge: true })
+            .then(() => {
+                console.log("☁️ Salvo no Firebase (Sincronizado)");
+            })
+            .catch((error) => {
+                console.error("Erro ao salvar no Firebase: ", error);
+            });
+    } catch (e) {
+        console.error("Erro na sanitização dos dados:", e);
+    }
+}, 2000);
+
+/**
+ * Carrega os dados do usuário.
+ * Prioriza o Firestore. Se falhar ou estiver vazio, tenta o LocalStorage.
+ * Retorna a estrutura padrão se nada for encontrado.
  */
 export async function loadDataFromFirestore(currentUser) {
     let finalData = getDefaultDataStructure();
-    let localData = null;
 
+    // 1. Tenta carregar backup local primeiro (como fallback imediato)
+    let localData = null;
     try {
         const localStr = localStorage.getItem('hunter_backup_local');
         if (localStr) {
             localData = JSON.parse(localStr);
         }
     } catch(e) { 
-        console.log("Sem backup local legível"); 
+        console.warn("Sem backup local legível ou corrompido."); 
     }
 
     if (!currentUser) {
-        if (localData) return { ...finalData, ...localData };
-        return finalData;
+        // Se não há usuário logado, usa o local ou o padrão
+        return localData ? { ...finalData, ...localData } : finalData;
     }
 
+    // 2. Tenta buscar do Firestore
     const userDocRef = db.collection('usuarios').doc(currentUser.uid);
 
     try {
         const doc = await userDocRef.get();
         
         if (doc.exists) {
-            console.log("Dados carregados do Firestore!");
             const cloudData = doc.data();
             
-            if (Object.keys(cloudData).length < 3 && localData && Object.keys(localData).length > 5) {
-                 console.warn("Nuvem parece incompleta, usando dados locais.");
-                 finalData = { ...finalData, ...localData };
-                 persistData(finalData, currentUser); 
+            // Verificação de integridade básica
+            if (Object.keys(cloudData).length > 0) {
+                console.log("Dados carregados do Firestore com sucesso.");
+                // Mescla com a estrutura padrão para garantir que campos novos existam
+                finalData = { ...finalData, ...cloudData };
+                
+                // Atualiza o backup local com o que veio da nuvem (Sincronização Nuvem -> Local)
+                localStorage.setItem('hunter_backup_local', JSON.stringify(finalData));
             } else {
-                 finalData = { ...finalData, ...cloudData };
+                 console.warn("Documento na nuvem existe mas está vazio.");
+                 if (localData) finalData = { ...finalData, ...localData };
             }
         } else {
-            console.log("Novo usuário. Criando registro.");
-            if (localData) {
-                finalData = { ...finalData, ...localData };
-                persistData(finalData, currentUser);
-            } else {
-                await userDocRef.set(finalData);
-            }
+            console.log("Nenhum dado na nuvem encontrado. Usando local ou padrão.");
+            if (localData) finalData = { ...finalData, ...localData };
         }
     } catch (error) {
-        console.error("Erro ao carregar do Firestore:", error);
+        console.error("Erro ao carregar do Firestore (Offline ou Sem Permissão):", error);
+        // Fallback para local em caso de erro de rede
         if (localData) {
-            showToast("⚠️ Modo Offline: Usando dados locais.");
             finalData = { ...finalData, ...localData };
         }
     }
@@ -76,41 +104,26 @@ export async function loadDataFromFirestore(currentUser) {
 }
 
 /**
- * Função interna para salvar na nuvem com debounce.
- */
-const saveToCloudDebounced = debounce((data, currentUser) => {
-    if (currentUser) {
-        const userDocRef = db.collection('usuarios').doc(currentUser.uid);
-        
-        // --- CORREÇÃO CRÍTICA APLICADA AQUI ---
-        // Converte para objeto puro para evitar erro "custom object" do Firebase
-        const sanitizedData = JSON.parse(JSON.stringify(data));
-
-        userDocRef.set(sanitizedData, { merge: true })
-            .then(() => {
-                console.log("☁️ Salvo no Firebase (Sincronizado)");
-            })
-            .catch((error) => {
-                console.error("Erro no Firebase: ", error);
-                showToast("⚠️ Erro de conexão. Salvo apenas localmente.");
-            });
-    }
-}, 2000);
-
-/**
  * Salva os dados no LocalStorage imediatamente e agenda o salvamento na nuvem.
+ * ATENÇÃO: A assinatura da função foi ajustada para (currentUser, data)
+ * para coincidir com a chamada no main.js (linha 105).
  */
-export function persistData(data, currentUser) {
-    // 1. SALVAMENTO LOCAL (Imediato)
+export async function persistData(currentUser, data) {
+    if (!data) {
+        console.error("Tentativa de salvar dados nulos ou indefinidos abortada.");
+        return;
+    }
+
+    // 1. SALVAMENTO LOCAL (Imediato e Síncrono)
     try {
         localStorage.setItem('hunter_backup_local', JSON.stringify(data));
-        localStorage.setItem('hunter_backup_time', Date.now());
+        localStorage.setItem('hunter_backup_time', Date.now().toString());
     } catch (e) {
-        console.warn("Aviso: Não foi possível salvar backup local", e);
+        console.warn("Erro ao escrever no LocalStorage:", e);
     }
 
-    // 2. SALVAMENTO NA NUVEM
+    // 2. SALVAMENTO NA NUVEM (Assíncrono via Debounce)
     if (currentUser) {
-        saveToCloudDebounced(data, currentUser);
+        saveToCloudDebounced(currentUser, data);
     }
 }
