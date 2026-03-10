@@ -991,7 +991,20 @@ function openGrindDetailModal(sessionId, type, killCount) {
             if (collectionKey === 'greats') {
                 if (!savedData.greats[animalSlug]) savedData.greats[animalSlug] = { furs: {} };
                 if (!savedData.greats[animalSlug].furs[displayName]) savedData.greats[animalSlug].furs[displayName] = { trophies: [] };
-                savedData.greats[animalSlug].furs[displayName].trophies.push({ date: new Date().toISOString() });
+                
+                // Mapeia as estatísticas atuais da sessão de Grind EXATAMENTE no momento da captura
+                const sessionStats = {
+                    kills: session.counts.total || 0,
+                    diamonds: session.counts.diamonds ? session.counts.diamonds.length : 0,
+                    trolls: session.counts.trolls ? session.counts.trolls.length : 0,
+                    rares: session.counts.rares ? session.counts.rares.length : 0
+                };
+
+                // Adiciona o troféu do Great One com as estatísticas preenchidas para o Dossiê
+                savedData.greats[animalSlug].furs[displayName].trophies.push({ 
+                    date: new Date().toISOString(),
+                    stats: sessionStats
+                });
             } else {
                 if (!savedData[collectionKey]) savedData[collectionKey] = {};
                 if (!savedData[collectionKey][animalSlug]) savedData[collectionKey][animalSlug] = {};
