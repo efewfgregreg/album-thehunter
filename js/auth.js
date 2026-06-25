@@ -164,8 +164,7 @@ export function renderLoginForm(container) {
     });
 
     document.getElementById('btn-forgot-password').addEventListener('click', () => {
-        const modal = document.getElementById('password-reset-modal');
-        if (modal) modal.style.display = 'flex';
+        showForgotPasswordModal();
     });
 }
 export function renderRegisterForm(container) {
@@ -345,60 +344,78 @@ async function handleRegister(e) {
 }
 
 function showForgotPasswordModal() {
-    // Cria o modal dinamicamente se não existir no HTML base
-    let modal = document.getElementById('password-reset-modal');
-    if (!modal) {
-        modal = document.createElement('div');
-        modal.id = 'password-reset-modal';
-        modal.className = 'modal-overlay';
-        modal.innerHTML = `
-            <div class="modal-content-box">
-                <span class="modal-close">&times;</span>
-                <h3>Redefinir Senha</h3>
-                <p>Digite seu e-mail para receber o link de redefinição.</p>
-                <input type="email" id="reset-email-input" placeholder="Seu e-mail" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 4px; border: 1px solid #ccc; background: #222; color: white;">
-                <div id="reset-msg" style="margin-bottom: 10px; height: 20px;"></div>
-                <div style="text-align: right;">
-                    <button id="btn-send-reset" class="auth-button" style="width: auto; padding: 8px 20px;">Enviar</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(modal);
-        
-        // Fecha ao clicar fora ou no X
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) modal.style.display = 'none';
-        });
-        modal.querySelector('.modal-close').addEventListener('click', () => modal.style.display = 'none');
-        
-        // Ação do botão
-        document.getElementById('btn-send-reset').addEventListener('click', async () => {
-            const email = document.getElementById('reset-email-input').value;
-            const msgDiv = document.getElementById('reset-msg');
-            if (!email) {
-                msgDiv.textContent = "Digite um e-mail.";
-                msgDiv.style.color = "red";
-                return;
-            }
-            
-            try {
-                await auth.sendPasswordResetEmail(email);
-                msgDiv.textContent = "E-mail enviado! Verifique sua caixa de entrada.";
-                msgDiv.style.color = "lightgreen";
-            } catch (error) {
-                if (error.code === 'auth/user-not-found') {
-                    msgDiv.textContent = "E-mail não encontrado.";
-                } else {
-                    msgDiv.textContent = "Erro ao enviar e-mail.";
-                }
-                msgDiv.style.color = "red";
-            }
-        });
-    }
+    const modal = document.getElementById('password-reset-modal');
     
+    if (!modal) {
+        console.error("Modal '#password-reset-modal' não encontrado no index.html.");
+        return;
+    }
+
     modal.style.display = 'flex';
+    
+    // Limpa o campo preventivamente toda vez que o modal é aberto
+    const emailInput = document.getElementById('resetEmailInput');
+    if (emailInput) emailInput.value = '';
 }
 
+// Delegação global de eventos: Intercepta o clique na raiz do documento (Garante 100% de disparo no SPA)
+document.addEventListener('click', async (e) => {
+    const sendBtn = e.target.closest('#send-reset-btn');
+    const cancelBtn = e.target.closest('#cancel-reset-btn');
+    const modal = document.getElementById('password-reset-modal');
+    
+    // Processa apenas se o clique for nos botões E o modal estiver aberto
+    if (cancelBtn && modal && modal.style.display === 'flex') {
+        e.preventDefault();
+        modal.style.display = 'none';
+    }
+
+    if (sendBtn && modal && modal.style.display === 'flex') {
+        e.preventDefault();
+        
+        const emailInput = document.getElementById('resetEmailInput');
+        const emailValue = emailInput ? emailInput.value.trim() : '';
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailValue) {
+            showCustomAlert('Por favor, insira seu e-mail.', 'Campo Vazio');
+            return;
+        }
+
+        if (!emailRegex.test(emailValue)) {
+            showCustomAlert('O e-mail digitado parece incompleto ou inválido. Certifique-se de incluir o ".com" no final (Ex: caçador@gmail.com).', 'E-mail Inválido');
+            return;
+        }
+
+        sendBtn.disabled = true;
+        const originalText = sendBtn.textContent;
+        sendBtn.textContent = 'ENVIANDO...';
+
+        try {
+            await auth.sendPasswordResetEmail(emailValue);
+            await showCustomAlert('O link de redefinição de senha foi enviado com sucesso para a sua caixa de entrada!', 'Sucesso');
+            modal.style.display = 'none';
+            if (emailInput) emailInput.value = '';
+        } catch (error) {
+            console.error('Erro Firebase Auth:', error);
+            let errorMsg = 'Não foi possível enviar o e-mail de redefinição.';
+            
+            if (error.code === 'auth/user-not-found') {
+                errorMsg = 'Este e-mail não está cadastrado em nosso sistema.';
+            } else if (error.code === 'auth/invalid-email') {
+                errorMsg = 'O formato do e-mail fornecido é inválido.';
+            } else if (error.code === 'auth/too-many-requests') {
+                errorMsg = 'Muitas tentativas seguidas. Por favor, aguarde alguns minutos antes de tentar novamente.';
+            }
+            
+            showCustomAlert(errorMsg, 'Falha no Envio');
+        } finally {
+            sendBtn.disabled = false;
+            sendBtn.textContent = originalText;
+        }
+    }
+});
 // =================================================================
 // =================== UTILITÁRIOS DE UI (MODAIS) ==================
 // =================================================================
@@ -444,6 +461,7 @@ export function showCustomAlert(message, title = 'Aviso', isConfirmation = false
         `;
 
         modal.style.display = 'flex';
+        modal.style.zIndex = '999999';
 
         const btnOk = document.getElementById('alert-ok');
         const btnCancel = document.getElementById('alert-cancel');
