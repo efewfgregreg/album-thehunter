@@ -1,0 +1,1026 @@
+/* ==========================================================================
+   10. RESERVAS (MAPAS) E DOSSIÊ (DETALHAMENTO)
+   ========================================================================== */
+.reserve-card { 
+    background: var(--surface-color); 
+    border-radius: 8px; 
+    overflow: hidden; 
+    cursor: pointer; 
+    display: flex; 
+    flex-direction: column; 
+    border: 1px solid var(--border-color); 
+    transition: all 0.3s ease; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+}
+
+.reserve-card:hover { 
+    transform: translateY(-5px); 
+    box-shadow: 0 8px 25px rgba(0, 188, 212, 0.3); 
+    border-color: var(--primary-color);
+}
+
+.reserve-image-container { 
+    height: 140px; 
+    overflow: hidden; 
+}
+
+.reserve-card-image { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    transition: transform 0.4s ease; 
+}
+
+.reserve-card:hover .reserve-card-image { 
+    transform: scale(1.1); 
+}
+
+.reserve-card-info-panel { 
+    padding: 15px; 
+    background-color: var(--surface-color); 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    text-align: center;
+}
+
+/* Estatísticas dentro do Card da Reserva */
+.reserve-card-stats { 
+    display: flex; 
+    justify-content: space-around; 
+    align-items: flex-start; 
+    padding: 10px 0; 
+    font-size: 0.9rem; 
+    color: var(--text-color-muted); 
+}
+
+.reserve-card-stats span { 
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+    font-weight: bold; 
+    flex-direction: column; /* Para ícone ficar em cima do número */
+    min-width: 50px;
+}
+
+.mini-progress .custom-icon, 
+.reserve-card-stats .custom-icon { 
+    width: 35px; 
+    height: 35px; 
+    margin-right: 0px; 
+}
+
+.reserve-card-stats i { 
+    color: var(--primary-color); 
+}
+
+/* Checklist de Animais dentro da Reserva */
+.animal-checklist { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+}
+
+.animal-checklist-row { 
+    display: grid; 
+    grid-template-columns: 50px 1fr auto auto; 
+    align-items: center; 
+    gap: 15px; 
+    background-color: var(--surface-color); 
+    padding: 10px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+}
+
+.animal-checklist-row:hover { 
+    background-color: #3c3f43; 
+    transform: translateX(5px); 
+}
+
+.animal-checklist-row .animal-icon { 
+    width: 40px; 
+    height: 40px; 
+    filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%); 
+}
+
+.animal-checklist-row .animal-name { 
+    font-family: var(--font-headings); 
+    font-size: 1.1rem; 
+}
+
+.animal-checklist-row .mini-progress-bars { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 5px; 
+}
+
+.mini-progress { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    font-size: 0.8rem; 
+}
+
+.mini-progress-bar-container { 
+    flex-grow: 1; 
+    height: 8px; 
+    background-color: var(--bg-color); 
+    border-radius: 4px; 
+    width: 120px; 
+}
+
+.mini-progress-bar { 
+    height: 100%; 
+    background-color: var(--primary-color); 
+    border-radius: 4px; 
+}
+
+.great-one-indicator { 
+    width: 40px; 
+    height: 40px; 
+    color: var(--gold-color); 
+    opacity: 0.2; 
+}
+
+.great-one-indicator.possible { 
+    opacity: 1; 
+}
+
+/* Abas do Dossiê */
+.dossier-tabs { 
+    display: flex; 
+    border-bottom: 2px solid var(--border-color); 
+    margin-bottom: 20px; 
+}
+
+.dossier-tab { 
+    padding: 10px 20px; 
+    cursor: pointer; 
+    color: var(--text-color-muted); 
+    border-bottom: 3px solid transparent; 
+    transition: all 0.2s ease; 
+    font-family: var(--font-headings); 
+}
+
+.dossier-tab:hover { 
+    color: var(--text-color); 
+}
+
+.dossier-tab.active { 
+    color: var(--primary-color); 
+    border-bottom-color: var(--primary-color); 
+}
+
+.dossier-tab .custom-icon { 
+    color: initial; 
+}
+
+
+/* ==========================================================================
+   14. MONTAGENS MÚLTIPLAS (MULTI-MOUNTS)
+   ========================================================================== */
+.mount-card { 
+    background: var(--surface-color); 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 15px; 
+    transition: all 0.3s ease; 
+    position: relative; 
+    overflow: hidden; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+}
+
+.mount-card:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--primary-color); 
+    box-shadow: 0 8px 25px rgba(0, 188, 212, 0.2); 
+}
+
+.mount-card-header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+}
+
+.mount-card-header h3 { 
+    font-family: var(--font-headings); 
+    font-size: 1.2rem; 
+    margin: 0; 
+}
+
+.mount-progress { 
+    font-size: 1rem; 
+    font-weight: bold; 
+    color: var(--text-color-muted); 
+    background-color: rgba(0,0,0,0.2); 
+    padding: 3px 8px; 
+    border-radius: 5px; 
+}
+
+.mount-card-animals { 
+    display: flex; 
+    gap: 10px; 
+    flex-wrap: wrap; 
+    justify-content: center; 
+    background-color: rgba(0,0,0,0.1); 
+    padding: 10px; 
+    border-radius: 6px; 
+    min-height: 60px; 
+    align-items: center; 
+}
+
+.mount-card-animals img { 
+    height: 40px; 
+    width: auto; 
+    /* Inverte a cor para ficar branco em fundo escuro */
+    filter: invert(90%) sepia(6%) saturate(82%) hue-rotate(186deg) brightness(96%) contrast(95%); 
+}
+
+/* Estado: Completo */
+.mount-card.completed { border-color: var(--completed-color); }
+
+.mount-card .mount-completed-banner { 
+    position: absolute; 
+    top: -30px; 
+    right: -30px; 
+    width: 60px; 
+    height: 60px; 
+    background-color: var(--completed-color); 
+    transform: rotate(45deg); 
+    display: flex; 
+    align-items: flex-end; 
+    justify-content: center; 
+}
+
+.mount-card .mount-completed-banner i { 
+    color: var(--surface-color); 
+    transform: rotate(-45deg); 
+    font-size: 1.2rem; 
+    padding-bottom: 5px; 
+}
+
+/* Lista de Detalhes da Montagem */
+.mount-detail-list { 
+    list-style: none; 
+    padding: 0; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+}
+
+.mount-detail-item { 
+    background-color: var(--bg-color); 
+    border-radius: 6px; 
+    padding: 15px; 
+    border: 1px solid var(--border-color); 
+}
+
+.detail-item-header { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-family: var(--font-headings); 
+    font-size: 1.1rem; 
+    margin-bottom: 8px; 
+    color: var(--text-color); 
+}
+
+/* Cores de Gênero Específicas */
+.detail-item-header .fa-mars { color: #6495ED; } 
+.detail-item-header .fa-venus { color: #FF69B4; }
+
+.detail-item-body { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 0.9rem; 
+    color: var(--text-color-muted); 
+    padding-left: 25px; 
+}
+
+.detail-item-body .fa-check-circle { color: var(--completed-color); } 
+.detail-item-body .fa-times-circle { color: var(--secondary-color); }
+
+
+/* ==========================================================================
+   17. HOTSPOTS E MAPAS
+   ========================================================================== */
+/* Toggle de Visualização (Alternar entre Lista e Mapa) */
+.reserve-view-toggle { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    margin-bottom: 25px; 
+    background-color: var(--bg-color); 
+    padding: 10px; 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color); 
+}
+
+.reserve-view-toggle .toggle-button { 
+    background-color: var(--surface-color); 
+    color: var(--text-color-muted); 
+    border: 1px solid var(--border-color); 
+    padding: 10px 20px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-family: var(--font-headings); 
+    font-size: 1rem; 
+    transition: all 0.2s ease; 
+}
+
+.reserve-view-toggle .toggle-button:hover { 
+    background-color: #36393f; 
+    color: var(--text-color); 
+}
+
+.reserve-view-toggle .toggle-button.active { 
+    background-color: var(--primary-color); 
+    color: #111; 
+    border-color: var(--primary-color); 
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.4); 
+}
+
+.reserve-view-area { 
+    width: 100%; 
+    min-height: 200px; 
+}
+
+/* Grid de Hotspots */
+.hotspot-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); 
+    gap: 20px; 
+}
+
+.hotspot-card { 
+    background-color: var(--surface-color); 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; 
+    overflow: hidden; 
+    cursor: pointer; 
+    transition: all 0.3s ease; 
+    position: relative; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-end; 
+    min-height: 180px; 
+}
+
+.hotspot-card:hover { 
+    transform: translateY(-5px); 
+    border-color: var(--primary-color); 
+    box-shadow: 0 8px 25px rgba(0, 188, 212, 0.3); 
+}
+
+.hotspot-card img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    filter: brightness(0.7); 
+    transition: filter 0.3s ease; 
+    z-index: 1; 
+}
+
+.hotspot-card:hover img { 
+    filter: brightness(0.9); 
+}
+
+.hotspot-card .info-overlay { 
+    position: relative; 
+    z-index: 2; 
+    background: linear-gradient(to top, rgba(0,0,0,0.8), rgba(0,0,0,0)); 
+    padding: 20px 15px 10px 15px; 
+    color: var(--text-color); 
+    font-family: var(--font-headings); 
+    text-align: center; 
+    width: 100%; 
+}
+
+.hotspot-card .animal-name { 
+    display: block; 
+    font-size: 1.3rem; 
+    font-weight: bold; 
+    margin-bottom: 5px; 
+}
+
+.hotspot-card .hotspot-label { 
+    font-size: 0.8rem; 
+    color: var(--primary-color); 
+    text-transform: uppercase; 
+    letter-spacing: 0.5px; 
+}
+
+.hotspot-card .hotspot-label i { margin-right: 5px; }
+
+/* Mensagem de "Sem Dados" genérica para grids vazios */
+.no-data-message { 
+    text-align: center; 
+    color: var(--text-color-muted); 
+    font-style: italic; 
+    padding: 30px; 
+    background-color: rgba(0,0,0,0.2); 
+    border-radius: 8px; 
+    grid-column: 1 / -1; 
+}
+
+/* --- Visualização Detalhada do Hotspot (Modal) --- */
+.hotspot-detail-content { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 20px; 
+    max-width: 95vw; 
+    width: 100%; 
+    padding: 20px; 
+    background-color: var(--surface-color); 
+    border-radius: 8px; 
+    border: 1px solid var(--border-color); 
+    position: relative; 
+    max-height: 95vh; 
+    overflow-y: auto; 
+    box-sizing: border-box; 
+}
+
+.hotspot-detail-content .hotspot-image-container { 
+    width: 100%; 
+    position: relative; 
+    padding-bottom: 65%; /* Aspect Ratio para mapas */
+    background-color: var(--bg-color); 
+    border-radius: 6px; 
+    overflow: hidden; 
+    box-sizing: border-box; 
+}
+
+.hotspot-detail-content .modal-content-viewer { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    display: block; 
+    max-width: none; 
+    max-height: none; 
+    object-fit: contain; 
+    transform-origin: center center; 
+}
+
+.hotspot-detail-content .hotspot-info-panel { 
+    width: 100%; 
+    padding: 15px; 
+    background-color: var(--bg-color); 
+    border-radius: 6px; 
+    border: 1px solid var(--border-color); 
+    flex-shrink: 0; 
+}
+
+.hotspot-detail-content .hotspot-info-panel h3 { 
+    font-family: var(--font-headings); 
+    font-size: 1.8rem; 
+    color: var(--primary-color); 
+    margin-bottom: 15px; 
+    text-align: center; 
+}
+
+.hotspot-detail-content .info-row { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 8px 0; 
+    border-bottom: 1px dashed rgba(255,255,255,0.1); 
+    font-size: 1rem; 
+    flex-wrap: wrap; 
+    align-items: baseline; 
+}
+
+.hotspot-detail-content .info-row:last-child { border-bottom: none; }
+
+.hotspot-detail-content .info-row strong { 
+    color: var(--text-color); 
+    flex-shrink: 0; 
+    margin-right: 10px; 
+}
+
+.hotspot-detail-content .info-row span { 
+    color: var(--text-color-muted); 
+    text-align: right; 
+    flex-grow: 1; 
+}
+
+/* Card de Hotspot dentro do Dossiê do Animal */
+.hotspot-dossier-card { 
+    background-color: var(--bg-color); 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; 
+    padding: 15px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 15px; 
+    max-width: 700px; 
+    margin: 0 auto; 
+}
+
+.hotspot-dossier-image-wrapper { 
+    width: 100%; 
+    height: 0; 
+    padding-bottom: 65%; 
+    position: relative; 
+    background-color: var(--bg-color); 
+    border-radius: 4px; 
+    border: 1px solid var(--primary-color); 
+    box-shadow: 0 0 10px rgba(0, 188, 212, 0.3); 
+    overflow: hidden; 
+}
+
+.hotspot-dossier-image-wrapper img { 
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; 
+    display: block; 
+}
+
+.hotspot-dossier-info { 
+    width: 100%; 
+    padding: 10px; 
+    background-color: var(--surface-color); 
+    border-radius: 6px; 
+    border: 1px solid rgba(255,255,255,0.1); 
+}
+
+.hotspot-dossier-info .info-row { 
+    display: flex; 
+    justify-content: space-between; 
+    padding: 5px 0; 
+    border-bottom: 1px dashed rgba(255,255,255,0.05); 
+    font-size: 0.95rem; 
+    flex-wrap: wrap; 
+    align-items: baseline; 
+}
+
+.hotspot-dossier-info .info-row:last-child { border-bottom: none; }
+.hotspot-dossier-info .info-row strong { flex-shrink: 0; margin-right: 8px; }
+.hotspot-dossier-info .info-row span { flex-grow: 1; text-align: right; }
+
+.hotspot-fullscreen { 
+    margin-top: 20px; 
+    width: fit-content; 
+    align-self: center; 
+}
+
+/* ==========================================================================
+   28. CORREÇÃO ESPECÍFICA: BOTÃO FECHAR DO MAPA (VIEWER)
+   ========================================================================== */
+
+/* Define o container do conteúdo como referência de posicionamento */
+#image-viewer-modal .hotspot-detail-content {
+    position: relative; 
+}
+
+/* Estilo do Botão Fechar (X) Flutuante */
+#image-viewer-modal .modal-close {
+    position: absolute;
+    top: -15px;      /* Puxa para cima da borda */
+    right: -15px;    /* Puxa para fora da direita */
+    width: 35px;
+    height: 35px;
+    background-color: var(--secondary-color); /* Vermelho padrão do tema */
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 35px; /* Centraliza verticalmente */
+    text-align: center;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1010; /* Fica acima do mapa e da sobreposição */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+    opacity: 1; /* Garante visibilidade */
+}
+
+#image-viewer-modal .modal-close:hover {
+    background-color: #c9302c; /* Vermelho mais escuro no hover */
+    transform: scale(1.1);
+}
+
+/* Ajuste de segurança para telas muito pequenas (Mobile) */
+@media (max-width: 480px) {
+    #image-viewer-modal .modal-close {
+        top: -10px;
+        right: -10px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        font-size: 20px;
+    }
+}
+
+
+/* ==========================================================================
+   30. CARTÕES DE DOMÍNIO/RESERVAS EXPANSÍVEIS (LAYOUT V4 - ATUALIZADO)
+   ========================================================================== */
+
+.reserves-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+}
+
+.reserve-progress-card-v4 {
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+}
+
+.reserve-progress-card-v4:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 188, 212, 0.2);
+}
+
+/* Camada escura para o texto ficar legível sobre a imagem */
+.rp-card-overlay {
+    background: linear-gradient(to bottom, rgba(20,20,20,0.85) 0%, rgba(20,20,20,0.6) 50%, rgba(20,20,20,0.95) 100%);
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Cabeçalho do Card (Sempre visível) */
+.rp-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.rp-card-header h3 {
+    font-family: var(--font-headings);
+    font-size: 1.6rem;
+    margin: 0;
+    color: #fff;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.rp-header-percentage {
+    font-family: var(--font-headings);
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    font-weight: bold;
+    background: rgba(0,0,0,0.6);
+    padding: 2px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Barra de progresso visual fina */
+.rp-mini-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    margin-bottom: 15px;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.rp-mini-bar-fill {
+    height: 100%;
+    background: var(--primary-color);
+    box-shadow: 0 0 10px var(--primary-color);
+}
+
+/* Área de Detalhes (Escondida inicialmente) */
+.rp-card-details {
+    max-height: 0; /* Escondido */
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.3s ease;
+    margin-top: auto; /* Empurra para baixo */
+}
+
+/* Classe ativada via JS para mostrar detalhes */
+.reserve-progress-card-v4.expanded .rp-card-details {
+    max-height: 500px; /* Altura suficiente para mostrar tudo */
+    opacity: 1;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Ícones e Estatísticas internas */
+.rp-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.rp-stat-box {
+    background: rgba(255,255,255,0.05);
+    padding: 8px;
+    border-radius: 6px;
+    text-align: center;
+    font-size: 0.9rem;
+    color: var(--text-color-muted);
+}
+
+.rp-stat-box strong {
+    display: block;
+    color: #fff;
+    font-size: 1.1rem;
+    font-family: var(--font-headings);
+}
+
+.rp-stat-box i { margin-right: 5px; }
+.rp-stat-box.dia i { color: var(--primary-color); }
+.rp-stat-box.rare i { color: var(--inprogress-color); }
+
+/* Botões de Ação dentro do Card */
+.rp-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.rp-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.rp-btn:hover {
+    background: var(--primary-color);
+    color: #000;
+    border-color: var(--primary-color);
+}
+
+/* Indicador de "Clique para Expandir" */
+.rp-expand-hint {
+    text-align: center;
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+    margin-top: 10px;
+    transition: opacity 0.3s;
+}
+
+.reserve-progress-card-v4.expanded .rp-expand-hint {
+    opacity: 0;
+    pointer-events: none;
+}
+/* ==========================================================================
+   NOVO DESIGN: RESERVE CARD "DOSSIER TÁTICO" (V3 - FINAL)
+   ========================================================================== */
+
+.reserve-card-dossier {
+    display: flex;
+    flex-direction: column;
+    background-color: #121212; 
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    height: 300px; /* Altura total ajustada para acomodar o header maior */
+    position: relative;
+}
+
+.reserve-card-dossier:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary-color);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 15px rgba(var(--primary-rgb), 0.3);
+}
+
+.reserve-card-dossier:hover .header-overlay { opacity: 0; /* Remove overlay no hover para ver a imagem limpa */ }
+.reserve-card-dossier:hover .access-btn { color: var(--primary-color); gap: 10px; }
+
+.card-clicked { transform: scale(0.98) !important; transition: transform 0.1s !important; }
+
+/* ================= SEÇÃO 1: CABEÇALHO VISUAL ================= */
+.dossier-header {
+    height: 130px; /* Aumentado para mostrar mais da imagem */
+    background-size: cover; /* Cobre a área sem distorcer */
+    background-position: center center; /* Centraliza o logo da imagem */
+    background-repeat: no-repeat;
+    position: relative;
+    width: 100%;
+}
+
+.header-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    /* Gradiente mais suave apenas nas bordas para destacar o centro */
+    background: radial-gradient(circle, transparent 40%, rgba(18,18,18,0.8) 100%);
+    opacity: 0.6;
+    transition: opacity 0.3s ease;
+}
+
+/* ================= SEÇÃO 2: CORPO DE DADOS ================= */
+.dossier-body {
+    flex-grow: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    background: linear-gradient(to bottom, #161616, #121212);
+}
+
+/* --- Linha Principal (Estatísticas) --- */
+.primary-stats {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.stat-pod {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Distribui espaço verticalmente para separar Icone/Numero/Nome */
+    justify-content: space-between; 
+    height: 85px; /* Altura fixa para garantir alinhamento */
+    
+    background: rgba(255,255,255,0.03);
+    padding: 10px 5px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.pod-icon img {
+    width: 24px;
+    height: 24px;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.3));
+    display: block; /* Garante que não tenha espaço extra de linha */
+}
+
+.pod-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.pod-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #fff;
+    font-family: var(--font-headings);
+    line-height: 1;
+    margin: 6px 0; /* Espaçamento vital para "descolar" do nome */
+}
+
+.pod-label {
+    font-size: 0.6rem;
+    color: #888;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+/* Destaques */
+.go-active .pod-value { color: #ffd700; text-shadow: 0 0 8px rgba(255, 215, 0, 0.4); }
+.go-active .pod-icon img { filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.6)); }
+
+/* --- Linha Secundária --- */
+.secondary-stats {
+    display: flex;
+    justify-content: space-around;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.mini-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.75rem;
+    color: #bbb;
+    font-weight: 600;
+}
+.mini-stat i { font-size: 0.8rem; }
+
+/* ================= SEÇÃO 3: RODAPÉ ================= */
+.dossier-footer {
+    margin-top: auto;
+    padding-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.progress-track {
+    height: 4px;
+    background: rgba(0,0,0,0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--primary-color);
+    box-shadow: 0 0 8px var(--primary-color);
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+}
+
+.access-btn {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #666;
+    text-transform: uppercase;
+    text-align: right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    transition: all 0.3s ease;
+}
+
+/* ==========================================================================
+   FIX FINAL: BOTÃO DE EXCLUIR GREAT ONE E DATA
+   ========================================================================== */
+
+/* 1. Cria espaço seguro no cabeçalho do card para o botão não cobrir nada */
+.go-card-header {
+    padding-right: 45px !important; /* Empurra o conteúdo (data) para a esquerda */
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+}
+
+/* 2. Posicionamento do Botão de Excluir */
+.btn-delete-log {
+    position: absolute !important;
+    top: 50% !important;        /* Centraliza verticalmente em relação ao header */
+    right: 10px !important;     /* Cola na direita */
+    transform: translateY(-50%) !important; /* Ajuste fino da centralização */
+    
+    width: 28px !important;     /* Um pouco menor e mais discreto */
+    height: 28px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    
+    background-color: rgba(20, 20, 20, 0.6) !important; /* Fundo escuro para não brigar com a cor do card */
+    color: #ff1744 !important;
+    border: 1px solid rgba(255, 23, 68, 0.3) !important;
+    border-radius: 4px !important;
+    
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    cursor: pointer;
+    z-index: 20;
+    transition: all 0.2s ease;
+}
+
+/* Hover do botão */
+.btn-delete-log:hover {
+    background-color: #d50000 !important;
+    color: #fff !important;
+    border-color: #d50000 !important;
+    transform: translateY(-50%) scale(1.1) !important; /* Mantém centralização no hover */
+}
+
+/* 3. Ajuste visual da Data */
+.record-date {
+    font-size: 0.85rem !important;
+    padding: 4px 10px !important;
+    background: rgba(255,255,255,0.05); /* Fundo sutil para a data */
+    border-radius: 4px;
+    white-space: nowrap; /* Garante que a data não quebre linha */
+}

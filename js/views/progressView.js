@@ -327,30 +327,103 @@ function createLatestAchievementsPanel() {
         </div>
     `;
     
-    const allTrophies = [];
+   const allTrophies = [];
+            const processedTrophyIds = new Set(); // Evita a leitura duplicada de chaves espelhadas (hífen vs underscore)
 
-    // 1. Coleta Diamantes
-    if(savedData.diamantes) {
-        Object.entries(savedData.diamantes).forEach(([slug, trophies]) => {
-            const animalName = items.find(i => slugify(i) === slug) || slug;
-            trophies.forEach(trophy => allTrophies.push({ id: trophy.id, animalName, furName: trophy.type, slug, type: 'diamante', score: trophy.score }));
-        });
-    }
+            const cleanString = (str) => {
+                return str ? str.toLowerCase()
+                                .normalize("NFD")
+                                .replace(/[\u0300-\u036f]/g, "")
+                                .replace(/[^a-z0-9]/g, "")
+                                .trim() : "";
+            };
 
-    // 2. Coleta Great Ones
-    if(savedData.greats) {
-        Object.entries(savedData.greats).forEach(([slug, greatOneData]) => {
-            const animalName = items.find(i => slugify(i) === slug) || slug;
-            if(greatOneData.furs) {
-                Object.entries(greatOneData.furs).forEach(([furName, furData]) => {
-                    (furData.trophies || []).forEach(trophy => allTrophies.push({ id: new Date(trophy.date).getTime(), animalName, furName, slug, type: 'greatone' }));
+            // 1. Coleta Diamantes com Tratamento Resiliente de Elite
+            if (savedData.diamantes) {
+                Object.entries(savedData.diamantes).forEach(([slug, trophies]) => {
+                    if (!trophies || !Array.isArray(trophies)) return;
+                    
+                    const targetSlugClean = cleanString(slug);
+                    const officialAnimalName = items.find(item => 
+                        cleanString(item) === targetSlugClean || 
+                        cleanString(slugify(item)) === targetSlugClean
+                    ) || (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/[-_]/g, ' ') : "Animal Desconhecido");
+                    
+                    const safeSlug = slugify(officialAnimalName);
+
+                    trophies.forEach(trophy => {
+                        if (!trophy || !trophy.id) return;
+                        if (processedTrophyIds.has(trophy.id)) return;
+                        processedTrophyIds.add(trophy.id);
+
+                        allTrophies.push({ 
+                            id: trophy.id, 
+                            animalName: officialAnimalName, 
+                            furName: trophy.type, 
+                            slug: safeSlug, 
+                            type: 'diamante', 
+                            score: trophy.score 
+                        });
+                    });
                 });
             }
-        });
-    }
 
-    // Se não tiver nada
-    if (allTrophies.length === 0) {
+            // 2. Coleta Great Ones com Suporte a Estruturas Híbridas e Unificadas
+            if (savedData.greats) {
+                Object.entries(savedData.greats).forEach(([slug, greatOneData]) => {
+                    if (!greatOneData) return;
+                    
+                    const targetSlugClean = cleanString(slug);
+                    const officialAnimalName = items.find(item => 
+                        cleanString(item) === targetSlugClean || 
+                        cleanString(slugify(item)) === targetSlugClean
+                    ) || (slug ? slug.charAt(0).toUpperCase() + slug.slice(1).replace(/[-_]/g, ' ') : "Animal Desconhecido");
+                    
+                    const safeSlug = slugify(officialAnimalName);
+
+                    // Verifica se há troféus na raiz do nó unificado
+                    if (Array.isArray(greatOneData.trophies)) {
+                        greatOneData.trophies.forEach(trophy => {
+                            if (!trophy) return;
+                            const trophyId = trophy.id || (trophy.date ? new Date(trophy.date).getTime() : Date.now());
+                            if (processedTrophyIds.has(trophyId)) return;
+                            processedTrophyIds.add(trophyId);
+
+                            allTrophies.push({ 
+                                id: trophyId, 
+                                animalName: officialAnimalName, 
+                                furName: trophy.furName || trophy.type || "Great One", 
+                                slug: safeSlug, 
+                                type: 'greatone' 
+                            });
+                        });
+                    }
+
+                    // Fallback para sub-nós legados estruturados por pelagem (furs)
+                    if (greatOneData.furs) {
+                        Object.entries(greatOneData.furs).forEach(([furName, furData]) => {
+                            if (!furData || !Array.isArray(furData.trophies)) return;
+                            furData.trophies.forEach(trophy => {
+                                if (!trophy) return;
+                                const trophyId = trophy.id || (trophy.date ? new Date(trophy.date).getTime() : Date.now());
+                                if (processedTrophyIds.has(trophyId)) return;
+                                processedTrophyIds.add(trophyId);
+
+                                allTrophies.push({ 
+                                    id: trophyId, 
+                                    animalName: officialAnimalName, 
+                                    furName: furName, 
+                                    slug: safeSlug, 
+                                    type: 'greatone' 
+                                });
+                            });
+                        });
+                    }
+                });
+            }
+
+            // Se não tiver nada
+            if (allTrophies.length === 0) {
         const emptyMsg = document.createElement('div');
         emptyMsg.innerHTML = '<p style="color: var(--text-color-muted); padding: 20px; text-align: center; font-style: italic;">Nenhum troféu de destaque (Diamante ou Great One) registrado ainda.</p>';
         panel.appendChild(emptyMsg);

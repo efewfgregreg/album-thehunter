@@ -764,6 +764,47 @@ select.filter-select-v2:hover {
     z-index: 2;
 }
 
+/* --- OVERRIDE PREMIUM PARA CARDS UNIQUE GREAT ONES (EVITA CORTES DE IMAGEM) --- */
+.unique-great-card {
+    height: auto !important;
+    min-height: 280px !important;
+    padding: 20px !important;
+    background: linear-gradient(145deg, #22252a, #111315) !important;
+}
+
+.unique-great-card .animal-icon-container {
+    width: 100% !important;
+    height: 140px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    border-radius: 8px !important;
+    background: rgba(0, 0, 0, 0.4) !important;
+    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+}
+
+.unique-great-card img {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 130px !important;
+    object-fit: contain !important;
+    border-radius: 0 !important; /* Remove o formato de círculo do container global */
+    background: transparent !important;
+    border: none !important;
+    padding: 5px !important;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7)) !important;
+}
+
+.unique-great-card .info {
+    font-size: 1.1rem !important;
+    font-weight: bold !important;
+    color: #fff !important;
+    letter-spacing: 0.5px !important;
+    margin-top: 12px !important;
+    min-height: auto !important;
+}
+
 .animal-card:hover img {
     border-color: var(--primary-color) !important;
     transform: rotate(3deg) scale(1.05) !important;
@@ -870,4 +911,18 @@ select.filter-select-v2:hover {
 /* Garante que o Checkmark apareça com um leve 'pop' */
 .completion-badge i {
     filter: drop-shadow(0 0 5px rgba(76, 175, 80, 0.8));
+}
+
+/* Estilização Premium HUD para o Botão Fullscreen dos Great Ones */
+.unique-great-card .go-fullscreen-wrapper:hover .fullscreen-btn {
+    background: #ffc107 !important;
+    color: #000 !important;
+    border-color: #ffc107 !important;
+    box-shadow: 0 0 15px #ffc107 !important;
+    transform: scale(1.08);
+}
+
+/* Evita que cliques no botão ativem acidentalmente a seleção de cards de fundo */
+.unique-great-card .go-fullscreen-wrapper {
+    pointer-events: auto !important;
 }

@@ -14,34 +14,39 @@ export function createGrindCard(session, animalName, onClick) {
     // Extração segura de dados
     const counts = session.counts || {};
     const total = counts.total || 0;
-    const diamonds = counts.diamonds?.length || 0;
-    const rares = counts.rares?.length || 0;
-    const superRares = counts.super_raros?.length || 0;
 
-    // Tratamento de data (prevendo campo futuro 'lastActivity' ou usando fallback)
+    // Fallback resiliente para garantir que o título do animal nunca renderize "undefined"
+    const displayAnimalName = (animalName && animalName !== 'undefined') 
+        ? animalName 
+        : (session.animalSlug ? session.animalSlug.charAt(0).toUpperCase() + session.animalSlug.slice(1).replace(/[-_]/g, ' ') : 'Animal Desconhecido');
+
+    // Suporte unificado para carimbo de tempo (lastUpdate presente no backup vs lastActivity)
+    const actualTimestamp = session.lastUpdate || session.lastActivity || null;
     let dateText = "Sem registro";
-    if (session.lastActivity) {
-        const dateObj = new Date(session.lastActivity);
-        dateText = !isNaN(dateObj) ? dateObj.toLocaleDateString('pt-BR') : session.lastActivity;
+    if (actualTimestamp) {
+        const dateObj = new Date(actualTimestamp);
+        dateText = !isNaN(dateObj) ? dateObj.toLocaleDateString('pt-BR') : actualTimestamp;
     }
+
+    // Normalização do caminho do arquivo de imagem convertendo hífens para sublinhados
+    const safeImageSlug = session.animalSlug ? session.animalSlug.replace(/-/g, '_') : 'placeholder';
 
     card.innerHTML = `
         <div class="grind-card-background">
-            <img src="animais/${session.animalSlug}.png" 
-                 alt="${animalName}" 
+            <img src="animais/${safeImageSlug}.png" 
+                 alt="${displayAnimalName}" 
                  loading="lazy"
-                 onerror="this.style.opacity='0';"> 
+                 onerror="this.onerror=null; this.src='animais/placeholder.png';"> 
         </div>
         
         <div class="grind-card-overlay"></div>
 
         <div class="grind-card-content simple-layout">
             <div class="grind-card-header">
-                <h3 class="grind-card-title">${animalName}</h3>
+                <h3 class="grind-card-title">${displayAnimalName}</h3>
             </div>
             
             <div class="grind-card-main-stat">
-                <span class="stat-label">ABATES TOTAIS</span>
                 <span class="stat-value highlight-glow">${total}</span>
             </div>
 

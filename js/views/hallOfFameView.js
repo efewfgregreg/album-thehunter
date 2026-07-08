@@ -147,25 +147,46 @@ function analyzeGrindData(sessions) {
         allSessions: []
     };
 
+    const cleanString = (str) => {
+        return str ? str.toLowerCase()
+                        .normalize("NFD")
+                        .replace(/[\u0300-\u036f]/g, "")
+                        .replace(/[^a-z0-9]/g, "")
+                        .trim() : "";
+    };
+
     if (sessions) {
         sessions.forEach(s => {
-            const animalName = items.find(i => slugify(i) === s.animalSlug) || s.animalSlug;
+            // Resolução robusta de nomes tolerante a hífens e acentuações cruzadas
+            const targetSlugClean = cleanString(s.animalSlug);
+            const animalName = items.find(item => 
+                cleanString(item) === targetSlugClean || 
+                cleanString(slugify(item)) === targetSlugClean
+            ) || (s.animalSlug ? s.animalSlug.charAt(0).toUpperCase() + s.animalSlug.slice(1).replace(/[-_]/g, ' ') : 'Animal Desconhecido');
+
             const kills = s.counts?.total || 0;
             const dias = s.counts?.diamonds?.length || 0;
             const rares = s.counts?.rares?.length || 0;
             const gos = s.counts?.great_ones?.length || 0;
-            const lastActivity = s.id ? new Date(s.id).toLocaleDateString('pt-BR') : '-';
+            
+            // Tratamento polimórfico resiliente para evitar o erro 'Invalid Date'
+            const rawDate = s.lastUpdate || s.startDate || s.timestamp || s.id || null;
+            let lastActivity = "---";
+            if (rawDate) {
+                const parsedDate = !isNaN(rawDate) ? new Date(Number(rawDate)) : new Date(rawDate);
+                lastActivity = !isNaN(parsedDate.getTime()) ? parsedDate.toLocaleDateString('pt-BR') : "---";
+            }
             
             stats.totalGrindKills += kills;
             
             stats.allSessions.push({
                 animalName,
                 animalSlug: s.animalSlug,
-                reserveName: reservesData[s.reserveKey]?.name,
+                reserveName: reservesData[s.reserveKey]?.name || 'Desconhecida',
                 kills, dias, rares, gos,
                 rank: calculateGrindRank(kills, dias, gos),
                 date: lastActivity,
-                timestamp: s.id // Para ordenação
+                timestamp: s.id
             });
 
             if (kills > stats.mostKills.count) stats.mostKills = { count: kills, animal: animalName };
@@ -360,7 +381,7 @@ export function renderHuntingRankingView(container) {
         wrapper.innerHTML += `<div style="text-align:center; padding:40px; color:#666;"><h3>Nenhum Great One encontrado.</h3></div>`;
     }
 
-    // 3. ARQUIVOS TÁTICOS (CONSOLE V2 COM SCROLL E BUSCA)
+   // 3. ARQUIVOS TÁTICOS (CONSOLE V2 COM SCROLL E BUSCA)
     const grindSection = document.createElement('div');
     grindSection.className = 'grind-history-section';
     grindSection.innerHTML = `
@@ -371,7 +392,11 @@ export function renderHuntingRankingView(container) {
         <div class="grind-table-scroll-area">
             <table class="grind-table">
                 <thead><tr><th>Animal</th><th>Reserva</th><th>Abates</th><th>Saque</th><th>Rank</th><th>Data</th></tr></thead>
-                <tbody id="grind-table-body">${grindStats.allSessions.map(g => `<tr class="grind-row" data-name="${g.animalName.toLowerCase()}"><td><div class="gt-animal"><img src="animais/${g.animalSlug}.png" onerror="this.src='animais/placeholder.jpg'">${g.animalName}</div></td><td>${g.reserveName}</td><td style="font-weight:bold; color:#fff;">${g.kills}</td><td><div class="gt-stats-micro">${g.gos>0?`<span class="gt-pill go"><i class="fas fa-crown"></i> ${g.gos}</span>`:''}<span class="gt-pill dia"><i class="fas fa-gem"></i> ${g.dias}</span><span class="gt-pill rare"><i class="fas fa-paw"></i> ${g.rares}</span></div></td><td><div class="grind-rank-badge rank-${g.rank}">${g.rank}</div></td><td class="gt-date">${g.date}</td></tr>`).join('')}</tbody>
+                <tbody id="grind-table-body">${grindStats.allSessions.map(g => {
+                    // Correção do mapeamento de assets locais: Converte hífens para sublinhados (underscores) e expurga acentuações do arquivo físico
+                    const safeImageSlug = g.animalSlug ? g.animalSlug.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/-/g, '_') : 'placeholder';
+                    return `<tr class="grind-row" data-name="${g.animalName.toLowerCase()}"><td><div class="gt-animal"><img src="animais/${safeImageSlug}.png" onerror="this.onerror=null; this.src='animais/placeholder.png';"> <span>${g.animalName}</span></div></td><td>${g.reserveName}</td><td style="font-weight:bold; color:#fff;">${g.kills}</td><td><div class="gt-stats-micro">${g.gos>0?`<span class="gt-pill go"><i class="fas fa-crown"></i> ${g.gos}</span>`:''}<span class="gt-pill dia"><i class="fas fa-gem"></i> ${g.dias}</span><span class="gt-pill rare"><i class="fas fa-paw"></i> ${g.rares}</span></div></td><td><div class="grind-rank-badge rank-${g.rank}">${g.rank}</div></td><td class="gt-date">${g.date}</td></tr>`;
+                }).join('')}</tbody>
             </table>
         </div>`;
     

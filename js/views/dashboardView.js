@@ -120,29 +120,23 @@ export function renderDashboardView(container, savedData, navigateCallback) {
         .scr-title { font-family: 'Bebas Neue', cursive; font-size: 2.2rem; color: #fff; line-height: 1; margin-bottom: 5px; }
         .scr-sub { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
         
-        /* CARD ESPECIAL - CLUBE DE TROFÉUS (Dourado - NOVO) */
-        .special-card-trophy {
+        /* CARD ESPECIAL - ROTINA E POPULAÇÃO (Verde - NOVO) */
+        .special-card-routine {
             height: 220px;
-            background: radial-gradient(circle at top left, rgba(255, 215, 0, 0.15), rgba(18, 18, 18, 0.95));
+            background: radial-gradient(circle at top left, rgba(76, 175, 80, 0.15), rgba(18, 18, 18, 0.95));
             border: var(--border); border-radius: 15px; position: relative; overflow: hidden;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             cursor: pointer; transition: 0.4s; backdrop-filter: blur(20px);
-            border-bottom: 4px solid #FFD700;
+            border-bottom: 4px solid #4CAF50;
             grid-column: span 1;
         }
-        .special-card-trophy:hover { transform: translateY(-5px); border-color: #FFD700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2); }
+        .special-card-routine:hover { transform: translateY(-5px); border-color: #4CAF50; box-shadow: 0 10px 30px rgba(76, 175, 80, 0.2); }
         
-        .sct-icon { font-size: 3.5rem; color: #fff; margin-bottom: 15px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.6); transition: 0.5s; }
-        .special-card-trophy:hover .sct-icon { transform: scale(1.1) rotate(-10deg); }
+        .scr-routine-icon { font-size: 3.5rem; color: #fff; margin-bottom: 15px; text-shadow: 0 0 20px rgba(76, 175, 80, 0.6); transition: 0.5s; }
+        .special-card-routine:hover .scr-routine-icon { transform: scale(1.1); }
         
-        .sct-title { font-family: 'Bebas Neue', cursive; font-size: 2.2rem; color: #fff; line-height: 1; margin-bottom: 5px; }
-        .sct-sub { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
-
-        .scr-bg-deco {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
-            opacity: 0.1; pointer-events: none; z-index: 0;
-        }
+        .scr-routine-title { font-family: 'Bebas Neue', cursive; font-size: 2.2rem; color: #fff; line-height: 1; margin-bottom: 5px; }
+        .scr-routine-sub { font-size: 0.75rem; color: #aaa; text-transform: uppercase; letter-spacing: 2px; font-weight: 700; }
 
         /* COLUNA DIREITA */
         .right-col { grid-column: 2; z-index: 1; display: flex; flex-direction: column; gap: 25px; }
@@ -223,13 +217,12 @@ export function renderDashboardView(container, savedData, navigateCallback) {
                     <span class="scr-sub">SORTEIO DE CAÇA</span>
                 </div>
 
-                <div class="special-card-trophy" id="nav-trophies">
+                <div class="special-card-routine" id="nav-routine">
                     <div class="scr-bg-deco"></div>
-                    <i class="fas fa-trophy sct-icon"></i>
-                    <span class="sct-title">CLUBE DE TROFÉUS</span>
-                    <span class="sct-sub">GALERIA & SOCIAL</span>
+                    <i class="fas fa-clock scr-routine-icon"></i>
+                    <span class="scr-routine-title">ROTINA TÁTICA</span>
+                    <span class="scr-routine-sub">POPULAÇÃO & HORÁRIOS</span>
                 </div>
-
             </div>
             
             <div class="right-col">
@@ -274,8 +267,8 @@ export function renderDashboardView(container, savedData, navigateCallback) {
     bind('nav-mounts', TABS.MONTAGENS);
     bind('nav-feeders', 'TRATADORES');
     bind('nav-roulette', 'ROLETA');
-    // BIND DO NOVO CARD
-    bind('nav-trophies', 'TROPHIES');
+    // BIND DO NOVO CARD - ROTA DE ROTINA
+    bind('nav-routine', TABS.ROTINA);
 
     const resumeBtn = dashElement.querySelector('#btn-resume-grind');
     if (resumeBtn && activeGrind) {
@@ -286,6 +279,28 @@ export function renderDashboardView(container, savedData, navigateCallback) {
     }
 }
 
+// FUNÇÃO AUXILIAR: Normalização robusta preventiva para nomes compostos e fallbacks cleans
+function getAnimalPresentationName(slug, itemsList) {
+    if (!slug) return 'Animal Desconhecido';
+    
+    // Remove acentos, padroniza caixa baixa e converte hífens/underscores em espaços comuns
+    const normalize = (str) => str.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[-_]/g, " ")
+        .trim();
+
+    const normalizedSlug = normalize(slug);
+    const found = itemsList.find(item => normalize(item) === normalizedSlug);
+    
+    if (found) return found;
+
+    // Fallback de segurança: limpa o slug técnico transformando-o em formato de exibição limpo
+    return slug
+        .replace(/[-_]/g, ' ')
+        .replace(/\b\w/g, l => l.toUpperCase());
+}
+
 function findSmartCollectionGoal(data) {
     let goals = [];
     if (data.diamantes) {
@@ -293,7 +308,7 @@ function findSmartCollectionGoal(data) {
             const current = Array.isArray(list) ? list.length : 0;
             const target = rareFursData[slug] ? (Array.isArray(rareFursData[slug]) ? rareFursData[slug].length : Object.keys(rareFursData[slug]).length) : 5;
             if (current > 0 && current < target) {
-                const animalName = items.find(i => slugify(i) === slug) || slug;
+                const animalName = getAnimalPresentationName(slug, items);
                 goals.push({ name: `${animalName} Diamante`, percent: Math.round((current/target)*100), text: `Faltam <strong>${target - current}</strong> para completar o álbum.`, color: '#00bcd4' });
             }
         });
@@ -303,7 +318,7 @@ function findSmartCollectionGoal(data) {
             const current = Object.keys(userRares).length;
             const target = rareFursData[slug] ? (Array.isArray(rareFursData[slug]) ? rareFursData[slug].length : Object.keys(rareFursData[slug]).length) : 5;
             if (current > 0 && current < target) {
-                const animalName = items.find(i => slugify(i) === slug) || slug;
+                const animalName = getAnimalPresentationName(slug, items);
                 goals.push({ name: `${animalName} Raros`, percent: Math.round((current/target)*100), text: `Falta <strong>${target - current}</strong> variação para fechar a coleção.`, color: '#ff9800' });
             }
         });
@@ -316,21 +331,18 @@ function findSmartCollectionGoal(data) {
 function getMostRecentGrind(data) {
     if (!data || !data.grindSessions || data.grindSessions.length === 0) return null;
     
-    // CORREÇÃO: Converte strings de data para timestamp (número) antes de ordenar
     const sorted = [...data.grindSessions].sort((a, b) => {
-        // Tenta pegar a data de atualização, ou o timestamp de criação, ou o ID
         const dateA = new Date(a.lastUpdate || a.timestamp || a.id || 0).getTime();
         const dateB = new Date(b.lastUpdate || b.timestamp || b.id || 0).getTime();
         
-        // Se a conversão falhar (NaN), assume 0
         const valA = isNaN(dateA) ? 0 : dateA;
         const valB = isNaN(dateB) ? 0 : dateB;
 
-        return valB - valA; // Ordena do maior (mais novo) para o menor
+        return valB - valA;
     });
 
     const last = sorted[0];
-    const name = items.find(i => slugify(i) === last.animalSlug) || last.animalSlug;
+    const name = getAnimalPresentationName(last.animalSlug, items);
     const reserve = reservesData[last.reserveKey];
     
     return { 
